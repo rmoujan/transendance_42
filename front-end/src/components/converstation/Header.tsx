@@ -24,7 +24,7 @@ const Header = () => {
   const handleCloseInvite = () => {
     setOpenInvite(false);
   };
-  const handleClick = (event:any) => {
+  const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -37,7 +37,7 @@ const Header = () => {
         width: "100%",
         background: "#5E4F80",
         boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
-        borderRadius: "25px 25px 0 0",
+        borderRadius: "44px 44px 0 0",
       }}
       //   p={2}
     >

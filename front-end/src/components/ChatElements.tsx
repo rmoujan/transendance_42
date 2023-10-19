@@ -37,7 +37,7 @@ const ChatElements = (id: IdType) => {
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               variant="dot"
-              sx={{ width: 52, height: 52 }}
+              // sx={{ width: 52, height: 52 }}
             >
               <Avatar src={id.img} sx={{ width: 52, height: 52 }} />
             </StyledBadge>

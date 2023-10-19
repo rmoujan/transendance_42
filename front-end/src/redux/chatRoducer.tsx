@@ -1,5 +1,7 @@
 import { combineReducers } from "redux";
 import storage from "redux-persist/lib/storage";
+import appReducer from "./slices/App";
+
 
 
 const rootPresistConfig = {
@@ -11,7 +13,7 @@ const rootPresistConfig = {
 };
 
 const chatReducer = combineReducers({
-//   app: appReducer,
+  app: appReducer,
 //   conversation: conversationReducer,
 });
 

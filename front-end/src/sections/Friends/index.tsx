@@ -59,6 +59,7 @@ const Friends = () => {
                   // neeed to make it center
                   backgroundColor: "#443263", // Change the background color to purple
                   color: "#C7BBD1", // Change the text color to white
+                  borderRadius: "21px",
                   "&:hover": {
                     backgroundColor: "#684C83", // Change the background color on hover
                     color: "#C7BBD1",

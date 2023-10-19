@@ -19,7 +19,7 @@ const initialState: ContactInfoState = {
 };
 
 const appSlice = createSlice({
-    name: "contact",
+    name: "app",
     initialState,
     reducers: {
         openContactInfo: (state, action) => {

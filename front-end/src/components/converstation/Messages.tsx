@@ -5,7 +5,7 @@ import { MediaMsg, ReplyMsg, TextMsg, Timeline } from "./MsgTypes.tsx";
 
 const Messages = () => {
   return (
-    <Box p={2} sx={{ width: "100%", flexGrow: "1" }}>
+    <Box p={2} sx={{ width: "100%", flexGrow: "1", borderRadius: '64px' }}>
       <Stack spacing={2}>
         {Chat_History.map((el) => {
           switch (el.type) {
