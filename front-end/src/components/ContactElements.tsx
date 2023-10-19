@@ -16,7 +16,7 @@ interface State {
     password: string;
     weight: string;
     weightRange: string;
-    showPassword: boolean;
+    muted: boolean;
 }
 
 interface Props {
@@ -32,18 +32,20 @@ const ContactElements = (contact: Props) => {
         password: "",
         weight: "",
         weightRange: "",
-        showPassword: false,
+        muted: false,
     });
 
-    const handleClickShowPassword = () => {
-        if (values.showPassword === true) {
+    const handleClickMuted = () => {
+        // ! emit "mute_converstation" event
+        // socket.emit("mute_converstation", { to: _id, from: user_id });
+        if (values.muted === true) {
             console.log("unmute");
         } else {
             console.log("mute");
         }
         setValues({
             ...values,
-            showPassword: !values.showPassword,
+            muted: !values.muted,
         });
     };
 
@@ -84,15 +86,17 @@ const ContactElements = (contact: Props) => {
                     <IconButton
                         onClick={() => {
                             console.log("Start Converstation");
+                            // ! emit "start_converstation" event
+                            // socket.emit("start_conversation", { to: _id, from: user_id });
                         }}
                     >
                         <Chat />
                     </IconButton>
                     <IconButton
                         aria-label="mute contact"
-                        onClick={handleClickShowPassword}
+                        onClick={handleClickMuted}
                     >
-                        {values.showPassword ? (
+                        {values.muted ? (
                             <SpeakerSimpleSlash />
                         ) : (
                             <SpeakerSimpleNone />
@@ -102,6 +106,8 @@ const ContactElements = (contact: Props) => {
                     <IconButton
                         onClick={() => {
                             console.log("Delete Contact");
+                            // ! emit "delete_contact" event
+                            // socket.emit("delete_contact", { to: _id, from: user_id });
                         }}
                     >
                         <UserMinus />

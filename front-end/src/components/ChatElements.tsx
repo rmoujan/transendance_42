@@ -1,8 +1,11 @@
 import { Avatar, Badge, Box, Stack, Typography } from "@mui/material";
 import StyledBadge from "./StyledBadge";
+import { styled } from "@mui/system";
+import { useDispatch, useSelector } from "react-redux";
+import { SelectConversation } from "../redux/slices/App";
+// import { SelectConversation } from "../redux/slices/app";
 
-
-interface IdType  {
+interface IdType {
   id: number;
   name: string;
   img: string;
@@ -12,14 +15,32 @@ interface IdType  {
   online: boolean;
 }
 
+const StyledChatBox = styled(Box)(() => ({
+  "&:hover": {
+    cursor: "pointer",
+  },
+}));
+
 const ChatElements = (id: IdType) => {
+  const dispatch = useDispatch();
+  const { room_id } = useSelector((state) => state.app);
+  const selectedChatId: string = room_id?.toString();
+
+  let isSelected: boolean = +selectedChatId === id.id;
+
+  if (!selectedChatId) {
+    isSelected = false;
+  }
   return (
-    <Box
+    <StyledChatBox
+      onClick={() => {
+        dispatch(SelectConversation({ room_id: id.id.toString() }));
+      }}
       sx={{
         width: "100%",
         height: 85,
         borderRadius: "1",
-        backgroundColor: "#806EA9",
+        backgroundColor: isSelected ? "#806EA9" : "#684C83",
       }}
       p={2}
     >
@@ -72,9 +93,8 @@ const ChatElements = (id: IdType) => {
           ></Badge>
         </Stack>
       </Stack>
-    </Box>
+    </StyledChatBox>
   );
 };
-
 
 export default ChatElements;
