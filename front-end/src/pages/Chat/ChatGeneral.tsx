@@ -4,6 +4,9 @@ import NoChat from '../../sections/NoChat'
 import ChatTabs from './ChatTabs'
 import { useDispatch, useSelector } from "react-redux";
 import Converstation from '../../sections/Converstation'
+import InfosContact from '../../components/contactTypes/InfosContact'
+import StarredMsgs from '../../components/contactTypes/StarredMsgs'
+import SharedMsgs from '../../components/contactTypes/SharedMsgs'
 
 const ChatGeneral = () => {
     const { contactInfo } = useSelector((store) => store.app);
@@ -36,13 +39,25 @@ const ChatGeneral = () => {
         >
           {/* <NoChat /> */}
           {/* hello */}
-          {/* <Converstation /> */}
+          <Converstation />
         </Box>
       </Stack>
 
       {/* *** REDUX: if contact info open or not and which part *** */}
       
-       {/* {contstorestore */}
+       {contactInfo.open &&
+        (() => {
+          switch (contactInfo.type) {
+            case "CONTACT":
+              return <InfosContact />;
+            case "STARRED":
+              return <StarredMsgs />;
+            case "SHARED":
+              return <SharedMsgs />;
+            default:
+              return null;
+          }
+        })()}
     </Stack>
   )
 }

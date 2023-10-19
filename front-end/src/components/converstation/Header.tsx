@@ -11,11 +11,14 @@ import React from "react";
 import StyledBadge from "../StyledBadge";
 import { MenuOptions } from "./MsgTypes";
 import { InviteDialog } from "../dialogs/Dialogs";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleDialog, updatedContactInfo } from "../../redux/slices/App";
+
 // import { InviteDialog } from "./Dialogs";
 // import { MenuOptions } from "./MsgTypes";
 
 const Header = () => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openInvite, setOpenInvite] = React.useState(false);
@@ -57,9 +60,9 @@ const Header = () => {
             >
               <IconButton>
                 <Avatar
-                  // onClick={() => {
-                  //   dispatch(toggleDialog());
-                  // }}
+                  onClick={() => {
+                    dispatch(toggleDialog());
+                  }}
                   alt={faker.person.firstName()}
                   src={faker.image.avatar()}
                   sx={{ width: 46, height: 46 }}

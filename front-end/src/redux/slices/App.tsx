@@ -32,10 +32,6 @@ const appSlice = createSlice({
     updatedContactInfo(state, action) {
       state.contactInfo.type = action.payload.type;
     },
-    selectConversation(state, action) {
-      state.chat_type = "individual";
-      state.room_id = action.payload.room_id;
-    },
   },
 });
 
@@ -53,10 +49,4 @@ export const updatedContactInfo = (type: string) => {
       type,
     })
   );
-};
-
-export const SelectConversation = (room_id : string) => {
-  return async () => {
-    dispatch(appSlice.actions.selectConversation({ room_id }));
-  };
 };
