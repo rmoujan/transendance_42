@@ -10,22 +10,22 @@ import {
 } from "@mui/material";
 import { CaretLeft } from "@phosphor-icons/react";
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleDialog, updatedContactInfo } from "../../redux/slices/App";
+import { toggleDialog, updatedContactInfo } from "../../redux/slices/contact";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
 const SharedMsgs = () => {
-  const dispatch = useDispatch();
-  const { contactInfo } = useSelector((store) => store.app);
-  //   console.log(contactInfo)
+  const dispatch = useAppDispatch();
+  const { contact } = useAppSelector((store) => store);
+  console.log(contact);
 
   const [value, setValue] = React.useState(0);
 
-  const handleChange = (event, newValue: any) => {
+  const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   return (
     <Dialog
-      open={contactInfo.open}
+      open={contact.contactInfos.open}
       onClose={() => {
         dispatch(toggleDialog());
       }}

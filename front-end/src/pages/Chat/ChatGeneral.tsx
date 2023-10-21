@@ -1,24 +1,26 @@
-import React from 'react'
-import { Box, Stack } from '@mui/material'
-import NoChat from '../../sections/NoChat'
-import ChatTabs from './ChatTabs'
-import { useDispatch, useSelector } from "react-redux";
-import Converstation from '../../sections/Converstation'
-import InfosContact from '../../components/contactTypes/InfosContact'
-import StarredMsgs from '../../components/contactTypes/StarredMsgs'
-import SharedMsgs from '../../components/contactTypes/SharedMsgs'
+import React from "react";
+import { Box, Stack } from "@mui/material";
+import NoChat from "../../sections/NoChat";
+import ChatTabs from "./ChatTabs";
+import Converstation from "../../sections/Converstation";
+import InfosContact from "../../components/contactTypes/InfosContact";
+import StarredMsgs from "../../components/contactTypes/StarredMsgs";
+import SharedMsgs from "../../components/contactTypes/SharedMsgs";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
 const ChatGeneral = () => {
-    const { contactInfo } = useSelector((store) => store.app);
-    console.log(contactInfo)
-    const dispatch = useDispatch()
+  const { contact } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
+  console.log(contact.contactInfos);
+
   return (
     <Stack direction={"row"} sx={{ width: "100%", height: "90vh" }}>
-       <Stack direction={"column"} sx={{
-        margin: "42px 21px 42px 42px",
-        
-        
-       }}>
+      <Stack
+        direction={"column"}
+        sx={{
+          margin: "42px 21px 42px 42px",
+        }}
+      >
         <ChatTabs />
       </Stack>
       <Stack
@@ -28,8 +30,8 @@ const ChatGeneral = () => {
       >
         <Box
           sx={{
-            height: "calc(100vh - 72px)",
-            width: "calc(100vw - 920px)",
+            height: "calc(100vh - 172px)",
+            width: "calc(100vw - 975px)",
             // backgroundColor: "#3f3b5b91",
             margin: "42px 42px 21px 42px",
             // padding: "42px",
@@ -37,17 +39,20 @@ const ChatGeneral = () => {
           }}
           className="shadow-2xl bg-gradient-to-tr from-[#2A2742] via-[#3f3a5f] to-[#2A2742]"
         >
-          {/* <NoChat /> */}
+          {contact.type_chat === "individual" && contact.room_id !== "" ? (
+            <Converstation />
+          ) : (
+            <NoChat />
+          )}
           {/* hello */}
-          <Converstation />
         </Box>
       </Stack>
 
       {/* *** REDUX: if contact info open or not and which part *** */}
-      
-       {contactInfo.open &&
+
+      {contact.contactInfos.open &&
         (() => {
-          switch (contactInfo.type) {
+          switch (contact.contactInfos.type) {
             case "CONTACT":
               return <InfosContact />;
             case "STARRED":
@@ -59,7 +64,7 @@ const ChatGeneral = () => {
           }
         })()}
     </Stack>
-  )
-}
+  );
+};
 
-export default ChatGeneral
+export default ChatGeneral;

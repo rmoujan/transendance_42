@@ -1,24 +1,26 @@
 import { faker } from "@faker-js/faker";
 import {
-    Avatar,
-    Box,
-    Button,
-    IconButton,
-    Stack,
-    Typography
+  Avatar,
+  Box,
+  Button,
+  IconButton,
+  Stack,
+  Typography
 } from "@mui/material";
 import React from "react";
+import contact, { toggleDialog } from "../../redux/slices/contact";
+import { useAppDispatch } from "../../redux/store/store";
 import StyledBadge from "../StyledBadge";
-import { MenuOptions } from "./MsgTypes";
 import { InviteDialog } from "../dialogs/Dialogs";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleDialog, updatedContactInfo } from "../../redux/slices/App";
+import { MenuOptions } from "./MsgTypes";
+// import { useDispatch, useSelector } from "react-redux";
+// import { toggleDialog, updatedContactInfo } from "../../redux/slices/App";
 
 // import { InviteDialog } from "./Dialogs";
 // import { MenuOptions } from "./MsgTypes";
 
 const Header = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [openInvite, setOpenInvite] = React.useState(false);
@@ -27,7 +29,7 @@ const Header = () => {
   const handleCloseInvite = () => {
     setOpenInvite(false);
   };
-  const handleClick = (event: any) => {
+  const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
@@ -61,6 +63,8 @@ const Header = () => {
               <IconButton>
                 <Avatar
                   onClick={() => {
+                    console.log(contact.contactInfos);
+                    // console.log('this where it should show contact infos');
                     dispatch(toggleDialog());
                   }}
                   alt={faker.person.firstName()}

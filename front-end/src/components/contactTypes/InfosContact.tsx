@@ -1,64 +1,63 @@
 import { faker } from "@faker-js/faker";
 import {
-    Avatar,
-    Box,
-    Button,
-    Dialog,
-    DialogTitle,
-    Divider,
-    IconButton,
-    Slide,
-    Stack,
-    Typography
+  Avatar,
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  Divider,
+  IconButton,
+  Slide,
+  Stack,
+  Typography,
 } from "@mui/material";
-import { TransitionProps } from '@mui/material/transitions';
+import { TransitionProps } from "@mui/material/transitions";
 import {
-    CaretRight,
-    Prohibit,
-    SpeakerSimpleX,
-    Star,
-    Trash,
-    X,
+  CaretRight,
+  Prohibit,
+  SpeakerSimpleX,
+  Star,
+  Trash,
+  X,
 } from "@phosphor-icons/react";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { toggleDialog, updatedContactInfo } from "../../redux/slices/App";
+import { toggleDialog, updatedContactInfo } from "../../redux/slices/contact";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
 import { BlockDialog, DeleteDialog, MuteDialog } from "../dialogs/Dialogs";
 
-
 const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-        children: React.ReactElement<any, any>;
-    },
-    ref: React.Ref<unknown>,
+  props: TransitionProps & {
+    children: React.ReactElement<any, any>;
+  },
+  ref: React.Ref<unknown>
 ) {
-    return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 const InfosContact = () => {
+  const dispatch = useAppDispatch();
+  const { contact } = useAppSelector((store) => store);
+  console.log(contact);
 
-    const dispatch = useDispatch();
-    const { contactInfo } = useSelector((store) => store.app);
-  
-    const [openBlock, setOpenBlock] = useState(false);
-    const [openDelete, setOpenDelete] = useState(false);
-    const [openMute, setOpenMute] = useState(false);
-  
-    const handleCloseBlock = () => {
-      setOpenBlock(false);
-    };
-    const handleCloseDelete = () => {
-      setOpenDelete(false);
-    };
-  
-    const handleCloseMute = () => {
-      setOpenMute(false);
-    };
+  const [openBlock, setOpenBlock] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [openMute, setOpenMute] = useState(false);
+
+  const handleCloseBlock = () => {
+    setOpenBlock(false);
+  };
+  const handleCloseDelete = () => {
+    setOpenDelete(false);
+  };
+
+  const handleCloseMute = () => {
+    setOpenMute(false);
+  };
 
   return (
     <Dialog
-      open={contactInfo.open}
+      open={contact.contactInfos.open}
       TransitionComponent={Transition}
       keepMounted
       onClose={() => {
@@ -74,7 +73,7 @@ const InfosContact = () => {
         }}
         sx={{
           position: "absolute",
-          right: 9,
+          left: "23em",
           top: 10,
           color: (theme) => theme.palette.grey[500],
         }}
@@ -130,7 +129,7 @@ const InfosContact = () => {
                 }}
                 endIcon={<CaretRight />}
               >
-                {console.log(contactInfo)}
+                {console.log(contact.contactInfos)}
                 401
               </Button>
             </Stack>
@@ -142,7 +141,7 @@ const InfosContact = () => {
                   }}
                 >
                   <img
-                    src={faker.image.food()}
+                    src={faker.image.url()}
                     alt={faker.person.fullName()}
                     style={{ borderRadius: "15px" }}
                   />
@@ -270,7 +269,7 @@ const InfosContact = () => {
         <BlockDialog open={openBlock} handleClose={handleCloseBlock} />
       )}
     </Dialog>
-  )
-}
+  );
+};
 
-export default InfosContact
+export default InfosContact;

@@ -1,7 +1,9 @@
 import { Avatar, Badge, Box, Stack, Typography } from "@mui/material";
 import StyledBadge from "./StyledBadge";
 import { styled } from "@mui/system";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../redux/store/store";
+import { selectConversation } from "../redux/slices/contact";
+// import { useDispatch, useSelector } from "react-redux";
 // import { SelectConversation } from "../redux/slices/App";
 // import { SelectConversation } from "../redux/slices/app";
 
@@ -22,36 +24,36 @@ const StyledChatBox = styled(Box)(() => ({
 }));
 
 const ChatElements = (id: IdType) => {
-  // const dispatch = useDispatch();
-  // const { room_id } = useSelector((state) => state.app);
-  const selectedChatId: string = room_id?.toString();
-
-  let isSelected: boolean = +selectedChatId === id.id;
+  const { contact } = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
+  const selected_id = id.id.toString();
+  const selectedChatId = contact.room_id;
+  let isSelected = +selectedChatId === id.id;
 
   if (!selectedChatId) {
     isSelected = false;
   }
+
   return (
     <StyledChatBox
       onClick={() => {
-        console.log("this --> clicked converstation")
-        // dispatch(SelectConversation({ room_id: id.id.toString() }));
+        console.log("this --> clicked converstation");
+        dispatch(selectConversation({room_id: selected_id}));
       }}
       sx={{
         width: "100%",
         height: 85,
         borderRadius: "1",
-        backgroundColor: isSelected ? "#806EA9" : "#684C83",
+        backgroundColor: isSelected ? "#684C83" : "#3f3a5f",
+        // backgroundColor: "#684C83",
       }}
       p={2}
     >
-      {/* {console.log(id.img)} */}
       <Stack
         direction={"row"}
         alignItems={"center"}
         justifyContent={"space-between"}
         sx={{ padding: "0 8px 0 4px" }}
-        // margin={"0 0 0 4px"}
       >
         <Stack direction={"row"} alignItems={"center"} spacing={2}>
           {id.online ? (
@@ -59,7 +61,6 @@ const ChatElements = (id: IdType) => {
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               variant="dot"
-              // sx={{ width: 52, height: 52 }}
             >
               <Avatar src={id.img} sx={{ width: 52, height: 52 }} />
             </StyledBadge>
