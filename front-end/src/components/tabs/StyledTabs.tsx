@@ -54,7 +54,7 @@ const StyledTabPanel = styled(TabPanel)(
 );
 
 const StyledTabsList = styled(TabsList)(
-    ({ theme }) => `
+    () => `
     min-width: 400px;
     background-color: ${purple[500]};
     border-radius: 12px;
@@ -63,8 +63,6 @@ const StyledTabsList = styled(TabsList)(
     align-items: center;
     justify-content: center;
     align-content: space-between;
-    box-shadow: 0px 4px 30px ${theme.palette.mode === "dark" ? grey[900] : grey[200]
-        };
     `
 );
 

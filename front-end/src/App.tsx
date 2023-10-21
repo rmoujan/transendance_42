@@ -1,14 +1,56 @@
+import MuiAlert from "@mui/material/Alert";
+import Snackbar from "@mui/material/Snackbar";
+import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import "./App.css";
 import Home from "./pages/Home";
+import { closeSnackBar } from "./redux/slices/contact";
+import { useAppDispatch, useAppSelector } from "./redux/store/store";
+
+const vertical = "top";
+const horizontal = "center";
+
+const Alert = React.forwardRef((props, ref) => (
+  <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+));
 
 function App() {
+  const { severity, message, open } = useAppSelector(
+    (state) => state.contact.snackbar
+  );
+  const dispatch = useAppDispatch();
+ 
   return (
-      <BrowserRouter>
         <div>
+      <BrowserRouter>
           <Home />
-        </div>
       </BrowserRouter>
+      {message && open ? (
+        <Snackbar
+          anchorOrigin={{ vertical, horizontal }}
+          open={open}
+          autoHideDuration={4000}
+          key={vertical + horizontal}
+          onClose={() => {
+            console.log("This is clicked");
+            dispatch(closeSnackBar());
+          }}
+        >
+          <Alert
+            onClose={() => {
+              console.log("This is clicked");
+              dispatch(closeSnackBar());
+            }}
+            severity={severity}
+            sx={{ width: "100%" }}
+          >
+            {message}
+          </Alert>
+        </Snackbar>
+      ) : (
+        <></>
+      )}
+        </div>
   );
 }
 

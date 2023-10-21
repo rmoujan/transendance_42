@@ -4,10 +4,13 @@ import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { RHFAutocomplete, RHFTextField } from "../../components/hook-form";
 import FormProvider from "../../components/hook-form/FormProvider";
+import { showSnackbar } from "../../redux/slices/contact";
+import { useAppDispatch } from "../../redux/store/store";
 
 const MEMBERS = ["name 1", "name 2", "name 3", "name 4", "name 4"];
 
 const CreatePublicForm = ({ handleClose }: any) => {
+  const dispatch = useAppDispatch();
   const PublicSchema = Yup.object().shape({
     title: Yup.string().required("Title is Required!!"),
     members: Yup.array().min(3, "Must have at least 3 Members"),
@@ -34,6 +37,12 @@ const CreatePublicForm = ({ handleClose }: any) => {
 
   const onSubmit = async (data: any) => {
     try {
+      dispatch(
+        showSnackbar({
+          severity: "success",
+          message: "New Public Channel has Created",
+        })
+      );
       // call api
       console.log("DATA", data);
     } catch (error) {

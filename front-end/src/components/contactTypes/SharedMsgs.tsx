@@ -30,6 +30,7 @@ const SharedMsgs = () => {
         dispatch(toggleDialog());
       }}
       aria-describedby="alert-dialog-slide-description"
+      PaperProps={{ style: { backgroundColor: "#AE9BCD", borderRadius: "35px" } }}
     >
       {/* ==> title <== */}
       <Stack

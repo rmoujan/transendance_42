@@ -27,10 +27,17 @@ const CreateChannel = ({ open, handleClose }: any) => {
           borderRadius: "26px",
         },
       }}
+      PaperProps={{
+        style: {
+          backgroundColor: "#AE9BCD",
+          borderRadius: "28px",
+          // padding: "32px 135px",
+        },
+      }}
     >
       {/* {console.log(handleClose)} */}
       <DialogTitle sx={{ mb: 4 }}>Create a New Channel</DialogTitle>
-      <DialogContent>
+      <DialogContent sx={{mb: 2}}>
         <CreateTabs handleClose={handleClose} />
       </DialogContent>
     </Dialog>

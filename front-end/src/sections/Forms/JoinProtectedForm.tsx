@@ -6,6 +6,8 @@ import { Button, IconButton, InputAdornment, Stack } from "@mui/material";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
 import { RHFSelect, RHFTextField } from "../../components/hook-form";
 import FormProvider from "../../components/hook-form/FormProvider";
+import { showSnackbar } from "../../redux/slices/contact";
+import { useAppDispatch } from "../../redux/store/store";
 
 const channelOptions: Option[] = [
   { label: "RandomGamingManiac", value: "Public Channel 1" },
@@ -31,6 +33,7 @@ interface Option {
 }
 
 const JoinProtectedForm = ({ handleClose }: any) => {
+  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
   const ProtectedChannelSchema = Yup.object().shape({
     name: Yup.string().required("Name of Channel is Required!!"),
@@ -57,6 +60,12 @@ const JoinProtectedForm = ({ handleClose }: any) => {
 
   const onSubmit = async (data: any) => {
     try {
+      dispatch(
+        showSnackbar({
+          severity: "success",
+          message: `You Join to ${data.name} successfully`,
+        })
+      );
       // call api
       console.log("DATA", data);
     } catch (error) {
@@ -114,6 +123,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
                 color: "#C7BBD1",
               },
             }}
+            onClick={handleClose}
           >
             Join Channel
           </Button>

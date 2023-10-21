@@ -19,6 +19,7 @@
     "@heroicons/react": "^2.0.18",
     "@hookform/resolvers": "^3.3.2",
     "@material-tailwind/react": "^2.1.4",
+    "@mui/lab": "^5.0.0-alpha.149",
     "@mui/material": "^5.14.14",
     "@phosphor-icons/react": "^2.0.13",
     "@ramonak/react-progress-bar": "^5.0.3",

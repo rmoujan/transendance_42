@@ -7,6 +7,12 @@ export interface Contact {
   };
   type_chat: string;
   room_id: string;
+  muted: boolean;
+  snackbar : {
+    open: boolean;
+    severity: string;
+    message: string;
+  }
 }
 
 const initialState: Contact = {
@@ -16,6 +22,12 @@ const initialState: Contact = {
   },
   type_chat: "",
   room_id: "",
+  muted: false,
+  snackbar: {
+    open: false,
+    severity: '',
+    message: '',
+  },
 };
 
 export const ContactSlice = createSlice({
@@ -34,9 +46,39 @@ export const ContactSlice = createSlice({
       state.type_chat = "individual";
       state.room_id = action.payload.room_id;
     },
+    mutedContact(state, action)
+    {
+      state.room_id = action.payload.room_id;
+      state.muted = !state.muted;
+    },
+    openSnackBar(state, action) {
+      console.log(action.payload);
+      state.snackbar.open = true;
+      state.snackbar.severity = action.payload.severity;
+      state.snackbar.message = action.payload.message;
+    },
+    closeSnackBar(state) {
+      console.log("This is getting executed");
+      state.snackbar.open = false;
+      state.snackbar.message = '';
+    },
   },
 });
 
-export const { toggleDialog, updatedContactInfo, selectConversation } =
+export const showSnackbar =
+  ({ severity, message }: any) =>
+  async (dispatch:any, getState:any) => {
+    dispatch(
+      ContactSlice.actions.openSnackBar({
+        message,
+        severity,
+      })
+    );
+
+    setTimeout(() => {
+      dispatch(ContactSlice.actions.closeSnackBar());
+    }, 4000);
+  };
+export const { toggleDialog, updatedContactInfo, selectConversation, mutedContact, closeSnackBar} =
   ContactSlice.actions;
 export default ContactSlice.reducer;

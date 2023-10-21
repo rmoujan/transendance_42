@@ -12,7 +12,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const JoinChannel = ({ open, handleClose }: unknown) => {
+const JoinChannel = ({ open, handleClose }: any) => {
   return (
     <Dialog
       fullWidth

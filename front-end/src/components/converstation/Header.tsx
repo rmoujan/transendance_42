@@ -22,19 +22,19 @@ import { MenuOptions } from "./MsgTypes";
 const Header = () => {
   const dispatch = useAppDispatch();
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  // const [anchorEl, setAnchorEl] = React.useState(null);
   const [openInvite, setOpenInvite] = React.useState(false);
-  const open = Boolean(anchorEl);
+  // const open = Boolean(anchorEl);
 
   const handleCloseInvite = () => {
     setOpenInvite(false);
   };
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  // const handleClick = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
+  // const handleClose = () => {
+  //   setAnchorEl(null);
+  // };
   return (
     <Box
       sx={{
@@ -63,7 +63,7 @@ const Header = () => {
               <IconButton>
                 <Avatar
                   onClick={() => {
-                    console.log(contact.contactInfos);
+                    console.log(contact);
                     // console.log('this where it should show contact infos');
                     dispatch(toggleDialog());
                   }}

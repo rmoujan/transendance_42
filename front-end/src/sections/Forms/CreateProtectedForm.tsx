@@ -1,15 +1,18 @@
-import * as React from "react";
-import * as Yup from "yup";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Eye, EyeSlash } from "@phosphor-icons/react";
 import { Button, IconButton, InputAdornment, Stack } from "@mui/material";
+import { Eye, EyeSlash } from "@phosphor-icons/react";
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import * as Yup from "yup";
 import { RHFAutocomplete, RHFTextField } from "../../components/hook-form";
 import FormProvider from "../../components/hook-form/FormProvider";
+import { showSnackbar } from "../../redux/slices/contact";
+import { useAppDispatch } from "../../redux/store/store";
 
 const MEMBERS = ["name 1", "name 2", "name 3", "name 4", "name 4"];
 
 const CreateProtectedForm = ({ handleClose }: any) => {
+  const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = React.useState(false);
 
@@ -46,6 +49,12 @@ const CreateProtectedForm = ({ handleClose }: any) => {
 
   const onSubmit = async (data: any) => {
     try {
+      dispatch(
+        showSnackbar({
+          severity: "success",
+          message: "New Protected Channel has Created",
+        })
+      );
       // submit data to backend
       console.log("DATA", data);
     } catch (error) {

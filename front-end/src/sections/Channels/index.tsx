@@ -110,8 +110,8 @@ const Channels = () => {
           >
             {/* <SimpleBarStyle> */}
             <Stack>
-              {ChatList.filter((el) => !el.pinned).map((el) => {
-                return <ChatElements {...el} />;
+              {ChatList.filter((el) => !el.pinned).map((el, index) => {
+                return <ChatElements key={index} {...el} />;
               })}
             </Stack>
             {/* </SimpleBarStyle> */}

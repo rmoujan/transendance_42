@@ -30,7 +30,7 @@ const ChatInput = ({ setOpenEmojis }:any) => {
       InputProps={{
         disableUnderline: true,
         endAdornment: (
-          <InputAdornment>
+          <InputAdornment position="end">
             <Tooltip title="Photo/Video">
                 <IconButton>
                 {" "}

@@ -4,10 +4,15 @@ import * as Yup from "yup";
 import FormProvider from "../../components/hook-form/FormProvider";
 import { Button, Stack } from "@mui/material";
 import { RHFAutocomplete, RHFTextField } from "../../components/hook-form";
+import { useAppDispatch } from "../../redux/store/store";
+import { showSnackbar } from "../../redux/slices/contact";
+import LoadingButton from '@mui/lab/LoadingButton';
+
 
 const MEMBERS = ["name 1", "name 2", "name 3", "name 4", "name 4"];
 
 const CreatePrivateForm = ({ handleClose }: any) => {
+  const dispatch = useAppDispatch();
   const PrivateSchema = Yup.object().shape({
     title: Yup.string().required("Title is Required!!"),
     members: Yup.array().min(3, "Must have at least 3 Members"),
@@ -34,6 +39,12 @@ const CreatePrivateForm = ({ handleClose }: any) => {
 
   const onSubmit = async (data: any) => {
     try {
+      dispatch(
+        showSnackbar({
+          severity: "success",
+          message: "New Private Channel has Created",
+        })
+      );
       // call api
       console.log("DATA", data);
     } catch (error) {
@@ -61,6 +72,9 @@ const CreatePrivateForm = ({ handleClose }: any) => {
           justifyContent={"end"}
         >
           <Button onClick={handleClose}>Cancel</Button>
+          <LoadingButton loading variant="outlined">
+  Submit
+</LoadingButton>
           <Button
             sx={{
               backgroundColor: "#806EA9", // Change the background color to purple
@@ -74,7 +88,7 @@ const CreatePrivateForm = ({ handleClose }: any) => {
             type="submit"
             variant="contained"
           >
-            Create Chennel
+            Create Channel
           </Button>
         </Stack>
       </Stack>

@@ -63,9 +63,12 @@ const InfosContact = () => {
       onClose={() => {
         dispatch(toggleDialog());
       }}
+      PaperProps={{ style: { backgroundColor: "#AE9BCD", borderRadius: "35px" } }}
       // aria-describedby="alert-dialog-slide-description"
     >
-      <DialogTitle sx={{ m: "0 4px", p: 2 }}>{"Contact info"}</DialogTitle>
+
+      <Typography sx={{ m: "0 8px", p: 2 }} variant="h6">Contact info</Typography>
+      {/* <DialogTitle sx={{ m: "0 8px", p: 2 }} >Contact info</DialogTitle> */}
       <IconButton
         aria-label="close"
         onClick={() => {
@@ -73,9 +76,9 @@ const InfosContact = () => {
         }}
         sx={{
           position: "absolute",
-          left: "23em",
+          left: "22.7em",
           top: 10,
-          color: (theme) => theme.palette.grey[500],
+          color: (theme) => theme.palette.grey[800],
         }}
       >
         <X />
@@ -129,12 +132,12 @@ const InfosContact = () => {
                 }}
                 endIcon={<CaretRight />}
               >
-                {console.log(contact.contactInfos)}
+                {/* {console.log(contact)} */}
                 401
               </Button>
             </Stack>
             <Stack alignItems={"center"} direction={"row"} spacing={2}>
-              {[1, 2, 3].map((el) => (
+              {[1, 2, 3].map(() => (
                 <Box
                   sx={{
                     borderRadius: "5px",

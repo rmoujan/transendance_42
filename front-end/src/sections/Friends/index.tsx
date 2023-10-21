@@ -85,8 +85,8 @@ const Friends = () => {
             {/* <SimpleBarStyle> */}
               <Stack>
                 {/* ==> here's where i will do contact <== */}
-                {ContactList.map((el) => {
-                    return <ContactElements {...el} />
+                {ContactList.map((el, index) => {
+                    return <ContactElements key={index} {...el} />
                     
                 })}
               </Stack>

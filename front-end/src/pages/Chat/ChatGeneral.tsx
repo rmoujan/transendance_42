@@ -1,12 +1,11 @@
-import React from "react";
 import { Box, Stack } from "@mui/material";
+import InfosContact from "../../components/contactTypes/InfosContact";
+import SharedMsgs from "../../components/contactTypes/SharedMsgs";
+import StarredMsgs from "../../components/contactTypes/StarredMsgs";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import Converstation from "../../sections/Converstation";
 import NoChat from "../../sections/NoChat";
 import ChatTabs from "./ChatTabs";
-import Converstation from "../../sections/Converstation";
-import InfosContact from "../../components/contactTypes/InfosContact";
-import StarredMsgs from "../../components/contactTypes/StarredMsgs";
-import SharedMsgs from "../../components/contactTypes/SharedMsgs";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
 const ChatGeneral = () => {
   const { contact } = useAppSelector((state) => state);
