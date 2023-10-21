@@ -52,6 +52,7 @@
     "react-scripts": "^3.0.1",
     "redux": "^4.2.1",
     "redux-persist": "^6.0.0",
+    "socket.io-client": "^4.7.2",
     "styled-components": "^6.1.0",
     "tailwind-scrollbar": "^3.0.5",
     "web-vitals": "^3.5.0",

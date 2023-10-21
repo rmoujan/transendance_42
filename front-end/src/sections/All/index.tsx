@@ -1,11 +1,17 @@
 import { Box, Stack } from '@mui/material';
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Search, SearchIconWrapper, StyledInputBase } from '../../components/search';
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import ChatElements from '../../components/ChatElements';
 import { ChatList } from '../../data';
+import { socket } from '../../socket'
 
 const All = () => {
+
+  useEffect(() => {
+    // emit socket
+  }, [])
+  
   return (
     <Box
       sx={{
