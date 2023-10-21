@@ -21,6 +21,7 @@ const initialState: Contact = {
 export const ContactSlice = createSlice({
   name: "contact",
   initialState,
+  
   reducers: {
     toggleDialog(state) {
       state.contactInfos.open = !state.contactInfos.open;
