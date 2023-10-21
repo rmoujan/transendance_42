@@ -30,7 +30,7 @@ const ChatInput = ({ setOpenEmojis }:any) => {
       InputProps={{
         disableUnderline: true,
         endAdornment: (
-          <InputAdornment position="end">
+          <InputAdornment>
             <Tooltip title="Photo/Video">
                 <IconButton>
                 {" "}
@@ -63,7 +63,7 @@ const ChatInput = ({ setOpenEmojis }:any) => {
 const Chatbox = () => {
   const [openEmojis, setOpenEmojis] = React.useState(false);
   return (
-    <Box sx={{ padding: "16px 24px", width: "100%",background: "#8979AC", WebkitBorderBottomLeftRadius: "25px", WebkitBorderBottomRightRadius: "25px" }}>
+    <Box sx={{ padding: "16px 24px", width: "100%",background: "#8979AC", WebkitBorderBottomLeftRadius: "38px", WebkitBorderBottomRightRadius: "38px" }}>
       <Stack
         direction="row"
         alignItems={"center"}

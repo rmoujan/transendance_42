@@ -36,11 +36,9 @@ let AuthController = class AuthController {
             return (req);
         }
         if (user.IsFirstTime) {
-            {
-                console.log('first time');
-                await this.prisma.user.update({ where: { id_user: req.user.id }, data: { IsFirstTime: false } });
-                res.redirect('http://localhost:5173/setting');
-            }
+            console.log('first time');
+            await this.prisma.user.update({ where: { id_user: req.user.id }, data: { IsFirstTime: false } });
+            res.redirect('http://localhost:5173/setting');
         }
         else {
             console.log('not first time');

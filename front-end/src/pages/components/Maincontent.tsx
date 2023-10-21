@@ -26,7 +26,6 @@ function Maincontent() {
               <img
                 className=" xl:ml-auto  mobile:block mobile:ml-14 mobile:-mt-14  mobile:max-w-[100%]  laptop:hidden tablet:hidden tablet:max-w-[70%]"
                 src={Group}
-                alt=""
               />
                 <p className=" flex mobile:text-center p-2 tablet:text-left  w-auto text-stone-300 text-xs font-normal ">
                   FREE-TO-PLAY . PLAY-TO-EARN

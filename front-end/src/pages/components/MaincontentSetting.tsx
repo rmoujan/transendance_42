@@ -7,6 +7,8 @@ import { fadeIn } from "./variants";
 import axios from "axios";
 import AboutMe from "./AboutMe";
 import Cover from "../../img/bg33.png";
+import Path from "./Path";
+import { da } from "@faker-js/faker";
 
 
 type User = {
@@ -20,6 +22,9 @@ type User = {
 function MaincontentSetting() {
 
   const [twoFactor, setTwoFactor] = useState<User[]>([]);
+  const [name, setName] = useState<string>("");
+  const [photo, setPhoto] = useState<File | null>(null);
+
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get("http://localhost:3000/auth/get-user", {
@@ -80,6 +85,103 @@ function MaincontentSetting() {
     }
   }
 
+  const EditProfileName = async () => {
+    const backendURL = "http://localhost:3000/profile/modify-name";
+    const data = { name };
+
+    try {
+      const response = await axios.post(backendURL, data, {
+        withCredentials: true,
+      });
+
+      console.log("Name updated successfully");
+      // Update your UI with the new name if needed.
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  const Save = async () => {
+    const backendURLName = "http://localhost:3000/profile/modify-name";
+    const backendURLPhoto = "http://localhost:3000/profile/modify-photo";
+    const formData = new FormData();
+    formData.append("name", name);
+    if (photo) {
+      formData.append("photo", photo);
+    }
+    
+    const dataName = { name };
+    const dataPhoto = { photo };
+    console.log("dataName");
+    console.log(dataName);
+    console.log("dataPhoto");
+    console.log(dataPhoto);
+    console.log("formData");
+    console.log(formData);
+    try {
+      const responseName = await axios.post(backendURLName, dataName, {
+        withCredentials: true,
+      });
+      console.log("Name updated successfully");
+      // Update your UI with the new name if needed.
+    }
+    catch (error) {
+      console.error("Error:", error);
+    }
+    try {
+      const responsePhoto = await axios.post(backendURLPhoto, formData, {
+        withCredentials: true,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+      });
+      console.log("Photo updated successfully");
+      // Update your UI with the new name if needed.
+    }
+    catch (error) {
+      console.error("Error:", error);
+    }
+    // const backendURL = "http://localhost:3000/auth/Save";
+    // console.log(name)
+    // console.log(photo)
+    // try {
+    //   const response = await axios.post(backendURL, formData, {
+    //     withCredentials: true,
+    //   });
+
+    //   console.log("Profile updated successfully.");
+    //   console.log("Backend response:", response.data);
+
+    //   // Update your UI or show a success message.
+    // } catch (error) {
+    //   console.error("Error:", error);
+    // }
+  }
+
+  const [p, setP] = useState<string | undefined>(undefined);
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    // Get the first selected file
+    const selectedFile = e.target.files && e.target.files[0];
+    if (selectedFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const dataURL =  e.target?.result as string;
+        setP(dataURL);
+        
+        console.log("dataURL");
+        console.log(dataURL);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+    console.log("p");
+    console.log(p);
+
+
+    if (e.target.files) {
+      setPhoto(e.target.files[0]);
+    }
+  };
 
   return (
     <>
@@ -141,19 +243,45 @@ function MaincontentSetting() {
                           </div>
                         </div>
                       </div>
-                      <div className=" flex flex-row text-white items-center text-center">
+                      {/* <div className=" flex flex-row text-white items-center text-center">
                         <TbUserEdit className="text-2xl" />
-                        <div className=" ml-3 text-lg text-center items-center">
-                          Edit Profile Photo
-                        </div>
+                        <input
+                          className="bg-transparent border-2 border-white rounded-2xl p-2 ml-3 w-40  text-white"
+                          type="text"
+                          placeholder="Edit Profile Name"
+                          onClick={EditProfileName}
+
+                        />
+                      </div> */}
+                      <div className="flex flex-row text-white items-center text-center">
+                        <TbUserEdit className="text-2xl" />
+                        <input
+                          className="bg-transparent border-2 border-white rounded-2xl p-2 ml-3 w-40 text-white"
+                          type="text"
+                          placeholder="Edit Profile Name"
+                          value={name} // Make sure to bind the input value to a state variable
+                          onChange={(e) => setName(e.target.value)} // Handle the name change
+                        />
                       </div>
+                      {/* <button
+                        className="flex justify-center items-center text-white text-lg bg-[#7ca732] rounded-2xl p-3 px-5 mt-5"
+                        onClick={EditProfileName}
+                      >
+                        Save
+                      </button> */}
                       <div className=" flex flex-row text-white items-center text-center mt-5">
                         <TbPhotoEdit className="text-2xl" />
-                        <div className=" ml-3 text-lg text-center items-center">
-                          Edit Profile Name
+                        <div className=" ml-3 text-lg w-72 text-center items-center p-2 border-2 border-white rounded-2xl">
+                          <input type="file" onChange={handlePhotoChange} />
                         </div>
+                        {/* <input type="file" onChange={handlePhotoChange} /> */}
                       </div>
+                      <button className=" flex justify-center items-center text-white text-lg bg-[#7ca732] rounded-2xl p-3 px-5 mt-5" onClick={Save}>
+                        Save
+                      </button>
                       <div className=" flex flex-row text-white items-center text-center mt-5">
+                          {photo && <img src={p} alt="User Photo" />}
+                          {/* <img class="h-full w-full rounded-full " src="/Volumes/TOSHIBA EXT/last_transcendence/front-end/src/uploads/Group 11.png" alt=""> */}
 
                         {/* <button className=" text-lg bg-slate-600 rounded-2xl p-3" onClick={handelTwoFactor}>TwoFactor </button> */}
                       </div>
@@ -190,9 +318,9 @@ function MaincontentSetting() {
                     About me
                   </div>
                   {/* <div className=" flex justify-start items-start lg-laptop:justify-center lg-laptop:items-center"> */}
-                    <div className="flex  justify-center h-full bg-gradient-to-tr tablet:w-[50%]  lg-laptop:w-full from-[#3F3B5B] via-[#2a2742af] to-[#454069c7] shadow-2xl p-4  tablet:p-8 rounded-[46px]">
-                      <AboutMe />
-                      {/* <p className="leading-relaxed mb-6 text-[#A3AED0]">
+                  <div className="flex  justify-center h-full bg-gradient-to-tr tablet:w-[50%]  lg-laptop:w-full from-[#3F3B5B] via-[#2a2742af] to-[#454069c7] shadow-2xl p-4  tablet:p-8 rounded-[46px]">
+                    <AboutMe />
+                    {/* <p className="leading-relaxed mb-6 text-[#A3AED0]">
                         Synth chartreuse iPhone lomo cray raw denim brunch
                         everyday carry neutra before they sold out fixie 90's
                         microdosing. Tacos pinterest fanny pack venmo,

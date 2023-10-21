@@ -29,11 +29,12 @@ export class ProfileController {
 
     @Post('modify-photo')
     @UseInterceptors(FileInterceptor('photo'))
-    Photo__Modification(@UploadedFile() photo, @Req() req, @Res() res){
-      
+    Photo__Modification(@Body() data:any ,@UploadedFile() photo, @Req() req, @Res() res){
+
+      // console.log(data.photo);
       this.Profile.ModifyPhoto(photo, req, res);
       console.log(photo);
-      res.status(200).json({msg: 'photo well setted'});
+      // res.status(200).json({msg: 'photo well setted'});
       // const filePath = 'uploads/' + photo.originalname; // Use the original name or generate a unique name
       // fs.writeFileSync(filePath, photo.buffer);
 

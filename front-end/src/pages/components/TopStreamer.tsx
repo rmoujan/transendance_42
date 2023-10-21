@@ -4,7 +4,7 @@ import badge from "../../img/badge.png";
 import Maskgroup from "../../img/Maskgroupp.png";
 import { handelProfile } from "./RightbarData";
 import { useNavigate } from "react-router-dom";
-
+import Path from "./Path";
 interface TopStreamerDataProps {
   toggle: boolean;
 }
@@ -21,10 +21,10 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
         {topData.map((data) => {
           return (
             <div
+            key={data.id}
               className={`${
                 toggle ? "last:w-[3.6rem]" : "last:w-[17rem]"
               } rightbar left-4 bottom-4 flex flex-col tablet:pl-28 laptop:pl-0`}
-              key={data.id}
             >
               <div className="relative flex tablet:flex-row mobile:flex-col  items-center tablet:-ml-32 mobile:-ml-48 lg:ml-0">
                 <div className=" flex flex-row items-center justify-center">
@@ -66,13 +66,16 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
       {/* <img src="http://www.w3.org/2000/svg" 
            className="text-yellow-400  h-16 w-16" 
            /> */}
-      <path
+           {/* <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg> */}
+      {/* <Path
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="2"
         d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21
                  12a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
+      /> */}
     </div>
   );
 };

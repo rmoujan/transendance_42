@@ -6,5 +6,5 @@ export declare class ProfileController {
     Name_Modification(data: CreateUserDto, req: any, res: any): {
         msg: string;
     };
-    Photo__Modification(photo: any, req: any, res: any): void;
+    Photo__Modification(data: any, photo: any, req: any, res: any): void;
 }

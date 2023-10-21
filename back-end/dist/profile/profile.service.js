@@ -23,13 +23,13 @@ let ProfileService = class ProfileService {
         const Token = req.cookies['cookie'];
         const verifyToekn = this.jwt.verify(Token);
         try {
-            await this.prisma.user.update({
-                where: { name: verifyToekn.name },
+            const user = await this.prisma.user.update({
+                where: { id_user: verifyToekn.id },
                 data: {
                     name: dat.name,
                 },
             });
-            verifyToekn.name = dat.name;
+            verifyToekn.login = dat.name;
             res.cookie('cookie', this.jwt.sign(verifyToekn));
         }
         catch (error) {
@@ -39,16 +39,18 @@ let ProfileService = class ProfileService {
     }
     async ModifyPhoto(photo, req, res) {
         const verifyToken = this.jwt.verify(req.cookies['cookie']);
-        const filePath = '/Users/mmanouze/Desktop/oauth-42-project/uploads/' + photo.originalname;
+        const filePath = '/Volumes/TOSHIBA EXT/last_transcendence/front-end/public/uploads/' + photo.originalname;
+        const rightPath = 'public/uploads/' + photo.originalname;
+        console.log(photo.originalname);
         fs.writeFileSync(filePath, photo.buffer);
         try {
             await this.prisma.user.update({
-                where: { name: verifyToken.name },
+                where: { id_user: verifyToken.id },
                 data: {
-                    avatar: filePath,
+                    avatar: rightPath,
                 },
             });
-            verifyToken.avatar = filePath;
+            verifyToken.avatar = rightPath;
             res.cookie('cookie', this.jwt.sign(verifyToken));
         }
         catch (error) {

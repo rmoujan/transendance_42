@@ -65,7 +65,6 @@ const Channels = () => {
                   // neeed to make it center
                   backgroundColor: "#806EA9", // Change the background color to purple
                   color: "#3D2E5F", // Change the text color to white
-                  borderRadius: "21px",
                   "&:hover": {
                     backgroundColor: "#684C83", // Change the background color on hover
                     color: "#C7BBD1",
@@ -84,9 +83,8 @@ const Channels = () => {
                   fontSize: "18px", // Adjust the font size as needed
                   padding: "10px 17px", // Adjust the padding as needed
                   // neeed to make it center
-                  backgroundColor: "#806EA9", // Change the background color to purple
+                  backgroundColor: "#443263", // Change the background color to purple
                   color: "#3D2E5F", // Change the text color to white
-                  borderRadius: "21px",
                   "&:hover": {
                     backgroundColor: "#684C83", // Change the background color on hover
                     color: "#C7BBD1",
@@ -110,8 +108,8 @@ const Channels = () => {
           >
             {/* <SimpleBarStyle> */}
             <Stack>
-              {ChatList.filter((el) => !el.pinned).map((el, index) => {
-                return <ChatElements key={index} {...el} />;
+              {ChatList.filter((el) => !el.pinned).map((el) => {
+                return <ChatElements {...el} />;
               })}
             </Stack>
             {/* </SimpleBarStyle> */}

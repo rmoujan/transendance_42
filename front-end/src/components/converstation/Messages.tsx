@@ -1,4 +1,3 @@
-import React from "react";
 import { Box, Stack } from "@mui/material";
 import { Chat_History } from "../../data";
 import { MediaMsg, ReplyMsg, TextMsg, Timeline } from "./MsgTypes.tsx";

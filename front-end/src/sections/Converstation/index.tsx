@@ -11,8 +11,8 @@ import Chatbox from "../../components/converstation/Chatbox";
 const Converstation = () => {
   return (
     <Stack height={"100%"} maxHeight={"100vh"} width={"auto"} className="shadow-2xl" sx={{
-      // borderRadius: "44px",
-      // backgroundColor: "#806EA9",
+      borderRadius: "64px",
+      backgroundColor: "#806EA9",
     }}>
       {/* header chat */}
       <Header/>

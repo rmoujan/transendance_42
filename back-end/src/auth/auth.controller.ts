@@ -31,7 +31,7 @@ export class AuthController {
     @Get('login/42/redirect')
     @UseGuards(AuthGuard('42'))
     async redirect(@Req() req:any, @Res() res:any){
-
+      // console.log('alright');
       const accessToken = this.jwt.sign(req.user);
       // console.log(req.user);
       res.cookie('cookie', accessToken/*, { maxage: 99999 , secure: false}*/).status(200);
@@ -43,11 +43,9 @@ export class AuthController {
         return (req);
       }
       if (user.IsFirstTime){
-        {
           console.log('first time');
           await this.prisma.user.update({where : { id_user : req.user.id }, data: {IsFirstTime: false}});
           res.redirect('http://localhost:5173/setting');
-        }
       }
       else
       {

@@ -52,7 +52,7 @@ code {
     @apply absolute w-auto p-2 m-2 -mt-11 ml-7 min-w-max left-14 rounded-[10px] shadow-md text-white bg-gradient-to-tr from-[#d8522959] via-[#2A2742] to-[#fe764d59] text-xs font-bold transition-all duration-500 scale-0 origin-left 
   }
   .profile-card{
-    @apply absolute -left-60 -mt-12 p-2 min-w-max rounded-[25px] shadow-md text-white text-xs bg-[#bd4c2959] font-bold transition-all duration-500 scale-0 origin-right
+    @apply absolute -left-60 -mt-12 p-2 min-w-max rounded-[25px] shadow-md text-white text-xs bg-[#35324d] font-bold transition-all duration-500 scale-0 origin-right
   }
   /* bg-gradient-to-tr from-[#3F3B5B] via-[#2A2742] to-[#302c4bc7] */
   .radial-progress {

@@ -16,7 +16,7 @@ import {
 } from "@phosphor-icons/react";
 import StyledBadge from "./StyledBadge";
 import { useAppDispatch, useAppSelector } from "../redux/store/store";
-import { mutedContact, selectConversation } from "../redux/slices/contact";
+import { selectConversation } from "../redux/slices/contact";
 
 interface State {
   amount: string;
@@ -56,8 +56,6 @@ const ContactElements = (cont: Props) => {
   const handleClickMuted = () => {
     // ! emit "mute_converstation" event
     // socket.emit("mute_converstation", { to: _id, from: user_id });
-    dispatch(mutedContact({room_id: id}))
-    
     if (values.muted === true) {
       console.log("unmute");
     } else {
@@ -113,8 +111,7 @@ const ContactElements = (cont: Props) => {
           >
             <Chat />
           </IconButton>
-          <IconButton aria-label="mute contact" onClick={
-            handleClickMuted}>
+          <IconButton aria-label="mute contact" onClick={handleClickMuted}>
             {values.muted ? <SpeakerSimpleSlash /> : <SpeakerSimpleNone />}
           </IconButton>
 

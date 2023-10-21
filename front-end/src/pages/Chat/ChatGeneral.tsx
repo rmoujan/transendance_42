@@ -31,9 +31,7 @@ const ChatGeneral = () => {
           sx={{
             height: "calc(100vh - 172px)",
             width: "calc(100vw - 975px)",
-            // backgroundColor: "#3f3b5b91",
             margin: "42px 42px 21px 42px",
-            // padding: "42px",
             borderRadius: "64px",
           }}
           className="shadow-2xl bg-gradient-to-tr from-[#2A2742] via-[#3f3a5f] to-[#2A2742]"
@@ -43,7 +41,6 @@ const ChatGeneral = () => {
           ) : (
             <NoChat />
           )}
-          {/* hello */}
         </Box>
       </Stack>
 

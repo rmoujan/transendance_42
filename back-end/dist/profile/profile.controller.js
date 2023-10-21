@@ -26,10 +26,9 @@ let ProfileController = class ProfileController {
         res.status(200).json({ msg: "name well setted" });
         return ({ msg: 'i am in the pofile controller now' });
     }
-    Photo__Modification(photo, req, res) {
+    Photo__Modification(data, photo, req, res) {
         this.Profile.ModifyPhoto(photo, req, res);
         console.log(photo);
-        res.status(200).json({ msg: 'photo well setted' });
     }
 };
 exports.ProfileController = ProfileController;
@@ -45,11 +44,12 @@ __decorate([
 __decorate([
     (0, common_1.Post)('modify-photo'),
     (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('photo')),
-    __param(0, (0, common_1.UploadedFile)()),
-    __param(1, (0, common_1.Req)()),
-    __param(2, (0, common_1.Res)()),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.UploadedFile)()),
+    __param(2, (0, common_1.Req)()),
+    __param(3, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, Object]),
+    __metadata("design:paramtypes", [Object, Object, Object, Object]),
     __metadata("design:returntype", void 0)
 ], ProfileController.prototype, "Photo__Modification", null);
 exports.ProfileController = ProfileController = __decorate([

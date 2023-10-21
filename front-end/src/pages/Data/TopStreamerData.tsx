@@ -9,17 +9,20 @@ export const topData = [
     src:Arcane,
     name:"Jinx",
     rank: Badge,
+    email: "lelbakna@1337.ma",
   },
   {
     id:98853,
     src:Girl,
     name:"Reshe",
     rank:"02",
+    email:"mmanouze@1337.ma",
   },
   {
     id:3,
     src:Luffy,
     name:"Luffy",
-    rank:"03"
+    rank:"03",
+    email: "rmoujan@1337.ma"
   },
 ]

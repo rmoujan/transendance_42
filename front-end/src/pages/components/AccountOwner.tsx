@@ -38,7 +38,9 @@ function AccountOwner( { user }: AccountOwnerProps ) {
     <div className="bg-[#3f3b5b91] min-w-screen lg-laptop:w-[70%]  lg-laptop:mt-16 rounded-3xl mb-11 shadow-2xl">
       {user.map((data) => {
         return (
-          <div className="dark:!bg-navy-800 shadow-shadow-500 mb-5 shadow-3xl flex justify-center rounded-primary relative mx-auto  h-full w-full max-w-[90rem] flex-col items-center bg-cover bg-clip-border p-[16px] dark:text-white dark:shadow-none">
+          <div 
+          key={data.id_user}
+          className="dark:!bg-navy-800 shadow-shadow-500 mb-5 shadow-3xl flex justify-center rounded-primary relative mx-auto  h-full w-full max-w-[90rem] flex-col items-center bg-cover bg-clip-border p-[16px] dark:text-white dark:shadow-none">
             <div
               className="relative flex h-72 w-full md:w-[35rem] lg-laptop:w-[120rem] justify-center items-end rounded-3xl bg-cover -mt-3 shadow-lg"
               title="object-center"

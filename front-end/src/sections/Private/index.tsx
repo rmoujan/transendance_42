@@ -84,15 +84,13 @@ const Privates = () => {
                 fontSize: "18px", // Adjust the font size as needed
                 padding: "8px 53px", // Adjust the padding as needed
                 // neeed to make it center
-                backgroundColor: "#806EA9", // Change the background color to purple
-                color: "#3D2E5F", // Change the text color to white
-                borderRadius: "21px",
+                backgroundColor: "red", // Change the background color to purple
+                color: "#C7BBD1", // Change the text color to white
                 "&:hover": {
-                  backgroundColor: "#684C83", // Change the background color on hover
-                  color: "#C7BBD1",
+                  backgroundColor: "darkpurple", // Change the background color on hover
+                  color: "#443263",
                 },
               }}
-              variant="contained"
             >
               Archive
             </ColorButton>

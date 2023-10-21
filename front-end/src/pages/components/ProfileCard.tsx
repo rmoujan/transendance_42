@@ -6,10 +6,10 @@ import Cover from "../../img/bg33.png";
 
 function ProfileCard() {
   return (
-    <div className="transition-all ">
+    <div className="transition-all">
       {Data.map((data) => {
         return (
-          <div key={data.id} className="flex flex-col justify-center items-center">
+          <div key={data.id} className="flex flex-col justify-center items-center ">
             <div className="relative mt-1 flex h-32 w-full items-end justify-center rounded-xl bg-cover" style={{backgroundImage: `url(${Cover})`}}>
             
             <img
