@@ -1,13 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Box, Stack } from "@mui/material";
 import { Chat_History } from "../../data";
 import { MediaMsg, ReplyMsg, TextMsg, Timeline } from "./MsgTypes.tsx";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { socket } from "../../socket.ts";
+import {
+  fetchCurrentMessages,
+  setCurrentConverstation,
+} from "../../redux/slices/converstation";
 
 const Messages = () => {
+  const dispatch = useAppDispatch();
+  const { conversations, current_messages } = useAppSelector(
+    (state) => state.converstation.direct_chat
+  );
+
+  const { room_id } = useAppSelector((state) => state.contact);
+
+  useEffect(() => {
+    const current = conversations.find((el) => el?.id === room_id);
+
+    socket.emit("get_messages", { conversation_id: current?.id }, (data) => {
+      // data => list of messages
+      console.log(data, "List of messages");
+      dispatch(fetchCurrentMessages({ messages: data }));
+    });
+
+    dispatch(setCurrentConverstation(current));
+  }, []);
+
   return (
-    <Box p={2} sx={{ width: "100%", flexGrow: "1", borderRadius: '64px' }}>
+    <Box p={2} sx={{ width: "100%", flexGrow: "1", borderRadius: "64px" }}>
       <Stack spacing={2}>
-        {Chat_History.map((el) => {
+        {current_messages.map((el) => {
           switch (el.type) {
             case "divider":
               return <Timeline el={el} />;

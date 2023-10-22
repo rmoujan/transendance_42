@@ -14,38 +14,42 @@ const initialState = {
   },
 };
 
-
 export const ConverstationSlice = createSlice({
-    name: "converstation",
-    initialState,
-    reducers: {
-        fetchConverstation(state, action) {
-          // ! get all converstation
-          state.direct_chat.conversations = action.payload
-        },
-        updatedConverstation(state, action) {
-          // * update converstation
-            state.direct_chat.conversations = action.payload;
-        },
-        addConversation(state, action) {
-          // ? adding new converstattion
-            state.direct_chat.current_conversation = action.payload;
-        },
-        setCurrentConverstation(state, action) {
-          // * set current converstation
-          state.direct_chat.current_conversation = action.payload;
-        },
-        fetchCurrentMessages(state, action) {
-          // ! get all messages of current converstation
-          state.direct_chat.current_messages = action.payload;
-        }
-        
-      }
-        
-})
+  name: "converstation",
+  initialState,
+  reducers: {
+    fetchConverstation(state, action) {
+      // ! get all converstation
+      state.direct_chat.conversations = action.payload;
+    },
+    updatedConverstation(state, action) {
+      // * update converstation
+      state.direct_chat.conversations = action.payload;
+    },
+    addConversation(state, action) {
+      // ? adding new converstattion
+      state.direct_chat.current_conversation = action.payload;
+    },
+    setCurrentConverstation(state, action) {
+      // * set current converstation
+      state.direct_chat.current_conversation = action.payload;
+    },
+    fetchCurrentMessages(state, action) {
+      // ! get all messages of current converstation
+      state.direct_chat.current_messages = action.payload;
+    },
+  },
+});
 
 export default ConverstationSlice.reducer;
 
+export const {
+  fetchConverstation,
+  updatedConverstation,
+  addConversation,
+  setCurrentConverstation,
+  fetchCurrentMessages,
+} = ConverstationSlice.actions;
 
 /*
   fetchDirectConversations(state, action) {

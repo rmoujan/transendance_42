@@ -9,11 +9,11 @@ export interface Contact {
   room_id: string;
   muted: boolean;
   blocked: boolean;
-  snackbar : {
+  snackbar: {
     open: boolean;
     severity: string;
     message: string;
-  },
+  };
 }
 
 const initialState: Contact = {
@@ -27,15 +27,15 @@ const initialState: Contact = {
   blocked: false,
   snackbar: {
     open: false,
-    severity: '',
-    message: '',
+    severity: "",
+    message: "",
   },
 };
 
 export const ContactSlice = createSlice({
   name: "contact",
   initialState,
-  
+
   reducers: {
     toggleDialog(state) {
       state.contactInfos.open = !state.contactInfos.open;
@@ -48,13 +48,11 @@ export const ContactSlice = createSlice({
       state.type_chat = "individual";
       state.room_id = action.payload.room_id;
     },
-    mutedContact(state, action)
-    {
+    mutedContact(state, action) {
       state.room_id = action.payload.room_id;
       state.muted = !state.muted;
     },
-    blockedContact(state, action)
-    {
+    blockedContact(state, action) {
       state.room_id = action.payload.room_id;
       state.blocked = !state.blocked;
     },
@@ -67,14 +65,14 @@ export const ContactSlice = createSlice({
     closeSnackBar(state) {
       console.log("This is getting executed");
       state.snackbar.open = false;
-      state.snackbar.message = '';
+      state.snackbar.message = "";
     },
   },
 });
 
 export const showSnackbar =
   ({ severity, message }: any) =>
-  async (dispatch:any, getState:any) => {
+  async (dispatch: any, getState: any) => {
     dispatch(
       ContactSlice.actions.openSnackBar({
         message,
@@ -86,6 +84,11 @@ export const showSnackbar =
       dispatch(ContactSlice.actions.closeSnackBar());
     }, 4000);
   };
-export const { toggleDialog, updatedContactInfo, selectConversation, mutedContact, closeSnackBar} =
-  ContactSlice.actions;
+export const {
+  toggleDialog,
+  updatedContactInfo,
+  selectConversation,
+  mutedContact,
+  closeSnackBar,
+} = ContactSlice.actions;
 export default ContactSlice.reducer;
