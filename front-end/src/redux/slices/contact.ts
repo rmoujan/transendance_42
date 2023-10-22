@@ -8,11 +8,12 @@ export interface Contact {
   type_chat: string;
   room_id: string;
   muted: boolean;
+  blocked: boolean;
   snackbar : {
     open: boolean;
     severity: string;
     message: string;
-  }
+  },
 }
 
 const initialState: Contact = {
@@ -23,6 +24,7 @@ const initialState: Contact = {
   type_chat: "",
   room_id: "",
   muted: false,
+  blocked: false,
   snackbar: {
     open: false,
     severity: '',
@@ -50,6 +52,11 @@ export const ContactSlice = createSlice({
     {
       state.room_id = action.payload.room_id;
       state.muted = !state.muted;
+    },
+    blockedContact(state, action)
+    {
+      state.room_id = action.payload.room_id;
+      state.blocked = !state.blocked;
     },
     openSnackBar(state, action) {
       console.log(action.payload);

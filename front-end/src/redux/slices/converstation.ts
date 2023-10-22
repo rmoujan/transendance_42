@@ -44,6 +44,8 @@ export const ConverstationSlice = createSlice({
         
 })
 
+export default ConverstationSlice.reducer;
+
 
 /*
   fetchDirectConversations(state, action) {

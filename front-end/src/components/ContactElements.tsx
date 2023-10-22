@@ -15,7 +15,7 @@ import {
   UserMinus,
 } from "@phosphor-icons/react";
 import StyledBadge from "./StyledBadge";
-import { useAppDispatch, useAppSelector } from "../redux/store/store";
+import { useAppDispatch } from "../redux/store/store";
 import { mutedContact, selectConversation } from "../redux/slices/contact";
 
 interface State {
@@ -105,6 +105,7 @@ const ContactElements = (cont: Props) => {
         <Stack direction={"row"} spacing={1}>
           <IconButton
             onClick={() => {
+
               console.log("Start Converstation");
               // ! emit "start_converstation" event
               dispatch(selectConversation({room_id: id}));
@@ -130,6 +131,8 @@ const ContactElements = (cont: Props) => {
           <IconButton
             onClick={() => {
               console.log("Block Contact");
+              // ! emit "block_contact" event
+              // socket.emit("block_contact", { to: _id, from: user_id });
             }}
           >
             <Prohibit />

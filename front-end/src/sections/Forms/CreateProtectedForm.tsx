@@ -60,6 +60,12 @@ const CreateProtectedForm = ({ handleClose }: any) => {
     } catch (error) {
       console.error(error);
       reset();
+      dispatch(
+        showSnackbar({
+          severity: "failed",
+          message: "Create Protected Channel Failed",
+        })
+      );
     }
   };
 

@@ -32,7 +32,7 @@ const CreatePublicForm = ({ handleClose }: any) => {
     watch, // watch input value by passing the name of it
     setError, // setError by input name
     handleSubmit, // form submit function
-    formState: { errors, isSubmitted, isSubmitSuccessful, isValid }, // errors and form state
+    formState: { errors }, // errors and form state
   } = methods; // useful methods from useForm()
 
   const onSubmit = async (data: any) => {
@@ -48,6 +48,12 @@ const CreatePublicForm = ({ handleClose }: any) => {
     } catch (error) {
       console.log("error", error);
       reset();
+      dispatch(
+        showSnackbar({
+          severity: "failed",
+          message: "Create Public Channel Failed",
+        })
+      );
     }
   };
   return (
