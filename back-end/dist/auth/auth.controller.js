@@ -150,6 +150,7 @@ let AuthController = class AuthController {
     }
     async Get_User(req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
+        console.log(decoded);
         let obj = [];
         const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id }, });
         obj.push(user);

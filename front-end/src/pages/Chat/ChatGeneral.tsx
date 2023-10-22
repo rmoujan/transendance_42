@@ -6,12 +6,24 @@ import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import Converstation from "../../sections/Converstation";
 import NoChat from "../../sections/NoChat";
 import ChatTabs from "./ChatTabs";
+import axios from "axios";
+
+async function getUserData() {
+  try {
+    const response = await axios.get("http://localhost:3000/auth/get-user", { withCredentials: true });
+    const data = response.data;
+    // console.log(data);
+    return data; // You can return the data if needed
+  } catch (error) {
+    // console.error(error);
+    throw error; // You can throw an error if there was a problem with the request
+  }
+}
 
 const ChatGeneral: React.FC = () => {
-  const { contact } = useAppSelector((state) => state);
+  const { contact, profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
-  const user_id = localStorage.getItem("user_id");
-  console.log(user_id);
+  console.log('==========>', profile);
 
   // Create a function to render the component conditionally
   const renderContactInfoComponent = () => {

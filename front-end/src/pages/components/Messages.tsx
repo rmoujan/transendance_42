@@ -1,9 +1,13 @@
 import React from 'react'
 import ChatGeneral from '../Chat/ChatGeneral'
+import { useAppDispatch, useAppSelector } from '../../redux/store/store';
 
 function Messages() {
+  const dispatch = useAppDispatch();
+  const {_id} = useAppSelector((state) => state.profile);
+  
   return (
-    <div className='flex justify-center w-full text-white items-center text-6xl'
+    <div
     ><ChatGeneral />
     </div>
   )

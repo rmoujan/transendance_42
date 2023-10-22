@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
 import { styled } from "@mui/material/styles";
@@ -21,9 +21,15 @@ const StyledInput = styled(TextField)(() => ({
   },
 }));
 
-const ChatInput = ({ setOpenEmojis }:any) => {
+const ChatInput = ({ setOpenEmojis, setValue,
+  value, inputRef}:any) => {
   return (
     <StyledInput
+    inputRef={inputRef}
+    value={value}
+      onChange={(event) => {
+        setValue(event.target.value);
+      }}
       fullWidth
       placeholder="Write a message... "
       variant="filled"
@@ -51,7 +57,16 @@ const ChatInput = ({ setOpenEmojis }:any) => {
 
             <IconButton>
               {" "}
-              <PaperPlaneRight size={32} color="#C7BBD1" />{" "}
+              <PaperPlaneRight size={32} color="#C7BBD1"  onClick={() => {
+                console.log(value);
+                // socket.emit("text_message", {
+                //   message: linkify(value),
+                //   conversation_id: room_id,
+                //   from: user_id,
+                //   to: current_conversation.user_id,
+                //   type: containsUrl(value) ? "Link" : "Text",
+                // });
+              }}/>{" "}
             </IconButton>
                 </Tooltip>
           </InputAdornment>
@@ -60,8 +75,44 @@ const ChatInput = ({ setOpenEmojis }:any) => {
     />
   );
 };
+
+
+function linkify(text:string) {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text.replace(
+    urlRegex,
+    (url) => `<a href="${url}" target="_blank">${url}</a>`
+  );
+}
+
+
 const Chatbox = () => {
   const [openEmojis, setOpenEmojis] = React.useState(false);
+  const [value, setValue] = useState("");
+  const inputRef = useRef(null);
+
+  function handleEmojiClick(emoji:any) {
+    const input = inputRef.current;
+    console.log("emoji", emoji);
+    setValue(value + emoji);
+    console.log("input", input);
+
+    // if (input) {
+    //   const selectionStart = input.selectionStart;
+    //   const selectionEnd = input.selectionEnd;
+
+    //   setValue(
+    //     value.substring(0, selectionStart) +
+    //     emoji +
+    //     value.substring(selectionEnd)
+    //   );
+
+    //   // Move the cursor to the end of the inserted emoji
+    //   input.selectionStart = input.selectionEnd = selectionStart + 1;
+    // }
+  }
+
+  
   return (
     <Box sx={{ padding: "16px 24px", width: "100%",background: "#8979AC", WebkitBorderBottomLeftRadius: "25px", WebkitBorderBottomRightRadius: "25px" }}>
       <Stack
@@ -77,13 +128,15 @@ const Chatbox = () => {
               display: openEmojis ? "inline" : "none",
               zIndex: 10,
               position: "fixed",
-              bottom: 81,
-              right: 100,
+              bottom: 160,
+              left: "72%",
             }}
           >
-            <Picker data={data} onEmojiSelect={console.log} />
+            <Picker data={data} onEmojiSelect={(emoji:any) => {
+              handleEmojiClick(emoji.native)
+            }} />
           </Box>
-          <ChatInput setOpenEmojis={setOpenEmojis} />
+          <ChatInput setOpenEmojis={setOpenEmojis} setValue={setValue} value={value} inputRef={inputRef}/>
         </Stack>
       </Stack>
     </Box>
