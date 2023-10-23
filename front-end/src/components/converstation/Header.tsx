@@ -22,19 +22,19 @@ import { MenuOptions } from "./MsgTypes";
 const Header = () => {
   const dispatch = useAppDispatch();
 
-  // const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const [openInvite, setOpenInvite] = React.useState(false);
-  // const open = Boolean(anchorEl);
+  const open = Boolean(anchorEl);
 
   const handleCloseInvite = () => {
     setOpenInvite(false);
   };
-  // const handleClick = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
-  // const handleClose = () => {
-  //   setAnchorEl(null);
-  // };
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   return (
     <Box
       sx={{

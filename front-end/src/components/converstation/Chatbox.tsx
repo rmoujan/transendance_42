@@ -11,6 +11,7 @@ import {
   Tooltip,
 } from "@mui/material";
 import { ImageSquare, PaperPlaneRight, Smiley } from "@phosphor-icons/react";
+import { useAppSelector } from "../../redux/store/store";
 
 const StyledInput = styled(TextField)(() => ({
   "& .MuiInputBase-input": {
@@ -23,6 +24,7 @@ const StyledInput = styled(TextField)(() => ({
 
 const ChatInput = ({ setOpenEmojis, setValue,
   value, inputRef}:any) => {
+    const {contact} = useAppSelector((state) => state);
   return (
     <StyledInput
     inputRef={inputRef}
@@ -59,6 +61,7 @@ const ChatInput = ({ setOpenEmojis, setValue,
               {" "}
               <PaperPlaneRight size={32} color="#C7BBD1"  onClick={() => {
                 console.log(value);
+                console.log("contact", contact);
                 // socket.emit("text_message", {
                 //   message: linkify(value),
                 //   conversation_id: room_id,

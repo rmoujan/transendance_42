@@ -1,6 +1,6 @@
 import io from "socket.io-client"; // Add this
 
-let socket;
+let socket: any;
 
 const connectSocket = (user_id: string) => {
   socket = io("http://localhost:3001", {

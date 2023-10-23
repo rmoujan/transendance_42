@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ChatGeneral from "../Chat/ChatGeneral";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import {socket, connectSocket} from "../../socket"
+import { addConversation, updatedConverstation } from "../../redux/slices/converstation";
 
 function Messages() {
   const dispatch = useAppDispatch();
   const { _id , status} = useAppSelector((state) => state.profile);
+  const conversations = useAppSelector((state) => state.converstation.direct_chat);
 
   useEffect(() => {
     if (status) {
@@ -14,7 +16,7 @@ function Messages() {
         connectSocket(_id);
       }
 
-      socket.on("new_message", (data) => {
+      socket.on("new_message", (data: any) => {
         const message = data.message;
         console.log(message, data);
         // check if msg we got is from currently selected conversation
@@ -32,9 +34,9 @@ function Messages() {
         // }
       });
 
-      socket.on("start_chat", (data) => {
+      socket.on("start_chat", (data: any) => {
         console.log(data);
-        // add / update to conversation list
+        // ! add / update to conversation list
         const existing_conversation = conversations.find(
           (el) => el?.id === data._id
         );

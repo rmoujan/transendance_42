@@ -8,6 +8,7 @@ import {
   fetchCurrentMessages,
   setCurrentConverstation,
 } from "../../redux/slices/converstation";
+import ScrollBar from "../ScrollBar.tsx";
 
 const Messages = () => {
   const dispatch = useAppDispatch();
@@ -20,19 +21,20 @@ const Messages = () => {
   useEffect(() => {
     const current = conversations.find((el) => el?.id === room_id);
 
-    socket.emit("get_messages", { conversation_id: current?.id }, (data) => {
+    // socket.emit("get_messages", { conversation_id: current?.id }, (data: any) => {
       // data => list of messages
-      console.log(data, "List of messages");
-      dispatch(fetchCurrentMessages({ messages: data }));
-    });
+      // console.log(data, "List of messages");
+      // dispatch(fetchCurrentMessages({ messages: data }));
+    // });
 
     dispatch(setCurrentConverstation(current));
   }, []);
 
   return (
-    <Box p={2} sx={{ width: "100%", flexGrow: "1", borderRadius: "64px" }}>
+    <Box p={1} sx={{ width: "100%", borderRadius: "64px" }}>
+      <ScrollBar>
       <Stack spacing={2}>
-        {current_messages.map((el) => {
+        {Chat_History.map((el) => {
           switch (el.type) {
             case "divider":
               return <Timeline el={el} />;
@@ -57,6 +59,7 @@ const Messages = () => {
           }
         })}
       </Stack>
+      </ScrollBar>
     </Box>
   );
 };

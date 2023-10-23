@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Divider,
@@ -10,7 +10,42 @@ import {
 import Menu, { MenuProps } from '@mui/material/Menu';
 import { alpha, styled } from "@mui/material/styles";
 import { CaretDown, DotsThreeCircle } from "@phosphor-icons/react";
-import { Contact_menu, Message_options } from "../../data";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { mutedContact, toggleDialog } from "../../redux/slices/contact";
+
+const Message_options = [
+  {
+    title: "Reply",
+  },
+  {
+    title: "React to message",
+  },
+  {
+    title: "Star message",
+  },
+  {
+    title: "Delete Message",
+  },
+];
+
+const Contact_menu = [
+  {
+    title: "Info",
+  },
+  {
+    title: "Mute notifications",
+  },
+  {
+    title: "Clear messages",
+  },
+  {
+    title: "Delete Chat",
+  },
+  {
+    title: "Block",
+  },
+];
+
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -59,7 +94,7 @@ interface ReplyProps {
   reply: string;
 }
 
-const ReplyMsg = ({ el }:any) => {
+const ReplyMsg = ({ el }: any) => {
   return (
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
       <Box
@@ -170,24 +205,26 @@ const Timeline = ({ el }: any) => {
   );
 };
 
+// ~ this for options in messages
+
 const MsgOptions = () => {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [conversationMenuanchorEl, setConversationMenuAnchorEl] = React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const open = Boolean(anchorEl);
+  const openConversationMenu = Boolean(conversationMenuanchorEl);
 
   const handleMenuItemClick = (
     event: React.MouseEvent<HTMLElement>,
     index: number
   ) => {
     setSelectedIndex(index);
-    setAnchorEl(null);
+    setConversationMenuAnchorEl(null);
   };
   const handleClick = (event: any) => {
     console.log(event.currentTarget);
-    setAnchorEl(event.currentTarget);
+    setConversationMenuAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setAnchorEl(null);
+  const handleCloseConversationMenu = () => {
+    setConversationMenuAnchorEl(null);
   };
 
   return (
@@ -196,16 +233,16 @@ const MsgOptions = () => {
         size={20}
         color="#EADDFF"
         id="basic-button"
-        aria-controls={open ? "basic-menu" : undefined}
+        aria-controls={openConversationMenu ? "basic-menu" : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
+        aria-expanded={openConversationMenu ? "true" : undefined}
         onClick={handleClick}
       />
       <Menu
         id="basic-menu"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
+        anchorEl={conversationMenuanchorEl}
+        open={openConversationMenu}
+        onClose={handleCloseConversationMenu}
         MenuListProps={{
           "aria-labelledby": "basic-button",
         }}
@@ -222,7 +259,7 @@ const MsgOptions = () => {
     }, */}
           {/* ***** handle closing ***** */}
           {Message_options.map((e, index) => (
-            <MenuItem key={index} onClick={handleClick}>{e.title}</MenuItem>
+            <MenuItem key={index} onClick={handleCloseConversationMenu}>{e.title}</MenuItem>
           ))}
         </Stack>
       </Menu>
@@ -230,19 +267,59 @@ const MsgOptions = () => {
   );
 };
 
+// ~ this for options in contact list
+
 const MenuOptions = () => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+
+  const dispatch = useAppDispatch();
+  const { contact } = useAppSelector((state) => state);
+
+
+  const [conversationMenuanchorEl, setConversationMenuAnchorEl] = React.useState<null | HTMLElement>(null);
+  const openConversationMenu = Boolean(conversationMenuanchorEl);
+  const [selectedOption, setSelectedOption] = useState<string>('');
+
   const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
+    setConversationMenuAnchorEl(event.currentTarget);
   };
-  const handleCloseClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
-    console.log(anchorEl);
-    setAnchorEl(null);
-  }
+
+  const handleCloseClick = (event: any, index: number) => {
+    setConversationMenuAnchorEl(null);
+    setSelectedOption(Contact_menu[index].title);
+    console.log(`Selected option: ${Contact_menu[index].title}`, index);
+    switch (Contact_menu[index].title) {
+      case "Info":
+        dispatch(toggleDialog());
+        break;
+      case "Mute notifications":
+        console.log("Mute notifications");
+        // ! emit "mute_converstation" event
+        dispatch(mutedContact({room_id: contact.room_id}))
+        break;
+      case "Clear messages":
+        console.log("Clear messages");
+        // ! emit "Clear_messages" event
+        // socket.emit("clear_contact", { to: _id, from: user_id });
+        break;
+      case "Delete Chat":
+        console.log("Delete Chat");
+        break;
+      case "Block":
+        console.log("Block");
+        // ! emit "block_contact" event
+        // socket.emit("block_contact", { to: _id, from: user_id });
+        break;
+      default:
+        console.log("default");
+        break;
+    }
+
+
+
+  };
+
   const handleClose = () => {
-    setAnchorEl(null);
+    setConversationMenuAnchorEl(null);
   };
 
   return (
@@ -255,30 +332,29 @@ const MenuOptions = () => {
       <DotsThreeCircle
         size={36}
         color="#EADDFF"
-        id="demo-customized-button"
-        aria-controls={open ? "demo-customized-menu" : undefined}
+        id="converstation-positioned-button"
+        aria-controls={openConversationMenu ? "conversation-positioned-menu" : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? "true" : undefined}
+        aria-expanded={openConversationMenu ? "true" : undefined}
         onClick={handleClick}
       />
       <StyledMenu
-        id="demo-customized-menu"
-        anchorEl={anchorEl}
-        open={open}
+        id="conversation-positioned-menu"
+        anchorEl={conversationMenuanchorEl}
+        open={openConversationMenu}
         onClose={handleClose}
         MenuListProps={{
-          "aria-labelledby": "demo-customized-button",
+          "aria-labelledby": "converstation-positioned-button",
         }}
         PaperProps={{
           style: {
             backgroundColor: "#AE9BCD",
-            boxShadow: "none",
           },
         }}
       >
         <Stack spacing={1} px={1}>
           {Contact_menu.map((e, index) => (
-            <MenuItem key={index} onClick={handleCloseClick}>
+            <MenuItem key={index} onClick={(event) => handleCloseClick(event, index)}>
               {e.title}
             </MenuItem>
           ))}
