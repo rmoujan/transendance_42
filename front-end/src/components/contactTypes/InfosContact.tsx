@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Dialog,
-  DialogTitle,
   Divider,
   IconButton,
   Slide,
@@ -37,7 +36,7 @@ const Transition = React.forwardRef(function Transition(
 
 const InfosContact = () => {
   const dispatch = useAppDispatch();
-  const { contact } = useAppSelector((store) => store);
+  const { contact } = useAppSelector(store => store);
   console.log(contact);
 
   const [openBlock, setOpenBlock] = useState(false);
@@ -63,11 +62,14 @@ const InfosContact = () => {
       onClose={() => {
         dispatch(toggleDialog());
       }}
-      PaperProps={{ style: { backgroundColor: "#AE9BCD", borderRadius: "35px" } }}
+      PaperProps={{
+        style: { backgroundColor: "#AE9BCD", borderRadius: "35px" },
+      }}
       // aria-describedby="alert-dialog-slide-description"
     >
-
-      <Typography sx={{ m: "0 8px", p: 2 }} variant="h6">Contact info</Typography>
+      <Typography sx={{ m: "0 8px", p: 2 }} variant="h6">
+        Contact info
+      </Typography>
       {/* <DialogTitle sx={{ m: "0 8px", p: 2 }} >Contact info</DialogTitle> */}
       <IconButton
         aria-label="close"
@@ -78,7 +80,7 @@ const InfosContact = () => {
           position: "absolute",
           left: "22.7em",
           top: 10,
-          color: (theme) => theme.palette.grey[800],
+          color: theme => theme.palette.grey[800],
         }}
       >
         <X />

@@ -2,16 +2,14 @@ import { Box, Stack } from "@mui/material";
 import InfosContact from "../../components/contactTypes/InfosContact";
 import SharedMsgs from "../../components/contactTypes/SharedMsgs";
 import StarredMsgs from "../../components/contactTypes/StarredMsgs";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { useAppSelector } from "../../redux/store/store";
 import Converstation from "../../sections/Converstation";
 import NoChat from "../../sections/NoChat";
 import ChatTabs from "./ChatTabs";
 
-
 const ChatGeneral: React.FC = () => {
-  const { contact, profile } = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
-  console.log('==========>', profile);
+  const { contact, profile } = useAppSelector(state => state);
+  console.log("==========>", profile);
 
   // Create a function to render the component conditionally
   const renderContactInfoComponent = () => {

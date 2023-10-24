@@ -6,6 +6,9 @@ import Cover from "../../img/bg33.png";
 import { MdModeEditOutline } from "react-icons/md";
 import { Modal } from "antd";
 import axios from "axios";
+import { IconButton } from "@mui/material";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { toggleProfile } from "../../redux/slices/profile";
 type User = {
   id_user: number;
   name: string;
@@ -18,6 +21,8 @@ type AccountOwnerProps = {
   user: User[];
 };
 function AccountOwner( { user }: AccountOwnerProps ) {
+  const {profile} = useAppSelector((state) => state);
+  const dispatch = useAppDispatch();
 
   const [isEditingName, setIsEditingName] = useState(false);
 
@@ -47,13 +52,21 @@ function AccountOwner( { user }: AccountOwnerProps ) {
                 backgroundImage: `url(${Cover})`,
               }}
             >
+              <IconButton>
+
               <div className=" flex h-[98px] w-[98px] items-center -m-11 justify-center rounded-full border-[4px] border-white bg-slate-400">
                 <img
                   className="h-full w-full rounded-full "
                   src={data.avatar}
                   alt=""
-                />
+                  onClick={() => {
+                    console.log("this where it should show profile photo");
+                    console.log(profile);
+                    dispatch(toggleProfile());
+                  }}
+                  />
               </div>
+                  </IconButton>
             </div>
             {/* <div className="flex mt-16 justify-between items-center w-full">
               <div>first</div>

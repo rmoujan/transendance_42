@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Avatar,
   Box,
@@ -14,9 +13,10 @@ import {
   SpeakerSimpleSlash,
   UserMinus,
 } from "@phosphor-icons/react";
-import StyledBadge from "./StyledBadge";
-import { useAppDispatch } from "../redux/store/store";
+import React from "react";
 import { mutedContact, selectConversation } from "../redux/slices/contact";
+import { useAppDispatch } from "../redux/store/store";
+import StyledBadge from "./StyledBadge";
 
 interface State {
   amount: string;
@@ -108,8 +108,8 @@ const ContactElements = (cont: Props) => {
 
               console.log("Start Converstation");
               // ! emit "start_converstation" event
-              dispatch(selectConversation({room_id: id}));
               // socket.emit("start_conversation", { to: _id, from: user_id });
+              dispatch(selectConversation({room_id: id}));
             }}
           >
             <Chat />

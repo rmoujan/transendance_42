@@ -3,6 +3,7 @@ import axios from "axios";
 import {useDispatch} from "react-redux";
 
 export interface Profile {
+    open: boolean;
     name: string;
     avatar: string;
     status: string;
@@ -10,6 +11,7 @@ export interface Profile {
 }
 
 const initialState: Profile = {
+    open: false,
     name: "",
     avatar: "",
     status: "",
@@ -20,6 +22,9 @@ export const ProfileSlice = createSlice({
     name: "profile",
     initialState,
     reducers: {
+        toggleProfile(state) {
+            state.open = !state.open;
+          },
         fetchProfile(state, action) {
             state.name = action.payload[0].name;
             state.avatar = action.payload[0].avatar;
@@ -50,3 +55,9 @@ export function FetchProfile() {
             })
     };
 }
+
+export const {
+    toggleProfile,
+    fetchProfile,
+    updateProfile,
+} = ProfileSlice.actions;

@@ -72,9 +72,9 @@ const CreatePrivateForm = ({ handleClose }: any) => {
           justifyContent={"end"}
         >
           <Button onClick={handleClose}>Cancel</Button>
-          <LoadingButton loading variant="outlined">
+          {/* <LoadingButton loading variant="outlined">
   Submit
-</LoadingButton>
+</LoadingButton> */}
           <Button
             sx={{
               backgroundColor: "#806EA9", // Change the background color to purple

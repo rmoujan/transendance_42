@@ -3,13 +3,10 @@ import {
   Button,
   ButtonProps,
   Divider,
-  IconButton,
-  InputBase,
-  Paper,
-  Stack,
+  Stack
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ArchiveBox, ChatText, MagnifyingGlass } from "@phosphor-icons/react";
+import { ArchiveBox, MagnifyingGlass } from "@phosphor-icons/react";
 import ChatElements from "../../components/ChatElements";
 import {
   Search,
@@ -103,9 +100,12 @@ const Privates = () => {
         <Stack
           direction={"column"}
           sx={{
-            flexGrow: 1, overflowY: "auto", "&::-webkit-scrollbar": {
+            flexGrow: 1,
+            overflowY: "auto",
+            "&::-webkit-scrollbar": {
               width: "0.4em",
-            }, height: "100%"
+            },
+            height: "100%",
           }}
         >
           {/* <SimpleBarStyle timeout={500} clickOnTrack={false}> */}
@@ -127,7 +127,7 @@ const Privates = () => {
                     />
                   );
                 })} */}
-            {ChatList.filter((el) => !el.pinned).map((el) => {
+            {ChatList.filter(el => !el.pinned).map(el => {
               return <ChatElements {...el} />;
             })}
           </Stack>
