@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import ChatGeneral from "../Chat/ChatGeneral";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import {socket, connectSocket} from "../../socket"
