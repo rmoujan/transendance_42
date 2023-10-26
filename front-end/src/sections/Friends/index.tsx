@@ -1,14 +1,15 @@
 import { Box, Button, Divider, Stack } from "@mui/material";
-import { useState } from "react";
-import {
-    Search,
-    SearchIconWrapper,
-    StyledInputBase,
-} from "../../components/search";
 import { MagnifyingGlass, PlusCircle } from "@phosphor-icons/react";
+import { useState } from "react";
 import ContactElements from "../../components/ContactElements";
-import { ContactList } from "../../data";
+import ScrollBar from "../../components/ScrollBar";
 import CreateChannel from "../../components/channels/CreateChannel";
+import {
+  Search,
+  SearchIconWrapper,
+  StyledInputBase,
+} from "../../components/search";
+import { ContactList } from "../../data";
 // import CreateChannel from "./CreateChannel";
 
 const Friends = () => {
@@ -16,6 +17,8 @@ const Friends = () => {
   const handleCloseCreateChannel = () => {
     setOpenCreateChannel(false);
   };
+
+
   return (
     <>
       <Box
@@ -78,19 +81,20 @@ const Friends = () => {
               overflowY: "auto",
               "&::-webkit-scrollbar": {
                 width: "0.4em",
+                
               },
               height: "100%",
             }}
           >
-            {/* <SimpleBarStyle> */}
-              <Stack>
-                {/* ==> here's where i will do contact <== */}
+            <ScrollBar>
+                {
+                  // ~ ==>  here's where i will do contact <== 
+                }
                 {ContactList.map((el, index) => {
-                    return <ContactElements key={index} {...el} />
-                    
+                  return <ContactElements key={index} {...el} />
+
                 })}
-              </Stack>
-            {/* </SimpleBarStyle> */}
+            </ScrollBar>
           </Stack>
         </Stack>
       </Box>

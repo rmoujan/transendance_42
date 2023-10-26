@@ -1,4 +1,3 @@
-import React from 'react'
 import MaincontentProfile from './MaincontentProfile'
 function Profile() {
   return (

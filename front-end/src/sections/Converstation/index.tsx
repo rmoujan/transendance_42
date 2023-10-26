@@ -1,12 +1,12 @@
-import React, {useEffect, useRef} from "react";
+import { useEffect, useRef } from "react";
 import {
   Box,
   Stack,
 } from "@mui/material";
+import Chatbox from "../../components/converstation/Chatbox";
 import Header from "../../components/converstation/Header";
 import Messages from "../../components/converstation/Messages";
-import Chatbox from "../../components/converstation/Chatbox";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { useAppSelector } from "../../redux/store/store";
 
 
 const Converstation = () => {
@@ -17,7 +17,8 @@ const Converstation = () => {
 
   useEffect(() => {
     // Scroll to the bottom of the message list when new messages are added
-    messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    // messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+    console.log('messageListRef', messageListRef);
   }, [current_messages]);
 
   return (
