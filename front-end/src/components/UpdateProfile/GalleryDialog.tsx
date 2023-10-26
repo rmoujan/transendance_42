@@ -39,7 +39,10 @@ const GalleryDialog = ({ open, handleClose }: any) => {
   const [clickedImage, setClickedImage] = useState<string | null>(null);
 
   if (loading) return <p>Loading...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (error) {
+    console.error("GraphQL Error:", error);
+    return <p>Error: {error.message}</p>;
+  }
 
   useEffect(() => {
     console.log("data", data);

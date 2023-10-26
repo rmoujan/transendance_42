@@ -7,7 +7,6 @@ import Home from "./pages/Home";
 import { closeSnackBar } from "./redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "./redux/store/store";
 
-
 const vertical = "top";
 const horizontal = "center";
 
@@ -17,7 +16,7 @@ const Alert = React.forwardRef((props, ref) => (
 
 function App() {
   const { severity, message, open } = useAppSelector(
-    state => state.contact.snackbar
+    (state) => state.contact.snackbar
   );
   const dispatch = useAppDispatch();
 
@@ -33,7 +32,7 @@ function App() {
           autoHideDuration={4000}
           key={vertical + horizontal}
           onClose={() => {
-            console.log("This is clicked");s
+            console.log("This is clicked");
             dispatch(closeSnackBar());
           }}
         >

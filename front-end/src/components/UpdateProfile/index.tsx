@@ -1,22 +1,35 @@
 import {
-    Avatar,
-    Dialog,
-    DialogTitle,
-    Slide,
-    Stack,
-    Typography
+  Avatar,
+  Dialog,
+  DialogTitle,
+  Slide,
+  Stack,
+  Typography,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import { TransitionProps } from "@mui/material/transitions";
 import {
-    ArrowSquareUp,
-    ClockClockwise,
-    FinnTheHuman
+  ArrowSquareUp,
+  ClockClockwise,
+  FinnTheHuman,
 } from "@phosphor-icons/react";
 import React from "react";
-import { toggleProfile } from "../../redux/slices/profile";
+import { toggleProfile, updateAvatar } from "../../redux/slices/profile";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import GalleryDialog from "./GalleryDialog";
+import { showSnackbar } from "../../redux/slices/contact";
+
+const VisuallyHiddenInput = styled('input')({
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+});
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -28,7 +41,7 @@ const Transition = React.forwardRef(function Transition(
 });
 
 const UpdateProfile = () => {
-  const { profile } = useAppSelector(state => state);
+  const { profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const [openGallery, setOpenGallery] = React.useState(false);
   return (
@@ -76,7 +89,14 @@ const UpdateProfile = () => {
           <Button
             onClick={() => {
               console.log("default");
+              updateAvatar(profile.default_avatar);
               dispatch(toggleProfile());
+              dispatch(
+                showSnackbar({
+                  severity: "success",
+                  message: "Your Avatar changed to the default",
+                })
+              );
             }}
             variant="contained"
             endIcon={<ClockClockwise size={30} />}
@@ -96,7 +116,7 @@ const UpdateProfile = () => {
           <Button
             onClick={() => {
               console.log("update");
-              dispatch(toggleProfile());
+              // dispatch(toggleProfile());
             }}
             variant="contained"
             endIcon={<ArrowSquareUp size={30} />}
@@ -111,6 +131,7 @@ const UpdateProfile = () => {
               },
             }}
           >
+            <VisuallyHiddenInput type="file" />
             Update
           </Button>
           <Button

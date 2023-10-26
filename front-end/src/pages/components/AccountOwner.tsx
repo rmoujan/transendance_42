@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import Arcane from "../../img/Arcane.png";
 import { Data } from "../Data/AccountOwnerData";
 import scr from "../../img/Screenshot.png";
@@ -20,8 +20,8 @@ type User = {
 type AccountOwnerProps = {
   user: User[];
 };
-function AccountOwner( { user }: AccountOwnerProps ) {
-  const {profile} = useAppSelector((state) => state);
+function AccountOwner({ user }: AccountOwnerProps) {
+  const { profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
   const [isEditingName, setIsEditingName] = useState(false);
@@ -33,7 +33,6 @@ function AccountOwner( { user }: AccountOwnerProps ) {
     //     id_user: id_user,
     //     name: newName,
     //   });
-
     //   setIsEditingName(false);
     // } else {
     //   setIsEditingName(true);
@@ -53,20 +52,19 @@ function AccountOwner( { user }: AccountOwnerProps ) {
               }}
             >
               <IconButton>
-
-              <div className=" flex h-[98px] w-[98px] items-center -m-11 justify-center rounded-full border-[4px] border-white bg-slate-400">
-                <img
-                  className="h-full w-full rounded-full "
-                  src={data.avatar}
-                  alt=""
-                  onClick={() => {
-                    console.log("this where it should show profile photo");
-                    console.log(profile);
-                    dispatch(toggleProfile());
-                  }}
+                <div className=" flex h-[98px] w-[98px] items-center -m-11 justify-center rounded-full border-[4px] border-white bg-slate-400">
+                  <img
+                    className="h-full w-full rounded-full "
+                    src={profile.avatar}
+                    alt=""
+                    onClick={() => {
+                      console.log("this where it should show profile photo");
+                      console.log(profile);
+                      dispatch(toggleProfile());
+                    }}
                   />
-              </div>
-                  </IconButton>
+                </div>
+              </IconButton>
             </div>
             {/* <div className="flex mt-16 justify-between items-center w-full">
               <div>first</div>
@@ -86,11 +84,15 @@ function AccountOwner( { user }: AccountOwnerProps ) {
                   </p>
                 </div>
                 <div className="flex flex-col items-center justify-center">
-                  <h3 className="text-white text-lg tablet:text-2xl font-bold">{64} %</h3>
+                  <h3 className="text-white text-lg tablet:text-2xl font-bold">
+                    {64} %
+                  </h3>
                   <p className="text-[#A3AED0] text-sm font-normal">Win</p>
                 </div>
                 <div className="flex flex-col items-center justify-center">
-                  <h3 className="text-white text-lg tablet:text-2xl font-bold">{45} %</h3>
+                  <h3 className="text-white text-lg tablet:text-2xl font-bold">
+                    {45} %
+                  </h3>
                   <p className="text-[#A3AED0] text-sm font-normal">Loss</p>
                 </div>
               </div>
