@@ -13,10 +13,10 @@ const client = new ApolloClient({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
+    {/* <ApolloProvider client={client}> */}
       <ReduxProvider store={store}>
         <App />
       </ReduxProvider>
-    </ApolloProvider>
+    {/* </ApolloProvider> */}
   </React.StrictMode>
 );

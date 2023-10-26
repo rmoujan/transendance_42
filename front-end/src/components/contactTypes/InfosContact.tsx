@@ -19,7 +19,7 @@ import {
   Trash,
   X,
 } from "@phosphor-icons/react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { toggleDialog, updatedContactInfo } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
@@ -39,6 +39,7 @@ const InfosContact = () => {
   const { contact } = useAppSelector(store => store);
   console.log(contact);
 
+
   const [openBlock, setOpenBlock] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [openMute, setOpenMute] = useState(false);
@@ -52,6 +53,10 @@ const InfosContact = () => {
 
   const handleCloseMute = () => {
     setOpenMute(false);
+  };
+
+  const handleFileUpload = () => {
+    // handle click
   };
 
   return (

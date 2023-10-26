@@ -11,24 +11,24 @@ import {
 import ScrollBar from "../ScrollBar.tsx";
 
 const Messages = () => {
-  const dispatch = useAppDispatch();
-  const { conversations, current_messages } = useAppSelector(
-    (state) => state.converstation.direct_chat
-  );
+  // const dispatch = useAppDispatch();
+  // const { conversations, current_messages } = useAppSelector(
+  //   (state) => state.converstation.direct_chat
+  // );
 
-  const { room_id } = useAppSelector((state) => state.contact);
+  // const { room_id } = useAppSelector((state) => state.contact);
 
-  useEffect(() => {
-    const current = conversations.find((el) => el?.id === room_id);
+  // useEffect(() => {
+  //   const current = conversations.find((el) => el?.id === room_id);
 
-    // socket.emit("get_messages", { conversation_id: current?.id }, (data: any) => {
-      // data => list of messages
-      // console.log(data, "List of messages");
-      // dispatch(fetchCurrentMessages({ messages: data }));
-    // });
+  //   // socket.emit("get_messages", { conversation_id: current?.id }, (data: any) => {
+  //     // data => list of messages
+  //     // console.log(data, "List of messages");
+  //     // dispatch(fetchCurrentMessages({ messages: data }));
+  //   // });
 
-    dispatch(setCurrentConverstation(current));
-  }, []);
+  //   dispatch(setCurrentConverstation(current));
+  // }, []);
 
   return (
     <Box p={1} sx={{ width: "100%", borderRadius: "64px" }}>
