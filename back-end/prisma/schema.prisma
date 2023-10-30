@@ -10,6 +10,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
 model User{
   id_user Int @unique @id @default(autoincrement())
   name String  @unique
@@ -50,22 +51,24 @@ model BlockedUser{
 
 model Freind{
   id  Int @id @default(autoincrement())
-  name String?
   userId Int
-  id_freind Int?
+  id_freind Int
   user User @relation (fields: [userId], references: [id_user])
 }
 
+// hadi fiha ga3 conversations.
 model Dm{
   id_dm  Int @id @default(autoincrement())
-  senderId Int
-  recieverId Int
+  senderId Int      //
+  recieverId Int   //
   unread Int
   pinned Boolean
   sender User @relation(fields: [senderId], references: [id_user])
   conversation Conversation[]
 }
 
+//hadi mertbata ghi b dm sf.
+// hadi fiha les messages li kaynin f kol dm 
 model Conversation{
   id Int @id @default(autoincrement())
   text String
@@ -77,25 +80,32 @@ model Conversation{
   dm Dm @relation(fields: [idDm], references: [id_dm])
 }
 
+
+
+// starting channels .
 model Channel {
   id_channel  Int        @id @default(autoincrement())
-  name        String
+  name        String     @unique
   visibility  String
   password    String?
   users       MemberChannel[]
 }
-
+// gelt waila nezid att under name (mutedState? Boolean) qui montre isthat member is mud or no
+//re3mi record wahd ya3ni user x l f channel x momkin yekon 3ndo many discussion.
 model MemberChannel {
   user                User          @relation(fields: [userId], references: [id_user])
   userId              Int
   channel             Channel       @relation(fields: [channelId], references: [id_channel])
   channelId           Int
-  status_UserInChannel String
+  status_UserInChannel String  // values that contains are owner admin or member.
+  muted               Boolean?  // new added.
   discussions         Discussion[]
   period             DateTime?
+  banned ChannelBan? // for a muted number.
   @@id([userId, channelId]) 
 }
 
+//hadi mertabeta b chatrooms.(channels).
 model Discussion {
   id_disc           Int          @id @default(autoincrement())
   message           String
@@ -103,4 +113,12 @@ model Discussion {
   userId            Int 
   channelId         Int 
   memberchannel     MemberChannel @relation(fields: [userId,channelId ], references: [userId, channelId])
+}
+
+model ChannelBan {   
+  bannedUser          MemberChannel   @relation(fields: [bannedUserId, channelId], references: [userId, channelId])
+  bannedUserId        Int
+  channelId           Int
+  status_User String // will contains soit blocked from the channel, banned or kicked,
+  @@id([bannedUserId, channelId])
 }

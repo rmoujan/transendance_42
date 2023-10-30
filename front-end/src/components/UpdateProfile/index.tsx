@@ -4,8 +4,7 @@ import {
   DialogTitle,
   Slide,
   Stack,
-  Typography,
-  styled,
+  Typography
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import { TransitionProps } from "@mui/material/transitions";
@@ -15,22 +14,10 @@ import {
   FinnTheHuman,
 } from "@phosphor-icons/react";
 import React, { useRef } from "react";
+import { showSnackbar } from "../../redux/slices/contact";
 import { toggleProfile, updateAvatar } from "../../redux/slices/profile";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import GalleryDialog from "./GalleryDialog";
-import { showSnackbar } from "../../redux/slices/contact";
-
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {

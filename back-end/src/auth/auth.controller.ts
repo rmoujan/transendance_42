@@ -11,7 +11,9 @@ import { FortyTwoGuard } from './utils/Guards';
 import { AuthGuard } from "@nestjs/passport";
 import { JwtService } from 'src/jwt/jwtservice.service';
 import { JwtAuthGuard } from 'src/jwt/JwtGuard';
-import { PrismaService } from 'src/prisma/prisma.service';
+// import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
+
 import { authenticator } from 'otplib';
 import * as qrcode from 'qrcode';
 
@@ -99,7 +101,7 @@ export class AuthController {
         data: {
           freind:{
             create:{
-              name : body.name,
+              // name : body.name,
               id_freind: 98853/* body.friend_id */,
             },
           },
@@ -238,7 +240,7 @@ export class AuthController {
       const decoded = this.jwt.verify(req.cookies['cookie']);
       // console.log(req.cookies['cookie']);
 
-      console.log(decoded);
+      // console.log(decoded);
       let obj: any[] = []
       const user = await this.prisma.user.findUnique({where:{id_user : decoded.id},});
       obj.push(user);

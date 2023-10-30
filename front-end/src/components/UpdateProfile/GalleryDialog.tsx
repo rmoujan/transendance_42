@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { faker } from "@faker-js/faker";
-import { Shuffle } from "@phosphor-icons/react";
 import { TransitionProps } from "@mui/material/transitions";
-import { useQuery } from "@apollo/client";
+import { Shuffle } from "@phosphor-icons/react";
+import React from "react";
 
 import {
   Button,
@@ -14,9 +12,10 @@ import {
   Stack,
   styled,
 } from "@mui/material";
-import ScrollBar from "../ScrollBar";
+import { showSnackbar } from "../../redux/slices/contact";
+import { toggleProfile, updateAvatar } from "../../redux/slices/profile";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { FetchCharacters } from "../../redux/slices/anime";
+import ScrollBar from "../ScrollBar";
 // import { GET_TOP_CHARACTERS } from "../../graphql/Query";
 
 const Transition = React.forwardRef(function Transition(
@@ -37,28 +36,22 @@ const ColorButton = styled(Button)<ButtonProps>(() => ({
 }));
 
 const GalleryDialog = ({ open, handleClose }: any) => {
- 
   const { characters } = useAppSelector(state => state.characters);
-  // const { loading, error, data } = useQuery(GET_TOP_CHARACTERS);
-  // const [clickedImage, setClickedImage] = useState<string | null>(null);
+  const dispatch = useAppDispatch();
 
-  // if (loading) return <p>Loading...</p>;
-  // if (error) {
-  //   console.error("GraphQL Error:", error);
-  //   return <p>Error: {error.message}</p>;
-  // }
+  const handleImageClick = (img: string) => {
+    console.log(img);
+    dispatch(updateAvatar(img));
+    dispatch(toggleProfile());
+    handleClose();
+    dispatch(
+      showSnackbar({
+        severity: "success",
+        message: "Your Avatar changed to what you uploaded",
+      })
+    );
+  };
 
-  // useEffect(() => {
-  //   dispatch(FetchCharacters());
-  // }, []);
-
-  // const characters = data.topCharacters;
-
-  // const handleImageClick = (imageUrl: string) => {
-  //   setClickedImage(imageUrl);
-  //   // You can perform any actions related to the clicked image here
-  //   console.log("Clicked Image:", clickedImage);
-  // };
   return (
     <Dialog
       fullWidth
@@ -112,17 +105,17 @@ const GalleryDialog = ({ open, handleClose }: any) => {
           <ScrollBar>
             <Grid item xs={12}>
               <Grid container justifyContent="center" spacing={2}>
-                {characters.map((el) => (
+                {characters.map(el => (
                   <Grid key={el.id} item>
                     <Paper
                       sx={{
-                        height: 240,
-                        width: 200,
+                        height: 140,
+                        width: 100,
                         backgroundImage: `url(${el.image})`,
                         backgroundSize: "cover",
                         cursor: "pointer", // Add a pointer cursor
                       }}
-                      // onClick={() => handleImageClick(character.image_url)}
+                      onClick={() => handleImageClick(el.image)}
                     ></Paper>
                   </Grid>
                 ))}

@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const passport_1 = require("@nestjs/passport");
 const jwtservice_service_1 = require("../jwt/jwtservice.service");
-const prisma_service_1 = require("../prisma/prisma.service");
+const prisma_service_1 = require("../prisma.service");
 let AuthController = class AuthController {
     constructor(service, jwt, prisma) {
         this.service = service;
@@ -67,7 +67,6 @@ let AuthController = class AuthController {
             data: {
                 freind: {
                     create: {
-                        name: body.name,
                         id_freind: 98853,
                     },
                 },
@@ -150,7 +149,6 @@ let AuthController = class AuthController {
     }
     async Get_User(req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
-        console.log(decoded);
         let obj = [];
         const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id }, });
         obj.push(user);

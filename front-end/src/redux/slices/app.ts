@@ -57,7 +57,8 @@ export const AppSlice = createSlice({
 export function FetchFriends() {
     // const user_id = localStorage.getItem("user_id");
     return async () => {
-        await axios.get("/user/get-friends", {
+        await axios.get("http://localhost:3000/auth/friends", {
+            withCredentials: true,
             headers: {
                 "Content-Type": "application/json",
                 // Authorization: `Bearer ${getState().auth.token}`,
@@ -66,7 +67,7 @@ export function FetchFriends() {
         )
             .then((response) => {
                 console.log(response);
-                AppSlice.actions.updateFriends({ friends: response.data.data });
+                // AppSlice.actions.updateFriends({ friends: response.data.data });
             })
             .catch((err) => {
                 console.log(err);

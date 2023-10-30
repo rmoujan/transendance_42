@@ -9,9 +9,7 @@ import ChatTabs from "./ChatTabs";
 
 const ChatGeneral: React.FC = () => {
   const { contact, profile } = useAppSelector(state => state);
-  // console.log("==========>", profile);
 
-  // Create a function to render the component conditionally
   const renderContactInfoComponent = () => {
     if (contact.contactInfos.open) {
       switch (contact.contactInfos.type) {
@@ -60,7 +58,6 @@ const ChatGeneral: React.FC = () => {
         </Box>
       </Stack>
 
-      {/* Render the component conditionally using the function */}
       {renderContactInfoComponent()}
     </Stack>
   );

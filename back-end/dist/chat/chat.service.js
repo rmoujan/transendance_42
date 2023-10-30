@@ -9,23 +9,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PrismaService = void 0;
+exports.ChatService = void 0;
 const common_1 = require("@nestjs/common");
-const client_1 = require("@prisma/client");
-let PrismaService = class PrismaService extends client_1.PrismaClient {
-    constructor() {
-        super({
-            datasources: {
-                db: {
-                    url: 'postgresql://postgres:123@localhost:5434/nest?schema=public'
-                },
+const prisma_service_1 = require("../prisma.service");
+let ChatService = class ChatService {
+    constructor(prisma) {
+        this.prisma = prisma;
+    }
+    async findChannel(idch) {
+        const channel = await this.prisma.channel.findUnique({
+            where: {
+                id_channel: idch,
             },
         });
+        return (channel);
+    }
+    async getUsersInChannel(idch) {
+        const users = await this.prisma.memberChannel.findMany({
+            where: {
+                channelId: idch,
+            },
+        });
+        return (users);
     }
 };
-exports.PrismaService = PrismaService;
-exports.PrismaService = PrismaService = __decorate([
+exports.ChatService = ChatService;
+exports.ChatService = ChatService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [])
-], PrismaService);
-//# sourceMappingURL=prisma.service.js.map
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+], ChatService);
+//# sourceMappingURL=chat.service.js.map

@@ -8,32 +8,18 @@ import * as cors from 'cors';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
 
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
     }),
   );
-
-  app.use(cookieParser());
-  // app.use(
-  //   session({
-  //   secret: 'your-secret-key', // Replace with a strong secret
-  //   resave: false,
-  //   saveUninitialized: false,
-  //   cookie: {
-  //     maxAge: 600000000,
-  //   },
-  // }),
-  // );
-
-  // app.use(passport.initialize());
-  // app.use(passport.session());
+  app.enableCors();
   app.use(cors({
     credentials: true,
     origin: 'http://localhost:5173', // Replace with the domain of your frontend
   }));
-
   await app.listen(3000);
 }
 bootstrap();

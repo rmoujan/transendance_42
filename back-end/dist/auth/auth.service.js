@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
 const jwtservice_service_1 = require("../jwt/jwtservice.service");
-const prisma_service_1 = require("../prisma/prisma.service");
+const prisma_service_1 = require("../prisma.service");
 const otplib_1 = require("otplib");
 const qrcode = require("qrcode");
 let AuthService = class AuthService {
