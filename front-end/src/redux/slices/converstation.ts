@@ -32,7 +32,7 @@ export const ConverstationSlice = createSlice({
     },
     setCurrentConverstation(state, action) {
       // * set current converstation
-      state.direct_chat.current_conversation = action.payload;
+      state.direct_chat.current_conversation?.push(action.payload);
     },
     fetchCurrentMessages(state, action) {
       // ! get all messages of current converstation

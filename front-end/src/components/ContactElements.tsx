@@ -15,7 +15,7 @@ import {
 } from "@phosphor-icons/react";
 import React from "react";
 import { mutedContact, selectConversation } from "../redux/slices/contact";
-import { useAppDispatch } from "../redux/store/store";
+import { useAppDispatch, useAppSelector } from "../redux/store/store";
 import StyledBadge from "./StyledBadge";
 
 interface State {
@@ -33,10 +33,10 @@ interface Props {
   online: boolean;
 }
 
-const ContactElements = (cont: Props) => {
+const ContactElements = (cont: any) => {
   // const { contact } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
-  const id = cont.id.toString();
+  const id = cont.id_user.toString();
   // const selectedChatId = contact.room_id;
   // const isSelected = +selectedChatId === cont.id;
 
@@ -56,8 +56,8 @@ const ContactElements = (cont: Props) => {
   const handleClickMuted = () => {
     // ! emit "mute_converstation" event
     // socket.emit("mute_converstation", { to: _id, from: user_id });
-    dispatch(mutedContact({room_id: id}))
-    
+    dispatch(mutedContact({ room_id: id }));
+
     if (values.muted === true) {
       console.log("unmute");
     } else {
@@ -86,17 +86,17 @@ const ContactElements = (cont: Props) => {
         sx={{ padding: "0 8px 14px" }}
       >
         <Stack direction={"row"} alignItems={"center"} spacing={2}>
-          {cont.online ? (
+          {cont.status_user === 'online' ? (
             <StyledBadge
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               variant="dot"
               sx={{ width: 52, height: 52 }}
             >
-              <Avatar src={cont.img} sx={{ width: 52, height: 52 }} />
+              <Avatar src={cont.avatar} sx={{ width: 52, height: 52 }} />
             </StyledBadge>
           ) : (
-            <Avatar src={cont.img} sx={{ width: 52, height: 52 }} />
+            <Avatar src={cont.avatar} sx={{ width: 52, height: 52 }} />
           )}
           <Typography variant="subtitle2" color={"white"}>
             {cont.name}
@@ -105,17 +105,15 @@ const ContactElements = (cont: Props) => {
         <Stack direction={"row"} spacing={1}>
           <IconButton
             onClick={() => {
-
               console.log("Start Converstation");
               // ! emit "start_converstation" event
               // socket.emit("start_conversation", { to: _id, from: user_id });
-              dispatch(selectConversation({room_id: id}));
+              dispatch(selectConversation({ room_id: id }));
             }}
           >
             <Chat />
           </IconButton>
-          <IconButton aria-label="mute contact" onClick={
-            handleClickMuted}>
+          <IconButton aria-label="mute contact" onClick={handleClickMuted}>
             {values.muted ? <SpeakerSimpleSlash /> : <SpeakerSimpleNone />}
           </IconButton>
 

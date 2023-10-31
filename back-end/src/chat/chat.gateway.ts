@@ -1,7 +1,7 @@
-import { SubscribeMessage, WebSocketGateway , MessageBody, WebSocketServer, OnGatewayInit} from '@nestjs/websockets';
+import { SubscribeMessage, WebSocketGateway, MessageBody, WebSocketServer, OnGatewayInit } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { OnGatewayConnection, OnGatewayDisconnect, ConnectedSocket } from '@nestjs/websockets';
-import {Logger, OnModuleInit } from '@nestjs/common';
+import { Logger, OnModuleInit } from '@nestjs/common';
 import { JwtService } from 'src/jwt/jwtservice.service';
 import { ChatService } from './chat.service';
 // it is like cntroller,  ghi instead of working with api endpoints, we working
@@ -15,15 +15,24 @@ import { ChatService } from './chat.service';
 //     origin: '*',
 //   },
 // })
- @WebSocketGateway({ cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } })
-export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{  
-  constructor(private jwt :JwtService,private readonly ChatService: ChatService) {}
+
+interface DirectData {
+  message: string,
+  from: number,
+  to: number,
+}
+@WebSocketGateway({ cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } })
+export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  constructor(private jwt: JwtService, private readonly ChatService: ChatService) { }
 
   // Assuming you have a map of connected clients with user IDs
   // private connectedClients = new Map<string, Socket>();
   // private i: number = 70;
-  private connectedClients = new Map<number, Socket>();
-  private roomsDm : string[];
+  // private connectedClients = new Map<number, Socket>();
+  private connectedClients: Map<number, Socket> = new Map();
+
+  private roomsDm: string[] = [];
+
   private clientsChannel: Socket[] = [];
   @WebSocketServer()
   server: Server;
@@ -35,26 +44,34 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   //it gets automatically called each time a client connects to the WebSocket server. 
   //it logs the socket ID of the connected client using NestJS's logger.
-   handleConnection(client: Socket) 
-  {
+  handleConnection(client: Socket) {
 
     this.logger.log(client.handshake.query.user_id);
     // this.logger.log(`Client Connected : ${this.i}`);
     // const id: string = client.handshake.query.user_id[0];
     const id: number = Number(client.handshake.query.user_id);
-    this.logger.log(` ********  Client Connected : ${id}`);
-    // console.log(typeof id);
-    this.connectedClients.set(id,client);
-    // this.connectedClients.set(this.i,client);
+    this.logger.log(` ********  User  Connected : ${id} and its sockets is ${client.id}`);
+    // this.logger.log(` ********  Client Connected : ${client.id}`);
 
+    // console.log(typeof id);
+    this.connectedClients.set(id, client);
+    // this.connectedClients.set(this.i,client);
+    console.log("####### First connection :: OUTPUT MAP OF CONNECTE CLIENTS");
+    for (const [key, value] of this.connectedClients) {
+      console.log(`Key: ${key}, Value: ${value}`);
+    }
   }
 
-   handleDisconnect(client: Socket) {
+  handleDisconnect(client: Socket) {
     // Handle disconnection event
     // this.logger.log(`Client Connected : ${this.i}`);
     const id: number = Number(client.handshake.query.user_id);
-    this.logger.log(` ******   Client Disconnect : ${client.id}`);
+    this.logger.log(` ******   Client Disconnect : ${id}`);
     this.connectedClients.delete(id);
+    console.log("***** Client Disconnection :: OUTPUT MAP OF CONNECTE CLIENTS");
+    for (const [key, value] of this.connectedClients) {
+      console.log(`Key: ${key}, Value: ${value}`);
+    }
     // this.connectedClients.delete(this.i);
     // this.i--;
     //call for leave room :
@@ -62,59 +79,97 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   }
 
-  createRoom(senderId: string, recieverId: string)
-  {
+  createRoom(senderId: string, recieverId: string) {
+    console.log(`From Create Room SErver Side : sender is ${senderId} and reciever is ${recieverId}`);
     const roomName1 = `room_${senderId}_${recieverId}`;
     const roomName2 = `room_${recieverId}_${senderId}`;
-    const   check1: number = this.roomsDm.indexOf(roomName1);
-    const   check2: number = this.roomsDm.indexOf(roomName2);
 
+    console.log(`roomName1 is ${roomName1} and roomName2 is ${roomName2}`);
+    const check1: number = this.roomsDm.indexOf(roomName1);
+
+    const check2: number = this.roomsDm.indexOf(roomName2);
+    console.log(`From create room server side after check `);
     // check if the both name are not exist in database ? 
-    if (check1 === -1  && check2 === -1) {
-        this.roomsDm.push(roomName1);
-        return roomName1;
+    if (check1 === -1 && check2 === -1) {
+      console.log(`check1 is ${check1} and check2 is ${check2}`)
+      this.roomsDm.push(roomName1);
+      return roomName1;
     }
     if (check1 !== -1)
-        return this.roomsDm[check1];
+      return this.roomsDm[check1];
     else
-        return this.roomsDm[check2];
+      return this.roomsDm[check2];
   }
   // leave a room:
   leaveRoom(client: Socket, roomName: string) {
     client.leave(roomName);
 
   }
-    // Join a client to a room
+  // Join a client to a room
   joinRoom(client: Socket, roomName: any) {
-      client.join(roomName);
+    client.join(roomName);
   }
-  handling_joinRoom_dm(room: string, senderId: string, receiverId: string, message: string)
-  {
-    const senderClient = this.connectedClients[senderId];
-    const receiverClient = this.connectedClients[receiverId];
 
+  handling_joinRoom_dm(room: string, senderId: number, receiverId: number, message: string) {
+    const senderClient: Socket = this.connectedClients.get(senderId);
+
+    const receiverClient: Socket | undefined = this.connectedClients.get(receiverId);
+
+
+    console.log("####### :: OUTPUT MAP OF CONNECTE CLIENTS");
+    for (const [key, value] of this.connectedClients) {
+      console.log(`Key: ${key}, Value: ${value}`);
+    }
+    // console.log("Connected Clients Map:");
+    // console.log(this.connectedClients);
+    console.log(typeof (senderId), typeof (receiverId));
+    console.log(`***** From Dm handlingRoom Dm : sender is ${senderId} and reciver is ${receiverId}`);
+
+    console.log(`***** From Dm handlingRoom Dm : Socketsender is ${senderClient} and Socketreciver is ${receiverClient}`);
+    const size = this.connectedClients.size;
+
+    console.log(`****** size of map of clients connected is ${size}`);
     if (senderClient && receiverClient) {
       // Send the message to the specified room
       this.joinRoom(senderClient, room);
       this.joinRoom(receiverClient, room);
+      // chatTodm is the name of event li ana mn back kansifto lfront (li khaso yb9a yelisteni elih)
+      console.log("starting sending");
+      const data = {
+        id: 90,
+        message: message,
+        send: senderId,
+        recieve: receiverId
+      };
+      this.server.to(room).emit('chatToDm', data);
+      console.log("after sending");
+      // process o database .
 
-      this.server.to(room).emit('chatToDm', message);
     } else {
       console.error(`Sender or receiver is not connected.`);
     }
   }
 
 
+
   @SubscribeMessage('direct_message')
-  process_dm(@ConnectedSocket() client: Socket, payload: any): string {
+  process_dm(@ConnectedSocket() client: Socket, @MessageBody() data: any): string {
     // Business logic to save the message to the database
     // I need to check if this sender is already exist in conversatin table or not :
     // const senderId = "71";
     // const receiverId = "72";
-    // let room ;
-    // room = this.createRoom(senderId, receiverId);
-    // this.handling_joinRoom_dm(room, senderId, receiverId, payload);
-    console.log(`FRom websockets DM ==== ${payload}`);
+    console.log(typeof (data.from), typeof (data.to), data);
+    let room;
+
+    //  room = this.createRoom(senderId, receiverId);
+    room = this.createRoom(data.from, data.to);
+    this.handling_joinRoom_dm(room, data.from, data.to, data.message);
+    //  console.log("####### OUTPUT MAP OF CONNECTE CLIENTS");
+    //  for (const [key, value] of this.connectedClients) {
+    //   console.log(`Key: ${key}, Value: ${value}`);
+    // }
+    console.log(`FRom websockets DM ==== ${data.message}`);
+    console.log()
     console.log(`client connected is ${client.id}`);
     // decodeCookie(client)
     return 'Hello world!';
@@ -122,19 +177,16 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
 
 
-  
-  handling_joinRoom_group(idch:number, message: string, users:any)
-  {
+  handling_joinRoom_group(idch: number, message: string, users: any) {
 
     // u need more check 
-    const room= `room_${idch}`;
+    const room = `room_${idch}`;
     for (const user of users) {
       // Access and process individual user properties
       // clientsChannel.push(this.connectedClients[user.userId]);
       const clien = this.connectedClients[user.userId];
-      if (clien)
-      {
-        this.joinRoom(clien,room);
+      if (clien) {
+        this.joinRoom(clien, room);
       }
       // console.log(user.userId); 
     }
@@ -167,15 +219,15 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const users = await this.ChatService.getUsersInChannel(
       id
     );
-      console.log("Executing FRom gatways !!!");
-      // console.log(`All Users  : ${users[0]}`);
-      console.log(users[0]);// output  a single record from the array.
-      for (const user of users) {
-        // Access and process individual user properties
-        console.log(user.userId); // Example: Assuming there's a 'name' property
-      }
-      this.handling_joinRoom_group(id, payload, users);
-      // console.log(JSON.stringify(users, null, 2)); 
+    console.log("Executing FRom gatways !!!");
+    // console.log(`All Users  : ${users[0]}`);
+    console.log(users[0]);// output  a single record from the array.
+    for (const user of users) {
+      // Access and process individual user properties
+      console.log(user.userId); // Example: Assuming there's a 'name' property
+    }
+    this.handling_joinRoom_group(id, payload, users);
+    // console.log(JSON.stringify(users, null, 2)); 
     return users;
     // return 'Hello world!';
   }
@@ -195,9 +247,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   // @SubscribeMessage('typing')
   // async typing()
   // {
-       
+
   // }
-  
+
   // @SubscribeMessage('join')
   // joinRoom(@MessageBody() msg: string, @ConnectedSocket() client: Socket)
   // {

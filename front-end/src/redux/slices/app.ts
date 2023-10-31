@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { useDispatch } from "react-redux";
 // import { useAppDispatch } from "../store/store";
 
 // const dispatch = useAppDispatch();
@@ -25,6 +26,7 @@ export const AppSlice = createSlice({
             state.users = action.payload;
         },
         fetchFriends(state, action) {
+            console.log(action);
             // ~ get all friends
             state.friends = action.payload;
         },
@@ -56,6 +58,7 @@ export const AppSlice = createSlice({
 
 export function FetchFriends() {
     // const user_id = localStorage.getItem("user_id");
+    const dispatch = useDispatch();
     return async () => {
         await axios.get("http://localhost:3000/auth/friends", {
             withCredentials: true,
@@ -66,7 +69,8 @@ export function FetchFriends() {
         }
         )
             .then((response) => {
-                console.log(response);
+                // console.log(response.data);
+                dispatch(updateFriends(response.data));
                 // AppSlice.actions.updateFriends({ friends: response.data.data });
             })
             .catch((err) => {
@@ -76,3 +80,5 @@ export function FetchFriends() {
 }
 
 export default AppSlice.reducer;
+
+export const { fetchUsers, fetchFriends, fetchRequestFriends, updateFriends, addFriend, acceptFriend, removeFriend, declineFriend } = AppSlice.actions;

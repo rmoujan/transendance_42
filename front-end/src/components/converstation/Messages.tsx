@@ -2,12 +2,13 @@ import { Box, Stack } from "@mui/material";
 import { Chat_History } from "../../data";
 import ScrollBar from "../ScrollBar.tsx";
 import { MediaMsg, ReplyMsg, TextMsg, Timeline } from "./MsgTypes.tsx";
+import { useAppSelector } from "../../redux/store/store.ts";
 
 const Messages = () => {
   // const dispatch = useAppDispatch();
-  // const { conversations, current_messages } = useAppSelector(
-  //   (state) => state.converstation.direct_chat
-  // );
+  const { current_messages } = useAppSelector(
+    state => state.converstation.direct_chat
+  );
 
   // const { room_id } = useAppSelector((state) => state.contact);
 
@@ -27,12 +28,12 @@ const Messages = () => {
     <Box p={1} sx={{ width: "100%", borderRadius: "64px" }}>
       <ScrollBar>
         <Stack spacing={2}>
-          {Chat_History.map(el => {
-            switch (el.type) {
+          {current_messages.map(el => {
+            switch (el?.type) {
               case "divider":
                 return <Timeline el={el} />;
               case "msg":
-                switch (el.subtype) {
+                switch (el?.subtype) {
                   case "img":
                     return <MediaMsg el={el} />;
                   case "doc":

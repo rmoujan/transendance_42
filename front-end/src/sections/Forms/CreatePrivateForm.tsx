@@ -4,10 +4,9 @@ import * as Yup from "yup";
 import FormProvider from "../../components/hook-form/FormProvider";
 import { Button, Stack } from "@mui/material";
 import { RHFAutocomplete, RHFTextField } from "../../components/hook-form";
-import { useAppDispatch } from "../../redux/store/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { showSnackbar } from "../../redux/slices/contact";
-import LoadingButton from '@mui/lab/LoadingButton';
-
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const MEMBERS = ["name 1", "name 2", "name 3", "name 4", "name 4"];
 
@@ -37,6 +36,7 @@ const CreatePrivateForm = ({ handleClose }: any) => {
     formState: { errors, isSubmitted, isSubmitSuccessful, isValid }, // errors and form state
   } = methods; // useful methods from useForm()
 
+  const { friends } = useAppSelector(state => state.app);
   const onSubmit = async (data: any) => {
     try {
       dispatch(
@@ -62,7 +62,7 @@ const CreatePrivateForm = ({ handleClose }: any) => {
           label="Members"
           multiple
           freeSolo
-          options={MEMBERS.map((option) => option)}
+          options={friends.map(friend => friend?.name)}
           ChipProps={{ size: "medium" }}
         />
         <Stack

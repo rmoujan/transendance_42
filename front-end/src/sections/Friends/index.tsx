@@ -10,6 +10,7 @@ import {
   StyledInputBase,
 } from "../../components/search";
 import { ContactList } from "../../data";
+import { useAppSelector } from "../../redux/store/store";
 // import CreateChannel from "./CreateChannel";
 
 const Friends = () => {
@@ -17,7 +18,8 @@ const Friends = () => {
   const handleCloseCreateChannel = () => {
     setOpenCreateChannel(false);
   };
-
+  const { friends } = useAppSelector(state => state.app);
+  console.log(friends)
 
   return (
     <>
@@ -81,19 +83,18 @@ const Friends = () => {
               overflowY: "auto",
               "&::-webkit-scrollbar": {
                 width: "0.4em",
-                
               },
               height: "100%",
             }}
           >
             <ScrollBar>
-                {
-                  // ~ ==>  here's where i will do contact <== 
-                }
-                {ContactList.map((el, index) => {
-                  return <ContactElements key={index} {...el} />
-
-                })}
+              {
+                // ~ ==>  here's where i will do contact <==
+              }
+              {friends.map((el: any) => {
+                console.log(el);
+                return <ContactElements {...el} />;
+              })}
             </ScrollBar>
           </Stack>
         </Stack>

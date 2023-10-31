@@ -18,8 +18,8 @@ export declare class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     createRoom(senderId: string, recieverId: string): string;
     leaveRoom(client: Socket, roomName: string): void;
     joinRoom(client: Socket, roomName: any): void;
-    handling_joinRoom_dm(room: string, senderId: string, receiverId: string, message: string): void;
-    process_dm(client: Socket, payload: any): string;
+    handling_joinRoom_dm(room: string, senderId: number, receiverId: number, message: string): void;
+    process_dm(client: Socket, data: any): string;
     handling_joinRoom_group(idch: number, message: string, users: any): void;
     sendInChannel(client: any, payload: any): Promise<any>;
 }
