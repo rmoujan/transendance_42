@@ -59,7 +59,7 @@ export class AuthService {
             where: {id_user: decoded.id},
           data: { secretKey: sKey },
         });
-        console.log(user);
+        // console.log(user);
         const otpAuthURL = authenticator.keyuri(decoded.email, 'YourAppName', sKey);
         
         const qrCodeOptions = {
@@ -85,8 +85,8 @@ export class AuthService {
       const decoded = this.jwt.verify(req.cookies['cookie']);
       const user =  await this.prisma.user.findUnique({where: {id_user: decoded.id}});
     //   const user = await this.prisma.user.findUnique({where: {id_user: decoded.id}});
-    console.log(user);
-    console.log(body);
+    // console.log(user);
+    // console.log(body);
       if (authenticator.verify({token:body.inputValue, secret: user.secretKey}))
         return ({msg: 'true'});
       else

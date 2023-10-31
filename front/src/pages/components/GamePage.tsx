@@ -1,6 +1,6 @@
 import { FC, useEffect, useRef } from "react";
-import MyBotGame from "../../../../ping_pong_game/src/botGame.ts";
-import MyMultiplayerGame from "../../../../ping_pong_game/src/multiplayerGame.ts";
+import MyBotGame from "../../../../game/src/botGame.ts";
+import MyMultiplayerGame from "../../../../game/src/multiplayerGame.ts";
 
 function GamePage() {
   const myCanvas = useRef<HTMLCanvasElement>(null);

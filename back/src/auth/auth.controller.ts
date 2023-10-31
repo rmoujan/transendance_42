@@ -43,13 +43,13 @@ export class AuthController {
         return (req);
       }
       if (user.IsFirstTime){
-          console.log('first time');
+        //   console.log('first time');
           await this.prisma.user.update({where : { id_user : req.user.id }, data: {IsFirstTime: false}});
           res.redirect('http://localhost:5173/setting');
       }
       else
       {
-        console.log('not first time');
+        // console.log('not first time');
         res.redirect('http://localhost:5173/home');
       }
         // res.send('cookie well setted');
@@ -109,7 +109,7 @@ export class AuthController {
       const friendData = await this.prisma.user.findUnique({where: {id_user: Body.id_user}});
       const decoded = this.jwt.verify(req.cookies['cookie']);
       // console.log(decoded);
-      console.log(friendData);
+    //   console.log(friendData);
       const user = await this.prisma.freind.deleteMany({
         where: {
           AND: [
@@ -229,7 +229,7 @@ export class AuthController {
       const decoded = this.jwt.verify(req.cookies['cookie']);
       // console.log(req.cookies['cookie']);
 
-      console.log(decoded);
+    //   console.log(decoded);
       let obj: any[] = []
       const user = await this.prisma.user.findUnique({where:{id_user : decoded.id},});
       obj.push(user);

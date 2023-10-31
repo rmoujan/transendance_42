@@ -17,8 +17,10 @@ import { useLocation } from "react-router-dom";
 import ProfileCardUser from "./components/ProfileCardUser";
 import Login from "../components/Login";
 import NotFoundPage from "./NotFoundPage";
+let pathn: string;
 function Home() {
-  const location = useLocation();
+	const location = useLocation();
+	pathn = location.pathname;
   const match = location.pathname.match(/\/profileFriend\/(\d+)/);
   console.log("match");
   const extractedPath = match && match[0];
@@ -55,4 +57,5 @@ function Home() {
     </div>
   );
 }
+export {pathn};
 export default Home;

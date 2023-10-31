@@ -22,7 +22,7 @@ export class JwtAuthGuard implements CanActivate {
 
         try {
             const decoded = this.JwtService.verify(token);
-            console.log(decoded);
+            // console.log(decoded);
             if (!decoded){
                 response.send("false").status(401);
                 return false;

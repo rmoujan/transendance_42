@@ -19,7 +19,10 @@ model User{
   secretKey String?
   status_user String?
   stat Stat?
-  history History?
+  history History[]
+  wins Int?
+  losses Int?
+  games_played Int?
   blockedUser BlockedUser[]
   freind Freind[]
   dms Dm[]
@@ -36,6 +39,7 @@ model Stat {
 }
 
 model History{
+  winner Boolean?
   id_history Int @id @default(autoincrement())
   userId Int @unique
   user User @relation (fields: [userId], references: [id_user])

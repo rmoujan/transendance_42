@@ -41,4 +41,3 @@ export class JwtService extends PassportStrategy(Strategy, 'jwt') {
 
     }
 }
-

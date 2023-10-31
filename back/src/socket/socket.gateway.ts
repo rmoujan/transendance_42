@@ -40,7 +40,7 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect{
         status_user : "online",
       },
     });
-    console.log(user);
+    // console.log(user);
   }
 
   async handleDisconnect(client: Socket) {

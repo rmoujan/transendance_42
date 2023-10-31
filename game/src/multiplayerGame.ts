@@ -2,15 +2,10 @@ import { player_1, player_2, midLine, ball } from "./gameObjects";
 import { Room } from "./interfaces";
 import DrawGame from "./drawGame";
 import io, { Socket } from "socket.io-client";
+import { pathn } from "../../front/src/pages/Home";
+// import { useLocation, Location } from 'react-router-dom';
 
-const socket: Socket = io("http://localhost:3000", {
-    transports: ["websocket"],
-});
-
-socket.on("connect", () => {
-    console.log(`You connected to the server with id : ${socket.id}`);
-});
-
+// const location: Location = useLocation(); 
 class MyMultiplayerGame {
     canvas: HTMLCanvasElement;
     ctx!: CanvasRenderingContext2D;
@@ -24,6 +19,8 @@ class MyMultiplayerGame {
 	buttons!: NodeListOf<HTMLButtonElement>;
 	// exitButton!: HTMLButtonElement;
 	drawGame!: DrawGame;
+	onlineBtn!: HTMLButtonElement;
+	socket!: Socket;
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -39,8 +36,23 @@ class MyMultiplayerGame {
 		this.message = document.getElementById("message") as HTMLElement;
 		this.buttons = document.querySelectorAll<HTMLButtonElement>(".btn");
 		// this.exitButton = document.getElementById("exit-btn") as HTMLButtonElement;
-		this.initSocketListeners();
 		this.drawGame = new DrawGame(this.canvas, this.ctx);
+		this.onlineBtn = document.getElementById("online-game") as HTMLButtonElement;
+
+		this.onlineBtn.addEventListener("click", () => {
+			if (!this.socket) {
+				this.socket = io("http://localhost:3000", {
+					transports: ["websocket"],
+					withCredentials: true,
+				});
+	
+				this.socket.on("connect", () => {
+					console.log(pathn);
+					console.log(`You connected to the server with id : ${this.socket.id}`);
+				});
+			}
+			this.initSocketListeners();
+		});
     }
 
 	startMultiplayerGame(): void {
@@ -48,16 +60,22 @@ class MyMultiplayerGame {
 			button.style.display = "none";
 		}
 		const interval = setInterval(() => {
-			if (socket.connected) {
+			if (this.socket.connected) {
 				clearInterval(interval);
 				this.message.innerHTML = "Waiting for opponent to join...";
-				socket.emit("join-room");
+				this.socket.emit("join-room");
 			} else {
 				this.message.innerHTML =
 					"Failed to connect to server, please try again later";
 			}
 		}, 50);
 	}
+
+	checkLocation = () => {
+		if (pathn === '/game') {
+			console.log('Navigated to somewhere');
+		}
+	};
 	
 	render(room: Room): void {
 		if (room.winner) {
@@ -87,12 +105,12 @@ class MyMultiplayerGame {
 	}
 
 	initSocketListeners(): void {
-		socket.on("player-number", (num: number) => {
+		this.socket.on("player-number", (num: number) => {
 			console.log(`You are player : ${num}`);
 			this.playerNumber = num;
 		});
 		
-		socket.on("start-game", () => {
+		this.socket.on("start-game", () => {
 			console.log("Starting game.");
 			this.gameStarted = true;
 			setTimeout(() => {
@@ -112,7 +130,7 @@ class MyMultiplayerGame {
 			}, 1000);
 		});
 		
-		socket.on("game-started", (room: Room) => {
+		this.socket.on("game-started", (room: Room) => {
 			console.log(`Game started with room id : ${room.id}`);
 			this.roomID = room.id;
 		
@@ -130,7 +148,7 @@ class MyMultiplayerGame {
 			const pos: DOMRect = this.canvas.getBoundingClientRect();
 			this.canvas.addEventListener("mousemove", (event: MouseEvent) => {
 				if (this.gameStarted) {
-					socket.emit("update-player", {
+					this.socket.emit("update-player", {
 						playerNumber: this.playerNumber,
 						roomID: this.roomID,
 						direction: "mouse",
@@ -142,14 +160,14 @@ class MyMultiplayerGame {
 		
 			window.addEventListener("keydown", (event: KeyboardEvent) => {
 				if (event.key === "ArrowUp") {
-					socket.emit("update-player", {
+					this.socket.emit("update-player", {
 						playerNumber: this.playerNumber,
 						roomID: this.roomID,
 						direction: "up",
 						position: pos,
 					});
 				} else if (event.key === "ArrowDown") {
-					socket.emit("update-player", {
+					this.socket.emit("update-player", {
 						playerNumber: this.playerNumber,
 						roomID: this.roomID,
 						direction: "down",
@@ -157,11 +175,11 @@ class MyMultiplayerGame {
 					});
 				}
 			});
-		
+
 			this.render(room);
 		});
 		
-		socket.on("update-game", (room: Room) => {
+		this.socket.on("update-game", (room: Room) => {
 			ball.x = room.roomBall.x;
 			ball.y = room.roomBall.y;
 			ball.r = room.roomBall.r;
@@ -176,13 +194,14 @@ class MyMultiplayerGame {
 			player_2.score = room.roomPlayers[1].score;
 		
 			this.render(room);
+			this.checkLocation();
 		});
 		
-		socket.on("endGame", (room: Room) => {
+		this.socket.on("endGame", (room: Room) => {
 			console.log("Game Over.");
 			this.gameStarted = false;
 			this.render(room);
-			socket.emit("leave", this.roomID);
+			this.socket.emit("leave", this.roomID);
 		});
 	}
 }
