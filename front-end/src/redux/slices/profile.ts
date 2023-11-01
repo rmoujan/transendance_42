@@ -8,7 +8,7 @@ export interface Profile {
     avatar: string;
     default_avatar: string; 
     status: string;
-    _id: string;
+    _id: number;
 }
 
 const initialState: Profile = {
@@ -17,7 +17,7 @@ const initialState: Profile = {
     avatar: "",
     default_avatar: "",
     status: "",
-    _id: "",
+    _id: 0,
 };
 
 export const ProfileSlice = createSlice({

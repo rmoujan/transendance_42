@@ -1,6 +1,6 @@
 import { AuthService } from "../auth.service";
 import { JwtService } from "src/jwt/jwtservice.service";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from '../../prisma.service';
 declare const FortyTwoStrategy_base: new (...args: any[]) => any;
 export declare class FortyTwoStrategy extends FortyTwoStrategy_base {
     private authservice;

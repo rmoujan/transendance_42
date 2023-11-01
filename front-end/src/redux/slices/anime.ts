@@ -21,9 +21,6 @@ export const CharacterSlice = createSlice({
     initialState,
     reducers: {
         fetchCharacters(state, action) {
-            console.log(`************************`);
-            console.log(action.payload.data);
-            console.log(`************************`);
             // ! get all characters
             const charactersList = action.payload.data.map((el: any) => {
                 return {
@@ -34,8 +31,6 @@ export const CharacterSlice = createSlice({
             }
             );
             state.characters = charactersList;
-            console.log(state.characters);
-            // state.characters = action.payload;
         },
     },
 });
@@ -49,7 +44,6 @@ export function FetchCharacters() {
             .get("https://api.jikan.moe/v4/top/characters")
             .then((res) => {
                 dispatch(fetchCharacters(res.data));
-                // const delay = Math.pow(2, retry) + 1;
             })
             .catch((err) => {
                 console.log(err);

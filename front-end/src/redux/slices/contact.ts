@@ -5,8 +5,10 @@ export interface Contact {
     open: boolean;
     type: string;
   };
+  name: string;
+  avatar: string;
   type_chat: string;
-  room_id: string;
+  room_id: number;
   muted: boolean;
   blocked: boolean;
   snackbar: {
@@ -21,8 +23,10 @@ const initialState: Contact = {
     open: false,
     type: "CONTACT",
   },
+  name: "",
+  avatar: "",
   type_chat: "",
-  room_id: "",
+  room_id: 0,
   muted: false,
   blocked: false,
   snackbar: {
@@ -44,9 +48,10 @@ export const ContactSlice = createSlice({
       state.contactInfos.type = action.payload;
     },
     selectConversation(state, action) {
-      console.log(action.payload);
       state.type_chat = "individual";
       state.room_id = action.payload.room_id;
+      state.name = action.payload.name;
+      state.avatar = action.payload.avatar;
     },
     mutedContact(state, action) {
       state.room_id = action.payload.room_id;

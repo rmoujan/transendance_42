@@ -1,6 +1,6 @@
 import { AuthService } from './auth.service';
 import { JwtService } from 'src/jwt/jwtservice.service';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma.service';
 export declare class AuthController {
     private service;
     private jwt;

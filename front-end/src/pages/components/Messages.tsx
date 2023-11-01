@@ -1,67 +1,50 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import ChatGeneral from "../Chat/ChatGeneral";
+import { connectSocket, socket } from "../../socket";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import {socket, connectSocket} from "../../socket"
-import { addConversation, updatedConverstation } from "../../redux/slices/converstation";
-import io from "socket.io-client";
+import { FetchFriends } from "../../redux/slices/app";
+import { fetchCurrentMessages, setCurrentConverstation } from "../../redux/slices/converstation";
+
 function Messages() {
-  // const dispatch = useAppDispatch();
-  // const { id_user , status} = useAppSelector((state) => state.profile);
-  // const conversations = useAppSelector((state) => state.converstation.direct_chat);
-
+  const { profile, converstation } = useAppSelector(state => state);
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    if (status) {
+    if (!socket) {
+      // console.log("socket not found");
+      connectSocket(profile._id.toString());
+      console.log("socket connected");
 
-      if (!socket) {
-        // connectSocket(_id);
-      }
+      socket.on("chatToDm", (data: any) => {
+        console.log("received data !!", data);
+      });
 
-      // socket.on("new_message", (data: any) => {
-      //   const message = data.message;
-      //   console.log(message, data);
+      socket.on("chatToDm", (data:any) => {
+        console.log(data)
+        console.log(converstation.direct_chat.current_conversation, data);
         // check if msg we got is from currently selected conversation
-        // if (current_conversation?.id === data.conversation_id) {
-        //   dispatch(
-        //     AddDirectMessage({
-        //       id: message._id,
-        //       type: "msg",
-        //       subtype: message.type,
-        //       message: message.text,
-        //       incoming: message.to === user_id,
-        //       outgoing: message.from === user_id,
-        //     })
-        //   );
+        // if (converstation.direct_chat.current_conversation.id === data.id) {
+          dispatch(
+            fetchCurrentMessages({
+              id: data.id,
+              type: "msg",
+              subtype: data.subtype,
+              message: data.message,
+              incoming: data.send === profile._id,
+              outgoing: data.receive === profile._id,
+            })
+          );
         // }
-      // });
+      });
 
-  //     socket.on("start_chat", (data: any) => {
-  //       console.log(data);
-  //       // ! add / update to conversation list
-  //       const existing_conversation = conversations.find(
-  //         (el) => el?.id === data._id
-  //       );
-  //       if (existing_conversation) {
-  //         // update direct conversation
-  //         dispatch(updatedConverstation({ conversation: data }));
-  //       } else {
-  //         // add direct conversation
-  //         dispatch(addConversation({ conversation: data }));
-  //       }
-  //       // select converstation
-  //       // dispatch(SelectConversation({ room_id: data._id }));
-  //     });
-
-  //   }
-
-  //   // Remove event listener on component unmount
-  //   return () => {
-  //     socket?.off("start_chat");
-  //     socket?.off("new_message");
-  //   };
-  // }, [status, socket]);
-
-
-  
+      
+    }
+    // return () => {
+    //   if (socket) {
+    //     socket.off();
+    //     console.log("socket off");
+    //   }
+    // }
+  }, [profile, socket, converstation]);
 
   return (
     <div>

@@ -6,6 +6,7 @@ import "./App.css";
 import Home from "./pages/Home";
 import { closeSnackBar } from "./redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "./redux/store/store";
+import { FetchFriends } from "./redux/slices/app";
 
 const vertical = "top";
 const horizontal = "center";
@@ -16,9 +17,10 @@ const Alert = React.forwardRef((props, ref) => (
 
 function App() {
   const { severity, message, open } = useAppSelector(
-    (state) => state.contact.snackbar
+    state => state.contact.snackbar
   );
   const dispatch = useAppDispatch();
+  dispatch(FetchFriends());
 
   return (
     <div>
@@ -38,7 +40,6 @@ function App() {
         >
           <Alert
             onClose={() => {
-              console.log("This is clicked");
               dispatch(closeSnackBar());
             }}
             severity={severity}
