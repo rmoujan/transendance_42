@@ -138,10 +138,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       const data = {
         id: 90,
         message: message,
+        subtype: 'text',
         send: senderId,
         recieve: receiverId
       };
       this.server.to(room).emit('chatToDm', data);
+      console.log(data)
       console.log("after sending");
       // process o database .
 
