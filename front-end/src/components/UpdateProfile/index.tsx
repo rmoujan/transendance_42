@@ -5,6 +5,7 @@ import {
   Slide,
   Stack,
   Typography,
+  styled,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import { TransitionProps } from "@mui/material/transitions";
@@ -13,21 +14,21 @@ import {
   ClockClockwise,
   FinnTheHuman,
 } from "@phosphor-icons/react";
-import React from "react";
+import React, { useRef } from "react";
 import { toggleProfile, updateAvatar } from "../../redux/slices/profile";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import GalleryDialog from "./GalleryDialog";
 import { showSnackbar } from "../../redux/slices/contact";
 
-const VisuallyHiddenInput = styled('input')({
-  clip: 'rect(0 0 0 0)',
-  clipPath: 'inset(50%)',
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
   height: 1,
-  overflow: 'hidden',
-  position: 'absolute',
+  overflow: "hidden",
+  position: "absolute",
   bottom: 0,
   left: 0,
-  whiteSpace: 'nowrap',
+  whiteSpace: "nowrap",
   width: 1,
 });
 
@@ -41,9 +42,34 @@ const Transition = React.forwardRef(function Transition(
 });
 
 const UpdateProfile = () => {
-  const { profile } = useAppSelector((state) => state);
+  const { profile } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
   const [openGallery, setOpenGallery] = React.useState(false);
+
+  const uploadInputRef = useRef(null);
+
+  const onUploadImage = (e: any) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Create a URL for the selected file
+      const filePath = URL.createObjectURL(file);
+      // Dispatch the updateAvatar action to update the avatar in the Redux store
+      dispatch(updateAvatar(filePath));
+      dispatch(toggleProfile());
+      dispatch(
+        showSnackbar({
+          severity: "success",
+          message: "Your Avatar changed to what you uploaded",
+        })
+      );
+    }
+  };
+
+  const resetInputValue = () => {
+    if (uploadInputRef.current) {
+      uploadInputRef.current.value = null;
+    }
+  };
   return (
     <Dialog
       open={profile.open}
@@ -88,8 +114,7 @@ const UpdateProfile = () => {
         <Stack direction={"row"} justifyContent={"center"} spacing={4}>
           <Button
             onClick={() => {
-              console.log("default");
-              updateAvatar(profile.default_avatar);
+              dispatch(updateAvatar(profile.default_avatar));
               dispatch(toggleProfile());
               dispatch(
                 showSnackbar({
@@ -114,11 +139,8 @@ const UpdateProfile = () => {
             Default
           </Button>
           <Button
-            onClick={() => {
-              console.log("update");
-              // dispatch(toggleProfile());
-            }}
             variant="contained"
+            component="label"
             endIcon={<ArrowSquareUp size={30} />}
             sx={{
               borderRadius: "15px",
@@ -131,12 +153,19 @@ const UpdateProfile = () => {
               },
             }}
           >
-            <VisuallyHiddenInput type="file" />
-            Update
+            Upload
+            <input
+              type="file"
+              ref={uploadInputRef}
+              onChange={onUploadImage}
+              onClick={resetInputValue}
+              accept="image/*"
+              hidden
+            />
           </Button>
           <Button
             onClick={() => {
-              console.log("open gallery");
+              console.log("open galleryss");
               setOpenGallery(true);
               // dispatch(toggleProfile());
             }}

@@ -37,13 +37,13 @@ let AuthController = class AuthController {
         }
         if (user.IsFirstTime) {
             {
-                console.log(...oo_oo(`1321409281_0`, 'first time'));
+                console.log('first time');
                 await this.prisma.user.update({ where: { id_user: req.user.id }, data: { IsFirstTime: false } });
                 res.redirect('http://localhost:5173/setting');
             }
         }
         else {
-            console.log(...oo_oo(`1321409281_1`, 'not first time'));
+            console.log('not first time');
             res.redirect('http://localhost:5173/home');
         }
         return (req);
@@ -77,7 +77,7 @@ let AuthController = class AuthController {
     async Remove_friends(Body, req) {
         const friendData = await this.prisma.user.findUnique({ where: { id_user: Body.id_user } });
         const decoded = this.jwt.verify(req.cookies['cookie']);
-        console.log(...oo_oo(`1321409281_2`, friendData));
+        console.log(friendData);
         const user = await this.prisma.freind.deleteMany({
             where: {
                 AND: [
@@ -150,7 +150,7 @@ let AuthController = class AuthController {
     }
     async Get_User(req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
-        console.log(...oo_oo(`1321409281_3`, decoded));
+        console.log(decoded);
         let obj = [];
         const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id }, });
         obj.push(user);

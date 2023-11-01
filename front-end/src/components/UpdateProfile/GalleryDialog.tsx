@@ -15,7 +15,9 @@ import {
   styled,
 } from "@mui/material";
 import ScrollBar from "../ScrollBar";
-import { GET_TOP_CHARACTERS } from "../../graphql/Query";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { FetchCharacters } from "../../redux/slices/anime";
+// import { GET_TOP_CHARACTERS } from "../../graphql/Query";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -35,26 +37,28 @@ const ColorButton = styled(Button)<ButtonProps>(() => ({
 }));
 
 const GalleryDialog = ({ open, handleClose }: any) => {
-  const { loading, error, data } = useQuery(GET_TOP_CHARACTERS);
-  const [clickedImage, setClickedImage] = useState<string | null>(null);
+ 
+  const { characters } = useAppSelector(state => state.characters);
+  // const { loading, error, data } = useQuery(GET_TOP_CHARACTERS);
+  // const [clickedImage, setClickedImage] = useState<string | null>(null);
 
-  if (loading) return <p>Loading...</p>;
-  if (error) {
-    console.error("GraphQL Error:", error);
-    return <p>Error: {error.message}</p>;
-  }
+  // if (loading) return <p>Loading...</p>;
+  // if (error) {
+  //   console.error("GraphQL Error:", error);
+  //   return <p>Error: {error.message}</p>;
+  // }
 
-  useEffect(() => {
-    console.log("data", data);
-  }, [data]);
+  // useEffect(() => {
+  //   dispatch(FetchCharacters());
+  // }, []);
 
-  const characters = data.topCharacters;
+  // const characters = data.topCharacters;
 
-  const handleImageClick = (imageUrl: string) => {
-    setClickedImage(imageUrl);
-    // You can perform any actions related to the clicked image here
-    console.log("Clicked Image:", clickedImage);
-  };
+  // const handleImageClick = (imageUrl: string) => {
+  //   setClickedImage(imageUrl);
+  //   // You can perform any actions related to the clicked image here
+  //   console.log("Clicked Image:", clickedImage);
+  // };
   return (
     <Dialog
       fullWidth
@@ -74,7 +78,7 @@ const GalleryDialog = ({ open, handleClose }: any) => {
         },
       }}
     >
-      {/* <Stack
+      <Stack
         direction={"row"}
         alignContent={"center"}
         spacing={3}
@@ -108,26 +112,25 @@ const GalleryDialog = ({ open, handleClose }: any) => {
           <ScrollBar>
             <Grid item xs={12}>
               <Grid container justifyContent="center" spacing={2}>
-                {characters.map((character: any) => (
-                  <Grid key={character.id} item>
+                {characters.map((el) => (
+                  <Grid key={el.id} item>
                     <Paper
                       sx={{
                         height: 240,
                         width: 200,
-                        backgroundImage: `url(${character.image_url})`,
+                        backgroundImage: `url(${el.image})`,
                         backgroundSize: "cover",
                         cursor: "pointer", // Add a pointer cursor
                       }}
-                      onClick={() => handleImageClick(character.image_url)}
-                    >
-                    </Paper>
+                      // onClick={() => handleImageClick(character.image_url)}
+                    ></Paper>
                   </Grid>
                 ))}
               </Grid>
             </Grid>
           </ScrollBar>
         </Grid>
-      </Stack> */}
+      </Stack>
     </Dialog>
   );
 };

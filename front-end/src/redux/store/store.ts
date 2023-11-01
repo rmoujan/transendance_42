@@ -4,6 +4,7 @@ import { ContactSlice } from "../slices/contact";
 import { ConverstationSlice } from "../slices/converstation";
 import { AppSlice } from "../slices/app";
 import { ProfileSlice } from "../slices/profile";
+import { CharacterSlice } from "../slices/anime";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +12,7 @@ export const store = configureStore({
     converstation: ConverstationSlice.reducer,
     app: AppSlice.reducer,
     profile: ProfileSlice.reducer,
+    characters: CharacterSlice.reducer,
 
   },
 });

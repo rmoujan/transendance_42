@@ -24,14 +24,14 @@ type User = {
 };
 function MaincontentProfile() {
   const { profile } = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
-  const { loading, error, data } = useQuery(GET_TOP_CHARACTERS);
+  // const dispatch = useAppDispatch();
+  // const { loading, error, data } = useQuery(GET_TOP_CHARACTERS);
 
-  useEffect(() => {
-    console.log("data", data);
-  }, [data]);
+  // useEffect(() => {
+  //   console.log("data", data);
+  // }, [data]);
 
-  const [toggle, setToggle] = useState(false);
+  // const [toggle, setToggle] = useState(false);
   const [user, setUser] = useState<User[]>([]);
   useEffect(() => {
     const fetchData = async () => {

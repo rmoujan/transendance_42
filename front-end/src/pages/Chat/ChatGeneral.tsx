@@ -9,7 +9,7 @@ import ChatTabs from "./ChatTabs";
 
 const ChatGeneral: React.FC = () => {
   const { contact, profile } = useAppSelector(state => state);
-  console.log("==========>", profile);
+  // console.log("==========>", profile);
 
   // Create a function to render the component conditionally
   const renderContactInfoComponent = () => {

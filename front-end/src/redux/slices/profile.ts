@@ -42,7 +42,10 @@ export const ProfileSlice = createSlice({
             state._id = action.payload[0].id_user;
         },
         updateAvatar(state, action) {
-            state.avatar = action.payload[0].avatar;
+            state.avatar = action.payload;
+        },
+        editedNameProfile(state, action) {
+            state.name = action.payload;
         }
     },
 });
@@ -70,4 +73,5 @@ export const {
     fetchProfile,
     updateProfile,
     updateAvatar,
+    editedNameProfile,
 } = ProfileSlice.actions;
