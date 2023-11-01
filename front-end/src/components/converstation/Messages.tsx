@@ -29,11 +29,12 @@ const Messages = () => {
       <ScrollBar>
         <Stack spacing={2}>
           {current_messages.map(el => {
-            switch (el?.type) {
+            console.log(el)
+            switch (el.type) {
               case "divider":
                 return <Timeline el={el} />;
               case "msg":
-                switch (el?.subtype) {
+                switch (el.subtype) {
                   case "img":
                     return <MediaMsg el={el} />;
                   case "doc":

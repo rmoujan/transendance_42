@@ -36,7 +36,7 @@ interface Props {
 const ContactElements = (cont: any) => {
   // const { contact } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
-  const id = cont.id_user.toString();
+  const id = cont.id_user
   // const selectedChatId = contact.room_id;
   // const isSelected = +selectedChatId === cont.id;
 
@@ -108,7 +108,7 @@ const ContactElements = (cont: any) => {
               console.log("Start Converstation");
               // ! emit "start_converstation" event
               // socket.emit("start_conversation", { to: _id, from: user_id });
-              dispatch(selectConversation({ room_id: id }));
+              dispatch(selectConversation({ room_id: id, name: cont.name, avatar: cont.avatar }));
             }}
           >
             <Chat />

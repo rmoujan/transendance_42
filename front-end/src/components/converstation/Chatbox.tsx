@@ -29,12 +29,11 @@ const ChatInput = ({ setOpenEmojis, setValue, value, inputRef }: any) => {
     if (event.key === "Enter") {
       // Prevent the default behavior of "Enter" key in a textarea
       event.preventDefault();
-
-      // Your message sending logic here
       console.log(value);
       console.log("contact", contact);
       socket.emit("direct_message", {
         message: linkify(value),
+        subtype: 'text',
         from: profile._id,
         to: contact.room_id,
       });
