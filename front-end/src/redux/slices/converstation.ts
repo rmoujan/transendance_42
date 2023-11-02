@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+
 const initialState = {
   direct_chat: {
     conversations: [],
@@ -32,12 +33,15 @@ export const ConverstationSlice = createSlice({
     },
     setCurrentConverstation(state, action) {
       // * set current converstation
-      console.log(action.payload)
+      // console.log(action.payload)
       state.direct_chat.current_conversation = action.payload;
     },
     fetchCurrentMessages(state, action) {
       // ! get all messages of current converstation
-      state.direct_chat.current_messages.push(action.payload);
+      // console.log(action.payload)
+      const messages: any = action.payload;
+      state.direct_chat.current_messages.push(messages);
+      // state.direct_chat.current_messages.push();
     },
   },
 });

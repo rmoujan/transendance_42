@@ -29,11 +29,13 @@ const ChatInput = ({ setOpenEmojis, setValue, value, inputRef }: any) => {
     if (event.key === "Enter") {
       // Prevent the default behavior of "Enter" key in a textarea
       event.preventDefault();
-      console.log(value);
-      console.log("contact", contact);
+      console.log(linkify(value));
+      // console.log(value);
+      // console.log("contact", contact);
+      if (!value) return;
       socket.emit("direct_message", {
         message: linkify(value),
-        subtype: 'text',
+        subtype: "text",
         from: profile._id,
         to: contact.room_id,
       });
@@ -78,10 +80,11 @@ const ChatInput = ({ setOpenEmojis, setValue, value, inputRef }: any) => {
                   size={32}
                   color="#C7BBD1"
                   onClick={() => {
-                    console.log(value);
-                    console.log('==>', typeof(profile._id));
-                    console.log('=>', typeof(contact.room_id));
-                    const _id = parseInt(contact.room_id);
+                    // console.log(linkify(value));
+                    // console.log('==>', typeof(profile._id));
+                    // console.log('=>', typeof(contact.room_id));
+                    if (!linkify(value)) return;
+                    const _id = parseInt(contact.room_id.toString());
                     socket.emit("direct_message", {
                       message: linkify(value),
                       // conversation_id: room_id,
@@ -116,9 +119,9 @@ const Chatbox = () => {
 
   function handleEmojiClick(emoji: any) {
     const input = inputRef.current;
-    console.log("emoji", emoji);
+    // console.log("emoji", emoji);
     setValue(value + emoji);
-    console.log("input", input);
+    // console.log("input", input);
 
     // if (input) {
     //   const selectionStart = input.selectionStart;

@@ -6,7 +6,7 @@ import { FetchFriends } from "../../redux/slices/app";
 import { fetchCurrentMessages, setCurrentConverstation } from "../../redux/slices/converstation";
 
 function Messages() {
-  const { profile, converstation } = useAppSelector(state => state);
+  const { profile, converstation, contact } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (!socket) {
@@ -14,23 +14,24 @@ function Messages() {
       connectSocket(profile._id.toString());
       console.log("socket connected");
 
-      socket.on("chatToDm", (data: any) => {
-        console.log("received data !!", data);
-      });
+
 
       socket.on("chatToDm", (data:any) => {
-        console.log(data)
-        console.log(converstation.direct_chat.current_conversation, data);
+        console.log('---->', data)
+        // console.log(converstation.direct_chat.current_conversation, data);
         // check if msg we got is from currently selected conversation
         // if (converstation.direct_chat.current_conversation.id === data.id) {
+          console.log(`${contact.room_id} <== contact ==> ${data.send}`);
+          console.log(`${profile._id} <== profile ==> ${data.recieve}`);
+          // console.log(`this receiver ==>`, data.receive);
           dispatch(
             fetchCurrentMessages({
               id: data.id,
               type: "msg",
               subtype: data.subtype,
               message: data.message,
-              incoming: data.send === profile._id,
-              outgoing: data.receive === profile._id,
+              outgoing: data.send === profile._id, //incoming
+              incoming: data.recieve === profile._id, //outgoing
             })
           );
         // }

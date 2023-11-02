@@ -38,7 +38,7 @@ const TabPanel = React.forwardRef<HTMLDivElement, TabPanelProps>(
       <BaseTabPanel
         ref={ref}
         className={clsx(
-          " py-5 px-3 bg-green-400 dark:bg-[#806EA9] border-slate-200 dark:border-slate-700 rounded-[46px] w-full h-full font-sans text-sm",
+          " py-5 px-3 bg--[#f78562] dark:bg-[#f78562] border-slate-200 dark:border-slate-700 rounded-[46px] w-full h-full font-sans text-sm",
           className
         )}
         {...other}
@@ -104,8 +104,8 @@ const Tab = React.forwardRef<HTMLButtonElement, TabProps>((props, ref) => {
             className: clsx(
               `font-sans ${
                 ownerState.selected
-                  ? "text-[#443263] bg-[#806EA9]"
-                  : "text-[#806EA9] bg-[#443263] focus:text-[#EADDFF] hover:bg-[#514371B8]"
+                  ? "text-[#443263] bg-[#f78562]"
+                  : "text-[#f78562] bg-[#06254f] focus:text-[#EADDFF] hover:bg-[#514371B8]"
               } ${
                 ownerState.disabled
                   ? "cursor-not-allowed opacity-50"

@@ -43,9 +43,6 @@ const ChatElements = (id: IdType) => {
       sx={{
         width: "100%",
         height: 85,
-        borderRadius: "1",
-        backgroundColor: isSelected ? "#684C83" : "#3f3a5f",
-        // backgroundColor: "#684C83",
       }}
       p={2}
     >

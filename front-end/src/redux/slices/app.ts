@@ -26,7 +26,7 @@ export const AppSlice = createSlice({
             state.users = action.payload;
         },
         fetchFriends(state, action) {
-            console.log(action);
+            // console.log(action);
             // ~ get all friends
             state.friends = action.payload;
         },

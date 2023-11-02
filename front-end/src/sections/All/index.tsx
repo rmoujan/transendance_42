@@ -44,7 +44,7 @@ const All = () => {
             }, height: "100%"
           }}
         >
-          <Stack>
+          <Stack >
             {ChatList.filter((el) => !el.pinned).map((el) => {
               return <ChatElements {...el} />;
             })}

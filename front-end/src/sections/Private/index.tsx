@@ -15,10 +15,6 @@ import {
 } from "../../components/search";
 import { ChatList } from "../../data";
 
-//   import { useRef } from "react";
-// import EVENTS from "../../config/events";
-// import { useSocket } from "../../contexts/socket.context";
-
 const ColorButton = styled(Button)<ButtonProps>(() => ({
   color: "#C7BBD1",
   backgroundColor: "#443263",

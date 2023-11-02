@@ -62,13 +62,13 @@ export const ContactSlice = createSlice({
       state.blocked = !state.blocked;
     },
     openSnackBar(state, action) {
-      console.log(action.payload);
+      // console.log(action.payload);
       state.snackbar.open = true;
       state.snackbar.severity = action.payload.severity;
       state.snackbar.message = action.payload.message;
     },
     closeSnackBar(state) {
-      console.log("This is getting executed");
+      // console.log("This is getting executed");
       state.snackbar.open = false;
       state.snackbar.message = "";
     },

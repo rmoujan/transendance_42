@@ -26,35 +26,35 @@ const Messages = () => {
 
   return (
     <Box p={1} sx={{ width: "100%", borderRadius: "64px" }}>
-      <ScrollBar>
-        <Stack spacing={2}>
-          {current_messages.map(el => {
-            console.log(el)
-            switch (el.type) {
-              case "divider":
-                return <Timeline el={el} />;
-              case "msg":
-                switch (el.subtype) {
-                  case "img":
-                    return <MediaMsg el={el} />;
-                  case "doc":
-                    // doc msg
-                    break;
-                  case "link":
-                    // link msg
-                    break;
-                  case "reply":
-                    return <ReplyMsg el={el} />;
-                  default:
-                    return <TextMsg el={el} />;
-                }
-                break;
-              default:
-                return <></>;
-            }
-          })}
-        </Stack>
-      </ScrollBar>
+      {/* <ScrollBar> */}
+      <Stack spacing={2}>
+        {current_messages.map((el: any) => {
+          // console.log(el)
+          switch (el.type) {
+            case "divider":
+              return <Timeline el={el} />;
+            case "msg":
+              switch (el.subtype) {
+                case "img":
+                  return <MediaMsg el={el} />;
+                case "doc":
+                  // doc msg
+                  break;
+                case "link":
+                  // link msg
+                  break;
+                case "reply":
+                  return <ReplyMsg el={el} />;
+                default:
+                  return <TextMsg el={el} />;
+              }
+              break;
+            default:
+              return <></>;
+          }
+        })}
+      </Stack>
+      {/* </ScrollBar> */}
     </Box>
   );
 };

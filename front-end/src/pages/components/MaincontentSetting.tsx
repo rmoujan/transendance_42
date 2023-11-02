@@ -7,6 +7,7 @@ import { fadeIn } from "./variants";
 import axios from "axios";
 import AboutMe from "./AboutMe";
 import Cover from "../../img/bg33.png";
+import { useAppSelector } from "../../redux/store/store";
 
 
 type User = {
@@ -52,6 +53,7 @@ function MaincontentSetting() {
   //   );
   // }
   const toggleTwoFactor = async (user: User) => {
+    const {profile} = useAppSelector(state => state);
     const updatedTwoFactorStatus = !user.TwoFactor;
 
     // Optimistically update the UI

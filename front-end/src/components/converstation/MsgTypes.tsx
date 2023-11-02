@@ -1,17 +1,17 @@
-import React, { useState } from "react";
 import {
   Box,
   Divider,
-  Stack,
-  Typography,
   IconButton,
   MenuItem,
+  Stack,
+  Typography,
 } from "@mui/material";
-import Menu, { MenuProps } from '@mui/material/Menu';
+import Menu, { MenuProps } from "@mui/material/Menu";
 import { alpha, styled } from "@mui/material/styles";
 import { CaretDown, DotsThreeCircle } from "@phosphor-icons/react";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import React, { useState } from "react";
 import { mutedContact, toggleDialog } from "../../redux/slices/contact";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
 const Message_options = [
   {
@@ -46,42 +46,46 @@ const Contact_menu = [
   },
 ];
 
-
-const StyledMenu = styled((props: MenuProps) => (
+interface MenuPropsState extends MenuProps {
+  isrtl: boolean;
+}
+const StyledMenu = styled((props: MenuPropsState) => (
   <Menu
     elevation={0}
     anchorOrigin={{
-      vertical: 'bottom',
-      horizontal: 'right',
+      vertical: "bottom",
+      horizontal: props.isrtl ? "left" : "right",
     }}
     transformOrigin={{
-      vertical: 'top',
-      horizontal: 'right',
+      vertical: "top",
+      horizontal: props.isrtl ? "right" : "left",
     }}
     {...props}
   />
 ))(({ theme }) => ({
-  '& .MuiPaper-root': {
+  "& .MuiPaper-root": {
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 180,
     color:
-      theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+      theme.palette.mode === "light"
+        ? "rgb(55, 65, 81)"
+        : theme.palette.grey[300],
     boxShadow:
-      'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
-    '& .MuiMenu-list': {
-      padding: '4px 0',
+      "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
+    "& .MuiMenu-list": {
+      padding: "4px 0",
     },
-    '& .MuiMenuItem-root': {
-      '& .MuiSvgIcon-root': {
+    "& .MuiMenuItem-root": {
+      "& .MuiSvgIcon-root": {
         fontSize: 18,
         color: theme.palette.text.secondary,
         marginRight: theme.spacing(1.5),
       },
-      '&:active': {
+      "&:active": {
         backgroundColor: alpha(
           theme.palette.primary.main,
-          theme.palette.action.selectedOpacity,
+          theme.palette.action.selectedOpacity
         ),
       },
     },
@@ -106,7 +110,7 @@ const ReplyMsg = ({ el }: any) => {
         }}
       >
         <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
-          <MsgOptions />
+          <MsgOptions el={el} />
         </Stack>
         <Stack spacing={1}>
           <Stack
@@ -144,7 +148,7 @@ const MediaMsg = ({ el }: any) => {
         }}
       >
         <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
-          <MsgOptions />
+          <MsgOptions el={el} />
         </Stack>
         <Stack spacing={1}>
           <img
@@ -178,7 +182,7 @@ const TextMsg = ({ el }: any) => {
         }}
       >
         <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
-          <MsgOptions />
+          <MsgOptions el={el} />
         </Stack>
         <Typography
           variant="body1"
@@ -198,17 +202,18 @@ const Timeline = ({ el }: any) => {
       alignItems={"center"}
       justifyContent={"space-between"}
     >
-      <Divider width="46%" sx={{ background: "#3D2E5F" }} />
-      <Typography variant="caption">{el.text}</Typography>
-      <Divider width="46%" sx={{ background: "#3D2E5F" }} />
+      <Divider>
+        <Typography variant="caption">{el.text}</Typography>
+      </Divider>
     </Stack>
   );
 };
 
 // ~ this for options in messages
 
-const MsgOptions = () => {
-  const [conversationMenuanchorEl, setConversationMenuAnchorEl] = React.useState(null);
+const MsgOptions = (el: any) => {
+  const [conversationMenuanchorEl, setConversationMenuAnchorEl] =
+    React.useState(null);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const openConversationMenu = Boolean(conversationMenuanchorEl);
 
@@ -220,7 +225,7 @@ const MsgOptions = () => {
     setConversationMenuAnchorEl(null);
   };
   const handleClick = (event: any) => {
-    console.log(event.currentTarget);
+    // console.log(event.currentTarget);
     setConversationMenuAnchorEl(event.currentTarget);
   };
   const handleCloseConversationMenu = () => {
@@ -238,8 +243,8 @@ const MsgOptions = () => {
         aria-expanded={openConversationMenu ? "true" : undefined}
         onClick={handleClick}
       />
-      <Menu
-        id="basic-menu"
+      <StyledMenu
+        id="chat-menu"
         anchorEl={conversationMenuanchorEl}
         open={openConversationMenu}
         onClose={handleCloseConversationMenu}
@@ -252,17 +257,21 @@ const MsgOptions = () => {
             boxShadow: "none",
           },
         }}
+        isrtl={!el.el.incoming}
       >
-        <Stack spacing={1} px={1}>
+        {/* {console.log(el.incoming)} */}
+        <Stack spacing={2} px={1}>
           {/* u can add hover '&:hover': {
       backgroundColor: "red",
     }, */}
           {/* ***** handle closing ***** */}
           {Message_options.map((e, index) => (
-            <MenuItem key={index} onClick={handleCloseConversationMenu}>{e.title}</MenuItem>
+            <MenuItem key={index} onClick={handleCloseConversationMenu}>
+              {e.title}
+            </MenuItem>
           ))}
         </Stack>
-      </Menu>
+      </StyledMenu>
     </>
   );
 };
@@ -270,14 +279,13 @@ const MsgOptions = () => {
 // ~ this for options in contact list
 
 const MenuOptions = () => {
-
   const dispatch = useAppDispatch();
-  const { contact } = useAppSelector((state) => state);
+  const { contact } = useAppSelector(state => state);
 
-
-  const [conversationMenuanchorEl, setConversationMenuAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [conversationMenuanchorEl, setConversationMenuAnchorEl] =
+    React.useState<null | HTMLElement>(null);
   const openConversationMenu = Boolean(conversationMenuanchorEl);
-  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [selectedOption, setSelectedOption] = useState<string>("");
 
   const handleClick = (event: any) => {
     setConversationMenuAnchorEl(event.currentTarget);
@@ -294,7 +302,7 @@ const MenuOptions = () => {
       case "Mute notifications":
         console.log("Mute notifications");
         // ! emit "mute_converstation" event
-        dispatch(mutedContact({room_id: contact.room_id}))
+        dispatch(mutedContact({ room_id: contact.room_id }));
         break;
       case "Clear messages":
         console.log("Clear messages");
@@ -313,9 +321,6 @@ const MenuOptions = () => {
         console.log("default");
         break;
     }
-
-
-
   };
 
   const handleClose = () => {
@@ -333,7 +338,9 @@ const MenuOptions = () => {
         size={36}
         color="#EADDFF"
         id="converstation-positioned-button"
-        aria-controls={openConversationMenu ? "conversation-positioned-menu" : undefined}
+        aria-controls={
+          openConversationMenu ? "conversation-positioned-menu" : undefined
+        }
         aria-haspopup="true"
         aria-expanded={openConversationMenu ? "true" : undefined}
         onClick={handleClick}
@@ -351,10 +358,14 @@ const MenuOptions = () => {
             backgroundColor: "#AE9BCD",
           },
         }}
+        isrtl={true}
       >
         <Stack spacing={1} px={1}>
           {Contact_menu.map((e, index) => (
-            <MenuItem key={index} onClick={(event) => handleCloseClick(event, index)}>
+            <MenuItem
+              key={index}
+              onClick={event => handleCloseClick(event, index)}
+            >
               {e.title}
             </MenuItem>
           ))}
@@ -364,4 +375,4 @@ const MenuOptions = () => {
   );
 };
 
-export { Timeline, TextMsg, MediaMsg, ReplyMsg, MenuOptions };
+export { MediaMsg, MenuOptions, ReplyMsg, TextMsg, Timeline };

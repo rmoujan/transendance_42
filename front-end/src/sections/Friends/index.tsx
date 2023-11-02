@@ -26,7 +26,7 @@ const Friends = () => {
       <Box
         sx={{
           position: "relative",
-          width: 482,
+          width: 452,
           margin: "0 18px 18px",
         }}
       >

@@ -75,7 +75,7 @@ const ContactElements = (cont: any) => {
         width: "100%",
         height: 85,
         borderRadius: "1",
-        backgroundColor: "#806EA9",
+        // backgroundColor: "#806EA9",
       }}
       p={2}
     >
@@ -137,7 +137,7 @@ const ContactElements = (cont: any) => {
           </IconButton>
         </Stack>
       </Stack>
-      <Divider sx={{ paddingTop: "1px", background: "#684C83" }} />
+      <Divider sx={{ paddingTop: "1px", background: "#335f8e" }} />
     </Box>
   );
 };
