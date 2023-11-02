@@ -3,9 +3,7 @@ import { Room } from "./interfaces";
 import DrawGame from "./drawGame";
 import io, { Socket } from "socket.io-client";
 import { pathn } from "../../front/src/pages/Home";
-// import { useLocation, Location } from 'react-router-dom';
 
-// const location: Location = useLocation(); 
 class MyMultiplayerGame {
     canvas: HTMLCanvasElement;
     ctx!: CanvasRenderingContext2D;
@@ -17,7 +15,6 @@ class MyMultiplayerGame {
 	countdown!: number;
 	message!: HTMLElement;
 	buttons!: NodeListOf<HTMLButtonElement>;
-	// exitButton!: HTMLButtonElement;
 	drawGame!: DrawGame;
 	onlineBtn!: HTMLButtonElement;
 	socket!: Socket;
@@ -35,7 +32,6 @@ class MyMultiplayerGame {
 		this.countdown = 3;
 		this.message = document.getElementById("message") as HTMLElement;
 		this.buttons = document.querySelectorAll<HTMLButtonElement>(".btn");
-		// this.exitButton = document.getElementById("exit-btn") as HTMLButtonElement;
 		this.drawGame = new DrawGame(this.canvas, this.ctx);
 		this.onlineBtn = document.getElementById("online-game") as HTMLButtonElement;
 
@@ -55,33 +51,40 @@ class MyMultiplayerGame {
 		});
     }
 
+	checkLocation = () => {
+		if (pathn != '/game') {
+			console.log("TEST TEST TEST");
+			this.socket.disconnect();
+		}
+	};
+
 	startMultiplayerGame(): void {
+		let flag = false;
 		for (const button of this.buttons) {
 			button.style.display = "none";
 		}
+
 		const interval = setInterval(() => {
 			if (this.socket.connected) {
-				clearInterval(interval);
+				if (this.gameStarted) {
+					clearInterval(interval);
+				}
+				this.checkLocation();
 				this.message.innerHTML = "Waiting for opponent to join...";
-				this.socket.emit("join-room");
+				if (flag === false) {
+					this.socket.emit("join-room");
+					flag = true;
+				}
 			} else {
 				this.message.innerHTML =
 					"Failed to connect to server, please try again later";
 			}
 		}, 50);
 	}
-
-	checkLocation = () => {
-		if (pathn === '/game') {
-			console.log('Navigated to somewhere');
-		}
-	};
 	
 	render(room: Room): void {
 		if (room.winner) {
 			this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, "#B2C6E4");
-			this.drawGame.drawLine(this.canvasWidth / 2, 0, this.canvasWidth / 2, this.canvasHeight / 2 - 70, midLine.color);
-			this.drawGame.drawLine(this.canvasWidth / 2, this.canvasHeight / 2 + 70, this.canvasWidth / 2, this.canvasHeight, midLine.color);
 	
 			if (room.winner === this.playerNumber) {
 				if (room.gameAbondoned) {
@@ -92,7 +95,22 @@ class MyMultiplayerGame {
 			} else {
 				this.message.innerHTML = "Game Over, You Lost!";
 			}
-			// this.exitButton.style.display = "block";
+			this.message.style.fontWeight = "bold";
+			this.buttons[0].style.display = "block";
+			this.buttons[0].innerHTML = "Play Again";
+			this.buttons[1].style.display = "block";
+			this.buttons[0].addEventListener("click", () => {
+				this.message.style.fontWeight = "normal";
+				this.socket = io("http://localhost:3000", {
+					transports: ["websocket"],
+					withCredentials: true,
+				});
+	
+				this.socket.on("connect", () => {
+					console.log(pathn);
+					console.log(`You connected to the server with id : ${this.socket.id}`);
+				});
+			});
 		} else {
 			this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, "#B2C6E4");
 			this.drawGame.drawRect(player_1.x, player_1.y, player_1.w, player_1.h, player_1.color);
@@ -114,18 +132,25 @@ class MyMultiplayerGame {
 			console.log("Starting game.");
 			this.gameStarted = true;
 			setTimeout(() => {
-				if (this.message) {
+				this.checkLocation();
+				if (this.socket.connected) {
 					this.message.innerHTML = `The game will start in ${this.countdown} seconds...`;
 				}
 			}, 500);
 		
 			const countdownInterval = setInterval(() => {
+				this.checkLocation();
+				if (this.socket.disconnected) {
+					clearInterval(countdownInterval);
+				}
 				this.countdown--;
-				if (this.countdown) {
+				if (this.countdown && !this.socket.disconnected) {
 					this.message.innerHTML = `The game will start in ${this.countdown} seconds...`;
 				} else {
+					if (!this.socket.disconnected) {
+						this.message.innerHTML = "";
+					}
 					clearInterval(countdownInterval);
-					this.message.innerHTML = "";
 				}
 			}, 1000);
 		});

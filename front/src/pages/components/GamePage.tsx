@@ -35,7 +35,7 @@ function GamePage() {
           id="canvas"
         ></canvas>
         <p
-          className="relative text-bluish-purple inset-0 text-2xl font-roboto font-light px-4 text-center"
+          className="relative text-bluish-purple inset-0 text-2xl font-roboto font-normal px-4 text-center"
           id="message"
         ></p>
         <button
@@ -52,12 +52,6 @@ function GamePage() {
         >
           Play vs Bot
         </button>
-        {/* <button
-          className="hidden text-white bg-exit-red relative text-4xl border-none rounded-main font-zenkaku text-center font-medium tracking-normal my-2 mx-auto pt-1 px-7 pb-2 cursor-pointer"
-          id="exit-btn"
-        >
-          Back Home
-        </button> */}
       </div>
     </div>
   );

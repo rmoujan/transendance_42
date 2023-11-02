@@ -33,8 +33,7 @@ export class AppGateway
     decodeCookie(client: Socket) {
         let cookieHeader;
 
-        cookieHeader = client.handshake.headers.cookie; // Get the entire cookie header as a string
-        // // You can now parse and manipulate the cookie data as needed
+        cookieHeader = client.handshake.headers.cookie;
         const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
             const [name, value] = cookie.trim().split("=");
             acc[name] = value;
@@ -65,12 +64,10 @@ export class AppGateway
             }
             this.server.to(room.id).emit("endGame", room);
             this.rooms = this.rooms.filter((r) => r.id !== room.id);
-			this.users.delete(this.decodeCookie(client).id);
         } else {
-            this.logger.log(
-                `User disconnected but was not in a room: ${client.id}`
-            );
+            this.logger.log(`User disconnected : ${client.id}`);
         }
+		this.users.delete(this.decodeCookie(client).id);
 		console.log(this.users);
     }
 
@@ -183,16 +180,17 @@ export class AppGateway
     }
 
     @SubscribeMessage("leave")
-    async handleLeave(client: Socket, roomID: string) {
-		const decoded = this.decodeCookie(client);
-		await this.prisma.user.update({
-			where: {id_user: decoded.id},
-			data:{
-				losses
-			}
-			}
-		);
+    handleLeave(client: Socket, roomID: string) {
+		// const decoded = this.decodeCookie(client);
+		// await this.prisma.user.update({
+		// 	where: {id_user: decoded.id},
+		// 	data:{
+		// 		losses
+		// 	}
+		// 	}
+		// );
         client.leave(roomID);
+		client.disconnect();
 		this.users.delete(this.decodeCookie(client).id);
     }
 
