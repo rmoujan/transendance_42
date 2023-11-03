@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { showSnackbar } from "../../redux/slices/contact";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-const MEMBERS = ["name 1", "name 2", "name 3", "name 4", "name 4"];
 
 const CreatePrivateForm = ({ handleClose }: any) => {
   const dispatch = useAppDispatch();

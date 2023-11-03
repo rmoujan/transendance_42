@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const initialState = {
   direct_chat: {
     conversations: [],
@@ -19,9 +18,26 @@ export const ConverstationSlice = createSlice({
   name: "converstation",
   initialState,
   reducers: {
-    fetchConverstation(state, action) {
+    fetchConverstations(state, action) {
       // ! get all converstation
       state.direct_chat.conversations = action.payload;
+      const list = action.payload.conversations.map((el) => {
+        const user = el.participants.find(
+          (elm) => elm._id.toString() !== user_id
+        );
+        return {
+          id: el._id,
+          user_id: user?._id,
+          name: `${user?.firstName} ${user?.lastName}`,
+          online: user?.status === "Online",
+          img: user?.avatar,
+          msg: el.messages.slice(-1)[0].text,
+          time: "9:36",
+          unread: 0,
+          pinned: false,
+        };
+      });
+      state.direct_chat.conversations = list;
     },
     updatedConverstation(state, action) {
       // * update converstation
@@ -35,6 +51,16 @@ export const ConverstationSlice = createSlice({
       // * set current converstation
       // console.log(action.payload)
       state.direct_chat.current_conversation = action.payload;
+      const messages = action.payload.messages;
+      const formatted_messages = messages.map((el) => ({
+        id: el._id,
+        type: "msg",
+        subtype: el.type,
+        message: el.text,
+        incoming: el.to === user_id, // ! get user id from profile
+        outgoing: el.from === user_id,
+      }));
+      state.direct_chat.current_messages = formatted_messages;
     },
     fetchCurrentMessages(state, action) {
       // ! get all messages of current converstation
@@ -49,7 +75,7 @@ export const ConverstationSlice = createSlice({
 export default ConverstationSlice.reducer;
 
 export const {
-  fetchConverstation,
+  fetchConverstations,
   updatedConverstation,
   addConversation,
   setCurrentConverstation,

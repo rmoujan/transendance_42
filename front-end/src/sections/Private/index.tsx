@@ -1,10 +1,4 @@
-import {
-  Box,
-  Button,
-  ButtonProps,
-  Divider,
-  Stack
-} from "@mui/material";
+import { Box, Button, ButtonProps, Divider, Stack } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { ArchiveBox, MagnifyingGlass } from "@phosphor-icons/react";
 import ChatElements from "../../components/ChatElements";
@@ -14,6 +8,10 @@ import {
   StyledInputBase,
 } from "../../components/search";
 import { ChatList } from "../../data";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { useEffect } from "react";
+import { socket } from "../../socket";
+import { fetchConverstations } from "../../redux/slices/converstation";
 
 const ColorButton = styled(Button)<ButtonProps>(() => ({
   color: "#C7BBD1",
@@ -24,21 +22,22 @@ const ColorButton = styled(Button)<ButtonProps>(() => ({
 }));
 
 const Privates = () => {
-  // const { socket, roomId, rooms } = useSocket();
-  // const newRoomRef = useRef(null);
+  const dispatch = useAppDispatch();
 
-  // function handleCreateRoom() {
-  //   //get the room name (neme of room)
-  //   const roomName = newRoomRef.current.value || "";
+  const { conversations } = useAppSelector(
+    (state) => state.converstation.direct_chat
+  );
+  const { _id } = useAppSelector((state) => state.profile);
 
-  //   if (!String(roomName).trim()) return;
+  useEffect(() => {
+    socket.emit("get_direct_conversations", { _id }, (data) => {
+      console.log(data); // this data is the list of conversations
+      // dispatch action
 
-  //   // emit room created event (create room)
-  //   socket.emit(EVENTS.CLIENT.CREATE_ROOM, { roomName });
+      dispatch(fetchConverstations({ conversations: data }));
+    });
+  }, []);
 
-  //   // set room name input to empty string
-  //   newRoomRef.current.value = "";
-  // }
   return (
     <Box
       sx={{
@@ -123,7 +122,7 @@ const Privates = () => {
                     />
                   );
                 })} */}
-            {ChatList.filter(el => !el.pinned).map(el => {
+            {conversations.filter((el) => !el.pinned).map((el) => {
               return <ChatElements {...el} />;
             })}
           </Stack>
