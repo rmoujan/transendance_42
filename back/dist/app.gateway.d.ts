@@ -1,0 +1,32 @@
+import { OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect } from "@nestjs/websockets";
+import { Server, Socket } from "socket.io";
+import { Data, Room, RoomBall, RoomPlayer } from "./interfaces";
+import { JwtService } from "./jwt/jwtservice.service";
+import { PrismaService } from "./prisma/prisma.service";
+export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+    private jwt;
+    private prisma;
+    constructor(jwt: JwtService, prisma: PrismaService);
+    server: Server;
+    private users;
+    private rooms;
+    private framePerSec;
+    private isPaused;
+    private player01;
+    private player02;
+    private logger;
+    afterInit(server: Server): void;
+    decodeCookie(client: Socket): any;
+    handleConnection(client: Socket, ...args: any[]): void;
+    handleDisconnect(client: Socket): void;
+    handleDisconnectEvent(client: Socket): void;
+    handleJoinRoom(client: Socket): void;
+    handleUpdatePlayer(client: Socket, data: Data): void;
+    handleLeave(client: Socket, roomID: string, rooms: Room): Promise<void>;
+    findRoomBySocketId(socketId: string): Room;
+    pauseGame(duration: number): void;
+    resetBall(room: Room): void;
+    updateScore(room: Room): void;
+    collision(ball: RoomBall, player: RoomPlayer): boolean;
+    startRoomGame(room: Room): void;
+}

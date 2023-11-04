@@ -42,6 +42,9 @@ model History{
   winner Boolean?
   id_history Int @id @default(autoincrement())
   userId Int @unique
+  userscore Int?
+  enemyId Int?
+  enemyscore Int?
   user User @relation (fields: [userId], references: [id_user])
 }
 
