@@ -41,7 +41,7 @@ model Stat {
 model History{
   winner Boolean?
   id_history Int @id @default(autoincrement())
-  userId Int @unique
+  userId Int
   userscore Int?
   enemyId Int?
   enemyscore Int?
