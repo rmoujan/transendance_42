@@ -165,8 +165,11 @@ let AppGateway = class AppGateway {
             this.server.to(room.id).emit("update-game", room);
         }
     }
-    async handleLeave(client, roomID, rooms) {
+    async handleLeave(client, roomID) {
         const decoded = this.decodeCookie(client);
+        const room = this.rooms.find((room) => room.id === roomID);
+        const player = room.roomPlayers.find((player) => client.id === player.socketId);
+        const enemy = room.roomPlayers.find((player) => client.id !== player.socketId);
         let OppositeId;
         if (decoded.id == this.player01)
             OppositeId = this.player02;
@@ -174,18 +177,11 @@ let AppGateway = class AppGateway {
             OppositeId = this.player01;
         let UserScore;
         let EnemyScore;
-        if (rooms.roomPlayers[0].socketId == client.id) {
-            UserScore = rooms.roomPlayers[0].score;
-            EnemyScore = rooms.roomPlayers[1].score;
-        }
-        else {
-            UserScore = rooms.roomPlayers[1].score;
-            EnemyScore = rooms.roomPlayers[0].score;
-        }
+        UserScore = player.score;
+        EnemyScore = enemy.score;
         const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
-        const room = this.rooms.find((room) => room.id === roomID);
-        const player = room.roomPlayers.find((player) => client.id === player.socketId);
         if (player.won) {
+            console.log('leave');
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
@@ -193,7 +189,7 @@ let AppGateway = class AppGateway {
                     games_played: user.games_played++,
                     history: {
                         create: {
-                            winner: false,
+                            winner: true,
                             userscore: UserScore,
                             enemyId: OppositeId,
                             enemyscore: EnemyScore,
@@ -208,12 +204,21 @@ let AppGateway = class AppGateway {
                 data: {
                     wins: user.wins++,
                     games_played: user.games_played++,
+                    history: {
+                        create: {
+                            winner: false,
+                            userscore: UserScore,
+                            enemyId: OppositeId,
+                            enemyscore: EnemyScore,
+                        }
+                    }
                 }
             });
         }
         client.leave(roomID);
         client.disconnect();
         this.users.delete(this.decodeCookie(client).id);
+        this.rooms = this.rooms.filter((r) => r.id !== room.id);
     }
     findRoomBySocketId(socketId) {
         for (const room of this.rooms) {
@@ -296,15 +301,13 @@ let AppGateway = class AppGateway {
                 if (room.roomPlayers[0].score === 5) {
                     room.winner = 1;
                     room.roomPlayers[0].won = true,
-                        this.rooms = this.rooms.filter((r) => r.id !== room.id);
-                    this.server.to(room.id).emit("endGame", room);
+                        this.server.to(room.id).emit("endGame", room);
                     clearInterval(interval);
                 }
                 else if (room.roomPlayers[1].score === 5) {
                     room.winner = 2;
                     room.roomPlayers[1].won = true,
-                        this.rooms = this.rooms.filter((r) => r.id !== room.id);
-                    this.server.to(room.id).emit("endGame", room);
+                        this.server.to(room.id).emit("endGame", room);
                     clearInterval(interval);
                 }
                 if (room.stopRendering) {
@@ -341,7 +344,7 @@ __decorate([
 __decorate([
     (0, websockets_1.SubscribeMessage)("leave"),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, String, Object]),
+    __metadata("design:paramtypes", [socket_io_1.Socket, String]),
     __metadata("design:returntype", Promise)
 ], AppGateway.prototype, "handleLeave", null);
 exports.AppGateway = AppGateway = __decorate([

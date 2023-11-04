@@ -186,8 +186,11 @@ export class AppGateway
     }
 
     @SubscribeMessage("leave")
-    async handleLeave(client: Socket, roomID: string, rooms :Room) {
+    async handleLeave(client: Socket, roomID: string) {
 		const decoded = this.decodeCookie(client);
+        const room = this.rooms.find((room) => room.id === roomID);
+        const player = room.roomPlayers.find((player) => client.id === player.socketId);
+        const enemy = room.roomPlayers.find((player) => client.id !== player.socketId);
 
         let OppositeId: number;
         if (decoded.id == this.player01)
@@ -197,29 +200,22 @@ export class AppGateway
 
         let UserScore: number;
         let EnemyScore: number;
-        if (rooms.roomPlayers[0].socketId == client.id){
-            UserScore = rooms.roomPlayers[0].score;
-            EnemyScore = rooms.roomPlayers[1].score;
-        }
-        else {
-            UserScore = rooms.roomPlayers[1].score;
-            EnemyScore = rooms.roomPlayers[0].score;
-        }
+
+        UserScore = player.score;
+        EnemyScore = enemy.score;
 
         const user = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
-        const room = this.rooms.find((room) => room.id === roomID);
-        const player = room.roomPlayers.find((player) => client.id === player.socketId);
         if (player.won)
         {
+            console.log('leave');
             await this.prisma.user.update({
-
                 where: {id_user: decoded.id},
                     data:{
                         losses: user.losses++,
                         games_played: user.games_played++,
                         history:{
                             create:{
-                                winner: false,
+                                winner: true,
                                 userscore: UserScore,
                                 enemyId: OppositeId,
                                 enemyscore: EnemyScore,
@@ -235,6 +231,14 @@ export class AppGateway
                     data:{
                         wins: user.wins++,
                         games_played: user.games_played++,
+                        history:{
+                            create:{
+                                winner: false,
+                                userscore: UserScore,
+                                enemyId: OppositeId,
+                                enemyscore: EnemyScore,
+                            }
+                        }
                     }
                 }
             );
@@ -242,6 +246,7 @@ export class AppGateway
         client.leave(roomID);
 		client.disconnect();
 		this.users.delete(this.decodeCookie(client).id);
+        this.rooms = this.rooms.filter((r) => r.id !== room.id);
     }
 
     findRoomBySocketId(socketId: string) {
@@ -348,14 +353,16 @@ export class AppGateway
                 if (room.roomPlayers[0].score === 5) {
                     room.winner = 1;
                     room.roomPlayers[0].won = true,
-                    this.rooms = this.rooms.filter((r) => r.id !== room.id);
                     this.server.to(room.id).emit("endGame", room);
+                    // console.log(room);
+                    // this.rooms = this.rooms.filter((r) => r.id !== room.id);
                     clearInterval(interval);
                 } else if (room.roomPlayers[1].score === 5) {
                     room.winner = 2;
                     room.roomPlayers[1].won = true,
-                    this.rooms = this.rooms.filter((r) => r.id !== room.id);
                     this.server.to(room.id).emit("endGame", room);
+                    // console.log(room);
+                    // this.rooms = this.rooms.filter((r) => r.id !== room.id);
                     clearInterval(interval);
                 }
 

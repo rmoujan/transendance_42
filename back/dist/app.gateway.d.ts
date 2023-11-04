@@ -22,7 +22,7 @@ export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, O
     handleDisconnectEvent(client: Socket): void;
     handleJoinRoom(client: Socket): void;
     handleUpdatePlayer(client: Socket, data: Data): void;
-    handleLeave(client: Socket, roomID: string, rooms: Room): Promise<void>;
+    handleLeave(client: Socket, roomID: string): Promise<void>;
     findRoomBySocketId(socketId: string): Room;
     pauseGame(duration: number): void;
     resetBall(room: Room): void;
