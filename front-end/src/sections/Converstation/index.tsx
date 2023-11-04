@@ -4,6 +4,7 @@ import Chatbox from "../../components/converstation/Chatbox";
 import Header from "../../components/converstation/Header";
 import Messages from "../../components/converstation/Messages";
 import { useAppSelector } from "../../redux/store/store";
+import axios from "axios";
 
 const Converstation = () => {
   const messageListRef = useRef<HTMLDivElement | null>(null);
@@ -16,6 +17,26 @@ const Converstation = () => {
     if (messageListRef.current) {
       messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
     }
+
+    function axiosTest() {
+      // create a promise for the axios request
+      const promise = axios.get('http://localhost:3000/chatData/AllConversationsDm', {
+        withCredentials: true,
+      })
+  
+      // using .then, create a new promise which extracts the data
+      const dataPromise = promise.then((response) => response.data)
+  
+      // return it
+      return dataPromise
+  }
+
+  axiosTest()
+    .then(data => {
+      console.log(data)
+        Response.json({ message: 'Request received!', data })
+    })
+    .catch(err => console.log(err))
   }, [current_messages]);
 
   return (

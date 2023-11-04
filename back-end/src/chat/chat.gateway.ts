@@ -1,7 +1,7 @@
-import { SubscribeMessage, WebSocketGateway, MessageBody, WebSocketServer, OnGatewayInit } from '@nestjs/websockets';
+import { SubscribeMessage, WebSocketGateway , MessageBody, WebSocketServer, OnGatewayInit} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { OnGatewayConnection, OnGatewayDisconnect, ConnectedSocket } from '@nestjs/websockets';
-import { Logger, OnModuleInit } from '@nestjs/common';
+import {Logger, OnModuleInit } from '@nestjs/common';
 import { JwtService } from 'src/jwt/jwtservice.service';
 import { ChatService } from './chat.service';
 // it is like cntroller,  ghi instead of working with api endpoints, we working
@@ -15,25 +15,18 @@ import { ChatService } from './chat.service';
 //     origin: '*',
 //   },
 // })
-
-interface DirectData {
-  message: string,
-  from: number,
-  to: number,
-}
-@WebSocketGateway({ cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } })
-export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private jwt: JwtService, private readonly ChatService: ChatService) { }
+ @WebSocketGateway({ cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } })
+export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{  
+  constructor(private jwt :JwtService,private readonly ChatService: ChatService) {}
 
   // Assuming you have a map of connected clients with user IDs
   // private connectedClients = new Map<string, Socket>();
   // private i: number = 70;
   // private connectedClients = new Map<number, Socket>();
   private connectedClients: Map<number, Socket> = new Map();
-
   private roomsDm: string[] = [];
 
-  private clientsChannel: Socket[] = [];
+  // private clientsChannel: Socket[] = [];
   @WebSocketServer()
   server: Server;
 
@@ -44,7 +37,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   //it gets automatically called each time a client connects to the WebSocket server. 
   //it logs the socket ID of the connected client using NestJS's logger.
-  handleConnection(client: Socket) {
+   handleConnection(client: Socket) 
+  {
 
     this.logger.log(client.handshake.query.user_id);
     // this.logger.log(`Client Connected : ${this.i}`);
@@ -58,11 +52,11 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     // this.connectedClients.set(this.i,client);
     console.log("####### First connection :: OUTPUT MAP OF CONNECTE CLIENTS");
     for (const [key, value] of this.connectedClients) {
-      console.log(`Key: ${key}, Value: ${value}`);
-    }
+     console.log(`Key: ${key}, Value: ${value}`);
+   }
   }
 
-  handleDisconnect(client: Socket) {
+   handleDisconnect(client: Socket) {
     // Handle disconnection event
     // this.logger.log(`Client Connected : ${this.i}`);
     const id: number = Number(client.handshake.query.user_id);
@@ -70,8 +64,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     this.connectedClients.delete(id);
     console.log("***** Client Disconnection :: OUTPUT MAP OF CONNECTE CLIENTS");
     for (const [key, value] of this.connectedClients) {
-      console.log(`Key: ${key}, Value: ${value}`);
-    }
+     console.log(`Key: ${key}, Value: ${value}`);
+   }
     // this.connectedClients.delete(this.i);
     // this.i--;
     //call for leave room :
@@ -79,91 +73,104 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   }
 
-  createRoom(senderId: string, recieverId: string) {
-    console.log(`From Create Room SErver Side : sender is ${senderId} and reciever is ${recieverId}`);
+  // I think u don't need to save those roomNames, just create aroom then use it.
+  createRoom(senderId: string, recieverId: string)
+  {
+    console.log(`From Create Room Server Side : sender is ${senderId} and reciever is ${recieverId}`);
     const roomName1 = `room_${senderId}_${recieverId}`;
     const roomName2 = `room_${recieverId}_${senderId}`;
 
     console.log(`roomName1 is ${roomName1} and roomName2 is ${roomName2}`);
-    const check1: number = this.roomsDm.indexOf(roomName1);
+    const   check1: number = this.roomsDm.indexOf(roomName1);
 
-    const check2: number = this.roomsDm.indexOf(roomName2);
+    const   check2: number = this.roomsDm.indexOf(roomName2);
     console.log(`From create room server side after check `);
     // check if the both name are not exist in database ? 
-    if (check1 === -1 && check2 === -1) {
-      console.log(`check1 is ${check1} and check2 is ${check2}`)
-      this.roomsDm.push(roomName1);
-      return roomName1;
+    if (check1 === -1  && check2 === -1) {
+        this.roomsDm.push(roomName1);
+        return roomName1;
     }
     if (check1 !== -1)
-      return this.roomsDm[check1];
+        return this.roomsDm[check1];
     else
-      return this.roomsDm[check2];
+        return this.roomsDm[check2];
   }
   // leave a room:
+  // qst  when must call this function ????
   leaveRoom(client: Socket, roomName: string) {
     client.leave(roomName);
-
   }
-  // Join a client to a room
+    // Join a client to a room
   joinRoom(client: Socket, roomName: any) {
-    client.join(roomName);
+    if (client)
+      client.join(roomName);
   }
 
-  handling_joinRoom_dm(room: string, senderId: number, receiverId: number, message: string) {
+  async handling_joinRoom_dm(room: string, senderId: number, receiverId: number, message: string)
+  {
     const senderClient: Socket = this.connectedClients.get(senderId);
 
-    const receiverClient: Socket | undefined = this.connectedClients.get(receiverId);
+    const receiverClient: Socket = this.connectedClients.get(receiverId);
 
 
-    console.log("####### :: OUTPUT MAP OF CONNECTE CLIENTS");
-    for (const [key, value] of this.connectedClients) {
-      console.log(`Key: ${key}, Value: ${value}`);
-    }
-    // console.log("Connected Clients Map:");
-    // console.log(this.connectedClients);
-    console.log(typeof (senderId), typeof (receiverId));
-    console.log(`***** From Dm handlingRoom Dm : sender is ${senderId} and reciver is ${receiverId}`);
+    // console.log("####### :: OUTPUT MAP OF CONNECTE CLIENTS");
+  //   for (const [key, value] of this.connectedClients) {
+  //    console.log(`Key: ${key}, Value: ${value}`);
+  // //  }
+  //   console.log(`***** From Dm handlingRoom Dm : sender is ${senderId} and reciver is ${receiverId}`);
 
-    console.log(`***** From Dm handlingRoom Dm : Socketsender is ${senderClient} and Socketreciver is ${receiverClient}`);
-    const size = this.connectedClients.size;
+  //   console.log(`***** From Dm handlingRoom Dm : Socketsender is ${senderClient} and Socketreciver is ${receiverClient}`);
+    // const size = this.connectedClients.size;
 
-    console.log(`****** size of map of clients connected is ${size}`);
-    if (senderClient && receiverClient) {
+    // console.log(`****** size of map of clients connected is ${size}`);
+    // if (senderClient && receiverClient) {
       // Send the message to the specified room
       this.joinRoom(senderClient, room);
       this.joinRoom(receiverClient, room);
       // chatTodm is the name of event li ana mn back kansifto lfront (li khaso yb9a yelisteni elih)
+
       console.log("starting sending");
+      // start cheaking database :
+      const dm = await this.ChatService.checkDm(
+        senderId,
+        receiverId,
+      );
+      console.log(`FROM gatways value of Dm is ${dm}`);
+      // console.log(dm);
+      const insertDm = await this.ChatService.createMsg(
+        senderId,
+        receiverId,
+        dm,
+        message,
+        "text"
+      );
+      // console.log(`value of insertDm is ${insertDm}`);
       const data = {
-        id: 90,
+        id:dm.id_dm,
         message: message,
-        subtype: 'text',
-        send: senderId,
-        recieve: receiverId
+        send: senderId, 
+        recieve:receiverId
       };
       this.server.to(room).emit('chatToDm', data);
-      console.log(data)
       console.log("after sending");
       // process o database .
 
-    } else {
-      console.error(`Sender or receiver is not connected.`);
-    }
+    // } else {
+    //   console.error(`Sender or receiver is not connected.`);
+    // }
   }
 
 
-
   @SubscribeMessage('direct_message')
-  process_dm(@ConnectedSocket() client: Socket, @MessageBody() data: any): string {
+  process_dm(@ConnectedSocket() client: Socket,@MessageBody() data: any): string {
     // Business logic to save the message to the database
     // I need to check if this sender is already exist in conversatin table or not :
     // const senderId = "71";
     // const receiverId = "72";
-    console.log(typeof (data.from), typeof (data.to), data);
-    let room;
+    let room ;
 
     //  room = this.createRoom(senderId, receiverId);
+    console.log(data);
     room = this.createRoom(data.from, data.to);
     this.handling_joinRoom_dm(room, data.from, data.to, data.message);
     //  console.log("####### OUTPUT MAP OF CONNECTE CLIENTS");
@@ -178,36 +185,34 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   }
 
 
-
-  handling_joinRoom_group(idch: number, message: string, users: any) {
+  
+  handling_joinRoom_group(data:any, users:any)
+  {
 
     // u need more check 
-    const room = `room_${idch}`;
+    const room= `room_${data.id}`;
     for (const user of users) {
       // Access and process individual user properties
       // clientsChannel.push(this.connectedClients[user.userId]);
-      const clien = this.connectedClients[user.userId];
-      if (clien) {
-        this.joinRoom(clien, room);
-      }
-      // console.log(user.userId); 
-    }
-    this.server.to(room).emit('chatToGroup', message);
-    // if (senderClient && receiverClient) {
-    //   // Send the message to the specified room
-    //   this.joinRoom(senderClient, room);
-    //   this.joinRoom(receiverClient, room);
+      // const client = this.connectedClients[user.userId];
+      const client: Socket = this.connectedClients.get(user.userId);
+      this.joinRoom(client,room);
+      // saving into databases :
 
-    //   this.server.to(room).emit('chatToClient', message);
-    // } else {
-    //   console.error(`Sender or receiver is not connected.`);
-    // }
+      const save = this.ChatService.createDiscussion(data.senderId, data.message, data.id)
+      const result = {
+        id:data.id,
+        message: data.message,
+        send: data.senderId, 
+      };
+      this.server.to(room).emit('chatToGroup', result);
+    }
   }
 
   @SubscribeMessage('channel_message')
-  async sendInChannel(client: any, payload: any): Promise<any> {
-    // Business logic to save the message to the database
-    //output the map :
+  async sendInChannel(@ConnectedSocket() client: Socket,@MessageBody() data: any): Promise<any> {
+    // Business logic to save the message to the database 
+    // output the map :
     // I think I do need just the id of channel and the message.
     // first of all check is id channel is valid by checking the table of channel:
     // get all users Id they are in in this channel.
@@ -216,23 +221,27 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     // for (const [key, value] of this.connectedClients) {
     //   console.log(`Key: ${key}, Value: ${value}`);
     // }
-    const id = 1;
+    // const id = 1;
+    // data must contain :
+    // 1-sender and message 
+    // 2 -idChannel.
     // Create a new channel.
-    const users = await this.ChatService.getUsersInChannel(
-      id
-    );
-    console.log("Executing FRom gatways !!!");
-    // console.log(`All Users  : ${users[0]}`);
-    console.log(users[0]);// output  a single record from the array.
-    for (const user of users) {
-      // Access and process individual user properties
-      console.log(user.userId); // Example: Assuming there's a 'name' property
+    // check is the channel is exist :
+    const channel = await this.ChatService.findChannel(data.id);
+    if (channel)
+    {
+      const users = await this.ChatService.getUsersInChannel(
+        data.id
+      );
+
+      this.handling_joinRoom_group(data, users);
     }
-    this.handling_joinRoom_group(id, payload, users);
-    // console.log(JSON.stringify(users, null, 2)); 
-    return users;
-    // return 'Hello world!';
+
+    return "OK";
   }
+
+
+
 
   // @SubscribeMessage('findAllMessages')
   // findAll()
@@ -249,9 +258,9 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   // @SubscribeMessage('typing')
   // async typing()
   // {
-
+       
   // }
-
+  
   // @SubscribeMessage('join')
   // joinRoom(@MessageBody() msg: string, @ConnectedSocket() client: Socket)
   // {

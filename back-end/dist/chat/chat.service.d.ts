@@ -1,4 +1,5 @@
 import { PrismaService } from '../prisma.service';
+import { Dm } from '@prisma/client';
 export declare class ChatService {
     private prisma;
     constructor(prisma: PrismaService);
@@ -14,5 +15,51 @@ export declare class ChatService {
         status_UserInChannel: string;
         muted: boolean;
         period: Date;
+    }[]>;
+    checkDm(idSend: number, idRecv: number): Promise<{
+        id_dm: number;
+        senderId: number;
+        receiverId: number;
+        unread: number;
+        pinned: boolean;
+    }>;
+    createMsg(idSend: number, idRecv: number, dmVar: Dm, msg: string, typeMsg: string): Promise<{
+        id: number;
+        text: string;
+        dateSent: Date;
+        outgoing: boolean;
+        incoming: boolean;
+        type: string;
+        idDm: number;
+    }>;
+    getAllConversations(id: number): Promise<{
+        id_dm: number;
+        senderId: number;
+        receiverId: number;
+        unread: number;
+        pinned: boolean;
+    }[]>;
+    getAllMessages(id: number): Promise<{
+        id: number;
+        text: string;
+        dateSent: Date;
+        outgoing: boolean;
+        incoming: boolean;
+        type: string;
+        idDm: number;
+    }[]>;
+    createDiscussion(idSend: number, msg: string, idCh: number): Promise<{
+        id_disc: number;
+        message: string;
+        dateSent: Date;
+        userId: number;
+        channelId: number;
+    }>;
+    getAllMessagesRoom(id: number): Promise<{
+        id_disc: number;
+        message: string;
+        dateSent: Date;
+        userId: number;
+        channelId: number;
     }[]>;
 }

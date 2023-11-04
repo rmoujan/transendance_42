@@ -7,6 +7,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../../redux/store/store.ts";
 import { socket } from "../../socket.ts";
 import { MediaMsg, ReplyMsg, TextMsg, Timeline } from "./MsgTypes.tsx";
+import axios from "axios";
 
 const Messages = () => {
   const dispatch = useAppDispatch();
@@ -15,20 +16,25 @@ const Messages = () => {
   );
   const { room_id } = useAppSelector((state) => state.contact);
 
+  
   useEffect(() => {
-    const current = conversations.find((el) => el?.id === room_id);
+   
+    // const current = conversations.find((el) => el?.id === room_id);
+    // const rest = axios.get('http://localhost:3000/chatData/AllConversationsDm', {
+    //   withCredentials: true,
+    // });
+    // console.log(rest);
+    // socket.emit(
+    //   "AllConversationsDm",
+    //   { conversation_id: current?.id },
+    //   (data: any) => {
+    //     // data => list of messages
+    //     console.log(data, "List of messages");
+    //     dispatch(fetchCurrentMessages({ messages: data }));
+    //   }
+    // );
 
-    socket.emit(
-      "get_messages",
-      { conversation_id: current?.id },
-      (data: any) => {
-        // data => list of messages
-        console.log(data, "List of messages");
-        dispatch(fetchCurrentMessages({ messages: data }));
-      }
-    );
-
-    dispatch(setCurrentConverstation(current));
+    // dispatch(setCurrentConverstation(current));
   }, [conversations, room_id, dispatch]);
 
   return (

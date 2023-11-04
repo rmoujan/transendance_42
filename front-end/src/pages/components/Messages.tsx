@@ -17,12 +17,12 @@ function Messages() {
 
 
       socket.on("chatToDm", (data:any) => {
-        console.log('---->', data)
+        // console.log('---->', data)
         // console.log(converstation.direct_chat.current_conversation, data);
         // check if msg we got is from currently selected conversation
         // if (converstation.direct_chat.current_conversation.id === data.id) {
-          console.log(`${contact.room_id} <== contact ==> ${data.send}`);
-          console.log(`${profile._id} <== profile ==> ${data.recieve}`);
+          // console.log(`${contact.room_id} <== contact ==> ${data.send}`);
+          // console.log(`${profile._id} <== profile ==> ${data.recieve}`);
           // console.log(`this receiver ==>`, data.receive);
           dispatch(
             fetchCurrentMessages({

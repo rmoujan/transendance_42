@@ -19,7 +19,7 @@ const Friends = () => {
     setOpenCreateChannel(false);
   };
   const { friends } = useAppSelector(state => state.app);
-  console.log(friends)
+  // console.log(friends)
 
   return (
     <>

@@ -32,6 +32,121 @@ let ChatService = class ChatService {
         });
         return (users);
     }
+    async checkDm(idSend, idRecv) {
+        const dm1 = await this.prisma.dm.findUnique({
+            where: {
+                senderId_receiverId: {
+                    senderId: idSend,
+                    receiverId: idRecv,
+                },
+            },
+        });
+        if (dm1) {
+            console.log(`FRom dm1 |${dm1}|`);
+            return dm1;
+        }
+        const dm2 = await this.prisma.dm.findUnique({
+            where: {
+                senderId_receiverId: {
+                    senderId: idRecv,
+                    receiverId: idSend,
+                },
+            },
+        });
+        if (dm2) {
+            console.log(`FRom dm2 |${dm2}|`);
+            return dm2;
+        }
+        const result = await this.prisma.dm.create({
+            data: {
+                senderId: idSend,
+                receiverId: idRecv,
+                unread: 0,
+                pinned: false,
+            },
+        });
+        console.log(`Result is ${result}`);
+        return (result);
+    }
+    async createMsg(idSend, idRecv, dmVar, msg, typeMsg) {
+        let var1 = false;
+        let var2 = false;
+        console.log(`FRom create msg , ${dmVar}, ${dmVar.senderId}`);
+        if (dmVar.senderId === idSend) {
+            var1 = true;
+        }
+        else {
+            var2 = true;
+        }
+        const result = await this.prisma.conversation.create({
+            data: {
+                text: msg,
+                outgoing: var1,
+                incoming: var2,
+                type: typeMsg,
+                idDm: dmVar.id_dm,
+            },
+        });
+        return (result);
+    }
+    async getAllConversations(id) {
+        try {
+            const dms = await this.prisma.dm.findMany({
+                where: {
+                    OR: [
+                        { senderId: id },
+                        { receiverId: id }
+                    ]
+                }
+            });
+            return dms;
+        }
+        catch (error) {
+            console.error('there is no dms , error');
+        }
+    }
+    async getAllMessages(id) {
+        try {
+            const messages = await this.prisma.conversation.findMany({
+                where: {
+                    idDm: id
+                },
+                orderBy: {
+                    dateSent: 'asc'
+                }
+            });
+            return messages;
+        }
+        catch (error) {
+            console.error('we have no public channels', error);
+        }
+    }
+    async createDiscussion(idSend, msg, idCh) {
+        const result = await this.prisma.discussion.create({
+            data: {
+                message: msg,
+                userId: idSend,
+                channelId: idCh,
+            },
+        });
+        return (result);
+    }
+    async getAllMessagesRoom(id) {
+        try {
+            const messages = await this.prisma.discussion.findMany({
+                where: {
+                    channelId: id
+                },
+                orderBy: {
+                    dateSent: 'asc'
+                }
+            });
+            return messages;
+        }
+        catch (error) {
+            console.error('we have no public channels', error);
+        }
+    }
 };
 exports.ChatService = ChatService;
 exports.ChatService = ChatService = __decorate([

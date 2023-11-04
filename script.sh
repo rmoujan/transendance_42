@@ -33,7 +33,7 @@ function install_docker() {
   fi
 
   # Provide clear instructions for Docker installation
-  echo -e "Please install Docker through the ${BLUE}Managed Software Center${RESET} and then press Enter to continue."
+  echo -e "Please install Docker through the ${BLUE}åManaged Software Center${RESET} and then press Enter to continue."
   open -a "Managed Software Center"
   read -n 1 -s -r -p "Press Enter to continue..."
 

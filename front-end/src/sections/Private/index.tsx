@@ -24,19 +24,19 @@ const ColorButton = styled(Button)<ButtonProps>(() => ({
 const Privates = () => {
   const dispatch = useAppDispatch();
 
-  const { conversations } = useAppSelector(
-    (state) => state.converstation.direct_chat
-  );
-  const { _id } = useAppSelector((state) => state.profile);
+  // const { conversations } = useAppSelector(
+  //   (state) => state.converstation.direct_chat
+  // );
+  // const { _id } = useAppSelector((state) => state.profile);
 
-  useEffect(() => {
-    socket.emit("get_direct_conversations", { _id }, (data) => {
-      console.log(data); // this data is the list of conversations
-      // dispatch action
+  // useEffect(() => {
+  //   socket.emit("get_direct_conversations", { _id }, (data) => {
+  //     console.log(data); // this data is the list of conversations
+  //     // dispatch action
 
-      dispatch(fetchConverstations({ conversations: data }));
-    });
-  }, []);
+  //     dispatch(fetchConverstations({ conversations: data }));
+  //   });
+  // }, []);
 
   return (
     <Box
@@ -122,7 +122,7 @@ const Privates = () => {
                     />
                   );
                 })} */}
-            {conversations.filter((el) => !el.pinned).map((el) => {
+            {ChatList.filter((el) => !el.pinned).map((el) => {
               return <ChatElements {...el} />;
             })}
           </Stack>

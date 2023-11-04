@@ -6,10 +6,41 @@ import { useAppSelector } from "../../redux/store/store";
 import Converstation from "../../sections/Converstation";
 import NoChat from "../../sections/NoChat";
 import ChatTabs from "./ChatTabs";
+import { useEffect } from "react";
+import axios from "axios";
 
 const ChatGeneral: React.FC = () => {
   const { contact, profile } = useAppSelector(state => state);
 
+
+
+  useEffect(() => {
+    // console.log('chat general', contact.room_id, contact.type_chat);
+
+    function axiosTest() {
+      console.log(contact.room_id)
+      // create a promise for the axios request
+      const promise = axios.get(`http://localhost:3000/chatData/${contact.room_id}`, {
+        params: {
+          id: contact.room_id,
+        },
+        withCredentials: true,
+      })
+  
+      // using .then, create a new promise which extracts the data
+      const dataPromise = promise.then((response) => response.data)
+  
+      // return it
+      return dataPromise
+  }
+
+  axiosTest()
+  .then(data => {
+    console.log(data)
+      Response.json({ message: 'Request received!', data })
+  })
+  .catch(err => console.log(err))
+}, []);
   const renderContactInfoComponent = () => {
     if (contact.contactInfos.open) {
       switch (contact.contactInfos.type) {
