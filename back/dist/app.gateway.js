@@ -174,10 +174,14 @@ let AppGateway = class AppGateway {
             OppositeId = this.player01;
         let UserScore;
         let EnemyScore;
-        if (rooms.roomPlayers[0].socketId == client.id)
+        if (rooms.roomPlayers[0].socketId == client.id) {
             UserScore = rooms.roomPlayers[0].score;
-        else if (rooms.roomPlayers[0].socketId != client.id)
             EnemyScore = rooms.roomPlayers[1].score;
+        }
+        else {
+            UserScore = rooms.roomPlayers[1].score;
+            EnemyScore = rooms.roomPlayers[0].score;
+        }
         const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
         const room = this.rooms.find((room) => room.id === roomID);
         const player = room.roomPlayers.find((player) => client.id === player.socketId);
