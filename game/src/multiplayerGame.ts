@@ -36,17 +36,15 @@ class MyMultiplayerGame {
 		this.onlineBtn = document.getElementById("online-game") as HTMLButtonElement;
 
 		this.onlineBtn.addEventListener("click", () => {
-			if (!this.socket) {
-				this.socket = io("http://localhost:3000", {
-					transports: ["websocket"],
-					withCredentials: true,
-				});
-	
-				this.socket.on("connect", () => {
-					console.log(pathn);
-					console.log(`You connected to the server with id : ${this.socket.id}`);
-				});
-			}
+			this.socket = io("http://localhost:3000", {
+				transports: ["websocket"],
+				withCredentials: true,
+			});
+
+			this.socket.on("connect", () => {
+				console.log(pathn);
+				console.log(`You connected to the server with id : ${this.socket.id}`);
+			});
 			this.initSocketListeners();
 		});
     }
@@ -76,8 +74,7 @@ class MyMultiplayerGame {
 					flag = true;
 				}
 			} else {
-				this.message.innerHTML =
-					"Failed to connect to server, please try again later";
+				this.message.innerHTML = "Failed to connect to server, please try again later";
 			}
 		}, 50);
 	}
@@ -95,21 +92,25 @@ class MyMultiplayerGame {
 			} else {
 				this.message.innerHTML = "Game Over, You Lost!";
 			}
-			this.message.style.fontWeight = "bold";
 			this.buttons[0].style.display = "block";
 			this.buttons[0].innerHTML = "Play Again";
 			this.buttons[1].style.display = "block";
-			this.buttons[0].addEventListener("click", () => {
-				this.message.style.fontWeight = "normal";
-				this.socket = io("http://localhost:3000", {
-					transports: ["websocket"],
-					withCredentials: true,
-				});
-	
-				this.socket.on("connect", () => {
-					console.log(pathn);
-					console.log(`You connected to the server with id : ${this.socket.id}`);
-				});
+			// this.socket = io("http://localhost:3000", {
+			// 	transports: ["websocket"],
+			// 	withCredentials: true,
+			// });
+			this.onlineBtn.addEventListener("click", () => {
+				this.gameStarted = false;
+				this.playerNumber = 0;
+				this.roomID = "";
+				this.countdown = 3;
+				ball.x = 1088 / 2;
+				ball.y = 644 / 2;
+				// this.message.innerHTML = "";
+
+				// this.socket.on("connect", () => {
+				// 	console.log(`You connected to the server with id : ${this.socket.id}`);
+				// });
 			});
 		} else {
 			this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, "#B2C6E4");
@@ -144,10 +145,10 @@ class MyMultiplayerGame {
 					clearInterval(countdownInterval);
 				}
 				this.countdown--;
-				if (this.countdown && !this.socket.disconnected) {
+				if (this.countdown > 0 && this.socket.connected) {
 					this.message.innerHTML = `The game will start in ${this.countdown} seconds...`;
 				} else {
-					if (!this.socket.disconnected) {
+					if (this.socket.connected) {
 						this.message.innerHTML = "";
 					}
 					clearInterval(countdownInterval);

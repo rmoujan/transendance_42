@@ -593,7 +593,7 @@ video {
 }
 
 .rounded-main {
-  border-radius: 40px;
+  border-radius: 30px;
 }
 
 .border-none {
@@ -687,7 +687,7 @@ video {
   color: rgb(255 255 255 / var(--tw-text-opacity));
 }
 
-body {
+/* body {
   background: linear-gradient(249.81deg, #16132b 4.33%, #3d3c65 94.16%);
   margin: 0;
   display: flex;
@@ -696,17 +696,15 @@ body {
   height: 100vh;
   width: 100vw;
   overflow: hidden;
-}
+} */
 
 @media screen and (max-width: 767px) {
   .btn {
     font-size: 22px;
     padding: 2px 10px 4px;
   }
-
-  /* #exit-btn {
-    font-size: 22px;
-    padding: 2px 10px 4px;
-  } */
+  #message {
+	font-size: 10px;
+  }
 }
 
