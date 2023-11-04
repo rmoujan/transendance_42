@@ -226,7 +226,7 @@ class MyMultiplayerGame {
 			console.log("Game Over.");
 			this.gameStarted = false;
 			this.render(room);
-			this.socket.emit("leave", this.roomID);
+			this.socket.emit("leave", this.roomID, room);
 		});
 	}
 }

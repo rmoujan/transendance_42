@@ -115,7 +115,7 @@ export class AuthController {
           AND: [
             {userId: decoded.id},
             {id_freind: /*2002*/ Body.id_user},
-          ] // leila needs to store the id of every single friend to use em 
+          ] // leila needs to store the id of every single friend to use em
             // when removing some one from a user's data base
          },
       })
