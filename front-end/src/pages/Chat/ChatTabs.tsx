@@ -10,7 +10,8 @@ import All from "../../sections/All";
 import Channels from "../../sections/Channels";
 import Friends from "../../sections/Friends";
 import Privates from "../../sections/Private";
-
+import { socket } from "../../socket";
+import { useAppSelector } from "../../redux/store/store";
 
 const resolveSlotProps = (fn: unknown, args: unknown) =>
   typeof fn === "function" ? fn(args) : fn;
@@ -54,6 +55,25 @@ function useIsDarkMode() {
 
 const ChatTabs = () => {
   const isDarkMode = useIsDarkMode();
+  
+  // !!! fetch all conversations with user_is
+  // const { user_id } = useAppSelector(state => state.profile);
+  // React.useEffect(() => {
+  //   socket.emit("get_direct_conversations", { user_id }, (data) => {
+  //     console.log(data); // this data is the list of conversations
+  //     // dispatch action
+
+  //     dispatch(FetchDirectConversations({ conversations: data }));
+  //   });
+  // socket.emit("get_channels_conversations", { user_id }, (data) => {
+  //     console.log(data); // this data is the list of conversations
+  //     // dispatch action
+
+  //     dispatch(FetchChannelConversations({ conversations: data }));
+  //   });
+  // }, [user_id]);
+  // !! fetch all conversations with user_id
+
   return (
     <div className={isDarkMode ? "dark" : ""}>
       <Tabs defaultValue={0}>
@@ -65,9 +85,9 @@ const ChatTabs = () => {
           <Tab value={2}>Private</Tab>
           <Tab value={3}>Channels</Tab>
         </TabsList>
-      {/* 
-      * this is for friends
-       */}
+        {/*
+         * this is for friends
+         */}
         <TabPanel value={0}>
           <Friends />
         </TabPanel>
@@ -94,7 +114,7 @@ const Tab = React.forwardRef<HTMLButtonElement, TabProps>((props, ref) => {
       {...props}
       slotProps={{
         ...props.slotProps,
-        root: (ownerState) => {
+        root: ownerState => {
           const resolvedSlotProps = resolveSlotProps(
             props.slotProps?.root,
             ownerState

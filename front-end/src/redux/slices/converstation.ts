@@ -21,9 +21,9 @@ export const ConverstationSlice = createSlice({
     fetchConverstations(state, action) {
       // ! get all converstation
       state.direct_chat.conversations = action.payload;
-      const list = action.payload.conversations.map((el) => {
+      const list = action.payload.conversations.map((el: any) => {
         const user = el.participants.find(
-          (elm) => elm._id.toString() !== user_id
+          (elm: any) => elm._id.toString() !== user_id
         );
         return {
           id: el._id,
@@ -41,7 +41,29 @@ export const ConverstationSlice = createSlice({
     },
     updatedConverstation(state, action) {
       // * update converstation
-      state.direct_chat.conversations = action.payload;
+      const this_conversation = action.payload;
+      state.direct_chat.conversations = state.direct_chat.conversations.map(
+        (el: any) => {
+          if (el?.id !== this_conversation._id) {
+            return el;
+          } else {
+            const user = this_conversation.participants.find(
+              (elm: any) => elm._id.toString() !== user_id
+            );
+            return {
+              id: this_conversation._id._id,
+              user_id: user?._id,
+              name: `${user?.firstName} ${user?.lastName}`,
+              online: user?.status === "Online",
+              img: faker.image.avatar(),
+              msg: faker.music.songName(),
+              time: "9:36",
+              unread: 0,
+              pinned: false,
+            };
+          }
+        }
+      );
     },
     addConversation(state, action) {
       // ? adding new converstattion
@@ -52,7 +74,7 @@ export const ConverstationSlice = createSlice({
       // console.log(action.payload)
       state.direct_chat.current_conversation = action.payload;
       const messages = action.payload.messages;
-      const formatted_messages = messages.map((el) => ({
+      const formatted_messages = messages.map((el: any) => ({
         id: el._id,
         type: "msg",
         subtype: el.type,

@@ -17,13 +17,8 @@ function Messages() {
 
 
       socket.on("chatToDm", (data:any) => {
-        // console.log('---->', data)
-        // console.log(converstation.direct_chat.current_conversation, data);
-        // check if msg we got is from currently selected conversation
+        //~ check if msg we got is from currently selected conversation
         // if (converstation.direct_chat.current_conversation.id === data.id) {
-          // console.log(`${contact.room_id} <== contact ==> ${data.send}`);
-          // console.log(`${profile._id} <== profile ==> ${data.recieve}`);
-          // console.log(`this receiver ==>`, data.receive);
           dispatch(
             fetchCurrentMessages({
               id: data.id,
@@ -37,14 +32,31 @@ function Messages() {
         // }
       });
 
+      // ! check if exist converstation
+      // socket.on("start_chat", (data) => {
+      //   console.log(data);
+      //   // add / update to conversation list
+      //   const existing_conversation = conversations.find(
+      //     (el) => el?.id === data._id
+      //   );
+      //   if (existing_conversation) {
+      //     // update direct conversation
+      //     dispatch(UpdateDirectConversation({ conversation: data }));
+      //   } else {
+      //     // add direct conversation
+      //     dispatch(AddDirectConversation({ conversation: data }));
+      //   }
+      //   dispatch(SelectConversation({ room_id: data._id }));
+      // });
+
       
     }
-    // return () => {
-    //   if (socket) {
-    //     socket.off();
-    //     console.log("socket off");
-    //   }
-    // }
+    return () => {
+      if (socket) {
+        socket?.off("chatToDm");
+        console.log("socket off");
+      }
+    }
   }, [profile, socket, converstation]);
 
   return (

@@ -13,7 +13,7 @@ export declare class ChatController {
         unread: number;
         pinned: boolean;
     }[]>;
-    getAllMessages(req: any, id: number): Promise<{
+    getAllMessages(req: any, data: any): Promise<{
         id: number;
         text: string;
         dateSent: Date;

@@ -40,6 +40,7 @@ function MaincontentProfile() {
       });
       setUser(data);
     };
+
     fetchData();
   }, []);
 

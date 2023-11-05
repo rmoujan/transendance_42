@@ -18,21 +18,15 @@ const Messages = () => {
 
   
   useEffect(() => {
-   
+    // ! fatch all messages of room_id
     // const current = conversations.find((el) => el?.id === room_id);
-    // const rest = axios.get('http://localhost:3000/chatData/AllConversationsDm', {
-    //   withCredentials: true,
+
+    // socket.emit("get_messages", { conversation_id: current?.id }, (data) => {
+    //   // data => list of messages
+    //   console.log(data, "List of messages");
+    //   dispatch(FetchCurrentMessages({ messages: data }));
     // });
-    // console.log(rest);
-    // socket.emit(
-    //   "AllConversationsDm",
-    //   { conversation_id: current?.id },
-    //   (data: any) => {
-    //     // data => list of messages
-    //     console.log(data, "List of messages");
-    //     dispatch(fetchCurrentMessages({ messages: data }));
-    //   }
-    // );
+
 
     // dispatch(setCurrentConverstation(current));
   }, [conversations, room_id, dispatch]);

@@ -17,16 +17,16 @@ export class ChatController {
         return this.channelsService.getAllConversations(user.id_user);
     }
 
-    @Get(':id')
-    async getAllMessages(@Req() req, @Param('id') id: number)
+    @Get('get-conversations')
+    async getAllMessages(@Req() req, @Body('data') data: any)
     {
         // const decode = this.jwt.verify(req.cookies['cookie']);
         // const user = await this.UsersService.findById(decode.id);
         // console.log(`all Mesages dm is ${data}`)
         console.log('================================================')
-        console.log(id);
+        console.log(data);
         console.log('================================================')
-        return this.channelsService.getAllMessages(id);
+        return this.channelsService.getAllMessages(data);
         
     }
     @Get('allMessagesRoom')
