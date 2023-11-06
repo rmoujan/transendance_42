@@ -26,7 +26,7 @@ const StyledChatBox = styled(Box)(() => ({
 const ChatElements = (id: IdType) => {
   const { contact } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
-  const selected_id = id.id.toString();
+  const selected_id = id.id;
   const selectedChatId = contact.room_id;
   let isSelected = +selectedChatId === id.id;
 

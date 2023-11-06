@@ -21,20 +21,21 @@ export const ConverstationSlice = createSlice({
     fetchConverstations(state, action) {
       // ! get all converstation
       // state.direct_chat.conversations = action.payload;
+      console.log(action.payload);
       const list = action.payload.conversations.map((el: any) => {
         // const user = el.find(
         //   (elm: any) => elm.id_dm.toString() !== action.payload.user_id.toString()
         // );
         return {
-          id: el.id_dm,
-          // user_id: el?.id_dm,
-          name: `test`,
-          online: el?.status === "Online",
-          img: el?.avatar,
-          msg: 'the last one',
-          time: "9:36",
-          unread: el.unread,
-          pinned: false,
+          id: el?.id,
+          user_id: el?.user_id,
+          name: el?.name,
+          online: el?.online === "Online",
+          img: el?.img,
+          msg: el?.msg,
+          time: el?.time,
+          unread: el?.unread,
+          pinned: el?.pinned,
         };
       });
       state.direct_chat.conversations = list;

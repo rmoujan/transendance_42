@@ -125,8 +125,8 @@ const Privates = () => {
                 })} */}
             {conversations
               .filter((el: any) => !el.pinned)
-              .map(el => {
-                return <ChatElements {...el} />;
+              .map((el, index) => {
+                return <ChatElements key={index} {...el} />;
               })}
           </Stack>
           {/* </SimpleBarStyle> */}

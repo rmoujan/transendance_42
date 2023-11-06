@@ -42,7 +42,7 @@ let ChatService = class ChatService {
             },
         });
         if (dm1) {
-            console.log(...oo_oo(`1223751305_49_12_49_44_4`, `FRom dm1 |${dm1}|`));
+            console.log(...oo_oo(`1433611454_45_6_45_38_4`, `FRom dm1 |${dm1}|`));
             return dm1;
         }
         const dm2 = await this.prisma.dm.findUnique({
@@ -54,7 +54,7 @@ let ChatService = class ChatService {
             },
         });
         if (dm2) {
-            console.log(...oo_oo(`1223751305_63_12_63_44_4`, `FRom dm2 |${dm2}|`));
+            console.log(...oo_oo(`1433611454_58_6_58_38_4`, `FRom dm2 |${dm2}|`));
             return dm2;
         }
         const result = await this.prisma.dm.create({
@@ -65,13 +65,13 @@ let ChatService = class ChatService {
                 pinned: false,
             },
         });
-        console.log(...oo_oo(`1223751305_75_4_75_38_4`, `Result is ${result}`));
+        console.log(...oo_oo(`1433611454_70_4_70_38_4`, `Result is ${result}`));
         return (result);
     }
     async createMsg(idSend, idRecv, dmVar, msg, typeMsg) {
         let var1 = false;
         let var2 = false;
-        console.log(...oo_oo(`1223751305_83_12_83_72_4`, `FRom create msg , ${dmVar}, ${dmVar.senderId}`));
+        console.log(...oo_oo(`1433611454_77_4_77_64_4`, `FRom create msg , ${dmVar}, ${dmVar.senderId}`));
         if (dmVar.senderId === idSend) {
             var1 = true;
         }
@@ -99,7 +99,7 @@ let ChatService = class ChatService {
                     ]
                 }
             });
-            console.log(...oo_oo(`1223751305_116_12_116_67_4`, `!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  :: ${dms}`));
+            console.log(...oo_oo(`1433611454_107_6_107_61_4`, `!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  :: ${dms}`));
             return dms;
         }
         catch (error) {
@@ -143,6 +143,22 @@ let ChatService = class ChatService {
                 }
             });
             return messages;
+        }
+        catch (error) {
+            console.error('we have no public channels', error);
+        }
+    }
+    async getTheLastMessage(id) {
+        try {
+            const lastMessage = await this.prisma.conversation.findFirst({
+                where: {
+                    idDm: id
+                },
+                orderBy: {
+                    dateSent: 'desc'
+                }
+            });
+            return lastMessage;
         }
         catch (error) {
             console.error('we have no public channels', error);

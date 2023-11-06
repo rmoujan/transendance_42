@@ -62,4 +62,13 @@ export declare class ChatService {
         userId: number;
         channelId: number;
     }[]>;
+    getTheLastMessage(id: number): Promise<{
+        id: number;
+        text: string;
+        dateSent: Date;
+        outgoing: boolean;
+        incoming: boolean;
+        type: string;
+        idDm: number;
+    }>;
 }

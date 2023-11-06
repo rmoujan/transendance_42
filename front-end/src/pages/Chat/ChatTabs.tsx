@@ -61,11 +61,11 @@ const ChatTabs = () => {
   // !!! fetch all conversations with user_is
   const { _id } = useAppSelector(state => state.profile);
   React.useEffect(() => {
-    console.log(socket?.connected)
+    console.log(socket?.connected);
     if (socket) {
       socket.emit("allConversationsDm", { _id });
       socket.on("response", (data: any) => {
-        console.log("Response received from server:", data);
+        console.log(data);
         dispatch(fetchConverstations({ conversations: data, user_id: _id }));
       });
     }

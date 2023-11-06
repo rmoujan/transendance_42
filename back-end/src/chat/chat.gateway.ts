@@ -239,23 +239,42 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
   // I emitted to room + user id to target just this user who doing this request.
   @SubscribeMessage('allConversationsDm')
   async allConversationsDm(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
-    // I need the id of current User :
-    // data.id = 
-    // console.log["*************"];
+
+    console.log["*"];
     const userId: number = Number(client.handshake.query.user_id);
-    // console.log(`Socket from allDms is ${client.id}`);
-    console.log(`User id from hansshake is ${userId}`);
-    console.log(`id coming from front is ${data._id}`);
-    // console.log(`From allConversationsDm ${userId}`);
-    const user = await this.UsersService.findById(data._id);
+    console.log(`Socket from allDms is ${client.id}`);
+    console.log(`User id from allDms is ${data._id}`);
+
+    const user = await this.UsersService.findById(userId);
     const dms = await this.ChatService.getAllConversations(user.id_user);
-    // console.log("|||||||||||||||||||||||||");
-    if (dms)
-      console.log(dms);
-    const room = `room_${userId}`;
-    // this.server.to(room).emit('Response_allDms', dms);
-    // sending response to this client :
-    console.log(client.emit('response', dms));
+    console.log("|||||");
+
+    if (dms) {
+      const arrayOfDms = [];
+      for (const dmm of dms) {
+
+        const getUser = await this.UsersService.findById(dmm.receiverId);
+        const lastMsg = await this.ChatService.getTheLastMessage(dmm.id_dm);
+        console.log(`Last message is ${lastMsg.text}`);
+        console.log(dmm.id_dm);
+        const newDm = {
+          id: dmm.receiverId,
+          user_id: dmm.senderId,
+          name: getUser.name,
+          online: getUser.status_user,
+          img: user.avatar,
+          msg: lastMsg.text,
+          time: lastMsg.dateSent,
+          unread: dmm.unread,
+          pinned: dmm.pinned,
+        };
+        arrayOfDms.push(newDm);
+      }
+      // console.log("ZZZZZZZZZZZZZZ");
+      console.log(arrayOfDms);
+      client.emit('response', arrayOfDms);
+    }
+
     console.log("after allconDms");
   }
 
