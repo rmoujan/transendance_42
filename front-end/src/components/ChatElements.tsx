@@ -3,6 +3,11 @@ import StyledBadge from "./StyledBadge";
 import { styled } from "@mui/system";
 import { useAppDispatch, useAppSelector } from "../redux/store/store";
 import { selectConversation } from "../redux/slices/contact";
+import { socket } from "../socket";
+import {
+  fetchCurrentMessages,
+  setCurrentConverstation,
+} from "../redux/slices/converstation";
 // import { useDispatch, useSelector } from "react-redux";
 // import { SelectConversation } from "../redux/slices/App";
 // import { SelectConversation } from "../redux/slices/app";
@@ -24,7 +29,7 @@ const StyledChatBox = styled(Box)(() => ({
 }));
 
 const ChatElements = (id: IdType) => {
-  const { contact } = useAppSelector((state) => state);
+  const { contact, profile } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
   const selected_id = id.id;
   const selectedChatId = contact.room_id;
@@ -37,8 +42,18 @@ const ChatElements = (id: IdType) => {
   return (
     <StyledChatBox
       onClick={() => {
-        console.log("this --> clicked converstation");
-        dispatch(selectConversation({room_id: selected_id}));
+        socket.emit("allMessagesDm", { room_id: selected_id });
+        socket.on("historyDms", (data: any) => {
+          dispatch(setCurrentConverstation(data));
+          dispatch(
+            selectConversation({
+              room_id: selected_id,
+              name: id.name,
+              type_chat: "individual",
+              avatar: id.img,
+            })
+          );
+        });
       }}
       sx={{
         width: "100%",

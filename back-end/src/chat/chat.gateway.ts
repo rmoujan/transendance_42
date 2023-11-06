@@ -242,12 +242,12 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     console.log["*"];
     const userId: number = Number(client.handshake.query.user_id);
-    console.log(`Socket from allDms is ${client.id}`);
-    console.log(`User id from allDms is ${data._id}`);
+    // console.log(`Socket from allDms is ${client.id}`);
+    // console.log(`User id from allDms is ${data._id}`);
 
     const user = await this.UsersService.findById(userId);
     const dms = await this.ChatService.getAllConversations(user.id_user);
-    console.log("|||||");
+    // console.log("|||||");
 
     if (dms) {
       const arrayOfDms = [];
@@ -285,10 +285,13 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
     const user = await this.UsersService.findById(userId);
     if (user) {
-      const messages = this.ChatService.getAllMessages(data.id);
-      const room = `room_${data.id}`;
-      this.server.to(room).emit('Response_messages_Dms', messages);
-      console.log("after sending");
+      // console.log("before sending: ", data.room_id);
+      const messages = await this.ChatService.getAllMessages(data.id);
+      // const room = `room_${data.id}`;
+      // this.server.to(room).emit('Response_messages_Dms', messages);
+      // console.log("after sending", messages);
+      client.emit('historyDms', messages)
+      // console.log("after sending");
     }
     else
       console.log("Error user does not exist");

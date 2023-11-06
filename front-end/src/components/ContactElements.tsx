@@ -17,6 +17,8 @@ import React from "react";
 import { mutedContact, selectConversation } from "../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../redux/store/store";
 import StyledBadge from "./StyledBadge";
+import { socket } from "../socket";
+import { setCurrentConverstation } from "../redux/slices/converstation";
 
 interface State {
   amount: string;
@@ -36,7 +38,7 @@ interface Props {
 const ContactElements = (cont: any) => {
   // const { contact } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
-  const id = cont.id_user
+  const id = cont.id_user;
   // const selectedChatId = contact.room_id;
   // const isSelected = +selectedChatId === cont.id;
 
@@ -86,7 +88,7 @@ const ContactElements = (cont: any) => {
         sx={{ padding: "0 8px 14px" }}
       >
         <Stack direction={"row"} alignItems={"center"} spacing={2}>
-          {cont.status_user === 'online' ? (
+          {cont.status_user === "online" ? (
             <StyledBadge
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -107,8 +109,18 @@ const ContactElements = (cont: any) => {
             onClick={() => {
               console.log("Start Converstation");
               // ! emit "start_converstation" event
-              // socket.emit("start_conversation", { to: _id, from: user_id });
-              dispatch(selectConversation({ room_id: id, name: cont.name, avatar: cont.avatar }));
+              socket.emit("allMessagesDm", { room_id: id });
+              socket.on("historyDms", (data: any) => {
+                dispatch(setCurrentConverstation(data));
+                dispatch(
+                  selectConversation({
+                    room_id: id,
+                    name: cont.name,
+                    avatar: cont.avatar,
+                    type_chat: "individual",
+                  })
+                );
+              });
             }}
           >
             <Chat />

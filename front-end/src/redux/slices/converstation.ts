@@ -20,9 +20,23 @@ export const ConverstationSlice = createSlice({
   reducers: {
     fetchConverstations(state, action) {
       // ! get all converstation
-      // state.direct_chat.conversations = action.payload;
-      console.log(action.payload);
       const list = action.payload.conversations.map((el: any) => {
+        const formatDateTime = (dateString: string): string => {
+          const inputDate = new Date(dateString);
+          const currentDate = new Date();
+
+          const isToday = inputDate.toDateString() === currentDate.toDateString();
+
+          if (isToday) {
+            const hours = inputDate.getHours();
+            const minutes = inputDate.getMinutes();
+            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+          } else {
+            const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
+            return inputDate.toLocaleDateString(undefined, options);
+          }
+        };
+
         // const user = el.find(
         //   (elm: any) => elm.id_dm.toString() !== action.payload.user_id.toString()
         // );
@@ -33,7 +47,7 @@ export const ConverstationSlice = createSlice({
           online: el?.online === "Online",
           img: el?.img,
           msg: el?.msg,
-          time: el?.time,
+          time: formatDateTime(el?.time),
           unread: el?.unread,
           pinned: el?.pinned,
         };
@@ -42,7 +56,8 @@ export const ConverstationSlice = createSlice({
     },
     updatedConverstation(state, action) {
       // * update converstation
-      const this_conversation = action.payload;
+      const this_conversation = action.payload.data;
+      const user_id = action.payload.user_id;
       state.direct_chat.conversations = state.direct_chat.conversations.map(
         (el: any) => {
           if (el?.id !== this_conversation._id) {
@@ -52,44 +67,44 @@ export const ConverstationSlice = createSlice({
               (elm: any) => elm._id.toString() !== user_id
             );
             return {
-              id: this_conversation._id._id,
+              id: this_conversation._id,
               user_id: user?._id,
-              name: `${user?.firstName} ${user?.lastName}`,
+              name: user?.name,
               online: user?.status === "Online",
-              img: faker.image.avatar(),
-              msg: faker.music.songName(),
-              time: "9:36",
-              unread: 0,
-              pinned: false,
+              img: user?.img,
+              msg: user?.msg,
+              time: user?.time,
+              unread: user?.unread,
+              pinned: user?.pinned,
             };
           }
         }
       );
     },
-    addConversation(state, action) {
-      // ? adding new converstattion
+    addNewConversation(state, action) {
+      // ? adding new conversation
       state.direct_chat.current_conversation = action.payload;
     },
     setCurrentConverstation(state, action) {
-      // * set current converstation
-      // console.log(action.payload)
+      // ! set current converstation
+      console.log(action.payload);
       state.direct_chat.current_conversation = action.payload;
-      const messages = action.payload.messages;
+      const messages: any = action.payload;
       const formatted_messages = messages.map((el: any) => ({
-        id: el._id,
+        id: el.id,
         type: "msg",
         subtype: el.type,
         message: el.text,
-        incoming: el.to === user_id, // ! get user id from profile
-        outgoing: el.from === user_id,
+        incoming: el.incoming, // ! get user id from profile
+        outgoing: el.outgoing,
       }));
       state.direct_chat.current_messages = formatted_messages;
     },
     fetchCurrentMessages(state, action) {
       // ! get all messages of current converstation
       // console.log(action.payload)
-      const messages: any = action.payload;
-      state.direct_chat.current_messages.push(messages);
+      // const messages: any = action.payload;
+      // state.direct_chat.current_messages.push(messages);
       // state.direct_chat.current_messages.push();
     },
   },
@@ -100,7 +115,7 @@ export default ConverstationSlice.reducer;
 export const {
   fetchConverstations,
   updatedConverstation,
-  addConversation,
+  addNewConversation,
   setCurrentConverstation,
   fetchCurrentMessages,
 } = ConverstationSlice.actions;
