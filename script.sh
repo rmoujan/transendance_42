@@ -35,7 +35,7 @@ function install_docker() {
   # Provide clear instructions for Docker installation
   # echo -e "Please install Docker through the ${BLUE}åManaged Software Center${RESET} and then press Enter to continue."
   # open -a "Managed Software Center"
-  read -n 1 -s -r -p "Press Enter to continue..."
+  # read -n 1 -s -r -p "Press Enter to continue..."
 
   # Check if Docker is already installed
   if check_docker_status; then

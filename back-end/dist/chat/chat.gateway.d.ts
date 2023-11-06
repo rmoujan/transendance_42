@@ -3,10 +3,12 @@ import { Server, Socket } from 'socket.io';
 import { OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { JwtService } from 'src/jwt/jwtservice.service';
 import { ChatService } from './chat.service';
+import { UsersService } from 'src/users/users.service';
 export declare class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     private jwt;
     private readonly ChatService;
-    constructor(jwt: JwtService, ChatService: ChatService);
+    private readonly UsersService;
+    constructor(jwt: JwtService, ChatService: ChatService, UsersService: UsersService);
     private connectedClients;
     private roomsDm;
     server: Server;
@@ -21,4 +23,7 @@ export declare class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     process_dm(client: Socket, data: any): string;
     handling_joinRoom_group(data: any, users: any): void;
     sendInChannel(client: Socket, data: any): Promise<any>;
+    allConversationsDm(client: Socket, data: any): Promise<void>;
+    getAllMessages(client: Socket, data: any): Promise<void>;
+    getAllMessagesRoom(client: Socket, data: any): Promise<void>;
 }

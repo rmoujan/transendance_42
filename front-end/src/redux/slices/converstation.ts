@@ -20,20 +20,20 @@ export const ConverstationSlice = createSlice({
   reducers: {
     fetchConverstations(state, action) {
       // ! get all converstation
-      state.direct_chat.conversations = action.payload;
+      // state.direct_chat.conversations = action.payload;
       const list = action.payload.conversations.map((el: any) => {
-        const user = el.participants.find(
-          (elm: any) => elm._id.toString() !== user_id
-        );
+        // const user = el.find(
+        //   (elm: any) => elm.id_dm.toString() !== action.payload.user_id.toString()
+        // );
         return {
-          id: el._id,
-          user_id: user?._id,
-          name: `${user?.firstName} ${user?.lastName}`,
-          online: user?.status === "Online",
-          img: user?.avatar,
-          msg: el.messages.slice(-1)[0].text,
+          id: el.id_dm,
+          // user_id: el?.id_dm,
+          name: `test`,
+          online: el?.status === "Online",
+          img: el?.avatar,
+          msg: 'the last one',
           time: "9:36",
-          unread: 0,
+          unread: el.unread,
           pinned: false,
         };
       });

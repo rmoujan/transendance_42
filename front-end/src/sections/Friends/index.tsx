@@ -92,7 +92,7 @@ const Friends = () => {
                 // ~ ==>  here's where i will do contact <==
               }
               {friends.map((el: any) => {
-                console.log(el);
+                // console.log(el);
                 return <ContactElements {...el} />;
               })}
             </ScrollBar>

@@ -1,4 +1,4 @@
-import { Controller, Get,Post, Req,Body, UseGuards, Patch, Delete, ValidationPipe, Param } from '@nestjs/common';
+import { Controller, Get,Post, Req,Body, UseGuards, Patch, Delete, ValidationPipe } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '../jwt/jwtservice.service';
@@ -7,34 +7,30 @@ import * as cookie from 'cookie';
 
 @Controller('chatData')
 export class ChatController {
-    constructor(private jwt:JwtService ,private readonly channelsService: ChatService, private readonly UsersService: UsersService) {}
+    constructor(private jwt:JwtService ,private readonly chatService: ChatService, private readonly UsersService: UsersService) {}
 
     @Get('allConversationsDm')
     async getAllConversations(@Req() req)
     {
         const decode = this.jwt.verify(req.cookies['cookie']);
         const user = await this.UsersService.findById(decode.id);
-        return this.channelsService.getAllConversations(user.id_user);
+        return this.chatService.getAllConversations(user.id_user);
     }
 
-    @Get('get-conversations')
-    async getAllMessages(@Req() req, @Body('data') data: any)
+    @Get('allMessagesDm')
+    async getAllMessages(@Req() req, @Body() data: any)
     {
         // const decode = this.jwt.verify(req.cookies['cookie']);
         // const user = await this.UsersService.findById(decode.id);
-        // console.log(`all Mesages dm is ${data}`)
-        console.log('================================================')
-        console.log(data);
-        console.log('================================================')
-        return this.channelsService.getAllMessages(data);
-        
+        return this.chatService.getAllMessages(data.idDm);
+
     }
     @Get('allMessagesRoom')
     async getAllMessagesRoom(@Req() req, @Body() data: any)
     {
         // const decode = this.jwt.verify(req.cookies['cookie']);
         // const user = await this.UsersService.findById(decode.id);
-        return this.channelsService.getAllMessagesRoom(data.idRoom); 
+        return this.chatService.getAllMessagesRoom(data.idRoom); 
     }
 
 }

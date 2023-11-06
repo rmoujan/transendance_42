@@ -12,35 +12,29 @@ import axios from "axios";
 const ChatGeneral: React.FC = () => {
   const { contact, profile } = useAppSelector(state => state);
 
-
-
   useEffect(() => {
     // console.log('chat general', contact.room_id, contact.type_chat);
-
-    function axiosTest() {
-      console.log(contact.room_id)
-      // create a promise for the axios request
-      const promise = axios.get(`http://localhost:3000/chatData/${contact.room_id}`, {
-        params: {
-          id: contact.room_id,
-        },
-        withCredentials: true,
-      })
-  
-      // using .then, create a new promise which extracts the data
-      const dataPromise = promise.then((response) => response.data)
-  
-      // return it
-      return dataPromise
-  }
-
-  axiosTest()
-  .then(data => {
-    console.log(data)
-      Response.json({ message: 'Request received!', data })
-  })
-  .catch(err => console.log(err))
-}, []);
+    //   function axiosTest() {
+    //     console.log(contact.room_id)
+    //     // create a promise for the axios request
+    //     const promise = axios.get(`http://localhost:3000/chatData/${contact.room_id}`, {
+    //       params: {
+    //         id: contact.room_id,
+    //       },
+    //       withCredentials: true,
+    //     })
+    //     // using .then, create a new promise which extracts the data
+    //     const dataPromise = promise.then((response) => response.data)
+    //     // return it
+    //     return dataPromise
+    // }
+    // axiosTest()
+    // .then(data => {
+    //   console.log(data)
+    //     Response.json({ message: 'Request received!', data })
+    // })
+    // .catch(err => console.log(err))
+  }, []);
   const renderContactInfoComponent = () => {
     if (contact.contactInfos.open) {
       switch (contact.contactInfos.type) {
@@ -81,7 +75,8 @@ const ChatGeneral: React.FC = () => {
           }}
           className="shadow-2xl bg-gradient-to-tr from-[#2A2742] via-[#3f3a5f] to-[#2A2742]"
         >
-          {contact.type_chat === "individual" && contact.room_id.toString() !== "" ? (
+          {contact.type_chat === "individual" &&
+          contact.room_id.toString() !== "" ? (
             <Converstation />
           ) : (
             <NoChat />

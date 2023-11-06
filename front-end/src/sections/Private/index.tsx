@@ -24,9 +24,10 @@ const ColorButton = styled(Button)<ButtonProps>(() => ({
 const Privates = () => {
   const dispatch = useAppDispatch();
 
-  // const { conversations } = useAppSelector(
-  //   (state) => state.converstation.direct_chat
-  // );
+  const { conversations } = useAppSelector(
+    state => state.converstation.direct_chat
+  );
+  // console.log(conversations);
   // const { _id } = useAppSelector((state) => state.profile);
 
   // useEffect(() => {
@@ -122,9 +123,11 @@ const Privates = () => {
                     />
                   );
                 })} */}
-            {ChatList.filter((el) => !el.pinned).map((el) => {
-              return <ChatElements {...el} />;
-            })}
+            {conversations
+              .filter((el: any) => !el.pinned)
+              .map(el => {
+                return <ChatElements {...el} />;
+              })}
           </Stack>
           {/* </SimpleBarStyle> */}
         </Stack>

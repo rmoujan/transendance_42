@@ -3,9 +3,9 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '../jwt/jwtservice.service';
 export declare class ChatController {
     private jwt;
-    private readonly channelsService;
+    private readonly chatService;
     private readonly UsersService;
-    constructor(jwt: JwtService, channelsService: ChatService, UsersService: UsersService);
+    constructor(jwt: JwtService, chatService: ChatService, UsersService: UsersService);
     getAllConversations(req: any): Promise<{
         id_dm: number;
         senderId: number;

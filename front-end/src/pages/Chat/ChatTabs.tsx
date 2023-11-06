@@ -11,7 +11,8 @@ import Channels from "../../sections/Channels";
 import Friends from "../../sections/Friends";
 import Privates from "../../sections/Private";
 import { socket } from "../../socket";
-import { useAppSelector } from "../../redux/store/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { fetchConverstations } from "../../redux/slices/converstation";
 
 const resolveSlotProps = (fn: unknown, args: unknown) =>
   typeof fn === "function" ? fn(args) : fn;
@@ -55,23 +56,32 @@ function useIsDarkMode() {
 
 const ChatTabs = () => {
   const isDarkMode = useIsDarkMode();
-  
+  const dispatch = useAppDispatch();
+
   // !!! fetch all conversations with user_is
-  // const { user_id } = useAppSelector(state => state.profile);
-  // React.useEffect(() => {
-  //   socket.emit("get_direct_conversations", { user_id }, (data) => {
-  //     console.log(data); // this data is the list of conversations
-  //     // dispatch action
+  const { _id } = useAppSelector(state => state.profile);
+  React.useEffect(() => {
+    console.log(socket?.connected)
+    if (socket) {
+      socket.emit("allConversationsDm", { _id });
+      socket.on("response", (data: any) => {
+        console.log("Response received from server:", data);
+        dispatch(fetchConverstations({ conversations: data, user_id: _id }));
+      });
+    }
+    // socket.emit("get_direct_conversations", { _id }, (data:any) => {
+    //   console.log(data); // this data is the list of conversations
+    //   // dispatch action
 
-  //     dispatch(FetchDirectConversations({ conversations: data }));
-  //   });
-  // socket.emit("get_channels_conversations", { user_id }, (data) => {
-  //     console.log(data); // this data is the list of conversations
-  //     // dispatch action
+    //   // dispatch(fetchConverstations({ conversations: data }));
+    // });
+    // socket.emit("get_channels_conversations", { _id }, (data) => {
+    //     console.log(data); // this data is the list of conversations
+    //     // dispatch action
 
-  //     dispatch(FetchChannelConversations({ conversations: data }));
-  //   });
-  // }, [user_id]);
+    //     dispatch(FetchChannelConversations({ conversations: data }));
+    //   });
+  }, [_id]);
   // !! fetch all conversations with user_id
 
   return (

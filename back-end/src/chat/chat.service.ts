@@ -113,6 +113,7 @@ export class ChatService {
                 ]
               }
             });
+            console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  :: ${dms}`);
             return dms;
           }
           catch (error) {
