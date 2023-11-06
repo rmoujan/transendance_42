@@ -1,6 +1,8 @@
 import { player_1, player_2, midLine, ball } from "./gameObjects";
 import { Player, Ball } from "./interfaces";
 import DrawGame from "./drawGame";
+import { pathn } from "../../front/src/pages/Home";
+import axios from "axios";
 
 class MyBotGame {
     canvas: HTMLCanvasElement;
@@ -35,7 +37,35 @@ class MyBotGame {
         this.message = document.getElementById("message") as HTMLElement;
         this.buttons = document.querySelectorAll<HTMLButtonElement>(".btn");
 		this.drawGame = new DrawGame(this.canvas, this.ctx);
+
+		this.buttons[1].addEventListener("click", () => {
+			this.gameOver = false;
+			this.userWon = false;
+			this.compWon = false;
+			this.renderingStopped = false;
+			this.countdown = 3;
+			this.isPaused = false;
+			player_1.score = 0;
+			player_2.score = 0;
+			player_1.x = 10;
+			player_1.y = 644 / 2 - 100 / 2;
+			player_2.x = 1088 - 20;
+			player_2.y = 644 / 2 - 100 / 2;
+			ball.x = 1088 / 2;
+			ball.y = 644 / 2;
+			ball.speed = 7;
+			ball.velocityX = ball.speed;
+			ball.velocityY = ball.speed;
+		});
     }
+
+	checkLocation = () => {
+		if (pathn != '/game') {
+			this.gameOver = true;
+			this.compWon = true;
+			this.renderingStopped = true;
+		}
+	};
 
     pauseGame(duration: number): void {
         this.isPaused = true;
@@ -143,23 +173,17 @@ class MyBotGame {
             } else if (this.compWon) {
                 this.message.innerHTML = "Game Over, You Lost!";
             }
+
+			axios.post("http://localhost:3000/profile/Bot-Pong", {
+				won: this.userWon,
+				userScore: player_1.score,
+				botScore: player_2.score
+			}, {
+				withCredentials: true,
+			});
+
 			this.buttons[0].style.display = "block";
 			this.buttons[1].style.display = "block";
-			this.buttons[1].addEventListener("click", () => {
-				this.gameOver = false;
-				this.userWon = false;
-				this.compWon = false;
-				this.renderingStopped = false;
-				this.countdown = 3;
-				this.isPaused = false;
-				player_1.score = 0;
-				player_2.score = 0;
-				ball.x = 1088 / 2;
-				ball.y = 644 / 2;
-				ball.speed = 7;
-				ball.velocityX = ball.speed;
-				ball.velocityY = ball.speed;
-			});
         } else {
             this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, "#B2C6E4");
             this.drawGame.drawRect(player_1.x, player_1.y, player_1.w, player_1.h, player_1.color);
@@ -175,16 +199,23 @@ class MyBotGame {
         if (!this.isPaused) {
             this.update();
         }
-        this.render();
+		if (!this.renderingStopped) {
+			this.render();
+		}
     }
 
     startBotGame(): void {
         for (const button of this.buttons) {
             button.style.display = "none";
         }
-        console.log("Starting Game");
+        console.log("Starting Bot Game");
         this.message.innerHTML = `The game will start in ${this.countdown} seconds...`;
         const countdownInterval = setInterval(() => {
+			this.checkLocation();
+			if (this.gameOver) {
+				clearInterval(countdownInterval);
+				// this.render();
+			}
             this.countdown--;
             if (this.countdown) {
                 this.message.innerHTML = `The game will start in ${this.countdown} seconds...`;
@@ -221,7 +252,8 @@ class MyBotGame {
                 if (this.renderingStopped) {
                     clearInterval(interval);
                 }
-                this.game();
+				this.checkLocation();
+				this.game();
             }, 1000 / this.framePerSec);
         }, 3100);
     }

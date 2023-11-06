@@ -42,7 +42,6 @@ class MyMultiplayerGame {
 			});
 
 			this.socket.on("connect", () => {
-				console.log(pathn);
 				console.log(`You connected to the server with id : ${this.socket.id}`);
 			});
 			this.initSocketListeners();
@@ -51,7 +50,6 @@ class MyMultiplayerGame {
 
 	checkLocation = () => {
 		if (pathn != '/game') {
-			console.log("TEST TEST TEST");
 			this.socket.disconnect();
 		}
 	};
@@ -80,6 +78,7 @@ class MyMultiplayerGame {
 	}
 	
 	render(room: Room): void {
+		this.checkLocation();
 		if (room.winner) {
 			this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, "#B2C6E4");
 	
@@ -95,22 +94,13 @@ class MyMultiplayerGame {
 			this.buttons[0].style.display = "block";
 			this.buttons[0].innerHTML = "Play Again";
 			this.buttons[1].style.display = "block";
-			// this.socket = io("http://localhost:3000", {
-			// 	transports: ["websocket"],
-			// 	withCredentials: true,
-			// });
 			this.onlineBtn.addEventListener("click", () => {
 				this.gameStarted = false;
 				this.playerNumber = 0;
 				this.roomID = "";
 				this.countdown = 3;
 				ball.x = 1088 / 2;
-				ball.y = 644 / 2;
-				// this.message.innerHTML = "";
-
-				// this.socket.on("connect", () => {
-				// 	console.log(`You connected to the server with id : ${this.socket.id}`);
-				// });
+				ball.y = 644 /  2;
 			});
 		} else {
 			this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, "#B2C6E4");

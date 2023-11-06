@@ -28,29 +28,28 @@ export class AppGateway
 
     private logger: Logger = new Logger("AppGateway");
 
+	decodeCookie(client: Socket) {
+		let cookieHeader;
+
+		cookieHeader = client.handshake.headers.cookie;
+		const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
+			const [name, value] = cookie.trim().split("=");
+			acc[name] = value;
+			return acc;
+		}, {});
+
+		const specificCookie = cookies["cookie"];
+		const decoded = this.jwt.verify(specificCookie);
+
+		return decoded;
+	}
+
     afterInit(server: Server) {
         this.logger.log("Websocket Gateway initialized");
     }
 
-    decodeCookie(client: Socket) {
-        let cookieHeader;
-
-        cookieHeader = client.handshake.headers.cookie;
-        const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
-            const [name, value] = cookie.trim().split("=");
-            acc[name] = value;
-            return acc;
-        }, {});
-
-        const specificCookie = cookies["cookie"];
-        const decoded = this.jwt.verify(specificCookie);
-
-        return decoded;
-    }
-
     handleConnection(client: Socket, ...args: any[]) {
         this.logger.log(`Client connected: ${client.id}`);
-
     }
 
     handleDisconnect(client: Socket) {
@@ -244,9 +243,9 @@ export class AppGateway
             );
         }
         client.leave(roomID);
-		client.disconnect();
-		this.users.delete(this.decodeCookie(client).id);
         this.rooms = this.rooms.filter((r) => r.id !== room.id);
+		this.users.delete(this.decodeCookie(client).id);
+		client.disconnect();
     }
 
     findRoomBySocketId(socketId: string) {
@@ -354,15 +353,11 @@ export class AppGateway
                     room.winner = 1;
                     room.roomPlayers[0].won = true,
                     this.server.to(room.id).emit("endGame", room);
-                    // console.log(room);
-                    // this.rooms = this.rooms.filter((r) => r.id !== room.id);
                     clearInterval(interval);
                 } else if (room.roomPlayers[1].score === 5) {
                     room.winner = 2;
                     room.roomPlayers[1].won = true,
                     this.server.to(room.id).emit("endGame", room);
-                    // console.log(room);
-                    // this.rooms = this.rooms.filter((r) => r.id !== room.id);
                     clearInterval(interval);
                 }
 

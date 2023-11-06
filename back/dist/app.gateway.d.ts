@@ -15,8 +15,8 @@ export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, O
     private player01;
     private player02;
     private logger;
-    afterInit(server: Server): void;
     decodeCookie(client: Socket): any;
+    afterInit(server: Server): void;
     handleConnection(client: Socket, ...args: any[]): void;
     handleDisconnect(client: Socket): void;
     handleDisconnectEvent(client: Socket): void;

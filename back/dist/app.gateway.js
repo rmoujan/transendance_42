@@ -25,9 +25,6 @@ let AppGateway = class AppGateway {
         this.isPaused = false;
         this.logger = new common_1.Logger("AppGateway");
     }
-    afterInit(server) {
-        this.logger.log("Websocket Gateway initialized");
-    }
     decodeCookie(client) {
         let cookieHeader;
         cookieHeader = client.handshake.headers.cookie;
@@ -39,6 +36,9 @@ let AppGateway = class AppGateway {
         const specificCookie = cookies["cookie"];
         const decoded = this.jwt.verify(specificCookie);
         return decoded;
+    }
+    afterInit(server) {
+        this.logger.log("Websocket Gateway initialized");
     }
     handleConnection(client, ...args) {
         this.logger.log(`Client connected: ${client.id}`);
@@ -216,9 +216,9 @@ let AppGateway = class AppGateway {
             });
         }
         client.leave(roomID);
-        client.disconnect();
-        this.users.delete(this.decodeCookie(client).id);
         this.rooms = this.rooms.filter((r) => r.id !== room.id);
+        this.users.delete(this.decodeCookie(client).id);
+        client.disconnect();
     }
     findRoomBySocketId(socketId) {
         for (const room of this.rooms) {
