@@ -9,7 +9,7 @@ import Messages from "../converstation/Messages";
 const SharedMsgs = () => {
   const dispatch = useAppDispatch();
   const { contact } = useAppSelector((store) => store);
-  // console.log(contact);
+  console.log(contact);
 
   return (
     <Dialog

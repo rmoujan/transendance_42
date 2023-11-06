@@ -4,7 +4,7 @@ import { Search, SearchIconWrapper, StyledInputBase } from '../../components/sea
 import { MagnifyingGlass } from '@phosphor-icons/react';
 import ChatElements from '../../components/ChatElements';
 import { ChatList } from '../../data';
-import { socket } from '../../socket'
+// import { socket } from '../../socket'
 
 const All = () => {
 
@@ -44,7 +44,7 @@ const All = () => {
             }, height: "100%"
           }}
         >
-          <Stack >
+          <Stack>
             {ChatList.filter((el) => !el.pinned).map((el) => {
               return <ChatElements {...el} />;
             })}

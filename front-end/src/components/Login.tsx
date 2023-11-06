@@ -80,10 +80,12 @@ function Login() {
                 Log In with Intra
               </button>
             )} */}
-            <button className='font-bold hover:scale-105 duration-300 mobile:w-60 tablet:w-80  bg-gradient-to-br from-[#FE754D] to-[#ce502a]  text-white p-2 rounded-full mb-6'>
-              <img src={logo42} alt="42" className='w-6 h-6 inline mr-2' />
-              <a href="http://localhost:3000/auth/login/42">Log In with Intra</a>
-            </button>
+            <a href="http://localhost:3000/auth/login/42">
+              <button className='font-bold hover:scale-105 duration-300 mobile:w-60 tablet:w-80  bg-gradient-to-br from-[#FE754D] to-[#ce502a]  text-white p-2 rounded-full mb-6'>
+                <img src={logo42} alt="42" className='w-6 h-6 inline mr-2' />
+                <a >Log In with Intra</a>
+              </button>
+            </a>
             <div className='text-center text-white text-xs'>
               Or sign in with
               <a href="#" className='font-bold  text-[#7F7B86] hover:text-white'> Two-Factor Authentication</a>

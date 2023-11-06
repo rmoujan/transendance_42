@@ -2,7 +2,7 @@ import { Box, Button, Divider, Stack } from "@mui/material";
 import { MagnifyingGlass, PlusCircle } from "@phosphor-icons/react";
 import { useState } from "react";
 import ContactElements from "../../components/ContactElements";
-import ScrollBar from "../../components/ScrollBar";
+// import ScrollBar from "../../components/ScrollBar";
 import CreateChannel from "../../components/channels/CreateChannel";
 import {
   Search,
@@ -10,7 +10,6 @@ import {
   StyledInputBase,
 } from "../../components/search";
 import { ContactList } from "../../data";
-import { useAppSelector } from "../../redux/store/store";
 // import CreateChannel from "./CreateChannel";
 
 const Friends = () => {
@@ -18,15 +17,14 @@ const Friends = () => {
   const handleCloseCreateChannel = () => {
     setOpenCreateChannel(false);
   };
-  const { friends } = useAppSelector(state => state.app);
-  // console.log(friends)
+
 
   return (
     <>
       <Box
         sx={{
           position: "relative",
-          width: 452,
+          width: 482,
           margin: "0 18px 18px",
         }}
       >
@@ -83,19 +81,20 @@ const Friends = () => {
               overflowY: "auto",
               "&::-webkit-scrollbar": {
                 width: "0.4em",
+                
               },
               height: "100%",
             }}
           >
-            <ScrollBar>
-              {
-                // ~ ==>  here's where i will do contact <==
-              }
-              {friends.map((el: any) => {
-                // console.log(el);
-                return <ContactElements {...el} />;
-              })}
-            </ScrollBar>
+            {/* <ScrollBar> */}
+                {
+                  // ~ ==>  here's where i will do contact <== 
+                }
+                {ContactList.map((el, index) => {
+                  return <ContactElements key={index} {...el} />
+
+                })}
+            {/* </ScrollBar> */}
           </Stack>
         </Stack>
       </Box>

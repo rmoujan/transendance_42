@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import { ImageSquare, PaperPlaneRight, Smiley } from "@phosphor-icons/react";
 import { useAppSelector } from "../../redux/store/store";
-import { socket } from "../../socket";
 
 const StyledInput = styled(TextField)(() => ({
   "& .MuiInputBase-input": {
@@ -23,33 +22,16 @@ const StyledInput = styled(TextField)(() => ({
   },
 }));
 
-const ChatInput = ({ setOpenEmojis, setValue, value, inputRef }: any) => {
-  const { contact, profile } = useAppSelector(state => state);
-  const handleKeyPress = (event: React.KeyboardEvent) => {
-    if (event.key === "Enter") {
-      // Prevent the default behavior of "Enter" key in a textarea
-      event.preventDefault();
-      console.log(linkify(value));
-      // console.log(value);
-      // console.log("contact", contact);
-      if (!value) return;
-      socket.emit("direct_message", {
-        message: linkify(value),
-        subtype: "text",
-        from: profile._id,
-        to: contact.room_id,
-      });
-      setValue("");
-    }
-  };
+const ChatInput = ({ setOpenEmojis, setValue,
+  value, inputRef}:any) => {
+    const {contact} = useAppSelector((state) => state);
   return (
     <StyledInput
-      inputRef={inputRef}
-      value={value}
-      onChange={event => {
+    inputRef={inputRef}
+    value={value}
+      onChange={(event) => {
         setValue(event.target.value);
       }}
-      onKeyDown={handleKeyPress} // Attach the key press event handler
       fullWidth
       placeholder="Write a message... "
       variant="filled"
@@ -58,45 +40,38 @@ const ChatInput = ({ setOpenEmojis, setValue, value, inputRef }: any) => {
         endAdornment: (
           <InputAdornment position="end">
             <Tooltip title="Photo/Video">
-              <IconButton>
+                <IconButton>
                 {" "}
                 <ImageSquare size={32} color="#C7BBD1" />{" "}
-              </IconButton>
+                </IconButton>
             </Tooltip>
             <Tooltip title="Emojis">
-              <IconButton
-                onClick={() => {
-                  setOpenEmojis((prev: any) => !prev);
-                }}
-              >
-                {" "}
-                <Smiley size={32} color="#C7BBD1" />{" "}
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Send">
-              <IconButton>
-                {" "}
-                <PaperPlaneRight
-                  size={32}
-                  color="#C7BBD1"
-                  onClick={() => {
-                    // console.log(linkify(value));
-                    // console.log('==>', typeof(profile._id));
-                    // console.log('=>', typeof(contact.room_id));
-                    if (!linkify(value)) return;
-                    const _id = parseInt(contact.room_id.toString());
-                    socket.emit("direct_message", {
-                      message: linkify(value),
-                      // conversation_id: room_id,
-                      from: profile._id,
-                      to: _id,
-                      // type: containsUrl(v›alue) ? "Link" : "Text",
-                    });
-                    setValue("");
-                  }}
-                />{" "}
-              </IconButton>
-            </Tooltip>
+            <IconButton
+              onClick={() => {
+                setOpenEmojis((prev: any) => !prev);
+              }}
+            >
+              {" "}
+              <Smiley size={32} color="#C7BBD1" />{" "}
+            </IconButton>
+                </Tooltip>
+                <Tooltip title="Send">
+
+            <IconButton>
+              {" "}
+              <PaperPlaneRight size={32} color="#C7BBD1"  onClick={() => {
+                console.log(value);
+                console.log("contact", contact);
+                // socket.emit("text_message", {
+                //   message: linkify(value),
+                //   conversation_id: room_id,
+                //   from: user_id,
+                //   to: current_conversation.user_id,
+                //   type: containsUrl(value) ? "Link" : "Text",
+                // });
+              }}/>{" "}
+            </IconButton>
+                </Tooltip>
           </InputAdornment>
         ),
       }}
@@ -104,24 +79,26 @@ const ChatInput = ({ setOpenEmojis, setValue, value, inputRef }: any) => {
   );
 };
 
-function linkify(text: string) {
+
+function linkify(text:string) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return text.replace(
     urlRegex,
-    url => `<a href="${url}" target="_blank">${url}</a>`
+    (url) => `<a href="${url}" target="_blank">${url}</a>`
   );
 }
+
 
 const Chatbox = () => {
   const [openEmojis, setOpenEmojis] = React.useState(false);
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
 
-  function handleEmojiClick(emoji: any) {
+  function handleEmojiClick(emoji:any) {
     const input = inputRef.current;
-    // console.log("emoji", emoji);
+    console.log("emoji", emoji);
     setValue(value + emoji);
-    // console.log("input", input);
+    console.log("input", input);
 
     // if (input) {
     //   const selectionStart = input.selectionStart;
@@ -138,16 +115,9 @@ const Chatbox = () => {
     // }
   }
 
+  
   return (
-    <Box
-      sx={{
-        padding: "16px 24px",
-        width: "100%",
-        background: "#8979AC",
-        WebkitBorderBottomLeftRadius: "25px",
-        WebkitBorderBottomRightRadius: "25px",
-      }}
-    >
+    <Box sx={{ padding: "16px 24px", width: "100%",background: "#8979AC", WebkitBorderBottomLeftRadius: "38px", WebkitBorderBottomRightRadius: "38px" }}>
       <Stack
         direction="row"
         alignItems={"center"}
@@ -165,19 +135,11 @@ const Chatbox = () => {
               left: "72%",
             }}
           >
-            <Picker
-              data={data}
-              onEmojiSelect={(emoji: any) => {
-                handleEmojiClick(emoji.native);
-              }}
-            />
+            <Picker data={data} onEmojiSelect={(emoji:any) => {
+              handleEmojiClick(emoji.native)
+            }} />
           </Box>
-          <ChatInput
-            setOpenEmojis={setOpenEmojis}
-            setValue={setValue}
-            value={value}
-            inputRef={inputRef}
-          />
+          <ChatInput setOpenEmojis={setOpenEmojis} setValue={setValue} value={value} inputRef={inputRef}/>
         </Stack>
       </Stack>
     </Box>

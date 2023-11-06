@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import {
   Avatar,
   Box,
@@ -7,19 +8,32 @@ import {
   Typography
 } from "@mui/material";
 import React from "react";
-import { toggleDialog } from "../../redux/slices/contact";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import contact, { toggleDialog } from "../../redux/slices/contact";
+import { useAppDispatch } from "../../redux/store/store";
 import StyledBadge from "../StyledBadge";
 import { InviteDialog } from "../dialogs/Dialogs";
 import { MenuOptions } from "./MsgTypes";
+// import { useDispatch, useSelector } from "react-redux";
+// import { toggleDialog, updatedContactInfo } from "../../redux/slices/App";
+
+// import { InviteDialog } from "./Dialogs";
+// import { MenuOptions } from "./MsgTypes";
 
 const Header = () => {
   const dispatch = useAppDispatch();
+
+  // const [anchorEl, setAnchorEl] = React.useState(null);
   const [openInvite, setOpenInvite] = React.useState(false);
-  const {contact} = useAppSelector((state) => state)
+  // const open = Boolean(anchorEl);
 
   const handleCloseInvite = () => {
     setOpenInvite(false);
+  };
+  const handleClick = (event: any) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
   return (
     <Box
@@ -53,23 +67,23 @@ const Header = () => {
                     // console.log('this where it should show contact infos');
                     dispatch(toggleDialog());
                   }}
-                  alt={contact.name}
-                  src={contact.avatar}
+                  alt={faker.person.firstName()}
+                  src={faker.image.avatar()}
                   sx={{ width: 46, height: 46 }}
                 />
               </IconButton>
             </StyledBadge>
           </Box>
           <Stack spacing={0.75}>
-            <Typography variant="subtitle1" color={"#fff"} sx={{ padding: 0 }}>
-              {contact.name}
+            <Typography variant="subtitle2" color={"#fff"} sx={{ padding: 0 }}>
+              {faker.person.firstName()}
             </Typography>
             <Typography
               variant="caption"
               color={"#322554"}
               sx={{ padding: 0, fontWeight: 400, fontSize: "14px" }}
             >
-              Online {/* change this later */}
+              Online
             </Typography>
           </Stack>
         </Stack>

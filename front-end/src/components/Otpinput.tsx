@@ -5,8 +5,9 @@ import OtpInput from 'react-otp-input';
 import { constants } from "buffer";
 import { CgSpinner } from "react-icons/cg"
 import axios from "axios";
-
-
+import { Alert } from "@material-tailwind/react";
+import { useAppDispatch, useAppSelector } from "../redux/store/store";
+import { showSnackbar } from "../redux/slices/contact";
 // type Props ={
 //   value: string;
 //   valueLength: number;
@@ -114,7 +115,8 @@ const Otpinput: FC<Props> = (props): JSX.Element => {
   useEffect(() => {
     inputRef.current?.focus();
   }, [activeOTPIndex])
-  
+  // const [showAlert, setShowAlert] = useState(false);
+  const dispatch = useAppDispatch();
   function onVerify() {
     const backendURL = 'http://localhost:3000/auth/verify-qrcode';
     const data = { inputValue };
@@ -135,7 +137,15 @@ const Otpinput: FC<Props> = (props): JSX.Element => {
         }else{
           // message error with html code
           console.log("error");
-          alert("otp is not correct");
+          dispatch(
+            showSnackbar({
+              severity: "error",
+              message: "OTP is not correct",
+            })
+          );
+          // alert("otp is not correct");
+          // setShowAlert()
+          // <Alert className=" bg-[#ce502a]">otp is not correct.</Alert>
 
         }      
 
@@ -155,24 +165,24 @@ const Otpinput: FC<Props> = (props): JSX.Element => {
   // const url = lotp.then((res)=>res.data);
 
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await axios.get("http://localhost:3000/auth/get-qrcode", { withCredentials: true });
-      // const { data } = await axios.get("http://localhost:3000/auth/friends");
-      // console.log("data");
-      // console.log(data);
-      setQRCodeDataURL(data);
-    };
-    fetchData();
-    // fetch('https://fakestoreapi.com/users')
-    //   .then((res) => res.json())
-    //   .then((data) => setUsers(data))
-  }, []);
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const { data } = await axios.get("http://localhost:3000/auth/get-qrcode", { withCredentials: true });
+  //     // const { data } = await axios.get("http://localhost:3000/auth/friends");
+  //     // console.log("data");
+  //     // console.log(data);
+  //     setQRCodeDataURL(data);
+  //   };
+  //   fetchData();
+  //   // fetch('https://fakestoreapi.com/users')
+  //   //   .then((res) => res.json())
+  //   //   .then((data) => setUsers(data))
+  // }, []);
   // console.log(lotp.then((res)=>console.log(res.data)));
   return (
     <div className="relative justify-center flex flex-col m-12 space-y-8 w-200 h-auto pt-5 pb-4 bg-[#3b376041] shadow-2xl rounded-[40px] md:flex-row md:space-y-0 ">
       <div className='relative flex flex-col justify-center p-8 items-center md:p-14'>
-        <img src={qrCodeDataURL} alt="QRcode" className=" mb-5 rounded-2xl bg-red-400" />
+        {/* <img src={qrCodeDataURL} alt="QRcode" className=" mb-5 rounded-2xl bg-red-400" /> */}
         <div className=" text-[#B7B7C9] font-bold text-2xl mb-3 ">Enter your OTP </div>
         <div className='flex flex-row justify-center p-3 md:pl-14 md:pr-14'>
           {otp.map((_, index) => {

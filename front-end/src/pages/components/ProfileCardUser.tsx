@@ -14,13 +14,14 @@ import Cover from "../../img/bg33.png";
 import { MdModeEditOutline } from "react-icons/md";
 import ProgressBar from "@ramonak/react-progress-bar";
 import axios from "axios";
-
+import { Modal } from "antd";
 type User = {
   id_user: number;
   name: string;
   avatar: string;
   TwoFactor: boolean;
   secretKey: string | null;
+  About:string;
   status_user: string;
 };
 
@@ -28,6 +29,7 @@ const ProfileCardUser: React.FC = () => {
   const { friendId } = useParams<{ friendId: string }>();
   const friendIdNumber = friendId ? parseInt(friendId, 10) : undefined;
   const [user, setUser] = useState<User[]>([]);
+  const [friend, setFriend] = useState<User[]>([]);
   useEffect(() => {
     const fetchData = async () => {
       const { data } = await axios.get("http://localhost:3000/auth/friends", {
@@ -37,6 +39,24 @@ const ProfileCardUser: React.FC = () => {
     };
     fetchData();
   }, []);
+
+  function AddMember(id_user: number) {
+    axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
+    // setFriend(friend.filter((user) => user.id_user !== id_user));
+    console.log("id_user", id_user);
+    Modal.confirm({
+      title: 'Are you sure, you want to add this friend?',
+      okText: 'Yes',
+      okType: "danger",
+      className: " flex justify-center items-center h-100vh",
+      onOk: () => {
+        const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+        setFriend(updatedUsers);
+      }
+    })
+
+  }
+
   const friendInfo = user.find((friend) => friend.id_user === friendIdNumber);
   console.log(friendIdNumber);
   return (
@@ -79,19 +99,21 @@ const ProfileCardUser: React.FC = () => {
             >
               <div className=" mt-4 flex flex-col md:!gap-14 justify-center tablet:flex-row ">
                 <div className="flex flex-col items-center justify-center ">
-                  <h3 className="text-white text-lg tablet:text-2xl font-bold">
+                  <h3 className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">
                     {155}
                   </h3>
                   <p className="text-[#A3AED0] text-sm font-normal w-24 ">
                     Games Played
                   </p>
                 </div>
+                <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
                 <div className="flex flex-col items-center justify-center">
-                  <h3 className="text-white text-lg tablet:text-2xl font-bold">{64} %</h3>
+                  <h3 className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">{64} %</h3>
                   <p className="text-[#A3AED0] text-sm font-normal">Win</p>
                 </div>
+                <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
                 <div className="flex flex-col items-center justify-center">
-                  <h3 className="text-white text-lg tablet:text-2xl font-bold">{45} %</h3>
+                  <h3 className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">{45} %</h3>
                   <p className="text-[#A3AED0] text-sm font-normal">Loss</p>
                 </div>
               </div>
@@ -106,9 +128,9 @@ const ProfileCardUser: React.FC = () => {
                 {/* <button className="bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] rounded-2xl px-3 mx-4 shadow-2xl">
                   Edit Profile Photo
                 </button> */}
-                {/* <button className="bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] font-semibold rounded-2xl px-3 text-white shadow-2xl hidden lg-laptop:block">
+                <button className="bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] font-semibold rounded-2xl px-3 text-white shadow-2xl hidden lg-laptop:block mr-5" onClick={()=>AddMember(friendInfo?.id_user)}>
                   Add Friend +
-                </button> */}
+                </button>
               </div>
             </div>
           </div>
@@ -222,8 +244,10 @@ const ProfileCardUser: React.FC = () => {
                 <div className="flex justify-center items-center text-white -mt-3 text-2xl  laptop:text-4xl font-PalanquinDark">
                     About Me
                   </div>
-                    <p className=" text-white  flex justify-center px-3">
-                      
+                    <p className="whitespace-pre-line text-white  flex justify-center px-3 max-w-[400px] bg-black/20 rounded-2xl shadow-2xl mt-8 font-Bad_Script mx-2 text-2xl text-center p-4 overflow-hidden">
+                      {
+                        friendInfo?.About
+                      }
                     </p>
               </motion.div>
               <motion.div

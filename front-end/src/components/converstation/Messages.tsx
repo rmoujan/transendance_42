@@ -1,42 +1,40 @@
+import React, { useEffect } from "react";
 import { Box, Stack } from "@mui/material";
-import { useEffect } from "react";
+import { Chat_History } from "../../data";
+import { MediaMsg, ReplyMsg, TextMsg, Timeline } from "./MsgTypes.tsx";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+// import { socket } from "../../socket.ts";
 import {
   fetchCurrentMessages,
   setCurrentConverstation,
-} from "../../redux/slices/converstation.ts";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store.ts";
-import { socket } from "../../socket.ts";
-import { MediaMsg, ReplyMsg, TextMsg, Timeline } from "./MsgTypes.tsx";
-import axios from "axios";
+} from "../../redux/slices/converstation";
+// import ScrollBar from "../ScrollBar.tsx";
 
 const Messages = () => {
   const dispatch = useAppDispatch();
   const { conversations, current_messages } = useAppSelector(
     (state) => state.converstation.direct_chat
   );
+
   const { room_id } = useAppSelector((state) => state.contact);
 
-  
   useEffect(() => {
-    // ! fatch all messages of room_id
-    // const current = conversations.find((el) => el?.id === room_id);
+    const current = conversations.find((el) => el?.id === room_id);
 
-    // socket.emit("get_messages", { conversation_id: current?.id }, (data) => {
-    //   // data => list of messages
-    //   console.log(data, "List of messages");
-    //   dispatch(FetchCurrentMessages({ messages: data }));
+    // socket.emit("get_messages", { conversation_id: current?.id }, (data: any) => {
+      // data => list of messages
+      // console.log(data, "List of messages");
+      // dispatch(fetchCurrentMessages({ messages: data }));
     // });
 
-
-    // dispatch(setCurrentConverstation(current));
-  }, [conversations, room_id, dispatch]);
+    dispatch(setCurrentConverstation(current));
+  }, []);
 
   return (
     <Box p={1} sx={{ width: "100%", borderRadius: "64px" }}>
       {/* <ScrollBar> */}
       <Stack spacing={2}>
-        {current_messages.map((el: any) => {
-          // console.log(el)
+        {Chat_History.map((el:any) => {
           switch (el.type) {
             case "divider":
               return <Timeline el={el} />;

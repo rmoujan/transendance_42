@@ -7,16 +7,17 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    app.use(cookieParser());
     app.useGlobalPipes(new common_1.ValidationPipe({
         whitelist: true,
     }));
-    app.enableCors();
+    app.use(cookieParser());
     app.use(cors({
         credentials: true,
         origin: 'http://localhost:5173',
     }));
-    await app.listen(3000);
+    await app.listen(3000, () => {
+        console.log("Server is running on http://localhost:3000");
+    });
 }
 bootstrap();
 //# sourceMappingURL=main.js.map

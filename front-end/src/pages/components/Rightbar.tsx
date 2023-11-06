@@ -30,43 +30,46 @@ function Rightbar() {
   };
   return (
     // <nav className="flex w-40 h-full hidden lg:block mt-20"></nav>
-    <nav className="flex w-40 h-full hidden lg:block mt-20">
-      <div className="w-full flex -mt-32 px-6">
-        <div className="w-full h-full flex items-center justify-center text-gray-900 text-xl">
-          <div className={`${toggle ? "w-[5.8rem]" : ""} rightbar-container `}>
-            <div className="group">
-              <img
-                className="w-14 h-14 p-1 rounded-full ring-2 ring-[#FE754D] dark:ring-[#FE754D] "
-                src={Arcane}
-                alt="Bordered avatar"
-              />
-              <span className="profile-card group-hover:scale-100 ">
-                <ProfileCard />
-              </span>
-            </div>
+    <div className=" mt-[30px]">
 
-            {/* <div className="flex text-white items-center justify-center mt-8 text-[1.7rem]">
-              <TiGroup />
-            </div> */}
-            <button className="absolute left-6 my-5 bg-[#0505054d] p-3 rounded-full" onClick={handleScrollUp}>
-              <FiChevronUp className=" text-white" />
-            </button>
-            <div
-              className="overflow-y-auto resultContainer relative h-[38.5rem] mt-[4.5rem]"
-              ref={containerRef}
-            >
-              <RightbarData toggle={toggle} />
+      <nav className="flex w-40 h-full hidden lg:block mt-20">
+        <div className="w-full flex -mt-32 px-6">
+          <div className="w-full h-full flex items-center justify-center text-gray-900 mt-10 text-xl">
+            <div className={`${toggle ? "w-[5.8rem]" : ""} rightbar-container `}>
+              {/* <div className="group">
+                <img
+                  className="w-14 h-14 p-1 rounded-full ring-2 ring-[#FE754D] dark:ring-[#FE754D] "
+                  src={Arcane}
+                  alt="Bordered avatar"
+                />
+                <span className="profile-card group-hover:scale-100 ">
+                  <ProfileCard />
+                </span>
+              </div> */}
+
+              {/* <div className="flex text-white items-center justify-center mt-8 text-[1.7rem]">
+                <TiGroup />
+              </div> */}
+              <button className="absolute left-6 my-5 bg-[#0505054d] p-3 rounded-full" onClick={handleScrollUp}>
+                <FiChevronUp className=" text-white" />
+              </button>
+              <div
+                className="overflow-y-auto resultContainer relative h-[38.5rem] mt-[4.5rem]"
+                ref={containerRef}
+              >
+                <RightbarData toggle={toggle} />
+              </div>
+              <button
+                className="absolute left-6  bg-[#0505054d] p-3 rounded-full mt-0"
+                onClick={handleScrollDown}
+              >
+                <FiChevronDown className=" text-white" />
+              </button>
             </div>
-            <button
-              className="absolute left-6  bg-[#0505054d] p-3 rounded-full mt-0"
-              onClick={handleScrollDown}
-            >
-              <FiChevronDown className=" text-white" />
-            </button>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
 

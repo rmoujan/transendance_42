@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Avatar,
   Box,
@@ -13,12 +14,9 @@ import {
   SpeakerSimpleSlash,
   UserMinus,
 } from "@phosphor-icons/react";
-import React from "react";
-import { mutedContact, selectConversation } from "../redux/slices/contact";
-import { useAppDispatch, useAppSelector } from "../redux/store/store";
 import StyledBadge from "./StyledBadge";
-import { socket } from "../socket";
-import { setCurrentConverstation } from "../redux/slices/converstation";
+import { useAppDispatch } from "../redux/store/store";
+import { mutedContact, selectConversation } from "../redux/slices/contact";
 
 interface State {
   amount: string;
@@ -35,10 +33,10 @@ interface Props {
   online: boolean;
 }
 
-const ContactElements = (cont: any) => {
+const ContactElements = (cont: Props) => {
   // const { contact } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
-  const id = cont.id_user;
+  const id = cont.id.toString();
   // const selectedChatId = contact.room_id;
   // const isSelected = +selectedChatId === cont.id;
 
@@ -58,8 +56,8 @@ const ContactElements = (cont: any) => {
   const handleClickMuted = () => {
     // ! emit "mute_converstation" event
     // socket.emit("mute_converstation", { to: _id, from: user_id });
-    dispatch(mutedContact({ room_id: id }));
-
+    dispatch(mutedContact({room_id: id}))
+    
     if (values.muted === true) {
       console.log("unmute");
     } else {
@@ -77,7 +75,7 @@ const ContactElements = (cont: any) => {
         width: "100%",
         height: 85,
         borderRadius: "1",
-        // backgroundColor: "#806EA9",
+        backgroundColor: "#806EA9",
       }}
       p={2}
     >
@@ -88,17 +86,17 @@ const ContactElements = (cont: any) => {
         sx={{ padding: "0 8px 14px" }}
       >
         <Stack direction={"row"} alignItems={"center"} spacing={2}>
-          {cont.status_user === "online" ? (
+          {cont.online ? (
             <StyledBadge
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
               variant="dot"
               sx={{ width: 52, height: 52 }}
             >
-              <Avatar src={cont.avatar} sx={{ width: 52, height: 52 }} />
+              <Avatar src={cont.img} sx={{ width: 52, height: 52 }} />
             </StyledBadge>
           ) : (
-            <Avatar src={cont.avatar} sx={{ width: 52, height: 52 }} />
+            <Avatar src={cont.img} sx={{ width: 52, height: 52 }} />
           )}
           <Typography variant="subtitle2" color={"white"}>
             {cont.name}
@@ -107,25 +105,17 @@ const ContactElements = (cont: any) => {
         <Stack direction={"row"} spacing={1}>
           <IconButton
             onClick={() => {
+
               console.log("Start Converstation");
               // ! emit "start_converstation" event
-              socket.emit("allMessagesDm", { room_id: id });
-              socket.on("historyDms", (data: any) => {
-                dispatch(setCurrentConverstation(data));
-                dispatch(
-                  selectConversation({
-                    room_id: id,
-                    name: cont.name,
-                    avatar: cont.avatar,
-                    type_chat: "individual",
-                  })
-                );
-              });
+              dispatch(selectConversation({room_id: id}));
+              // socket.emit("start_conversation", { to: _id, from: user_id });
             }}
           >
             <Chat />
           </IconButton>
-          <IconButton aria-label="mute contact" onClick={handleClickMuted}>
+          <IconButton aria-label="mute contact" onClick={
+            handleClickMuted}>
             {values.muted ? <SpeakerSimpleSlash /> : <SpeakerSimpleNone />}
           </IconButton>
 
@@ -149,7 +139,7 @@ const ContactElements = (cont: any) => {
           </IconButton>
         </Stack>
       </Stack>
-      <Divider sx={{ paddingTop: "1px", background: "#335f8e" }} />
+      <Divider sx={{ paddingTop: "1px", background: "#684C83" }} />
     </Box>
   );
 };

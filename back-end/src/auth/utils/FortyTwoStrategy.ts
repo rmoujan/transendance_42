@@ -5,9 +5,7 @@ import { AuthService } from "../auth.service";
 import { JwtService } from "src/jwt/jwtservice.service";
 import axios from 'axios';
 import { Response } from "express";
-// import { PrismaService } from "src/prisma/prisma.service";
-import { PrismaService } from '../../prisma.service';
-
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {

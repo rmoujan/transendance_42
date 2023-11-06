@@ -18,94 +18,25 @@ export const ConverstationSlice = createSlice({
   name: "converstation",
   initialState,
   reducers: {
-    fetchConverstations(state, action) {
+    fetchConverstation(state, action) {
       // ! get all converstation
-      const list = action.payload.conversations.map((el: any) => {
-        const formatDateTime = (dateString: string): string => {
-          const inputDate = new Date(dateString);
-          const currentDate = new Date();
-
-          const isToday = inputDate.toDateString() === currentDate.toDateString();
-
-          if (isToday) {
-            const hours = inputDate.getHours();
-            const minutes = inputDate.getMinutes();
-            return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-          } else {
-            const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
-            return inputDate.toLocaleDateString(undefined, options);
-          }
-        };
-
-        // const user = el.find(
-        //   (elm: any) => elm.id_dm.toString() !== action.payload.user_id.toString()
-        // );
-        return {
-          id: el?.id,
-          user_id: el?.user_id,
-          name: el?.name,
-          online: el?.online === "Online",
-          img: el?.img,
-          msg: el?.msg,
-          time: formatDateTime(el?.time),
-          unread: el?.unread,
-          pinned: el?.pinned,
-        };
-      });
-      state.direct_chat.conversations = list;
+      state.direct_chat.conversations = action.payload;
     },
     updatedConverstation(state, action) {
       // * update converstation
-      const this_conversation = action.payload.data;
-      const user_id = action.payload.user_id;
-      state.direct_chat.conversations = state.direct_chat.conversations.map(
-        (el: any) => {
-          if (el?.id !== this_conversation._id) {
-            return el;
-          } else {
-            const user = this_conversation.participants.find(
-              (elm: any) => elm._id.toString() !== user_id
-            );
-            return {
-              id: this_conversation._id,
-              user_id: user?._id,
-              name: user?.name,
-              online: user?.status === "Online",
-              img: user?.img,
-              msg: user?.msg,
-              time: user?.time,
-              unread: user?.unread,
-              pinned: user?.pinned,
-            };
-          }
-        }
-      );
+      state.direct_chat.conversations = action.payload;
     },
-    addNewConversation(state, action) {
-      // ? adding new conversation
+    addConversation(state, action) {
+      // ? adding new converstattion
       state.direct_chat.current_conversation = action.payload;
     },
     setCurrentConverstation(state, action) {
-      // ! set current converstation
-      console.log(action.payload);
+      // * set current converstation
       state.direct_chat.current_conversation = action.payload;
-      const messages: any = action.payload;
-      const formatted_messages = messages.map((el: any) => ({
-        id: el.id,
-        type: "msg",
-        subtype: el.type,
-        message: el.text,
-        incoming: el.incoming, // ! get user id from profile
-        outgoing: el.outgoing,
-      }));
-      state.direct_chat.current_messages = formatted_messages;
     },
     fetchCurrentMessages(state, action) {
       // ! get all messages of current converstation
-      // console.log(action.payload)
-      // const messages: any = action.payload;
-      // state.direct_chat.current_messages.push(messages);
-      // state.direct_chat.current_messages.push();
+      state.direct_chat.current_messages = action.payload;
     },
   },
 });
@@ -113,9 +44,9 @@ export const ConverstationSlice = createSlice({
 export default ConverstationSlice.reducer;
 
 export const {
-  fetchConverstations,
+  fetchConverstation,
   updatedConverstation,
-  addNewConversation,
+  addConversation,
   setCurrentConverstation,
   fetchCurrentMessages,
 } = ConverstationSlice.actions;

@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "commonjs",
+		"outDir": "../game",
+		"jsx": "react-jsx",
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true
+    },
+    "include": ["../srcs/*.ts", "../srcs/*.tsx"],
+}

@@ -1,6 +1,6 @@
 import { AuthService } from './auth.service';
 import { JwtService } from 'src/jwt/jwtservice.service';
-import { PrismaService } from '../prisma.service';
+import { PrismaService } from 'src/prisma/prisma.service';
 export declare class AuthController {
     private service;
     private jwt;
@@ -18,6 +18,6 @@ export declare class AuthController {
         FriendList: {};
     }>;
     only_friends(req: any): Promise<any[]>;
-    Get_User(req: any): Promise<any[]>;
+    Get_User(req: any): Promise<any>;
     TwofactorAuth(body: any, req: any): Promise<void>;
 }

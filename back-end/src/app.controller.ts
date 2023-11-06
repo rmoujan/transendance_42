@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Res } from '@nestjs/common';
 import { AppService } from './app.service';
+// import { Response } from "express";
 
 @Controller()
 export class AppController {
@@ -9,4 +10,9 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+ 
+  // @Get()
+  // root(@Res() res: Response) {
+  //     res.send("<h1>Hello World!</h1>");
+  // }
 }

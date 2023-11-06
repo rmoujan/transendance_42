@@ -1,16 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { topData } from "../Data/TopStreamerData";
 import badge from "../../img/badge.png";
 import Maskgroup from "../../img/Maskgroupp.png";
 import { handelProfile } from "./RightbarData";
 import { useNavigate } from "react-router-dom";
-
+import Path from "./Path";
+import CircularProgressbar from "react-circular-progressbar";
+import { Progress } from "@material-tailwind/react";
 interface TopStreamerDataProps {
   toggle: boolean;
 }
 
 const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
   const navigate = useNavigate();
+  const [showDivs, setShowDivs] = useState(false);
+
+  useEffect(() => {
+    // Use a delay (e.g., setTimeout) to gradually show the divs after component mounts.
+    const showDelay = setTimeout(() => {
+      setShowDivs(true);
+    }, 500); // Adjust the delay as needed
+
+    // Clear the timeout when the component unmounts to avoid memory leaks.
+    return () => {
+      clearTimeout(showDelay);
+    };
+  }, []);
   const handleProfileClick = (friend: any) => {
     // Update selectedFriend with the clicked friend's information
     navigate(`/profileFriend/${friend.id}`);
@@ -18,25 +33,24 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
   return (
     <div className=" flex flex-row ">
       <div>
-        {topData.map((data) => {
+        {topData.map((data, index) => {
           return (
             <div
+              key={data.id}
               className={`${
                 toggle ? "last:w-[3.6rem]" : "last:w-[17rem]"
-              } rightbar left-4 bottom-4 flex flex-col tablet:pl-28 laptop:pl-0`}
-              key={data.id}
+              } my-8 bottom-4 flex flex-col tablet:pl-28 laptop:pl-0 ${
+                showDivs ? "show-div" : "hide-div"
+              }`}
+              style={{ marginLeft: `${-index * 40}px` }}
             >
-              <div className="relative flex tablet:flex-row mobile:flex-col  items-center tablet:-ml-32 mobile:-ml-48 lg:ml-0">
+              <div className="relative flex tablet:flex-row mobile:flex-col bg-gradient-to-tr from-[#1e1b31c4] to-[#1e1b3112] px-5 py-2 rounded-2xl w-[20vw]  items-center tablet:-ml-32 mobile:-ml-48 lg:ml-20">
                 <div className=" flex flex-row items-center justify-center">
-                  {data.id === 1 ? (
-                    <img
-                      className="w-8 h-8  mobile:w-10 mobile:h-10 m-2 -ml-10 lg:-ml-2"
-                      src={data.rank}
-                      alt=""
-                    />
-                  ) : (
-                    <span className="m-2 -ml-9 lg:-ml-2 mr-4">{data.rank}</span>
-                  )}
+                  <img
+                    className="w-8 h-8  mobile:w-10 mobile:h-10 m-2 -ml-10 lg:-ml-2"
+                    src={data.rank}
+                    alt=""
+                  />
 
                   <img
                     className="w-14 h-14  rounded-full"
@@ -45,16 +59,37 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
                     onClick={() => handleProfileClick(data)}
                   />
                 </div>
-                <div className=" flex flex-col justify-center items-center">
+                <div className=" flex flex-row justify-center items-center">
                   <span
-                    className="ml-3 mt-2"
+                    className="ml-5 font-PalanquinDark"
                     onClick={() => handleProfileClick(data)}
                   >
                     {data.name}
                   </span>
-                  <p className="flex ml-3 text-sm text-[#7B7987]">
+                  <span className="ml-5">
+                    <span className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">
+                      {data.GamesPlayed}
+                    </span>{" "}
+                    <span className="text-[#A3AED0] text-xs font-normal w-28 ">
+                      Games Played
+                    </span>
+                  </span>
+                  <span className="ml-10 w-20">
+                    <div className="w-full bg-gradient-to-br from-[#c1c0bf] to-[#90908f] dark:bg-neutral-600 rounded-full ">
+                      <div
+                        className=" flex  items-center justify-center bg-gradient-to-br h-3 from-[#FE754D] to-[#ce502a] p-0.5 text-center text-xs font-PalanquinDark leading-none text-primary-100 rounded-full"
+                        style={{ width: `${data.progress}%` }}
+                      >
+                        <span className="-mt-0.5">{data.progress}%{" "}</span> 
+                      </div>
+                    </div>
+                  </span>
+                  {/* <span className="text-[#A3AED0] text-sm font-normal w-24 ">
+                    Win
+                  </span> */}
+                  {/* <p className="flex ml-3 text-sm text-[#7B7987]">
                     xxxxxxxxxxx
-                  </p>
+                  </p> */}
                 </div>
               </div>
               {/* <hr className="text-white w-[100%] mt-16"/> */}
@@ -62,17 +97,6 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
           );
         })}
       </div>
-        {/* <img className=" flex top-0 h-80 " src={Maskgroup} alt="" /> */}
-      {/* <img src="http://www.w3.org/2000/svg" 
-           className="text-yellow-400  h-16 w-16" 
-           /> */}
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-        d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21
-                 12a9 9 0 11-18 0 9 9 0 0118 0z"
-      />
     </div>
   );
 };

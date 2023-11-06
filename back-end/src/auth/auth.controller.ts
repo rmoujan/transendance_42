@@ -11,9 +11,7 @@ import { FortyTwoGuard } from './utils/Guards';
 import { AuthGuard } from "@nestjs/passport";
 import { JwtService } from 'src/jwt/jwtservice.service';
 import { JwtAuthGuard } from 'src/jwt/JwtGuard';
-// import { PrismaService } from 'src/prisma/prisma.service';
-import { PrismaService } from '../prisma.service';
-
+import { PrismaService } from 'src/prisma/prisma.service';
 import { authenticator } from 'otplib';
 import * as qrcode from 'qrcode';
 
@@ -33,7 +31,8 @@ export class AuthController {
     @Get('login/42/redirect')
     @UseGuards(AuthGuard('42'))
     async redirect(@Req() req:any, @Res() res:any){
-
+      // console.log('alright');
+      
       const accessToken = this.jwt.sign(req.user);
       // console.log(req.user);
       res.cookie('cookie', accessToken/*, { maxage: 99999 , secure: false}*/).status(200);
@@ -45,11 +44,9 @@ export class AuthController {
         return (req);
       }
       if (user.IsFirstTime){
-        {
           console.log('first time');
           await this.prisma.user.update({where : { id_user : req.user.id }, data: {IsFirstTime: false}});
           res.redirect('http://localhost:5173/setting');
-        }
       }
       else
       {
@@ -57,10 +54,8 @@ export class AuthController {
         res.redirect('http://localhost:5173/home');
       }
         // res.send('cookie well setted');
-
       return (req);
     }
-
     /************************************** */
 
     @Get('get-session-token')
@@ -85,11 +80,9 @@ export class AuthController {
 
       const msg = await this.service.Verify_QrCode(body, req);
       return (msg.msg);
-
     }
 
     /************************************** */
-
 
     @Post('add-friends')
     async Insert_Friends(@Body() body, @Req() req){
@@ -101,7 +94,7 @@ export class AuthController {
         data: {
           freind:{
             create:{
-              // name : body.name,
+              name : body.name,
               id_freind: 98853/* body.friend_id */,
             },
           },
@@ -109,9 +102,7 @@ export class AuthController {
       });
     }
 
-
     /************************************** */
-
 
     @Post('remove-friends')
     async Remove_friends(@Body() Body, @Req() req){
@@ -119,7 +110,7 @@ export class AuthController {
       const friendData = await this.prisma.user.findUnique({where: {id_user: Body.id_user}});
       const decoded = this.jwt.verify(req.cookies['cookie']);
       // console.log(decoded);
-      console.log(friendData);
+      // console.log(friendData);
       const user = await this.prisma.freind.deleteMany({
         where: {
           AND: [
@@ -134,7 +125,6 @@ export class AuthController {
 
 
     /************************************** */
-
 
     @Post('Block-friends')
     async Block_friends(@Body() Body, @Req() req){
@@ -199,7 +189,7 @@ export class AuthController {
 
 
     @Get('friends')
-    // @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtAuthGuard)
     async only_friends(@Req() req){
 
       const decoded = this.jwt.verify(req.cookies['cookie']);
@@ -234,8 +224,8 @@ export class AuthController {
     /************************************** */
 
     @Get('get-user')
-    // @UseGuards(JwtAuthGuard)
-    async Get_User(@Req() req){
+    @UseGuards(JwtAuthGuard)
+    async Get_User(@Req() req): Promise<any>{
 
       const decoded = this.jwt.verify(req.cookies['cookie']);
       // console.log(req.cookies['cookie']);

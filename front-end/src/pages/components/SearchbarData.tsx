@@ -113,9 +113,9 @@ function SearchbarData() {
           onChange={handelQuerychange}
           onKeyDown={handelkeyDown }
           ref={inputRef}
-          className="w-[25rem] p-2 pl-11 rounded-full bg-[#322f49da] focus:outline-none text-white"
+          className="w-[25rem] p-2 pl-11 py-4 rounded-full bg-[#322f49da] focus:outline-none text-white"
         />
-        <button type="submit" className="flex ml-4 -mt-7 text-white ">
+        <button type="submit" className="flex ml-4 -mt-9 text-white ">
           <AiOutlineSearch />
         </button>
         <div className=" relative ">

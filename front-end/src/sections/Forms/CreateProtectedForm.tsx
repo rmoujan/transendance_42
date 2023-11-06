@@ -7,11 +7,11 @@ import * as Yup from "yup";
 import { RHFAutocomplete, RHFTextField } from "../../components/hook-form";
 import FormProvider from "../../components/hook-form/FormProvider";
 import { showSnackbar } from "../../redux/slices/contact";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { useAppDispatch } from "../../redux/store/store";
 
+const MEMBERS = ["name 1", "name 2", "name 3", "name 4", "name 4"];
 
 const CreateProtectedForm = ({ handleClose }: any) => {
-  const { friends } = useAppSelector(state => state.app);
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = React.useState(false);
@@ -81,7 +81,7 @@ const CreateProtectedForm = ({ handleClose }: any) => {
           label="Members"
           multiple
           freeSolo
-          options={friends.map(friend => friend?.name)}
+          options={MEMBERS.map((option) => option)}
           ChipProps={{ size: "medium" }}
         />
 

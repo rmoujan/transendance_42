@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, Fragment} from "react";
 import Arcane from "../../img/Arcane.png";
 import { Data } from "../Data/AccountOwnerData";
 import scr from "../../img/Screenshot.png";
 import Cover from "../../img/bg33.png";
 import { MdModeEditOutline } from "react-icons/md";
-import { Modal } from "antd";
+import { Modal } from "antd"
+import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import { Popover, Transition } from "@headlessui/react";
+import { topData } from "../Data/TopStreamerData";
+// import { topData } from "../Data/TopData";
+// import { Modal, Popover } from "antd";
 import axios from "axios";
-import { IconButton } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { toggleProfile } from "../../redux/slices/profile";
 type User = {
   id_user: number;
   name: string;
@@ -21,8 +23,6 @@ type AccountOwnerProps = {
   user: User[];
 };
 function AccountOwner({ user }: AccountOwnerProps) {
-  const { profile } = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
 
   const [isEditingName, setIsEditingName] = useState(false);
 
@@ -33,38 +33,53 @@ function AccountOwner({ user }: AccountOwnerProps) {
     //     id_user: id_user,
     //     name: newName,
     //   });
+
     //   setIsEditingName(false);
     // } else {
     //   setIsEditingName(true);
     // }
   }
+  const [friend, setFriend] = useState<User[]>([]);
+  function AddMember(id_user: number) {
+    axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
+    // setFriend(friend.filter((user) => user.id_user !== id_user));
+    console.log("id_user", id_user);
+    Modal.confirm({
+      title: 'Are you sure, you want to add this friend?',
+      okText: 'Yes',
+      okType: "danger",
+      className: " flex justify-center items-center h-100vh",
+      onOk: () => {
+        const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+        setFriend(updatedUsers);
+      }
+    })
+
+  }
   return (
     <div className="bg-[#3f3b5b91] min-w-screen lg-laptop:w-[70%]  lg-laptop:mt-16 rounded-3xl mb-11 shadow-2xl">
       {user.map((data) => {
         return (
-          <div className="dark:!bg-navy-800 shadow-shadow-500 mb-5 shadow-3xl flex justify-center rounded-primary relative mx-auto  h-full w-full max-w-[90rem] flex-col items-center bg-cover bg-clip-border p-[16px] dark:text-white dark:shadow-none">
+          <div
+            key={data.id_user}
+            className="dark:!bg-navy-800 shadow-shadow-500 mb-5 shadow-3xl flex justify-center rounded-primary relative mx-auto  h-full w-full max-w-[90rem] flex-col items-center bg-cover bg-clip-border p-[16px] dark:text-white dark:shadow-none">
             <div
-              className="relative flex h-72 w-full md:w-[35rem] lg-laptop:w-[120rem] justify-center items-end rounded-3xl bg-cover -mt-3 shadow-lg"
+              className="relative flex h-72 w-full md:w-[35rem] lg-laptop:w-[108%] justify-center items-end rounded-3xl bg-cover -mt-3 shadow-lg"
               title="object-center"
               style={{
                 // backgroundImage: 'url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/bca2fa29-36c0-4b87-aa20-6848ad75c66b/d62n5by-9ef8ff16-8b2d-41c6-849f-093129d3ac3a.jpg/v1/fill/w_1203,h_664,q_70,strp/mercenaries_by_real_sonkes_d62n5by-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9ODgzIiwicGF0aCI6IlwvZlwvYmNhMmZhMjktMzZjMC00Yjg3LWFhMjAtNjg0OGFkNzVjNjZiXC9kNjJuNWJ5LTllZjhmZjE2LThiMmQtNDFjNi04NDlmLTA5MzEyOWQzYWMzYS5qcGciLCJ3aWR0aCI6Ijw9MTYwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.cj4Pf9CSyiVk-cjTsZKAeHUcLPPKP6h-el1mMuLDJmo")',
                 backgroundImage: `url(${Cover})`,
               }}
             >
-              <IconButton>
+              <div className="flex h-[115px] w-[115px] items-center -m-11 justify-center rounded-full border-[10px] border-[#353151] bg-slate-400">
                 <div className=" flex h-[98px] w-[98px] items-center -m-11 justify-center rounded-full border-[4px] border-white bg-slate-400">
                   <img
                     className="h-full w-full rounded-full "
-                    src={profile.avatar}
+                    src={data.avatar}
                     alt=""
-                    onClick={() => {
-                      console.log("this where it should show profile photo");
-                      console.log(profile);
-                      dispatch(toggleProfile());
-                    }}
                   />
                 </div>
-              </IconButton>
+              </div>
             </div>
             {/* <div className="flex mt-16 justify-between items-center w-full">
               <div>first</div>
@@ -74,30 +89,28 @@ function AccountOwner({ user }: AccountOwnerProps) {
               className=" flex  w-full lg-laptop:flex-row  mt-10  justify-between 
              flex-col-reverse "
             >
-              <div className=" mt-4 flex flex-col md:!gap-14 justify-center tablet:flex-row ">
+              <div className=" mt-4 flex flex-col md:!gap-7 justify-center tablet:flex-row ">
                 <div className="flex flex-col items-center justify-center ">
-                  <h3 className="text-white text-lg tablet:text-2xl font-bold">
+                  <h3 className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">
                     {155}
                   </h3>
                   <p className="text-[#A3AED0] text-sm font-normal w-24 ">
                     Games Played
                   </p>
                 </div>
+                <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
                 <div className="flex flex-col items-center justify-center">
-                  <h3 className="text-white text-lg tablet:text-2xl font-bold">
-                    {64} %
-                  </h3>
+                  <h3 className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">{64} %</h3>
                   <p className="text-[#A3AED0] text-sm font-normal">Win</p>
                 </div>
+                <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
                 <div className="flex flex-col items-center justify-center">
-                  <h3 className="text-white text-lg tablet:text-2xl font-bold">
-                    {45} %
-                  </h3>
+                  <h3 className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">{45} %</h3>
                   <p className="text-[#A3AED0] text-sm font-normal">Loss</p>
                 </div>
               </div>
               <div className="flex flex-row justify-center items-center ">
-                <h4 className="text-white mobile:text-2xl tablet:text-4xl flex-row font-bold lg:mt-4 mt-0 lg-laptop:-ml-44">
+                <h4 className="text-white mobile:text-2xl tablet:text-4xl font-PalanquinDark flex-row font-bold lg:mt-4 mt-0 lg-laptop:-ml-52">
                   {data.name}
                 </h4>
 
@@ -107,9 +120,46 @@ function AccountOwner({ user }: AccountOwnerProps) {
                 {/* <button className="bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] rounded-2xl px-3 mx-4 shadow-2xl">
                   Edit Profile Photo
                 </button> */}
-                <button className="bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] font-semibold rounded-2xl px-3 text-white shadow-2xl hidden lg-laptop:block">
-                  Add Friend +
-                </button>
+                <Popover>
+                  <Popover.Button className="bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] font-semibold rounded-2xl px-5 py-3 text-white shadow-2xl hidden lg-laptop:block">
+                     Add Friend +
+                  </Popover.Button>
+                  <Transition
+                as={Fragment}
+                enter="transition ease-out duration-500"
+                enterFrom="opacity-0 translate-y-1"
+                enterTo="opacity-100 translate-y-0"
+                leave="transition ease-in duration-150"
+                leaveFrom="opacity-100 translate-y-0"
+                leaveTo="opacity-0 translate-y-1"
+              >
+                  <Popover.Panel className="absolute right-0 z-10  w-80 ml-[80%] text-white">
+                  <div 
+                  className=" flex flex-col  rounded-[30px] mt-10 bg-[#35324d] hover:scale-100 ">
+                      {topData.map((data) => {
+                        return (
+                          <ul
+                            key={data.id} 
+                          role="list" className="p-6 divide-y divide-slate-200">
+                            <li className="flex py-4 first:pt-0 last:pb-0">
+                              <img className="h-11 w-11 rounded-full" src={data.src} alt="" />
+                              <div className="ml-3 overflow-hidden">
+                                <p className="text-lg font-medium text-white">{data.name} </p>
+                                <p className="text-sm text-slate-500 truncate">{data.email}</p>
+                                <div className="text-xs text-blue-200 dark:text-blue-200">a few moments ago</div>
+                              </div>
+                              
+                              <button className="ml-auto  bg-indigo-400 hover:bg-indigo-500 text-white font-bold  px-6 rounded-[20px]" onClick={() => AddMember(data.id)}>
+                                Add
+                              </button>
+                            </li>
+                          </ul>
+                        );
+                      })}
+                    </div>
+               </Popover.Panel>
+               </Transition>
+                </Popover>
               </div>
             </div>
           </div>

@@ -23,7 +23,7 @@ const Logo: React.FC<LogoProps> = ({ toggle }) => {
               times: [0, 0.2, 0.5, 0.8, 1],
               repeatDelay: 1
             }}>
-                <Link to="/"><img src={logo} alt="logo" className=""/></Link>
+                <Link to="/home"><img src={logo} alt="logo" className=""/></Link>
             </motion.div>
         </div>
     );

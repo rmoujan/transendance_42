@@ -10,9 +10,7 @@ import All from "../../sections/All";
 import Channels from "../../sections/Channels";
 import Friends from "../../sections/Friends";
 import Privates from "../../sections/Private";
-import { socket } from "../../socket";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { fetchConverstations } from "../../redux/slices/converstation";
+
 
 const resolveSlotProps = (fn: unknown, args: unknown) =>
   typeof fn === "function" ? fn(args) : fn;
@@ -40,7 +38,7 @@ const TabPanel = React.forwardRef<HTMLDivElement, TabPanelProps>(
       <BaseTabPanel
         ref={ref}
         className={clsx(
-          " py-5 px-3 bg--[#f78562] dark:bg-[#f78562] border-slate-200 dark:border-slate-700 rounded-[46px] w-full h-full font-sans text-sm",
+          " py-5 px-3 bg-green-400 dark:bg-[#806EA9] border-slate-200 dark:border-slate-700 rounded-[46px] w-full h-full font-sans text-sm",
           className
         )}
         {...other}
@@ -56,34 +54,6 @@ function useIsDarkMode() {
 
 const ChatTabs = () => {
   const isDarkMode = useIsDarkMode();
-  const dispatch = useAppDispatch();
-
-  // !!! fetch all conversations with user_is
-  const { _id } = useAppSelector(state => state.profile);
-  React.useEffect(() => {
-    console.log(socket?.connected);
-    if (socket) {
-      socket.emit("allConversationsDm", { _id });
-      socket.on("response", (data: any) => {
-        console.log(data);
-        dispatch(fetchConverstations({ conversations: data, user_id: _id }));
-      });
-    }
-    // socket.emit("get_direct_conversations", { _id }, (data:any) => {
-    //   console.log(data); // this data is the list of conversations
-    //   // dispatch action
-
-    //   // dispatch(fetchConverstations({ conversations: data }));
-    // });
-    // socket.emit("get_channels_conversations", { _id }, (data) => {
-    //     console.log(data); // this data is the list of conversations
-    //     // dispatch action
-
-    //     dispatch(FetchChannelConversations({ conversations: data }));
-    //   });
-  }, [_id]);
-  // !! fetch all conversations with user_id
-
   return (
     <div className={isDarkMode ? "dark" : ""}>
       <Tabs defaultValue={0}>
@@ -95,9 +65,9 @@ const ChatTabs = () => {
           <Tab value={2}>Private</Tab>
           <Tab value={3}>Channels</Tab>
         </TabsList>
-        {/*
-         * this is for friends
-         */}
+      {/* 
+      * this is for friends
+       */}
         <TabPanel value={0}>
           <Friends />
         </TabPanel>
@@ -124,7 +94,7 @@ const Tab = React.forwardRef<HTMLButtonElement, TabProps>((props, ref) => {
       {...props}
       slotProps={{
         ...props.slotProps,
-        root: ownerState => {
+        root: (ownerState) => {
           const resolvedSlotProps = resolveSlotProps(
             props.slotProps?.root,
             ownerState
@@ -134,8 +104,8 @@ const Tab = React.forwardRef<HTMLButtonElement, TabProps>((props, ref) => {
             className: clsx(
               `font-sans ${
                 ownerState.selected
-                  ? "text-[#443263] bg-[#f78562]"
-                  : "text-[#f78562] bg-[#06254f] focus:text-[#EADDFF] hover:bg-[#514371B8]"
+                  ? "text-[#443263] bg-[#806EA9]"
+                  : "text-[#806EA9] bg-[#443263] focus:text-[#EADDFF] hover:bg-[#514371B8]"
               } ${
                 ownerState.disabled
                   ? "cursor-not-allowed opacity-50"

@@ -22,3 +22,10 @@ export const fadeIn = (direction: 'up' | 'down' | 'left' | 'right', delay: numbe
     },
   };
 };
+
+
+
+
+
+
+

@@ -1,6 +1,15 @@
-import { Box, Button, ButtonProps, Divider, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  ButtonProps,
+  Divider,
+  IconButton,
+  InputBase,
+  Paper,
+  Stack,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { ArchiveBox, MagnifyingGlass } from "@phosphor-icons/react";
+import { ArchiveBox, ChatText, MagnifyingGlass } from "@phosphor-icons/react";
 import ChatElements from "../../components/ChatElements";
 import {
   Search,
@@ -8,10 +17,10 @@ import {
   StyledInputBase,
 } from "../../components/search";
 import { ChatList } from "../../data";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { useEffect } from "react";
-import { socket } from "../../socket";
-import { fetchConverstations } from "../../redux/slices/converstation";
+
+//   import { useRef } from "react";
+// import EVENTS from "../../config/events";
+// import { useSocket } from "../../contexts/socket.context";
 
 const ColorButton = styled(Button)<ButtonProps>(() => ({
   color: "#C7BBD1",
@@ -22,23 +31,21 @@ const ColorButton = styled(Button)<ButtonProps>(() => ({
 }));
 
 const Privates = () => {
-  const dispatch = useAppDispatch();
+  // const { socket, roomId, rooms } = useSocket();
+  // const newRoomRef = useRef(null);
 
-  const { conversations } = useAppSelector(
-    state => state.converstation.direct_chat
-  );
-  // console.log(conversations);
-  // const { _id } = useAppSelector((state) => state.profile);
+  // function handleCreateRoom() {
+  //   //get the room name (neme of room)
+  //   const roomName = newRoomRef.current.value || "";
 
-  // useEffect(() => {
-  //   socket.emit("get_direct_conversations", { _id }, (data) => {
-  //     console.log(data); // this data is the list of conversations
-  //     // dispatch action
+  //   if (!String(roomName).trim()) return;
 
-  //     dispatch(fetchConverstations({ conversations: data }));
-  //   });
-  // }, []);
+  //   // emit room created event (create room)
+  //   socket.emit(EVENTS.CLIENT.CREATE_ROOM, { roomName });
 
+  //   // set room name input to empty string
+  //   newRoomRef.current.value = "";
+  // }
   return (
     <Box
       sx={{
@@ -96,12 +103,9 @@ const Privates = () => {
         <Stack
           direction={"column"}
           sx={{
-            flexGrow: 1,
-            overflowY: "auto",
-            "&::-webkit-scrollbar": {
+            flexGrow: 1, overflowY: "auto", "&::-webkit-scrollbar": {
               width: "0.4em",
-            },
-            height: "100%",
+            }, height: "100%"
           }}
         >
           {/* <SimpleBarStyle timeout={500} clickOnTrack={false}> */}
@@ -123,11 +127,9 @@ const Privates = () => {
                     />
                   );
                 })} */}
-            {conversations
-              .filter((el: any) => !el.pinned)
-              .map((el, index) => {
-                return <ChatElements key={index} {...el} />;
-              })}
+            {ChatList.filter((el) => !el.pinned).map((el) => {
+              return <ChatElements {...el} />;
+            })}
           </Stack>
           {/* </SimpleBarStyle> */}
         </Stack>

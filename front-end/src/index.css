@@ -3,6 +3,9 @@
 @import url('https://fonts.googleapis.com/css2?family=Lemon&family=Palanquin+Dark:wght@400;500;600;700&family=Roboto:wght@400;700&family=ZCOOL+KuaiLe&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lemon&family=Palanquin+Dark:wght@400;500;600;700&family=Roboto:wght@400;700&family=ZCOOL+KuaiLe&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lalezar&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sacramento&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Architects+Daughter&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bad+Script&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -36,7 +39,7 @@ code {
   }
   
   .sidebar-container{
-    @apply bg-[#35324db2]  h-[70%] w-16 lg:h-[85%] lg:w-24 rounded-3xl p-2 lg:p-4 transition-all duration-500 relative
+    @apply bg-[#35324db2]  h-[70%] w-16 lg:h-[80%] -mt-10 lg:w-24 rounded-3xl p-2 lg:p-4 transition-all duration-500 relative
   }
 
   .rightbar-container{
@@ -52,7 +55,7 @@ code {
     @apply absolute w-auto p-2 m-2 -mt-11 ml-7 min-w-max left-14 rounded-[10px] shadow-md text-white bg-gradient-to-tr from-[#d8522959] via-[#2A2742] to-[#fe764d59] text-xs font-bold transition-all duration-500 scale-0 origin-left 
   }
   .profile-card{
-    @apply absolute -left-60 -mt-12 p-2 min-w-max rounded-[25px] shadow-md text-white text-xs bg-[#bd4c2959] font-bold transition-all duration-500 scale-0 origin-right
+    @apply absolute -left-60 -mt-12 p-2 min-w-max rounded-[25px] shadow-md text-white text-xs bg-[#35324d] font-bold transition-all duration-500 scale-0 origin-right
   }
   /* bg-gradient-to-tr from-[#3F3B5B] via-[#2A2742] to-[#302c4bc7] */
   .radial-progress {
@@ -81,6 +84,10 @@ code {
       background: transparent;
       border-radius: 10px ;
   }
+  .scrollContainer::-webkit-scrollbar-thumb{
+    /* background: transparent; */
+    border-radius: 10px ;
+}
   .remove-arrow::-webkit-inner-spin-button,
   .remove-arrow::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -89,6 +96,43 @@ code {
   .remove-arrow {
     -moz-appearance: textfield;
   }
+  .show-div {
+    opacity: 1;
+    transition: opacity 0.5s ease; /* Adjust the transition duration as needed */
+  }
+  
+  .hide-div {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .game-help-background {
+    background-image: url('../src/img/astronaut_.png');
+    background-size: cover; /* Adjust as needed */
+    background-position: center; /* Adjust as needed */
+    background-repeat: no-repeat; /* Adjust as needed */
+    padding: 20px; /* Add some padding to make text more readable */
+    opacity: 0.5; /* Adjust the opacity value as needed (0.0 to 1.0) */
+    color: white; /* Text color for better contrast */
+  }
+  .bg-opacity-40 {
+    opacity: 0.4;
+  }
+  
+  .text-opacity-100 {
+    opacity: 1.0;
+  }
+  
 }
 /* absolute w-auto p-2 m-2 min-w-max rounded-[10px] shadow-md text-white bg-gradient-to-tr from-[#fe764d59] via-[#2A2742] to-[#fe764d59] text-xs font-bold transition-all duration-100 origin-right */
 /* absolute w-auto p-2 m-2 min-w-max left-14 rounded-md shadow-md text-white bg-gray-400 text-xs font-bold transition-all duration-100 scale-0 origin-left */
+
+@media screen and (max-width: 767px) {
+  .btn {
+      font-size: 22px;
+      padding: 2px 10px 4px;
+  }
+/* #exit-btn {
+  font-size: 22px;
+  padding: 2px 10px 4px;
+} */
+}

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, ChangeEvent } from "react";
+import React, { useEffect, useState, ChangeEvent, Fragment } from "react";
 import { BiBlock } from "react-icons/bi";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
@@ -10,6 +10,8 @@ import { fadeIn } from "./variants";
 import { AiOutlineSearch } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { topData } from "../Data/TopStreamerData";
+import { Popover, Transition } from "@headlessui/react";
 import { Modal } from "antd"
 import {
   Card,
@@ -132,6 +134,23 @@ function FriendList() {
     //   .then((data) => setUsers(data))
   }, []);
 
+  function AddMember(id_user: number) {
+    axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
+    // setFriend(friend.filter((user) => user.id_user !== id_user));
+    console.log("id_user", id_user);
+    Modal.confirm({
+      title: 'Are you sure, you want to add this friend?',
+      okText: 'Yes',
+      okType: "danger",
+      className: " flex justify-center items-center h-100vh",
+      onOk: () => {
+        const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+        setFriend(updatedUsers);
+      }
+    })
+
+  }
+
   return (
     <motion.div
       // variants={fadeIn("down", 0.2)}
@@ -193,12 +212,58 @@ function FriendList() {
               >
                 view all
               </Button> */}
-              <Button
-                className="flex items-center gap-3 rounded-xl bg-slate-500"
+               
+              {/* <Button
+                className="flex items-center gap-3 rounded-xl bg-slate-500 sm:bg-indigo-500"
                 size="sm"
               >
                 <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add member
               </Button>
+               */}
+
+               <Popover className="relative">
+              <Popover.Button
+                  className="flex items-center gap-3 p-2 rounded-xl bg-slate-500 sm:bg-indigo-500"
+                  // size="sm"
+                  >
+                  <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add member
+                </Popover.Button>
+                <Transition
+                as={Fragment}
+                enter="transition ease-out duration-500"
+                enterFrom="opacity-0 translate-y-1"
+                enterTo="opacity-100 translate-y-0"
+                leave="transition ease-in duration-150"
+                leaveFrom="opacity-100 translate-y-0"
+                leaveTo="opacity-0 translate-y-1"
+              >
+                  <Popover.Panel className="absolute right-0 z-10  w-80 -ml-40 text-white">
+                  <div 
+                  className=" flex flex-col  rounded-[30px] mt-3 bg-[#35324db2] hover:scale-100 ">
+                      {topData.map((data) => {
+                        return (
+                          <ul
+                            key={data.id} 
+                          role="list" className="p-6 divide-y divide-slate-200">
+                            <li className="flex py-4 first:pt-0 last:pb-0">
+                              <img className="h-10 w-10 rounded-full" src={data.src} alt="" />
+                              <div className="ml-3 overflow-hidden">
+                                <p className="text-sm font-medium text-white">{data.name} </p>
+                                <p className="text-sm text-slate-500 truncate">{data.email}</p>
+                                <div className="text-xs text-blue-200 dark:text-blue-200">a few moments ago</div>
+                              </div>
+                              
+                              <button className="ml-auto  bg-indigo-400 hover:bg-indigo-500 text-white font-bold  px-7 rounded-[20px]" onClick={() => AddMember(data.id)}>
+                                Add
+                              </button>
+                            </li>
+                          </ul>
+                        );
+                      })}
+                    </div>
+               </Popover.Panel>
+               </Transition>
+              </Popover>
             </div>
           </div>
         </div>
@@ -224,13 +289,13 @@ function FriendList() {
         <CardBody className=" flex overflow-scroll resultUserContainer px-0 justify-center items-center w-[90%] bg-transparent">
           <table className="w-[90%] min-w-max table-auto text-left flex flex-col justify-center ">
             <thead className=" flex justify-center items-center">
-              <tr className="   flex ml-[40rem] justify-between space-x-32 fixed">
+              <tr className=" flex ml-[32%] mr-[32%] items-center justify-between space-x-24 fixed">
                 {TABLE_HEAD.map((head) => (
                   <th key={head} className=" bg-blue-gray-50/50 p-4  ">
                     <Typography
                       variant="small"
                       color="blue-gray"
-                      className="leading-none opacity-70 font-bold text-xl text-white "
+                      className="leading-none opacity-70 font-bold text-xl text-white"
                     >
                       {head}
                     </Typography>
@@ -238,7 +303,7 @@ function FriendList() {
                 ))}
               </tr>
             </thead>
-            <tbody className="flex flex-col w-full mx-auto justify-evenly items-center ">
+            <tbody className="flex flex-col mt-20 w-full mx-auto justify-evenly items-center ">
               {friend.map(
                 (
                   {
@@ -267,15 +332,18 @@ function FriendList() {
                     navigate(`/profileFriend/${friend.id}`);
                   };
                   return (
-                    <div className=" flex justify-center">
+                    // <div
+                    //   key={id_user}
+                    //  className=" flex justify-center">
                       <motion.tr
+                        key={id_user}
                         variants={fadeIn("right", 0.2)}
                         initial="hidden"
                         whileInView={"show"}
                         viewport={{ once: false, amount: 0.7 }}
                         transition={{ duration: 2.3, delay: animationDelay }}
-                        className="flex bg-black/30 space-x-32 rounded-[27px] w-[70rem] my-2 p-4 justify-evenly items-center"
-                        key={id_user}
+                        className="flex bg-black/30 space-x-32 rounded-[27px] w-[70rem] my-2 p-4 ml-32 justify-evenly items-center"
+                        
                       >
                         <td className={`${classes} flex`}>
                           <div className="flex items-center gap-3">
@@ -364,7 +432,7 @@ function FriendList() {
                           </div>
                         </td>
                       </motion.tr>
-                    </div>
+                    // </div>
                   );
                 }
               )}
@@ -372,7 +440,7 @@ function FriendList() {
           </table>
         </CardBody>
         {/* </div> */}
-        <CardFooter className="flex items-center justify-end mr-5  border-blue-gray-50 p-4 ">
+        {/* <CardFooter className="flex items-center justify-end mr-5  border-blue-gray-50 p-4 "> */}
           {/* <Typography variant="small" color="blue-gray" className="font-normal">
             Page 1 of 10
           </Typography> */}
@@ -392,7 +460,7 @@ function FriendList() {
               Next
             </Button>
           </div> */}
-        </CardFooter>
+        {/* </CardFooter> */}
       </Card>
     </motion.div>
   );
