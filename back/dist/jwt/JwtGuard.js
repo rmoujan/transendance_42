@@ -28,7 +28,6 @@ let JwtAuthGuard = class JwtAuthGuard {
         }
         try {
             const decoded = this.JwtService.verify(token);
-            console.log(decoded);
             if (!decoded) {
                 response.send("false").status(401);
                 return false;

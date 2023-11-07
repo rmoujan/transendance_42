@@ -25,10 +25,8 @@ let ProfileController = class ProfileController {
         this.prisma = prisma;
         this.jwt = jwt;
     }
-    async Name_Modification(data, req, res) {
-        const result = await this.Profile.ModifyName(data, req, res);
-        if (result == 400)
-            res.status(400).json({ msg: "name already exists" });
+    Name_Modification(data, req, res) {
+        this.Profile.ModifyName(data, req, res);
         res.status(200).json({ msg: "name well setted" });
         return ({ msg: 'i am in the pofile controller now' });
     }
@@ -53,6 +51,45 @@ let ProfileController = class ProfileController {
         console.log(user.About);
         return (user.About);
     }
+    async VsBoot(req, body) {
+        console.log(body);
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+        const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
+        if (body.won) {
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    wins: user.wins++,
+                    games_played: user.games_played++,
+                    history: {
+                        create: {
+                            winner: true,
+                            userscore: body.userScore,
+                            enemyId: 9,
+                            enemyscore: body.botScore,
+                        },
+                    },
+                },
+            });
+        }
+        else {
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    losses: user.losses++,
+                    games_played: user.games_played++,
+                    history: {
+                        create: {
+                            winner: false,
+                            userscore: body.userScore,
+                            enemyId: 9,
+                            enemyscore: body.botScore,
+                        },
+                    },
+                },
+            });
+        }
+    }
 };
 exports.ProfileController = ProfileController;
 __decorate([
@@ -62,7 +99,7 @@ __decorate([
     __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [nameDto_1.CreateUserDto, Object, Object]),
-    __metadata("design:returntype", Promise)
+    __metadata("design:returntype", void 0)
 ], ProfileController.prototype, "Name_Modification", null);
 __decorate([
     (0, common_1.Post)('modify-photo'),
@@ -92,6 +129,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "Get_About", null);
+__decorate([
+    (0, common_1.Post)('Bot-Pong'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "VsBoot", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)('profile'),
     __metadata("design:paramtypes", [profile_service_1.ProfileService, prisma_service_1.PrismaService, jwtservice_service_1.JwtService])

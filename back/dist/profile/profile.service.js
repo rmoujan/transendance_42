@@ -29,11 +29,10 @@ let ProfileService = class ProfileService {
                     name: dat.name,
                 },
             });
-            return (200);
         }
         catch (error) {
             if (error.code == 'P2002')
-                return (400);
+                res.status(400).json({ error: 'name already exists' });
         }
     }
     async ModifyPhoto(photo, req, res) {

@@ -51,7 +51,6 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
                     src={data.rank}
                     alt=""
                   />
-
                   <img
                     className="w-14 h-14  rounded-full"
                     src={data.src}
@@ -77,7 +76,7 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
                   <span className="ml-10 w-20">
                     <div className="w-full bg-gradient-to-br from-[#c1c0bf] to-[#90908f] dark:bg-neutral-600 rounded-full ">
                       <div
-                        className=" flex  items-center justify-center bg-gradient-to-br h-3 from-[#FE754D] to-[#ce502a] p-0.5 text-center text-xs font-PalanquinDark leading-none text-primary-100 rounded-full"
+                        className=" flex items-center justify-center bg-gradient-to-br h-3 from-[#FE754D] to-[#ce502a] p-0.5 text-center text-xs font-PalanquinDark leading-none text-primary-100 rounded-full"
                         style={{ width: `${data.progress}%` }}
                       >
                         <span className="-mt-0.5">{data.progress}%{" "}</span> 

@@ -32,7 +32,6 @@ export class AuthController {
     @UseGuards(AuthGuard('42'))
     async redirect(@Req() req:any, @Res() res:any){
       // console.log('alright');
-      
       const accessToken = this.jwt.sign(req.user);
       // console.log(req.user);
       res.cookie('cookie', accessToken/*, { maxage: 99999 , secure: false}*/).status(200);
@@ -44,13 +43,13 @@ export class AuthController {
         return (req);
       }
       if (user.IsFirstTime){
-          console.log('first time');
+        //   console.log('first time');
           await this.prisma.user.update({where : { id_user : req.user.id }, data: {IsFirstTime: false}});
           res.redirect('http://localhost:5173/setting');
       }
       else
       {
-        console.log('not first time');
+        // console.log('not first time');
         res.redirect('http://localhost:5173/home');
       }
         // res.send('cookie well setted');
@@ -110,13 +109,13 @@ export class AuthController {
       const friendData = await this.prisma.user.findUnique({where: {id_user: Body.id_user}});
       const decoded = this.jwt.verify(req.cookies['cookie']);
       // console.log(decoded);
-      // console.log(friendData);
+    //   console.log(friendData);
       const user = await this.prisma.freind.deleteMany({
         where: {
           AND: [
             {userId: decoded.id},
             {id_freind: /*2002*/ Body.id_user},
-          ] // leila needs to store the id of every single friend to use em 
+          ] // leila needs to store the id of every single friend to use em
             // when removing some one from a user's data base
          },
       })
@@ -230,7 +229,7 @@ export class AuthController {
       const decoded = this.jwt.verify(req.cookies['cookie']);
       // console.log(req.cookies['cookie']);
 
-      // console.log(decoded);
+    //   console.log(decoded);
       let obj: any[] = []
       const user = await this.prisma.user.findUnique({where:{id_user : decoded.id},});
       obj.push(user);

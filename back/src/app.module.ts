@@ -13,7 +13,7 @@ import { ProfileModule } from './profile/profile.module';
 import { JwtModule } from '@nestjs/jwt';
 import { SocketGateway } from './socket/socket.gateway';
 import { SocketModule } from './socket/socket.module';
-// import { AppGateway } from './app.gateway';
+import { AppGateway } from './app.gateway';
 
 @Module({
   imports: [AuthModule, PrismaModule,
@@ -24,7 +24,7 @@ import { SocketModule } from './socket/socket.module';
   controllers: [AppController, AuthController,
                 ProfileController],
   providers: [AppService, AuthService,
-              JwtService, ProfileService, SocketGateway, /*AppGateway*/],
+              JwtService, ProfileService, SocketGateway, AppGateway],
 })
 
 export class AppModule {}

@@ -21,40 +21,44 @@ let SocketGateway = class SocketGateway {
     constructor(jwt, prisma) {
         this.jwt = jwt;
         this.prisma = prisma;
+        this.SocketContainer = new Map();
     }
     decodeCookie(client) {
-        let cookieHeader = '';
-        cookieHeader = client.handshake.headers.cookies.toString();
-        const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
-            const [name, value] = cookie.trim().split('=');
+        let cookieHeader;
+        cookieHeader = client.handshake.headers.cookie;
+        const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
+            const [name, value] = cookie.trim().split("=");
             acc[name] = value;
             return acc;
         }, {});
-        const specificCookie = cookies['cookie'];
+        const specificCookie = cookies["cookie"];
+        console.log(specificCookie);
         const decoded = this.jwt.verify(specificCookie);
-        return (decoded);
+        return decoded;
     }
     async handleConnection(client) {
         console.log('client ' + client.id + ' has conected');
         const decoded = this.decodeCookie(client);
+        console.log(decoded);
+        let user_id = decoded.id;
+        this.SocketContainer.set(user_id, client.id);
         const user = await this.prisma.user.update({
             where: { id_user: decoded.id },
             data: {
                 status_user: "online",
             },
         });
-        console.log(user);
     }
     async handleDisconnect(client) {
         console.log('client ' + client.id + ' has disconnected');
         const decoded = this.decodeCookie(client);
+        this.SocketContainer.delete(decoded.id);
         const user = await this.prisma.user.update({
             where: { id_user: decoded.id },
             data: {
                 status_user: "offline",
             },
         });
-        console.log(user);
     }
     handleUserOnline(client) {
         this.handleConnection(client);

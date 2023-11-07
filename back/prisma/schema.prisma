@@ -20,7 +20,10 @@ model User{
   About String?
   status_user String?
   stat Stat?
-  history History?
+  history History[]
+  wins Int?
+  losses Int?
+  games_played Int?
   blockedUser BlockedUser[]
   freind Freind[]
   dms Dm[]
@@ -37,8 +40,12 @@ model Stat {
 }
 
 model History{
+  winner Boolean?
   id_history Int @id @default(autoincrement())
-  userId Int @unique
+  userId Int
+  userscore Int?
+  enemyId Int?
+  enemyscore Int?
   user User @relation (fields: [userId], references: [id_user])
 }
 

@@ -145,6 +145,7 @@ function AboutMe() {
                     ></textarea>
                 </div>
             </div>
+            
             <button type="submit" className="inline-flex m items-center px-5 py-2.5 text-sm font-medium text-center text-white bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] rounded-2xl focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800" onClick={handleSubmit}>
                 Publish post
             </button>

@@ -22,6 +22,8 @@ import Table from "../../img/tableping.png";
 // import Friends from "./friends";
 import Friends from "./Friends";
 import { Key } from "@phosphor-icons/react";
+import {socket, socketuser} from '../../socket'
+
 type User = {
   id_user: number;
   name: string;
@@ -46,6 +48,9 @@ function Maincontent() {
   };
   const [user, setUser] = useState<User[]>([]);
   useEffect(() => {
+    if (socket == undefined){
+      socketuser();
+    }
     const fetchData = async () => {
       const { data } = await axios.get("http://localhost:3000/auth/get-user", {
         withCredentials: true,

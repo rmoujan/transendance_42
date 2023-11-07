@@ -8,7 +8,7 @@ import * as fs from 'fs';
 export class ProfileService {
     constructor(private prisma: PrismaService, private jwt:JwtService){}
 
-    async ModifyName(dat :any, req :any, res :any): Promise<Number>{
+    async ModifyName(dat :any, req :any, res :any){
         // console.log('name : ' + dat.name);
         const Token = req.cookies['cookie'];
         const verifyToekn = this.jwt.verify(Token);
@@ -20,15 +20,14 @@ export class ProfileService {
                     name : dat.name,
                 },
             });
-           return(200) //me
+           
             // verifyToekn.login = dat.name;
             // console.log(user);
             // res.cookie('cookie', this.jwt.sign(verifyToekn));
 
         }catch(error){
             if (error.code == 'P2002')
-                return (400);
-                // res.status(400).json({error: 'name already exists'});
+                res.status(400).json({error: 'name already exists'});
         }
     }
 
@@ -57,12 +56,10 @@ export class ProfileService {
                 // res.status(400).json({error: 'name already exists'});
         }
     }
-
-    async About_me(req:any, res:any){
-        
+    async About_me(req, res) {
         const payload = this.jwt.verify(req.cookies['cookie']);
         const user = await this.prisma.user.findUnique({
-          where: {id_user: payload.id},
+            where: { id_user: payload.id },
         });
         return (user);
     }

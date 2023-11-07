@@ -22,6 +22,8 @@ import TwoFactor from "../../components/TwoFactor";
 import { CgSpinner } from "react-icons/cg";
 import astronaut from "../../img/astronaut_.png";
 import { url } from "inspector";
+import {socket, socketuser} from '../../socket'
+
 type User = {
   id_user: number;
   name: string;
@@ -38,6 +40,9 @@ function MaincontentSetting() {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   useEffect(() => {
+    if (socket == undefined){
+      socketuser();
+    }
     const fetchData = async () => {
       const { data } = await axios.get("http://localhost:3000/auth/get-user", {
         withCredentials: true,

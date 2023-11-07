@@ -23,6 +23,7 @@ interface Ball {
     color: string;
 }
 interface RoomPlayer {
+    won: boolean;
     socketId: string;
     playerNumber: number;
     x: number;

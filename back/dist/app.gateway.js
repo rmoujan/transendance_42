@@ -13,12 +13,29 @@ exports.AppGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
 const common_1 = require("@nestjs/common");
 const socket_io_1 = require("socket.io");
+const jwtservice_service_1 = require("./jwt/jwtservice.service");
+const prisma_service_1 = require("./prisma/prisma.service");
 let AppGateway = class AppGateway {
-    constructor() {
+    constructor(jwt, prisma) {
+        this.jwt = jwt;
+        this.prisma = prisma;
+        this.users = new Map();
         this.rooms = [];
         this.framePerSec = 50;
         this.isPaused = false;
         this.logger = new common_1.Logger("AppGateway");
+    }
+    decodeCookie(client) {
+        let cookieHeader;
+        cookieHeader = client.handshake.headers.cookie;
+        const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
+            const [name, value] = cookie.trim().split("=");
+            acc[name] = value;
+            return acc;
+        }, {});
+        const specificCookie = cookies["cookie"];
+        const decoded = this.jwt.verify(specificCookie);
+        return decoded;
     }
     afterInit(server) {
         this.logger.log("Websocket Gateway initialized");
@@ -42,21 +59,34 @@ let AppGateway = class AppGateway {
             this.rooms = this.rooms.filter((r) => r.id !== room.id);
         }
         else {
-            this.logger.log(`User disconnected but was not in a room: ${client.id}`);
+            this.logger.log(`User disconnected : ${client.id}`);
         }
+        this.users.delete(this.decodeCookie(client).id);
+        console.log(this.users);
+    }
+    handleDisconnectEvent(client) {
+        console.log(`Client requested socket disconnection: ${client.id}`);
+        client.disconnect();
     }
     handleJoinRoom(client) {
+        const userId = this.decodeCookie(client).id;
+        if (!this.users.has(userId)) {
+            this.users.set(userId, client.id);
+        }
+        console.log(this.users);
         let room = null;
         if (this.rooms.length > 0 &&
             this.rooms[this.rooms.length - 1].roomPlayers.length === 1) {
             room = this.rooms[this.rooms.length - 1];
         }
         if (room) {
+            this.player01 = userId;
             client.join(room.id);
             client.emit("player-number", 2);
             room.roomPlayers.push({
+                won: false,
                 socketId: client.id,
-                playerNumber: 1,
+                playerNumber: 2,
                 x: 1088 - 20,
                 y: 644 / 2 - 100 / 2,
                 h: 100,
@@ -71,6 +101,7 @@ let AppGateway = class AppGateway {
             }, 3100);
         }
         else {
+            this.player02 = userId;
             room = {
                 gameAbondoned: false,
                 stopRendering: false,
@@ -78,8 +109,9 @@ let AppGateway = class AppGateway {
                 id: (this.rooms.length + 1).toString(),
                 roomPlayers: [
                     {
+                        won: false,
                         socketId: client.id,
-                        playerNumber: 2,
+                        playerNumber: 1,
                         x: 10,
                         y: 644 / 2 - 100 / 2,
                         h: 100,
@@ -105,7 +137,8 @@ let AppGateway = class AppGateway {
         const room = this.rooms.find((room) => room.id === data.roomID);
         if (room) {
             if (data.direction === "mouse") {
-                room.roomPlayers[data.playerNumber - 1].y = data.event - data.position.top - 100 / 2;
+                room.roomPlayers[data.playerNumber - 1].y =
+                    data.event - data.position.top - 100 / 2;
             }
             else if (data.direction === "up") {
                 room.roomPlayers[data.playerNumber - 1].y -= 30;
@@ -132,12 +165,64 @@ let AppGateway = class AppGateway {
             this.server.to(room.id).emit("update-game", room);
         }
     }
-    handleLeave(client, roomID) {
+    async handleLeave(client, roomID) {
+        const decoded = this.decodeCookie(client);
+        const room = this.rooms.find((room) => room.id === roomID);
+        const player = room.roomPlayers.find((player) => client.id === player.socketId);
+        const enemy = room.roomPlayers.find((player) => client.id !== player.socketId);
+        let OppositeId;
+        if (decoded.id == this.player01)
+            OppositeId = this.player02;
+        else
+            OppositeId = this.player01;
+        let UserScore;
+        let EnemyScore;
+        UserScore = player.score;
+        EnemyScore = enemy.score;
+        const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
+        if (player.won) {
+            console.log('leave');
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    losses: user.losses++,
+                    games_played: user.games_played++,
+                    history: {
+                        create: {
+                            winner: true,
+                            userscore: UserScore,
+                            enemyId: OppositeId,
+                            enemyscore: EnemyScore,
+                        }
+                    }
+                }
+            });
+        }
+        else {
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    wins: user.wins++,
+                    games_played: user.games_played++,
+                    history: {
+                        create: {
+                            winner: false,
+                            userscore: UserScore,
+                            enemyId: OppositeId,
+                            enemyscore: EnemyScore,
+                        }
+                    }
+                }
+            });
+        }
         client.leave(roomID);
+        this.rooms = this.rooms.filter((r) => r.id !== room.id);
+        this.users.delete(this.decodeCookie(client).id);
+        client.disconnect();
     }
     findRoomBySocketId(socketId) {
         for (const room of this.rooms) {
-            const playerInRoom = room.roomPlayers.find(player => player.socketId === socketId);
+            const playerInRoom = room.roomPlayers.find((player) => player.socketId === socketId);
             if (playerInRoom) {
                 return room;
             }
@@ -215,14 +300,14 @@ let AppGateway = class AppGateway {
                 this.updateScore(room);
                 if (room.roomPlayers[0].score === 5) {
                     room.winner = 1;
-                    this.rooms = this.rooms.filter((r) => r.id !== room.id);
-                    this.server.to(room.id).emit("endGame", room);
+                    room.roomPlayers[0].won = true,
+                        this.server.to(room.id).emit("endGame", room);
                     clearInterval(interval);
                 }
                 else if (room.roomPlayers[1].score === 5) {
                     room.winner = 2;
-                    this.rooms = this.rooms.filter((r) => r.id !== room.id);
-                    this.server.to(room.id).emit("endGame", room);
+                    room.roomPlayers[1].won = true,
+                        this.server.to(room.id).emit("endGame", room);
                     clearInterval(interval);
                 }
                 if (room.stopRendering) {
@@ -239,6 +324,12 @@ __decorate([
     __metadata("design:type", socket_io_1.Server)
 ], AppGateway.prototype, "server", void 0);
 __decorate([
+    (0, websockets_1.SubscribeMessage)('disconnect-socket'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket]),
+    __metadata("design:returntype", void 0)
+], AppGateway.prototype, "handleDisconnectEvent", null);
+__decorate([
     (0, websockets_1.SubscribeMessage)("join-room"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket]),
@@ -254,9 +345,10 @@ __decorate([
     (0, websockets_1.SubscribeMessage)("leave"),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket, String]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], AppGateway.prototype, "handleLeave", null);
 exports.AppGateway = AppGateway = __decorate([
-    (0, websockets_1.WebSocketGateway)()
+    (0, websockets_1.WebSocketGateway)(),
+    __metadata("design:paramtypes", [jwtservice_service_1.JwtService, prisma_service_1.PrismaService])
 ], AppGateway);
 //# sourceMappingURL=app.gateway.js.map

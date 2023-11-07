@@ -9,6 +9,7 @@ import bages from "../../img/bdg.png";
 import ProfileCardUser from "./ProfileCardUser";
 import axios from "axios";
 import AboutMe from "./AboutMe";
+import {socket} from "../../socket";
 // import '../../../';
 type User = {
   id_user: number;
@@ -23,6 +24,7 @@ function MaincontentProfile() {
   const [toggle, setToggle] = useState(false);
   const [user, setUser] = useState<User[]>([]);
   useEffect(() => {
+    socket.emit('message', 'hello world');
     const fetchData = async () => {
       const { data } = await axios.get("http://localhost:3000/auth/get-user", {
         withCredentials: true,

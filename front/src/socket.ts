@@ -1,8 +1,8 @@
-import io, { Socket } from "socket.io-client";
+import {io,  Socket } from "socket.io-client";
 import { createContext } from "vm";
 // import io from "socket.io-client"; // Add this
 
-// let socket: any;
+let socket: Socket;
 
 // const connectSocket = (user_id: string) => {
 //   socket = io("http://localhost:3001", {
@@ -14,5 +14,11 @@ import { createContext } from "vm";
 
 // export {socket, connectSocket};
 
-// const socket : Socket = io("http://localhost:3000", {withCredentials: true});
+const socketuser  = () => {
+    socket = io("http://localhost:3000/users", {
+        transports: ["websocket"],
+        withCredentials: true,
+    });
+}
+export {socketuser, socket};
 // const context = createContext(socket);

@@ -21,6 +21,7 @@ const profile_module_1 = require("./profile/profile.module");
 const jwt_1 = require("@nestjs/jwt");
 const socket_gateway_1 = require("./socket/socket.gateway");
 const socket_module_1 = require("./socket/socket.module");
+const app_gateway_1 = require("./app.gateway");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -32,7 +33,7 @@ exports.AppModule = AppModule = __decorate([
         controllers: [app_controller_1.AppController, auth_controller_1.AuthController,
             profile_controller_1.ProfileController],
         providers: [app_service_1.AppService, auth_service_1.AuthService,
-            jwtservice_service_1.JwtService, profile_service_1.ProfileService, socket_gateway_1.SocketGateway,],
+            jwtservice_service_1.JwtService, profile_service_1.ProfileService, socket_gateway_1.SocketGateway, app_gateway_1.AppGateway],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

@@ -7,10 +7,11 @@ export declare class ProfileController {
     private prisma;
     private jwt;
     constructor(Profile: ProfileService, prisma: PrismaService, jwt: JwtService);
-    Name_Modification(data: CreateUserDto, req: any, res: any): Promise<{
+    Name_Modification(data: CreateUserDto, req: any, res: any): {
         msg: string;
-    }>;
+    };
     Photo__Modification(data: any, photo: any, req: any, res: any): void;
     About_me(data: any, req: any, res: any): Promise<void>;
     Get_About(req: any, res: any): Promise<string>;
+    VsBoot(req: any, body: any): Promise<void>;
 }

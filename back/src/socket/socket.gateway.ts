@@ -11,48 +11,52 @@ export class SocketGateway implements OnGatewayConnection, OnGatewayDisconnect{
 
   @WebSocketServer() server: Server;
 
-  private SocketContainer 
+  private SocketContainer = new Map();
 
-  decodeCookie(client: Socket){
-    let cookieHeader : string  = '';
-    cookieHeader = client.handshake.headers.cookies.toString(); // Get the entire cookie header as a string
-    // // You can now parse and manipulate the cookie data as needed
-    const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
-      const [name, value] = cookie.trim().split('=');
-      acc[name] = value;
-      return acc;
-    }, {});
+	decodeCookie(client: Socket) {
+		let cookieHeader;
 
+		cookieHeader = client.handshake.headers.cookie;
+		const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
+			const [name, value] = cookie.trim().split("=");
+			acc[name] = value;
+			return acc;
+		}, {});
 
-    const specificCookie = cookies['cookie'];
-    const decoded = this.jwt.verify(specificCookie);
+		const specificCookie = cookies["cookie"];
+    console.log(specificCookie);
+		const decoded = this.jwt.verify(specificCookie);
 
-    return (decoded);
-  }
+		return decoded;
+	}
 
   async handleConnection(client: Socket) {
 
     console.log('client ' + client.id + ' has conected');
     const decoded = this.decodeCookie(client);
+    console.log(decoded);
+    let user_id:number = decoded.id;
+    this.SocketContainer.set(user_id, client.id);
     const user = await this.prisma.user.update({
       where : {id_user : decoded.id},
       data :{
         status_user : "online",
       },
     });
-    console.log(user);
+    // console.log(user);
   }
 
   async handleDisconnect(client: Socket) {
     console.log('client ' + client.id + ' has disconnected');
     const decoded = this.decodeCookie(client);
+    this.SocketContainer.delete(decoded.id);
     const user = await this.prisma.user.update({
       where : {id_user : decoded.id},
       data :{
         status_user : "offline",
       },
     });
-    console.log(user);
+    // console.log(user);
   }
 
   @SubscribeMessage('userOnline')
