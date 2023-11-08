@@ -10,6 +10,9 @@ import { da } from "@faker-js/faker";
 import Arcane from "../../img/Arcane.png";
 import ProfileCard from "./ProfileCard";
 import axios from "axios";
+import {socket} from "../../socket";
+import { set } from "react-hook-form";
+
 type User = {
   id_user: number;
   name: string;
@@ -27,14 +30,54 @@ function Searchbar() {
   const accepteFriend = (friend: any) => {
     // Update selectedFriend with the clicked friend's information
     console.log(friend);
+    axios.post("http://localhost:3000/auth/add-friends", {
+
+      id_user: friend.id_user,
+    }, {
+      withCredentials: true,
+    })  
+    .then((res) => {
+      console.log(res);
+      window.location.reload();
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+    // console.log(friend);
     // navigate(`/profileFriend/${friend.id}`);
   }
   const [user, setUser] = useState<User[]>([]);
+  // const [Notification, setNotification] = useState<any[]>();
+  const [Notification, setNotification] = useState<Array<any>>([]);
   useEffect(() => {
+
+    if (socket){
+     //get notification
+     const fetchData = async () => {
+      const { data } = await axios.get("http://localhost:3000/profile/Notifications", {
+        withCredentials: true,
+      })
+      console.log("event notification111111")
+      console.log(data);
+      setNotification(data);
+    }
+    fetchData();
+      socket.on('notification', (data) => {
+        // console.log(data.obj);
+        // setNotification(data.obj);
+      });
+    }
     const fetchData = async () => {
       const { data } = await axios.get("http://localhost:3000/auth/get-user", {
         withCredentials: true,
       })
+      const { data: data2 } = await axios.get("http://localhost:3000/profile/Notifications", {
+        withCredentials: true,
+      })
+      console.log("event notification 2222")
+      // console.log(data2);
+      setNotification(data2);
+      console.log("event notification 2222")
       console.log(data);
       if (data == false){
         window.location.href = "/login";
@@ -89,19 +132,20 @@ function Searchbar() {
               >
                 <Popover.Panel className="absolute right-0 z-10 mt-28 w-80 -ml-72 text-white">
                   <strong className=" flex justify-center text-xl -mt-14 mb-2">Notification</strong>
-                  <div className="flex absolute bg-[#35324b] rounded-3xl w-full  shadow-2xl">
+                  <div className="flex absolute bg-[#35324b] rounded-3xl w-full  shadow-2xl max-h-72 overflow-scroll resultContainer">
                     {/* this is the panel */}
                     <div className=" flex flex-col">
-                      {topData.map((data) => {
+                      {
+                      Notification.map((data) => {
                         return (
                           <ul
-                            key={data.id}
+                            key={data.id_user}
                            role="list" className="p-6 divide-y divide-slate-200">
                             <li className="flex py-4 first:pt-0 last:pb-0">
-                              <img className="h-10 w-10 rounded-full" src={data.src} alt="" />
+                              <img className="h-10 w-10 rounded-full" src={data.avatar} alt="" />
                               <div className="ml-3 overflow-hidden">
                                 <p className="text-sm font-medium text-white">{data.name} </p>
-                                <p className="text-sm text-slate-500 truncate">{data.email}</p>
+                                {/* <p className="text-sm text-slate-500 truncate">{data.email}</p> */}
                                 <div className="text-xs text-blue-200 dark:text-blue-200">a few moments ago</div>
                               </div>
                               {/* Accepte button */}
@@ -139,11 +183,23 @@ function Searchbar() {
             })}
             </span>
             <div className="-ml-16 group">
-              <img
-                className="w-14 h-14 p-1 rounded-full ring-2 ring-[#FE754D] dark:ring-[#FE754D] "
-                src={Arcane}
-                alt="Bordered avatar"
-              />
+              {
+                user.map((data) => {
+                  return (
+                    <img
+                      key={data.id_user}
+                      className="w-14 h-14 p-1 rounded-full ring-2 ring-[#FE754D] dark:ring-[#FE754D] "
+                      src={data.avatar}
+                      alt="Bordered avatar"
+                    />
+                  );
+                })
+              }
+              {/* // <img
+              //   className="w-14 h-14 p-1 rounded-full ring-2 ring-[#FE754D] dark:ring-[#FE754D] "
+              //   src={Arcane}
+              //   alt="Bordered avatar"
+              // /> */}
               <span className="profile-card group-hover:scale-100 ml-8 mt-5">
                 <ProfileCard />
               </span>

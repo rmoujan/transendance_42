@@ -106,4 +106,37 @@ export class ProfileController {
 			})
 		}
 	}
+
+  @Get('NotFriends')
+  async NotFriendsUsers(@Req() req){
+
+    const decoded = this.jwt.verify(req.cookies['cookie']);
+    const users = this.prisma.user.findMany({
+      where:{
+        NOT:{
+          freind:{
+            some:{
+              id_freind : decoded.id,
+            },
+          },
+        },
+      },
+    });
+    const FinalUsers =  (await users).filter((scope => {if (scope.id_user != decoded.id){return (scope)}}));
+    console.log(FinalUsers);
+    return (FinalUsers);
+  }
+
+  @Get('Notifications')
+  async GetNotifications(@Req() req){
+    const decoded = this.jwt.verify(req.cookies['cookie']);
+    const user = await this.prisma.user.findUnique({
+      where: {id_user: decoded.id},
+      include:{
+        notification: true,
+      },
+    });
+    // console.log(user.notification);
+    return (user.notification);
+  }
 }

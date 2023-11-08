@@ -90,6 +90,35 @@ let ProfileController = class ProfileController {
             });
         }
     }
+    async NotFriendsUsers(req) {
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+        const users = this.prisma.user.findMany({
+            where: {
+                NOT: {
+                    freind: {
+                        some: {
+                            id_freind: decoded.id,
+                        },
+                    },
+                },
+            },
+        });
+        const FinalUsers = (await users).filter((scope => { if (scope.id_user != decoded.id) {
+            return (scope);
+        } }));
+        console.log(FinalUsers);
+        return (FinalUsers);
+    }
+    async GetNotifications(req) {
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+        const user = await this.prisma.user.findUnique({
+            where: { id_user: decoded.id },
+            include: {
+                notification: true,
+            },
+        });
+        return (user.notification);
+    }
 };
 exports.ProfileController = ProfileController;
 __decorate([
@@ -137,6 +166,20 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "VsBoot", null);
+__decorate([
+    (0, common_1.Get)('NotFriends'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "NotFriendsUsers", null);
+__decorate([
+    (0, common_1.Get)('Notifications'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "GetNotifications", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)('profile'),
     __metadata("design:paramtypes", [profile_service_1.ProfileService, prisma_service_1.PrismaService, jwtservice_service_1.JwtService])

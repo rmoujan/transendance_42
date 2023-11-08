@@ -134,6 +134,7 @@ function AboutMe() {
                 </div>
                 <div className="px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
                     <label htmlFor="editor" className="sr-only">Publish post</label>
+                    {/* I love playing pong game! Always up for a challenging match. */}
                     <textarea
                         id="editor"
                         rows={8}

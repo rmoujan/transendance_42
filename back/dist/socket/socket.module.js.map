@@ -1,1 +1,1 @@
-{"version":3,"file":"socket.module.js","sourceRoot":"","sources":["../../src/socket/socket.module.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAAwC;AACxC,qDAAiD;AACjD,kEAAwD;AAOjD,IAAM,YAAY,GAAlB,MAAM,YAAY;CAAG,CAAA;AAAf,oCAAY;uBAAZ,YAAY;IAJxB,IAAA,eAAM,EAAC;QACJ,SAAS,EAAE,CAAC,8BAAa,EAAE,+BAAU,CAAC;KACzC,CAAC;GAEW,YAAY,CAAG"}
+{"version":3,"file":"socket.module.js","sourceRoot":"","sources":["../../src/socket/socket.module.ts"],"names":[],"mappings":";;;AAKA,MAAa,YAAY;CAAG;AAA5B,oCAA4B"}

@@ -28,7 +28,7 @@ export const topData = [
     progress: 60,
   },
   {
-    id:3,
+    id:90652,
     src:Luffy,
     name:"Luffy",
     rank:BadgeBronze,

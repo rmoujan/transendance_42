@@ -13,10 +13,12 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocketGateway = void 0;
+const common_1 = require("@nestjs/common");
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
 const jwtservice_service_1 = require("../jwt/jwtservice.service");
 const prisma_service_1 = require("../prisma/prisma.service");
+const JwtGuard_1 = require("../jwt/JwtGuard");
 let SocketGateway = class SocketGateway {
     constructor(jwt, prisma) {
         this.jwt = jwt;
@@ -32,14 +34,14 @@ let SocketGateway = class SocketGateway {
             return acc;
         }, {});
         const specificCookie = cookies["cookie"];
-        console.log(specificCookie);
         const decoded = this.jwt.verify(specificCookie);
         return decoded;
+    }
+    afterInit(server) {
     }
     async handleConnection(client) {
         console.log('client ' + client.id + ' has conected');
         const decoded = this.decodeCookie(client);
-        console.log(decoded);
         let user_id = decoded.id;
         this.SocketContainer.set(user_id, client.id);
         const user = await this.prisma.user.update({
@@ -48,6 +50,7 @@ let SocketGateway = class SocketGateway {
                 status_user: "online",
             },
         });
+        console.log(this.SocketContainer.keys());
     }
     async handleDisconnect(client) {
         console.log('client ' + client.id + ' has disconnected');
@@ -61,7 +64,6 @@ let SocketGateway = class SocketGateway {
         });
     }
     handleUserOnline(client) {
-        this.handleConnection(client);
     }
     handleUserOffline(client) {
     }
@@ -69,12 +71,44 @@ let SocketGateway = class SocketGateway {
         console.log(body);
         return 'Hello world!';
     }
+    async add_friend(client, body) {
+        const decoded = this.decodeCookie(client);
+        const data = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
+        const notify = await this.prisma.notification.findFirst({ where: { userId: body.id_user, id_user: decoded.id } });
+        console.log(notify);
+        if (notify == null) {
+            console.log('heeeeere');
+            const user = await this.prisma.user.update({
+                where: { id_user: body.id_user },
+                data: {
+                    notification: {
+                        create: {
+                            AcceptFriend: true,
+                            GameInvitation: false,
+                            id_user: decoded.id,
+                            avatar: data.avatar,
+                            name: data.name,
+                        }
+                    }
+                }
+            });
+        }
+        console.log('hehehe');
+        const sock = this.SocketContainer.get(body.id_user);
+        this.server.to(sock).emit('notification');
+    }
 };
 exports.SocketGateway = SocketGateway;
 __decorate([
     (0, websockets_1.WebSocketServer)(),
     __metadata("design:type", socket_io_1.Server)
 ], SocketGateway.prototype, "server", void 0);
+__decorate([
+    (0, common_1.UseGuards)(JwtGuard_1.JwtAuthGuard),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket]),
+    __metadata("design:returntype", Promise)
+], SocketGateway.prototype, "handleConnection", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('userOnline'),
     __metadata("design:type", Function),
@@ -94,6 +128,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", String)
 ], SocketGateway.prototype, "handleMessage", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('add-friend'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __param(1, (0, websockets_1.MessageBody)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", Promise)
+], SocketGateway.prototype, "add_friend", null);
 exports.SocketGateway = SocketGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({ namespace: 'users' }),
     __metadata("design:paramtypes", [jwtservice_service_1.JwtService, prisma_service_1.PrismaService])

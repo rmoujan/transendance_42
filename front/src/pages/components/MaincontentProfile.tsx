@@ -92,7 +92,7 @@ function MaincontentProfile() {
               <div className="  w-full px-4  mt-5">
                 <div className=" flex justify-center items-center mb-8 w-full">
                   <div className="bg-light relative flex h-9 w-full  max-w-7xl  rounded-2xl bg-slate-300">
-                    <div className="bg-[#ce502ad3] absolute top-0 left-0 flex h-full w-[90%] items-center justify-center rounded-2xl text-xs font-semibold text-white">
+                    <div className="bg-[#ce502ad3] absolute top-0 left-0 flex font-PalanquinDark h-full w-[90%] items-center justify-center rounded-2xl text-lg font-semibold text-white">
                       90%
                     </div>
                   </div>

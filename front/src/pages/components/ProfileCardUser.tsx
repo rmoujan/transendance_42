@@ -15,6 +15,10 @@ import { MdModeEditOutline } from "react-icons/md";
 import ProgressBar from "@ramonak/react-progress-bar";
 import axios from "axios";
 import { Modal } from "antd";
+import { socket } from "../../socket";
+
+let i :number = 1;
+
 type User = {
   id_user: number;
   name: string;
@@ -39,9 +43,10 @@ const ProfileCardUser: React.FC = () => {
     };
     fetchData();
   }, []);
-
+  const [isEventEmitted, setIsEventEmitted] = useState(false);
   function AddMember(id_user: number) {
-    axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
+      socket.emit("add-friend", { id_user });
+    // axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     console.log("id_user", id_user);
     Modal.confirm({
@@ -54,10 +59,11 @@ const ProfileCardUser: React.FC = () => {
         setFriend(updatedUsers);
       }
     })
-
   }
 
   const friendInfo = user.find((friend) => friend.id_user === friendIdNumber);
+  console.log("user");
+  console.log(friendInfo);
   console.log(friendIdNumber);
   return (
     <main className=" overflow-scroll resultUserContainer flex justify-center items-center flex-col w-[90%]  overflow-y-auto  mb-14">

@@ -14,4 +14,28 @@ export declare class ProfileController {
     About_me(data: any, req: any, res: any): Promise<void>;
     Get_About(req: any, res: any): Promise<string>;
     VsBoot(req: any, body: any): Promise<void>;
+    NotFriendsUsers(req: any): Promise<{
+        id_user: number;
+        name: string;
+        avatar: string;
+        TwoFactor: boolean;
+        IsFirstTime: boolean;
+        secretKey: string;
+        About: string;
+        status_user: string;
+        wins: number;
+        losses: number;
+        games_played: number;
+    }[]>;
+    GetNotifications(req: any): Promise<{
+        id: number;
+        userId: number;
+        AcceptFriend: boolean;
+        GameInvitation: boolean;
+        id_user: number;
+        email: string;
+        avatar: string;
+        name: string;
+        createdAt: Date;
+    }[]>;
 }
