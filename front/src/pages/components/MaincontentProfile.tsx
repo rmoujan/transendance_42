@@ -24,7 +24,6 @@ function MaincontentProfile() {
   const [toggle, setToggle] = useState(false);
   const [user, setUser] = useState<User[]>([]);
   useEffect(() => {
-    socket.emit('message', 'hello world');
     const fetchData = async () => {
       const { data } = await axios.get("http://localhost:3000/auth/get-user", {
         withCredentials: true,

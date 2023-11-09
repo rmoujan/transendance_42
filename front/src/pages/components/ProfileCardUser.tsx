@@ -134,8 +134,10 @@ const ProfileCardUser: React.FC = () => {
                 {/* <button className="bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] rounded-2xl px-3 mx-4 shadow-2xl">
                   Edit Profile Photo
                 </button> */}
-                <button className="bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] font-semibold rounded-2xl px-3 text-white shadow-2xl hidden lg-laptop:block mr-5" onClick={()=>AddMember(friendInfo?.id_user)}>
-                  Add Friend +
+                <button className="w-28 font-semibold rounded-2xl px-3 text-white shadow-2xl hidden lg-laptop:block mr-5" 
+                // onClick={()=>AddMember(friendInfo?.id_user)}
+                >
+                  {/* Add Friend + */}
                 </button>
               </div>
             </div>

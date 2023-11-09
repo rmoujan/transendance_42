@@ -13,7 +13,8 @@ import axios from "axios";
 import { topData } from "../Data/TopStreamerData";
 import { Popover, Transition } from "@headlessui/react";
 import { useAppSelector } from "../../redux/store/store";
-import { Modal } from "antd"
+import { Modal } from "antd";
+import { socket } from "../../socket";
 import {
   Card,
   CardHeader,
@@ -141,9 +142,10 @@ function FriendList() {
   }, []);
 
   function AddMember(id_user: number) {
-    axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
+    console.log("id_user---------->", id_user);
+    socket.emit("add-friend", { id_user });
+    // axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
-    console.log("id_user", id_user);
     Modal.confirm({
       title: 'Are you sure, you want to add this friend?',
       okText: 'Yes',
@@ -156,7 +158,10 @@ function FriendList() {
     })
 
   }
-
+  // const handleProfileClick = (friend: number) => {
+  //   // Update selectedFriend with the clicked friend's information
+  //   navigate(`/profileFriend/${friend}`);
+  // };
   return (
     <motion.div
       // variants={fadeIn("down", 0.2)}
@@ -258,7 +263,7 @@ function FriendList() {
                                 {/* <p className="text-sm text-slate-500 truncate">{data.email}</p> */}
                                 <div className="text-xs text-blue-200 dark:text-blue-200">a few moments ago</div>
                               </div>
-                              <button className="ml-auto  bg-indigo-400 hover:bg-indigo-500 text-white font-bold  px-7 rounded-[20px]" onClick={() => AddMember(data.id)}>
+                              <button className="ml-auto  bg-indigo-400 hover:bg-indigo-500 text-white font-bold  px-7 rounded-[20px]" onClick={() => AddMember(data.id_user)}>
                                 Add
                               </button>
                             </li>
@@ -333,8 +338,10 @@ function FriendList() {
                   const animationDelay = index * 0.5;
 
                   const handleProfileClick = (friend: any) => {
+                    console.log("friend : ")
+                    console.log(friend.id_user);
                     // Update selectedFriend with the clicked friend's information
-                    navigate(`/profileFriend/${friend.id}`);
+                    navigate(`/profileFriend/${friend.id_user}`);
                   };
                   return (
                     // <div

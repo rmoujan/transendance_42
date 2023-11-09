@@ -62,7 +62,7 @@ function Maincontent() {
   
   return (
     <main className="overflow-scroll resultContainer flex flex-col w-full  overflow-x-hidden overflow-y-auto mb-14">
-      <div className="flex w-full mx-auto pr-6  ">
+      <div className="flex w-full mx-auto pr-6">
         <div className="flex flex-col w-full h-full text-gray-900 text-xl lg-laptop:mr-20">
           <div className="flex w-full h-full text-gray-900 text-xl space-x-0 lg-laptop:space-x-32 laptop:ml-3 flex-col lg-laptop:flex-row mt-0 2xl:mt-20">
             <motion.div
