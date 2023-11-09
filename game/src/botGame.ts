@@ -19,6 +19,7 @@ class MyBotGame {
     message!: HTMLElement;
     buttons!: NodeListOf<HTMLButtonElement>;
 	drawGame!: DrawGame;
+    avatars!: HTMLElement;
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -37,6 +38,7 @@ class MyBotGame {
         this.message = document.getElementById("message") as HTMLElement;
         this.buttons = document.querySelectorAll<HTMLButtonElement>(".btn");
 		this.drawGame = new DrawGame(this.canvas, this.ctx);
+        this.avatars = document.getElementById("avatars") as HTMLElement;
 
 		this.buttons[1].addEventListener("click", () => {
 			this.gameOver = false;
@@ -165,6 +167,7 @@ class MyBotGame {
 
     render(): void {
         if (this.gameOver) {
+            this.avatars.style.display = "none";
             this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, "#B2C6E4");
 
             this.renderingStopped = true;
@@ -205,6 +208,7 @@ class MyBotGame {
     }
 
     startBotGame(): void {
+        this.avatars.style.display = "flex";
         for (const button of this.buttons) {
             button.style.display = "none";
         }

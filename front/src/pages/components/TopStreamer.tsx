@@ -14,8 +14,18 @@ interface TopStreamerDataProps {
 const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
   const navigate = useNavigate();
   const [showDivs, setShowDivs] = useState(false);
+  const [users, setUsers] = useState<any[]>([]);
 
   useEffect(() => {
+    const fetchUsers = async () => {
+      const res = await fetch("http://localhost:3000/auth/get-all-users", {
+        credentials: "include",
+        //withCredentials: true,
+      });
+      const data = await res.json();
+      setUsers(data);
+    }
+    fetchUsers();
     // Use a delay (e.g., setTimeout) to gradually show the divs after component mounts.
     const showDelay = setTimeout(() => {
       setShowDivs(true);
@@ -28,10 +38,14 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
   }, []);
   const handleProfileClick = (friend: any) => {
     // Update selectedFriend with the clicked friend's information
-    navigate(`/profileFriend/${friend.id}`);
+    // navigate(`/profileFriend/${friend.id}`);
+    console.log();
   };
   return (
     <div className=" flex flex-row ">
+      <div>
+
+      </div>
       <div>
         {topData.map((data, index) => {
           return (

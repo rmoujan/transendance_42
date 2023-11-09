@@ -263,7 +263,18 @@ export class AuthController {
       obj.push(user);
       return obj;
     }
+    /************************************** */
+    //get all users except the one who is logged in
+    @Get('get-all-users')
+    @UseGuards(JwtAuthGuard)
+    async Get_All_Users(@Req() req){
 
+      // const decoded = this.jwt.verify(req.cookies['cookie']);
+      // console.log(req.cookies['cookie']);
+      const users = await this.prisma.user.findMany({});
+      console.log('useeeeeeeeers');
+      console.log(users);
+    }
     /************************************** */
 
 

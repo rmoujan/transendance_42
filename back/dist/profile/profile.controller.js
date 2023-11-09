@@ -55,12 +55,17 @@ let ProfileController = class ProfileController {
         console.log(body);
         const decoded = this.jwt.verify(req.cookies['cookie']);
         const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
+        let gameP = user.games_played + 1;
+        let gameW = user.wins;
+        let gameL = user.losses;
+        console.log('game_played: ' + user.games_played);
         if (body.won) {
+            gameW++;
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
-                    wins: user.wins++,
-                    games_played: user.games_played++,
+                    wins: gameW,
+                    games_played: gameP,
                     history: {
                         create: {
                             winner: true,
@@ -73,11 +78,12 @@ let ProfileController = class ProfileController {
             });
         }
         else {
+            gameL++;
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
-                    losses: user.losses++,
-                    games_played: user.games_played++,
+                    losses: gameL,
+                    games_played: gameP,
                     history: {
                         create: {
                             winner: false,

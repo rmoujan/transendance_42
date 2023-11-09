@@ -177,6 +177,11 @@ let AuthController = class AuthController {
         obj.push(user);
         return obj;
     }
+    async Get_All_Users(req) {
+        const users = await this.prisma.user.findMany({});
+        console.log('useeeeeeeeers');
+        console.log(users);
+    }
     async TwofactorAuth(body, req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
         const user = await this.prisma.user.update({
@@ -273,6 +278,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "Get_User", null);
+__decorate([
+    (0, common_1.Get)('get-all-users'),
+    (0, common_1.UseGuards)(JwtGuard_1.JwtAuthGuard),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "Get_All_Users", null);
 __decorate([
     (0, common_1.Post)('TwoFactorAuth'),
     __param(0, (0, common_1.Body)()),

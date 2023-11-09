@@ -147,6 +147,7 @@ export class AppGateway
             this.rooms.push(room);
             client.join(room.id);
             client.emit("player-number", 1);
+            client.emit("user-id", userId);
         }
     }
 
@@ -202,16 +203,20 @@ export class AppGateway
 
         UserScore = player.score;
         EnemyScore = enemy.score;
-
+        
         const user = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
-        if (player.won)
+        let gameP:number = user.games_played + 1;
+        let gameW:number = user.wins;
+        let gameL:number = user.losses;
+        if (!player.won)
         {
+            gameL++;
             console.log('leave');
             await this.prisma.user.update({
                 where: {id_user: decoded.id},
                     data:{
-                        losses: user.losses++,
-                        games_played: user.games_played++,
+                        losses: gameL,
+                        games_played: gameP,
                         history:{
                             create:{
                                 winner: true,
@@ -225,11 +230,12 @@ export class AppGateway
             );
         }
         else{
+            gameW++;
             await this.prisma.user.update({
                 where: {id_user: decoded.id},
                     data:{
-                        wins: user.wins++,
-                        games_played: user.games_played++,
+                        wins: gameW,
+                        games_played: gameP,
                         history:{
                             create:{
                                 winner: false,
