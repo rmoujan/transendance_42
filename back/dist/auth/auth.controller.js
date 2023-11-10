@@ -181,6 +181,7 @@ let AuthController = class AuthController {
         const users = await this.prisma.user.findMany({});
         console.log('useeeeeeeeers');
         console.log(users);
+        return users;
     }
     async TwofactorAuth(body, req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);

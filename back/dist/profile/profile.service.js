@@ -32,12 +32,12 @@ let ProfileService = class ProfileService {
         }
         catch (error) {
             if (error.code == 'P2002')
-                res.status(400).json({ error: 'name already exists' });
+                return ('P2002');
         }
     }
     async ModifyPhoto(photo, req, res) {
         const verifyToken = this.jwt.verify(req.cookies['cookie']);
-        const filePath = '/Volumes/TOSHIBA EXT/last_transcendence/front-end/public/uploads/' + photo.originalname;
+        const filePath = '/goinfre/lelbakna/new/last_push/front/public/uploads/' + photo.originalname;
         const rightPath = 'public/uploads/' + photo.originalname;
         console.log(photo.originalname);
         fs.writeFileSync(filePath, photo.buffer);

@@ -7,9 +7,9 @@ export declare class ProfileController {
     private prisma;
     private jwt;
     constructor(Profile: ProfileService, prisma: PrismaService, jwt: JwtService);
-    Name_Modification(data: CreateUserDto, req: any, res: any): {
+    Name_Modification(data: CreateUserDto, req: any, res: any): Promise<{
         msg: string;
-    };
+    }>;
     Photo__Modification(data: any, photo: any, req: any, res: any): void;
     About_me(data: any, req: any, res: any): Promise<void>;
     Get_About(req: any, res: any): Promise<string>;
@@ -26,6 +26,9 @@ export declare class ProfileController {
         wins: number;
         losses: number;
         games_played: number;
+        Progress: number;
+        Wins_percent: number;
+        Losses_percent: number;
     }[]>;
     GetNotifications(req: any): Promise<{
         id: number;
@@ -37,5 +40,27 @@ export declare class ProfileController {
         avatar: string;
         name: string;
         createdAt: Date;
+    }[]>;
+    TopThree(req: any): Promise<{
+        id_user: number;
+        name: string;
+        avatar: string;
+        TwoFactor: boolean;
+        IsFirstTime: boolean;
+        secretKey: string;
+        About: string;
+        status_user: string;
+        wins: number;
+        losses: number;
+        games_played: number;
+        Progress: number;
+        Wins_percent: number;
+        Losses_percent: number;
+    }[]>;
+    Achievments(req: any): Promise<{
+        id: number;
+        achieve: string;
+        msg: string;
+        userId: number;
     }[]>;
 }

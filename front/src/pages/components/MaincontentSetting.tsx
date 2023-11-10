@@ -200,7 +200,8 @@ function MaincontentSetting() {
             message: "Name updated successfully",
           })
         );
-
+        //clear input name
+        setName("");
         console.log("Name updated successfully");
       } catch (error) {
         dispatch(
@@ -209,6 +210,7 @@ function MaincontentSetting() {
             message: "Name updated failed",
           })
         );
+        setName("");
         console.error("Error:", error);
       }
     }

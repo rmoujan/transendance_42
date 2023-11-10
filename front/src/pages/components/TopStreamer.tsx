@@ -7,23 +7,35 @@ import { useNavigate } from "react-router-dom";
 import Path from "./Path";
 import CircularProgressbar from "react-circular-progressbar";
 import { Progress } from "@material-tailwind/react";
+import axios from "axios";
 interface TopStreamerDataProps {
   toggle: boolean;
 }
-
+type User = {
+  id_user: number;
+  name: string;
+  avatar: string;
+  TwoFactor: boolean;
+  secretKey: string | null;
+  About:string;
+  status_user: string;
+  wins:number;
+  losses:number;
+  games_played:number;
+  Progress:number;
+};
 const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
   const navigate = useNavigate();
   const [showDivs, setShowDivs] = useState(false);
-  const [users, setUsers] = useState<any[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const res = await fetch("http://localhost:3000/auth/get-all-users", {
-        credentials: "include",
-        //withCredentials: true,
+      const { data } = await axios.get("http://localhost:3000/auth/get-all-users", {
+        withCredentials: true,
       });
-      const data = await res.json();
       setUsers(data);
+      console.log("============================================???");
     }
     fetchUsers();
     // Use a delay (e.g., setTimeout) to gradually show the divs after component mounts.
@@ -39,7 +51,8 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
   const handleProfileClick = (friend: any) => {
     // Update selectedFriend with the clicked friend's information
     // navigate(`/profileFriend/${friend.id}`);
-    console.log();
+    console.log("friend");
+    console.log(users);
   };
   return (
     <div className=" flex flex-row ">
@@ -47,10 +60,10 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
 
       </div>
       <div>
-        {topData.map((data, index) => {
+        {users.map((data, index) => {
           return (
             <div
-              key={data.id}
+              key={data.id_user}
               className={`${
                 toggle ? "last:w-[3.6rem]" : "last:w-[17rem]"
               } my-8 bottom-4 flex flex-col tablet:pl-28 laptop:pl-0 ${
@@ -62,14 +75,14 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
                 <div className=" flex flex-row items-center justify-center">
                   <img
                     className="w-8 h-8  mobile:w-10 mobile:h-10 m-2 -ml-10 lg:-ml-2"
-                    src={data.rank}
+                    src={topData[index].rank}
                     alt=""
                   />
                   <img
                     className="w-14 h-14  rounded-full"
-                    src={data.src}
+                    src={data.avatar}
                     alt=""
-                    // onClick={() => handleProfileClick(data)}
+                    onClick={() => handleProfileClick(data)}
                   />
                 </div>
                 <div className=" flex flex-row justify-center items-center">
@@ -81,7 +94,7 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
                   </span>
                   <span className="ml-5">
                     <span className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">
-                      {data.GamesPlayed}
+                      {data.games_played}
                     </span>{" "}
                     <span className="text-[#A3AED0] text-xs font-normal w-28 ">
                       Games Played
@@ -91,9 +104,9 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
                     <div className="w-full bg-gradient-to-br from-[#c1c0bf] to-[#90908f] dark:bg-neutral-600 rounded-full ">
                       <div
                         className=" flex items-center justify-center bg-gradient-to-br h-3 from-[#FE754D] to-[#ce502a] p-0.5 text-center text-xs font-PalanquinDark leading-none text-primary-100 rounded-full"
-                        style={{ width: `${data.progress}%` }}
+                        style={{ width: `${data.Progress}%` }}//data.progress
                       >
-                        <span className="-mt-0.5">{data.progress}%{" "}</span> 
+                        <span className="-mt-0.5">{data.Progress}%{" "}</span>
                       </div>
                     </div>
                   </span>

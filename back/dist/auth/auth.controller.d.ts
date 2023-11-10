@@ -19,6 +19,21 @@ export declare class AuthController {
     }>;
     only_friends(req: any): Promise<any[]>;
     Get_User(req: any): Promise<any>;
-    Get_All_Users(req: any): Promise<void>;
+    Get_All_Users(req: any): Promise<{
+        id_user: number;
+        name: string;
+        avatar: string;
+        TwoFactor: boolean;
+        IsFirstTime: boolean;
+        secretKey: string;
+        About: string;
+        status_user: string;
+        wins: number;
+        losses: number;
+        games_played: number;
+        Progress: number;
+        Wins_percent: number;
+        Losses_percent: number;
+    }[]>;
     TwofactorAuth(body: any, req: any): Promise<void>;
 }

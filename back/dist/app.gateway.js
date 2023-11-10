@@ -184,14 +184,24 @@ let AppGateway = class AppGateway {
         let gameP = user.games_played + 1;
         let gameW = user.wins;
         let gameL = user.losses;
+        let progress;
+        let winspercent;
+        let lossespercent;
         if (!player.won) {
             gameL++;
+            progress = ((gameW - gameL) / gameP) * 100;
+            progress = (progress < 0) ? 0 : progress;
+            winspercent = (gameW / gameP) * 100;
+            lossespercent = (gameL / gameP) * 100;
             console.log('leave');
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
                     losses: gameL,
                     games_played: gameP,
+                    Progress: progress,
+                    Wins_percent: winspercent,
+                    Losses_percent: lossespercent,
                     history: {
                         create: {
                             winner: true,
@@ -205,11 +215,18 @@ let AppGateway = class AppGateway {
         }
         else {
             gameW++;
+            progress = ((gameW - gameL) / gameP) * 100;
+            progress = (progress < 0) ? 0 : progress;
+            winspercent = (gameW / gameP) * 100;
+            lossespercent = (gameL / gameP) * 100;
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
                     wins: gameW,
                     games_played: gameP,
+                    Progress: progress,
+                    Wins_percent: winspercent,
+                    Losses_percent: lossespercent,
                     history: {
                         create: {
                             winner: false,
@@ -220,6 +237,48 @@ let AppGateway = class AppGateway {
                     }
                 }
             });
+        }
+        if (player.won) {
+            if (gameW == 1) {
+                await this.prisma.user.update({
+                    where: { id_user: decoded.id },
+                    data: {
+                        achievments: {
+                            create: {
+                                achieve: "won 1 game",
+                                msg: "Tbarkellah 3lik",
+                            }
+                        }
+                    }
+                });
+            }
+            ;
+            if (gameW == 5) {
+                await this.prisma.user.update({
+                    where: { id_user: decoded.id },
+                    data: {
+                        achievments: {
+                            create: {
+                                achieve: "won 5 games",
+                                msg: "Wa Rak Nad...Khomasiya",
+                            }
+                        }
+                    }
+                });
+            }
+            if (gameW == 10) {
+                await this.prisma.user.update({
+                    where: { id_user: decoded.id },
+                    data: {
+                        achievments: {
+                            create: {
+                                achieve: "won 10 games",
+                                msg: "papapapapa...3Ashra",
+                            }
+                        }
+                    }
+                });
+            }
         }
         client.leave(roomID);
         this.rooms = this.rooms.filter((r) => r.id !== room.id);

@@ -17,7 +17,6 @@ import * as qrcode from 'qrcode';
 
 @Controller('auth')
 export class AuthController {
-
     constructor(private service : AuthService, 
       private jwt:JwtService,
       private readonly prisma: PrismaService){}
@@ -274,6 +273,7 @@ export class AuthController {
       const users = await this.prisma.user.findMany({});
       console.log('useeeeeeeeers');
       console.log(users);
+      return users;
     }
     /************************************** */
 

@@ -20,15 +20,27 @@ model User{
   About String?
   status_user String?
   stat Stat?
-  history History[]
-  notification Notification[]
   wins Int?
   losses Int?
   games_played Int?
+  Progress Int?
+  Wins_percent Int?
+  Losses_percent Int?
+  achievments Achievments[]
+  history History[]
+  notification Notification[]
   blockedUser BlockedUser[]
   freind Freind[]
   dms Dm[]
   channels MemberChannel[]
+}
+
+model Achievments{
+  id Int @id @default(autoincrement())
+  achieve String?
+  msg String?
+  userId Int
+  user User @relation (fields: [userId], references: [id_user])
 }
 
 model Notification {

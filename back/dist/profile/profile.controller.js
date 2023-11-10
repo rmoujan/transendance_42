@@ -25,9 +25,12 @@ let ProfileController = class ProfileController {
         this.prisma = prisma;
         this.jwt = jwt;
     }
-    Name_Modification(data, req, res) {
-        this.Profile.ModifyName(data, req, res);
-        res.status(200).json({ msg: "name well setted" });
+    async Name_Modification(data, req, res) {
+        const value = await this.Profile.ModifyName(data, req, res);
+        if (value == 'P2002')
+            res.status(400).json({ error: 'name already exists' });
+        else
+            res.status(200).json({ msg: "name well setted" });
         return ({ msg: 'i am in the pofile controller now' });
     }
     Photo__Modification(data, photo, req, res) {
@@ -95,6 +98,19 @@ let ProfileController = class ProfileController {
                 },
             });
         }
+        if (gameW == 1) {
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    achievments: {
+                        create: {
+                            achieve: "won Bot",
+                            msg: "Wliti Bot",
+                        }
+                    }
+                },
+            });
+        }
     }
     async NotFriendsUsers(req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
@@ -125,6 +141,26 @@ let ProfileController = class ProfileController {
         });
         return (user.notification);
     }
+    async TopThree(req) {
+        const topUsers = await this.prisma.user.findMany({
+            orderBy: [
+                {
+                    Wins_percent: 'desc',
+                }
+            ],
+            take: 3,
+        });
+        return (topUsers);
+    }
+    async Achievments(req) {
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+        const userAchievements = await this.prisma.achievments.findMany({
+            where: {
+                userId: decoded.id,
+            },
+        });
+        return (userAchievements);
+    }
 };
 exports.ProfileController = ProfileController;
 __decorate([
@@ -134,7 +170,7 @@ __decorate([
     __param(2, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [nameDto_1.CreateUserDto, Object, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "Name_Modification", null);
 __decorate([
     (0, common_1.Post)('modify-photo'),
@@ -186,6 +222,20 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "GetNotifications", null);
+__decorate([
+    (0, common_1.Get)('TopThree'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "TopThree", null);
+__decorate([
+    (0, common_1.Get)('Achievments'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "Achievments", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)('profile'),
     __metadata("design:paramtypes", [profile_service_1.ProfileService, prisma_service_1.PrismaService, jwtservice_service_1.JwtService])

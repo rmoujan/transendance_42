@@ -17,15 +17,18 @@ export class ProfileController {
     constructor (private Profile: ProfileService, private prisma: PrismaService, private jwt: JwtService) {}
 
     @Post('modify-name')
-    Name_Modification(@Body() data: CreateUserDto, @Req() req:any, @Res() res:any)
+    async Name_Modification(@Body() data: CreateUserDto, @Req() req:any, @Res() res:any)
     {
-      this.Profile.ModifyName(data, req, res);
+      const value = await this.Profile.ModifyName(data, req, res);
       // console.log(data);
       // res.send('in profile modification route');
       // return `Received data: ${JSON.stringify(data)}`;
       // res.send('name well changed');
       // console.log('wssalt hna');
-      res.status(200).json({msg: "name well setted"});
+      if (value == 'P2002')
+        res.status(400).json({error: 'name already exists'});
+      else
+        res.status(200).json({msg: "name well setted"});
       return({msg: 'i am in the pofile controller now'});
     }
 
@@ -111,6 +114,20 @@ export class ProfileController {
 					},
 			})
 		}
+    if (gameW == 1){
+      await this.prisma.user.update({
+        where : {id_user: decoded.id},
+          data :{
+            achievments:{
+              create:{
+                achieve: "won Bot",
+                msg: "Wliti Bot",
+              }
+            }
+          },
+      })
+    
+    }
 	}
 
   @Get('NotFriends')
@@ -145,4 +162,29 @@ export class ProfileController {
     // console.log(user.notification);
     return (user.notification);
   }
+
+  @Get('TopThree')
+  async TopThree(@Req() req){
+    const topUsers = await this.prisma.user.findMany({
+      orderBy: [
+      {
+        Wins_percent: 'desc',
+      }],
+      take: 3,
+    });    
+    return (topUsers);
+  }
+
+  @Get('Achievments')
+  async Achievments(@Req() req){
+
+    const decoded = this.jwt.verify(req.cookies['cookie']);
+
+    const userAchievements = await this.prisma.achievments.findMany({
+      where: {
+        userId: decoded.id,
+      },
+    });
+    return (userAchievements);
+  }    
 }

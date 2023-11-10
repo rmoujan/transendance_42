@@ -8,7 +8,7 @@ import * as fs from 'fs';
 export class ProfileService {
     constructor(private prisma: PrismaService, private jwt:JwtService){}
 
-    async ModifyName(dat :any, req :any, res :any){
+    async ModifyName(dat :any, req :any, res :any): Promise<any>{
         // console.log('name : ' + dat.name);
         const Token = req.cookies['cookie'];
         const verifyToekn = this.jwt.verify(Token);
@@ -27,14 +27,15 @@ export class ProfileService {
 
         }catch(error){
             if (error.code == 'P2002')
-                res.status(400).json({error: 'name already exists'});
+                return ('P2002');
+                // res.status(400).json({error: 'name already exists'});
         }
     }
 
     async ModifyPhoto(photo:any, req:any, res:any) {
 
         const verifyToken = this.jwt.verify(req.cookies['cookie']);
-        const filePath = '/Volumes/TOSHIBA EXT/last_transcendence/front-end/public/uploads/' + photo.originalname; // Use the original name or generate a unique name
+        const filePath = '/goinfre/lelbakna/new/last_push/front/public/uploads/' + photo.originalname; // Use the original name or generate a unique name
         const rightPath = 'public/uploads/' + photo.originalname;//path to store in db
         // console.log("filePath");
         console.log(photo.originalname);

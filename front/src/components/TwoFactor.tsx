@@ -44,23 +44,23 @@ const TwoFactor = () => {
     };
     fetchData();
   }, []);
-  
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await axios.get(
-        "http://localhost:3000/auth/get-qrcode",
-        { withCredentials: true }
-      );
-      setQRCodeDataURL(data);
-    };
-    fetchData();
-  }, []);
 
+  const fetchData = async () => {
+    const { data } = await axios.get(
+      "http://localhost:3000/auth/get-qrcode",
+      { withCredentials: true }
+    );
+    setQRCodeDataURL(data);
+  };
+  useEffect(() => {
+  }, []);
+  
   useEffect(() => {
     inputRef.current?.focus();
   }, [activeOTPIndex]);
 
   const toggleTwoFactor = async (user: User) => {
+    fetchData();
     setOpen(true);
    
   };
