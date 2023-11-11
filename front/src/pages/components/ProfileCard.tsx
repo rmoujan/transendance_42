@@ -12,6 +12,12 @@ type User = {
   secretKey: string | null;
   About:string;
   status_user: string;
+  wins:number;
+  losses:number;
+  games_played:number;
+  Progress:number;
+  Wins_percent:number;
+  Losses_percent:number;
 };
 function ProfileCard() {
   const [user, setUser] = useState<User[]>([]);
@@ -41,21 +47,21 @@ function ProfileCard() {
             <div className=" flex justify-between items-center my-6 text-sm px-4 ">
               <div className="flex flex-col items-center font-semibold ">
                 <div className=" text-white text-lg  font-bold font-PalanquinDark">
-                  {155}
+                  {data.games_played}
                 </div>
                 <div className="text-[#A3AED0] text-xs font-normal w-20 text-center">Games Played</div>
               </div>
               <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
               <div className="flex flex-col items-center font-semibold">
                 <div className=" text-white text-lg font-bold font-PalanquinDark">
-                  {60}%
+                  {data.Wins_percent}%
                 </div>
                 <div className="text-[#A3AED0] text-xs font-normal w-20 text-center">Win</div>
               </div>
               <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
               <div className="flex flex-col items-center font-semibold">
                 <div className=" text-white text-lg  font-bold font-PalanquinDark">
-                  {45}%
+                  {data.Losses_percent}%
                 </div>
                 <div className="text-[#A3AED0] text-xs font-normal w-20 text-center">Loss</div>
               </div>

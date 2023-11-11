@@ -7,6 +7,7 @@ import { IsNotEmpty,
 
 export class CreateUserDto {
 
+    @Matches(/^[^0-9]*$/, {message: 'The string should not contain numbers.',})    
     @MinLength(3, {message: 'Title is too short',})
     @MaxLength(9, {message: 'Title is too long',})
     @Matches(/^\S+$/, {message: 'Should not contain a space'})

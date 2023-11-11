@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthService = void 0;
 const common_1 = require("@nestjs/common");
-const jwtservice_service_1 = require("../jwt/jwtservice.service");
+const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
 const prisma_service_1 = require("../prisma/prisma.service");
 const otplib_1 = require("otplib");
 const qrcode = require("qrcode");
@@ -43,6 +43,16 @@ let AuthService = class AuthService {
                     TwoFactor: false,
                     status_user: "online",
                     IsFirstTime: true,
+                    secretKey: null,
+                    About: null,
+                    WonBot: 0,
+                    LoseBot: 0,
+                    wins: 0,
+                    losses: 0,
+                    games_played: 0,
+                    Progress: 0,
+                    Wins_percent: 0,
+                    Losses_percent: 0,
                 },
             });
             return obj;

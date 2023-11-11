@@ -1,7 +1,7 @@
 import { ProfileService } from './profile.service';
 import { CreateUserDto } from './nameDto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { JwtService } from 'src/jwt/jwtservice.service';
+import { JwtService } from '../auth/jwt/jwtservice.service';
 export declare class ProfileController {
     private Profile;
     private prisma;
@@ -23,6 +23,8 @@ export declare class ProfileController {
         secretKey: string;
         About: string;
         status_user: string;
+        WonBot: number;
+        LoseBot: number;
         wins: number;
         losses: number;
         games_played: number;
@@ -50,6 +52,8 @@ export declare class ProfileController {
         secretKey: string;
         About: string;
         status_user: string;
+        WonBot: number;
+        LoseBot: number;
         wins: number;
         losses: number;
         games_played: number;
@@ -62,5 +66,17 @@ export declare class ProfileController {
         achieve: string;
         msg: string;
         userId: number;
+    }[]>;
+    History(req: any): Promise<{
+        winner: boolean;
+        id_history: number;
+        useravatar: string;
+        username: string;
+        userId: number;
+        userscore: number;
+        enemyId: number;
+        enemyname: string;
+        enemyavatar: string;
+        enemyscore: number;
     }[]>;
 }

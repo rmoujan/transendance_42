@@ -1,7 +1,7 @@
 import { OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { Data, Room, RoomBall, RoomPlayer } from "./interfaces";
-import { JwtService } from "./jwt/jwtservice.service";
+import { JwtService } from "./auth/jwt/jwtservice.service";
 import { PrismaService } from "./prisma/prisma.service";
 export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     private jwt;

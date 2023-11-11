@@ -16,8 +16,8 @@ exports.AuthController = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const passport_1 = require("@nestjs/passport");
-const jwtservice_service_1 = require("../jwt/jwtservice.service");
-const JwtGuard_1 = require("../jwt/JwtGuard");
+const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
+const JwtGuard_1 = require("../auth/jwt/JwtGuard");
 const prisma_service_1 = require("../prisma/prisma.service");
 let AuthController = class AuthController {
     constructor(service, jwt, prisma) {
@@ -59,7 +59,6 @@ let AuthController = class AuthController {
     }
     async Insert_Friends(body, req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
-        console.log(body.id_user);
         const user = await this.prisma.user.update({
             where: { id_user: decoded.id },
             data: {
@@ -91,7 +90,6 @@ let AuthController = class AuthController {
     async Remove_friends(Body, req) {
         const friendData = await this.prisma.user.findUnique({ where: { id_user: Body.id_user } });
         const decoded = this.jwt.verify(req.cookies['cookie']);
-        console.log(friendData);
         const user = await this.prisma.freind.deleteMany({
             where: {
                 AND: [
@@ -159,6 +157,8 @@ let AuthController = class AuthController {
                 }
             }
         });
+        if (friends == null)
+            return (null);
         const obj = friends.freind;
         const idFriends = obj.map((scope => scope.id_freind));
         let array = [];
@@ -179,8 +179,6 @@ let AuthController = class AuthController {
     }
     async Get_All_Users(req) {
         const users = await this.prisma.user.findMany({});
-        console.log('useeeeeeeeers');
-        console.log(users);
         return users;
     }
     async TwofactorAuth(body, req) {

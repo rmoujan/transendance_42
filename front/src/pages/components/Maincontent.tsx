@@ -31,6 +31,12 @@ type User = {
   TwoFactor: boolean;
   secretKey: string | null;
   status_user: string;
+  wins:number;
+  losses:number;
+  games_played:number;
+  Progress:number;
+  Wins_percent:number;
+  Losses_percent:number;
 };
 function Maincontent() {
   const [toggle, setToggle] = useState(false);
@@ -217,10 +223,10 @@ function Maincontent() {
                                     0
                                   </div>
                                 </div>
-                                <div className=" flex text-white text-center mr-[140px] font-bold mt-2 text-xl">
+                              </div>
+                                <div className=" flex justify-center items-center text-white text-center  font-bold mt-2 text-xl">
                                   {data.name}
                                 </div>
-                              </div>
                               <div className=" flex justify-between mx-10 mt-5 text-white">
                                 <div className=" flex flex-col justify-center items-center">
                                   <div className=" font-bold text-xl">
@@ -232,16 +238,16 @@ function Maincontent() {
                                 </div>
                                 <div className=" flex flex-col justify-center items-center">
                                   <div className=" font-bold text-xl">
-                                    Level
+                                    Progress
                                   </div>
-                                  <div className=" px-3 text-[#FE754D] font-bold rounded-full mt-5">
-                                    9.20%
+                                  <div className=" px-3 text-[#FE754D] text-lg font-bold rounded-full mt-5">
+                                    {data.Progress}%
                                   </div>
                                 </div>
                                 <div className=" flex flex-col justify-center items-center">
                                   <div className=" font-bold text-xl">Win</div>
                                   <div className=" px-3 text-white font-bold rounded-full mt-5">
-                                    125
+                                    {data.Wins_percent}%
                                   </div>
                                 </div>
                               </div>

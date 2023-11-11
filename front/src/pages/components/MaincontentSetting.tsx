@@ -446,7 +446,7 @@ function MaincontentSetting() {
                     Help
                   </div>
                   <div className="h-full tablet:min-w-[40vh] lg-laptop:min-w-[16vw] lg-laptop:min-h-[30vh]  bg-gradient-to-tr from-[#3F3B5B] via-[#2a2742af] to-[#454069c7] shadow-2xl  p-8 rounded-[46px]">
-                    <p className="leading-relaxed mb-6 text-[#A3AED0]">
+                    <div className="leading-relaxed mb-6 text-[#A3AED0]">
                       <div
                        className="relative justify-center bg-cover"
                        style={{
@@ -494,7 +494,7 @@ function MaincontentSetting() {
                         </p>
                         </div>
                       </div>
-                    </p>
+                    </div>
                   </div>
                 </motion.div>
                 <motion.div

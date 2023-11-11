@@ -13,7 +13,7 @@ exports.AppGateway = void 0;
 const websockets_1 = require("@nestjs/websockets");
 const common_1 = require("@nestjs/common");
 const socket_io_1 = require("socket.io");
-const jwtservice_service_1 = require("./jwt/jwtservice.service");
+const jwtservice_service_1 = require("./auth/jwt/jwtservice.service");
 const prisma_service_1 = require("./prisma/prisma.service");
 let AppGateway = class AppGateway {
     constructor(jwt, prisma) {
@@ -181,12 +181,17 @@ let AppGateway = class AppGateway {
         UserScore = player.score;
         EnemyScore = enemy.score;
         const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
+        const enemyUser = await this.prisma.user.findUnique({ where: { id_user: OppositeId } });
         let gameP = user.games_played + 1;
         let gameW = user.wins;
         let gameL = user.losses;
         let progress;
         let winspercent;
         let lossespercent;
+        let useravatar = user.avatar;
+        let enemyavatar = enemyUser.avatar;
+        let username = user.name;
+        let enemyname = enemyUser.name;
         if (!player.won) {
             gameL++;
             progress = ((gameW - gameL) / gameP) * 100;
@@ -204,9 +209,13 @@ let AppGateway = class AppGateway {
                     Losses_percent: lossespercent,
                     history: {
                         create: {
-                            winner: true,
+                            useravatar: useravatar,
+                            username: username,
+                            winner: false,
                             userscore: UserScore,
                             enemyId: OppositeId,
+                            enemyname: enemyname,
+                            enemyavatar: enemyavatar,
                             enemyscore: EnemyScore,
                         }
                     }
@@ -229,9 +238,13 @@ let AppGateway = class AppGateway {
                     Losses_percent: lossespercent,
                     history: {
                         create: {
-                            winner: false,
+                            useravatar: useravatar,
+                            winner: true,
+                            username: username,
                             userscore: UserScore,
                             enemyId: OppositeId,
+                            enemyname: enemyname,
+                            enemyavatar: enemyavatar,
                             enemyscore: EnemyScore,
                         }
                     }

@@ -8,6 +8,7 @@ import ProfileCardFriend from "./ProfileCardFriend";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import axios from "axios";
+import { socket } from "../../socket";
 
 export function handelProfile(data: any) {
   return data;
@@ -51,8 +52,33 @@ const RightbarData: React.FC<RightbarDataProps> = ({ toggle }) => {
       const { data: data2 } = await axios.get("http://localhost:3000/auth/get-user", {
         withCredentials: true,
       });
-      setAccountOwner(data2);
       setUsers(data);
+      if (socket) {
+        socket.on("offline", (data: any) => {
+          console.log("data");
+          console.log(data);
+          const updateFriends = users.map((user: User) => {
+            if (user.id_user === data.id_user) {
+              return { ...user, status_user: "offline" };
+            }
+            return user;
+          });
+          setUsers(updateFriends);
+        });
+        socket.on("online", (data: any) => {
+          console.log("data");
+          console.log(data);
+          const updateFriends = users.map((user: User) => {
+            if (user.id_user === data.id_user) {
+              return { ...user, status_user: "online" };
+            }
+            return user;
+          });
+          setUsers(updateFriends);
+        });
+        
+      }
+      setAccountOwner(data2);
       const updateFriends = data.filter((user:User) => user.id_user !== data2.id_user);
       setUsers(updateFriends);
       console.log("============================================???");

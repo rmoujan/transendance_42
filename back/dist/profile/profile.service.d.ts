@@ -1,5 +1,5 @@
 import { PrismaService } from 'src/prisma/prisma.service';
-import { JwtService } from 'src/jwt/jwtservice.service';
+import { JwtService } from '../auth/jwt/jwtservice.service';
 export declare class ProfileService {
     private prisma;
     private jwt;
@@ -15,6 +15,8 @@ export declare class ProfileService {
         secretKey: string;
         About: string;
         status_user: string;
+        WonBot: number;
+        LoseBot: number;
         wins: number;
         losses: number;
         games_played: number;

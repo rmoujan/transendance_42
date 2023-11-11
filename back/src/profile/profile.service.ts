@@ -1,6 +1,6 @@
 import { Injectable, Req, Body ,ForbiddenException} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { JwtService } from 'src/jwt/jwtservice.service';
+import { JwtService } from '../auth/jwt/jwtservice.service';
 import { CreateUserDto } from './nameDto';
 import * as fs from 'fs';
 //import from vite.config.ts
@@ -40,6 +40,7 @@ export class ProfileService {
         // console.log("filePath");
         console.log(photo.originalname);
         fs.writeFileSync(filePath, photo.buffer);
+
 
         try{
             await this.prisma.user.update({

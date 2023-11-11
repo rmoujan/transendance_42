@@ -18,7 +18,7 @@ const profile_service_1 = require("./profile.service");
 const platform_express_1 = require("@nestjs/platform-express");
 const nameDto_1 = require("./nameDto");
 const prisma_service_1 = require("../prisma/prisma.service");
-const jwtservice_service_1 = require("../jwt/jwtservice.service");
+const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
 let ProfileController = class ProfileController {
     constructor(Profile, prisma, jwt) {
         this.Profile = Profile;
@@ -35,11 +35,8 @@ let ProfileController = class ProfileController {
     }
     Photo__Modification(data, photo, req, res) {
         this.Profile.ModifyPhoto(photo, req, res);
-        console.log(photo);
     }
     async About_me(data, req, res) {
-        console.log('about well setted');
-        console.log(data);
         const payload = this.jwt.verify(req.cookies['cookie']);
         const ab = data.About;
         await this.prisma.user.update({
@@ -59,20 +56,24 @@ let ProfileController = class ProfileController {
         const decoded = this.jwt.verify(req.cookies['cookie']);
         const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
         let gameP = user.games_played + 1;
-        let gameW = user.wins;
-        let gameL = user.losses;
+        let gameW = user.WonBot;
+        let gameL = user.LoseBot;
+        let avatar = user.avatar;
+        let name = user.name;
         console.log('game_played: ' + user.games_played);
         if (body.won) {
             gameW++;
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
-                    wins: gameW,
+                    WonBot: gameW,
                     games_played: gameP,
                     history: {
                         create: {
                             winner: true,
+                            username: name,
                             userscore: body.userScore,
+                            useravatar: avatar,
                             enemyId: 9,
                             enemyscore: body.botScore,
                         },
@@ -85,12 +86,14 @@ let ProfileController = class ProfileController {
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
-                    losses: gameL,
+                    LoseBot: gameL,
                     games_played: gameP,
                     history: {
                         create: {
                             winner: false,
+                            username: name,
                             userscore: body.userScore,
+                            useravatar: avatar,
                             enemyId: 9,
                             enemyscore: body.botScore,
                         },
@@ -128,7 +131,6 @@ let ProfileController = class ProfileController {
         const FinalUsers = (await users).filter((scope => { if (scope.id_user != decoded.id) {
             return (scope);
         } }));
-        console.log(FinalUsers);
         return (FinalUsers);
     }
     async GetNotifications(req) {
@@ -139,6 +141,8 @@ let ProfileController = class ProfileController {
                 notification: true,
             },
         });
+        if (user.notification == null)
+            return ([]);
         return (user.notification);
     }
     async TopThree(req) {
@@ -160,6 +164,13 @@ let ProfileController = class ProfileController {
             },
         });
         return (userAchievements);
+    }
+    async History(req) {
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+        const user = await this.prisma.history.findMany({
+            where: { userId: decoded.id },
+        });
+        return (user);
     }
 };
 exports.ProfileController = ProfileController;
@@ -236,6 +247,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "Achievments", null);
+__decorate([
+    (0, common_1.Get)('History'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "History", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)('profile'),
     __metadata("design:paramtypes", [profile_service_1.ProfileService, prisma_service_1.PrismaService, jwtservice_service_1.JwtService])

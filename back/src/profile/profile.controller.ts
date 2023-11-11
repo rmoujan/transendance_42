@@ -10,7 +10,7 @@ import { ProfileService } from './profile.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CreateUserDto } from './nameDto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { JwtService } from 'src/jwt/jwtservice.service';
+import { JwtService } from '../auth/jwt/jwtservice.service';
 
 @Controller('profile')
 export class ProfileController {
@@ -38,7 +38,7 @@ export class ProfileController {
 
       // console.log(data.photo);
       this.Profile.ModifyPhoto(photo, req, res);
-      console.log(photo);
+      // console.log(photo);
       // res.status(200).json({msg: 'photo well setted'});
       // const filePath = 'uploads/' + photo.originalname; // Use the original name or generate a unique name
       // fs.writeFileSync(filePath, photo.buffer);
@@ -48,8 +48,8 @@ export class ProfileController {
 	@Post('About')
     async About_me(@Body() data:any, @Req() req, @Res() res){
 
-      console.log('about well setted');
-      console.log(data);
+      // console.log('about well setted');
+      // console.log(data);
       const payload = this.jwt.verify(req.cookies['cookie']);
       const ab :string = data.About;
       await this.prisma.user.update({
@@ -60,14 +60,14 @@ export class ProfileController {
       });
     }
 
-    @Get('About')
-    async Get_About(@Req() req, @Res() res) {
-      
-      const user = await this.Profile.About_me(req, res);
-      console.log(user.About);
-      return (user.About);
-      
-    }
+  @Get('About')
+  async Get_About(@Req() req, @Res() res) {
+    
+    const user = await this.Profile.About_me(req, res);
+    console.log(user.About);
+    return (user.About);
+    
+  }
 	
 	@Post('Bot-Pong')
 	async VsBoot(@Req() req:any, @Body() body){
@@ -75,20 +75,24 @@ export class ProfileController {
 		const decoded = this.jwt.verify(req.cookies['cookie']);
 		const user = await this.prisma.user.findUnique({where: {id_user: decoded.id}});
     let gameP:number = user.games_played + 1;
-    let gameW:number = user.wins;
-    let gameL:number = user.losses;
+    let gameW:number = user.WonBot;
+    let gameL:number = user.LoseBot;
+    let avatar:string = user.avatar;
+    let name:string = user.name;
     console.log('game_played: ' +user.games_played);
 		if (body.won){
       gameW++;
 			await this.prisma.user.update({
 				where : {id_user: decoded.id},
 					data :{
-						wins: gameW,
+						WonBot: gameW,
 						games_played: gameP,
 						history:{
 							create:{
 								winner: true,
+                username: name,
 								userscore: body.userScore,
+                useravatar: avatar,
 								enemyId: 9,
 								enemyscore: body.botScore,
 							},
@@ -101,12 +105,14 @@ export class ProfileController {
 			await this.prisma.user.update({
 				where : {id_user: decoded.id},
 					data :{
-						losses: gameL,
+						LoseBot: gameL,
 						games_played: gameP,
 						history:{
 							create:{
 								winner: false,
+                username: name,
 								userscore: body.userScore,
+                useravatar: avatar,
 								enemyId: 9,
 								enemyscore: body.botScore,
 							},
@@ -126,7 +132,6 @@ export class ProfileController {
             }
           },
       })
-    
     }
 	}
 
@@ -146,7 +151,7 @@ export class ProfileController {
       },
     });
     const FinalUsers =  (await users).filter((scope => {if (scope.id_user != decoded.id){return (scope)}}));
-    console.log(FinalUsers);
+    // console.log(FinalUsers);
     return (FinalUsers);
   }
 
@@ -160,6 +165,8 @@ export class ProfileController {
       },
     });
     // console.log(user.notification);
+    if (user.notification == null)
+      return ([]);
     return (user.notification);
   }
 
@@ -175,6 +182,7 @@ export class ProfileController {
     return (topUsers);
   }
 
+
   @Get('Achievments')
   async Achievments(@Req() req){
 
@@ -185,6 +193,18 @@ export class ProfileController {
         userId: decoded.id,
       },
     });
+
     return (userAchievements);
-  }    
+  }
+
+  @Get('History')
+  async History(@Req() req){
+    
+    const decoded = this.jwt.verify(req.cookies['cookie']);
+    const user = await this.prisma.history.findMany({
+      where: {userId: decoded.id},
+    });
+
+    return (user);
+  }
 }

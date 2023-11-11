@@ -1,5 +1,5 @@
 import { AuthService } from './auth.service';
-import { JwtService } from 'src/jwt/jwtservice.service';
+import { JwtService } from '../auth/jwt/jwtservice.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 export declare class AuthController {
     private service;
@@ -28,6 +28,8 @@ export declare class AuthController {
         secretKey: string;
         About: string;
         status_user: string;
+        WonBot: number;
+        LoseBot: number;
         wins: number;
         losses: number;
         games_played: number;

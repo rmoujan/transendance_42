@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { fadeIn } from "./variants";
 import Arcan from "../../img/Arcane.png";
 import axios from "axios";
+import { socket, socketuser } from "../../socket";
 
 type User = {
   id_user: number;
@@ -60,7 +61,9 @@ function GamePage() {
   };
 
   useEffect(() => {
-    
+    if (socket == undefined){
+      socketuser();
+    }
     fetchData();
     myBotGameInstance.current = new MyBotGame(myCanvas.current!);
     myMultiplayerGameInstance.current = new MyMultiplayerGame(

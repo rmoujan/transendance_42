@@ -28,14 +28,20 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
   const navigate = useNavigate();
   const [showDivs, setShowDivs] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
-
+  const [TopStreamer, setTopStreamer] = useState<any[]>([]);
   useEffect(() => {
     const fetchUsers = async () => {
       const { data } = await axios.get("http://localhost:3000/auth/get-all-users", {
         withCredentials: true,
       });
+      //get top three streamer
+      const topThreeStreamer = await axios.get("http://localhost:3000/profile/TopThree", {
+        withCredentials: true,
+      });
+      setTopStreamer(topThreeStreamer.data);
       setUsers(data);
       console.log("============================================???");
+      console.log(topThreeStreamer.data);
     }
     fetchUsers();
     // Use a delay (e.g., setTimeout) to gradually show the divs after component mounts.
@@ -57,10 +63,10 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
   return (
     <div className=" flex flex-row ">
       <div>
-
+      {}
       </div>
       <div>
-        {users.map((data, index) => {
+        {TopStreamer.map((data, index) => {
           return (
             <div
               key={data.id_user}

@@ -36,20 +36,8 @@ function Friends() {
     setSelectedFriend(friend);
     console.log(friend);
     setLoding(true);
-    // navigate(`/profileFriend/${friend.id}`);
   };
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const { data } = await axios.get("http://localhost:3000/auth/friends", {
-  //       withCredentials: true,
-  //     });
-  //     console.log("data friends");
-  //     console.log(data);
-  //     setFriends(data);
-  //     // setSelectedFriend(data[0]); // Select the first friend by default
-  //   };
-  //   fetchData();
-  // }, []);
+ 
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState<User[]>([]);
   const [searchResults, setSearchResults] = useState<User[]>([]);
@@ -108,6 +96,15 @@ function Friends() {
         >
           <Popover.Panel className="absolute flex justify-end items-end  right-0 w-[24rem]   text-white">
             <div className="overflow-scroll resultContainer max-h-72 flex flex-col w-[40rem]  rounded-[30px] mt-3 bg-[#585D8E] hover:scale-100 ">
+              {/* //if not friend show this messag*/}
+              {!loding && friends.length === 0 && (
+                <div className="flex justify-center items-center mt-4">
+                  <p className=" text-center text-gray-300 text-2xl opacity-50">
+                    You don't have any friends yet !<br/> Add some friends to playe.
+                  </p>
+                </div>
+              )}
+              {/* //if friend show this messag*/}
               {friends.map((data:any) => {
                 return (
                   <ul
@@ -125,23 +122,12 @@ function Friends() {
                         <p className="text-sm font-medium text-white">
                           {data.name}
                         </p>
-                        {/* <div className="text-xs text-blue-200 dark:text-blue-200">
-                          a few moments ago
-                        </div> */}
                       </div>
-
+                        {/* //when click on button invite to playe the color of button change to gray and stay like this until the friend accept the invitation */}
                       <button
                         className="flex items-center ml-auto  bg-[#868686] hover:bg-[#616060] text-white font-bold  px-7 rounded-[15px]"
                         onClick={() => InviteToPlaye(data)}
                       >
-                        {
-                          loding && (
-                            <div className="flex justify-center ">
-                              <CgSpinner className=" animate-spin" size={20} />
-                              {/* <div className="w-6 h-6 border-t-2 border-white rounded-full animate-spin"></div> */}
-                            </div>
-                          )
-                        }
                         invite to playe
                       </button>
                     </li>

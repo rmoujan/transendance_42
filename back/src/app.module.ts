@@ -5,7 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { AuthService } from './auth/auth.service';
 import { AuthController } from './auth/auth.controller';
 import { PrismaModule } from './prisma/prisma.module';
-import { JwtService } from './jwt/jwtservice.service';
+import { JwtService } from './auth/jwt/jwtservice.service';
 // import { PassportModule } from '@nestjs/passport';
 import { ProfileController } from './profile/profile.controller';
 import { ProfileService } from './profile/profile.service';
@@ -26,5 +26,6 @@ import { AppGateway } from './app.gateway';
   providers: [AppService, AuthService,
               JwtService, ProfileService, SocketGateway, AppGateway],
 })
+
 
 export class AppModule {}

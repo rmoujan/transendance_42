@@ -1,5 +1,5 @@
 import { ExecutionContext, Injectable, Res } from '@nestjs/common';
-import { JwtService } from 'src/jwt/jwtservice.service';
+import { JwtService } from '../auth/jwt/jwtservice.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { authenticator } from 'otplib';
 import * as qrcode from 'qrcode';
@@ -41,6 +41,16 @@ export class AuthService {
                     TwoFactor : false,
                     status_user: "online",
                     IsFirstTime: true,
+                    secretKey: null,
+                    About: null,
+                    WonBot: 0,
+                    LoseBot: 0,
+                    wins: 0,
+                    losses : 0,
+                    games_played: 0,
+                    Progress: 0,
+                    Wins_percent: 0,
+                    Losses_percent: 0,
                 },
             });
             return obj;

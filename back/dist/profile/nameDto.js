@@ -15,6 +15,7 @@ class CreateUserDto {
 }
 exports.CreateUserDto = CreateUserDto;
 __decorate([
+    (0, class_validator_1.Matches)(/^[^0-9]*$/, { message: 'The string should not contain numbers.', }),
     (0, class_validator_1.MinLength)(3, { message: 'Title is too short', }),
     (0, class_validator_1.MaxLength)(9, { message: 'Title is too long', }),
     (0, class_validator_1.Matches)(/^\S+$/, { message: 'Should not contain a space' }),

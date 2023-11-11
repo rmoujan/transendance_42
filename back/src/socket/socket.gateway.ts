@@ -1,9 +1,9 @@
 import { Headers , UseGuards} from '@nestjs/common';
 import {ConnectedSocket, MessageBody, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server ,Socket} from 'socket.io';
-import { JwtService } from 'src/jwt/jwtservice.service';
+import { JwtService } from '../auth/jwt/jwtservice.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { JwtAuthGuard } from 'src/jwt/JwtGuard';
+import { JwtAuthGuard } from '../auth/jwt/JwtGuard';
 
 @WebSocketGateway({namespace: 'users'})
 export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect{
@@ -50,10 +50,13 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       },
     });
     console.log(this.SocketContainer.keys());
+    this.server.emit("online", { id_user: decoded.id });
     // console.log(user);
+
   }
 
-  async handleDisconnect(client: Socket) {
+
+   async handleDisconnect(client: Socket) {
     console.log('client ' + client.id + ' has disconnected');
     const decoded = this.decodeCookie(client);
     this.SocketContainer.delete(decoded.id);
@@ -63,6 +66,9 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         status_user : "offline",
       },
     });
+    console.log("ofliiiiiine" + user);
+    this.server.emit("offline", { id_user: decoded.id });
+    console.log('hnaaaaa');
     // console.log(user);
   }
 
@@ -96,7 +102,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     const data = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
 
     const notify = await this.prisma.notification.findFirst({where:{userId: body.id_user, id_user: decoded.id}});
-    console.log(notify);
+    // console.log(notify);
     if (notify == null){
       console.log('heeeeere');
       const user = await this.prisma.user.update({

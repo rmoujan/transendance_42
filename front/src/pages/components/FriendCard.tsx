@@ -17,10 +17,10 @@ const ProfileCard = (friend :any) => {
                     alt=""
                   />
                 </div>
-                <div className=" flex text-white text-center ml-[150px] font-bold mt-2 text-xl">
+              </div>
+                <div className=" flex justify-center items-center text-white text-center  font-bold mt-2 text-xl">
                     {friend.friend.name}
                 </div>
-              </div>
               <div className=" flex justify-between mx-10 mt-5 text-white">
                 <div className=" flex flex-col justify-center items-center">
                   <div className=" font-bold text-xl">Status</div>

@@ -14,7 +14,7 @@ import { topData } from "../Data/TopStreamerData";
 import { Popover, Transition } from "@headlessui/react";
 import { useAppSelector } from "../../redux/store/store";
 import { Modal } from "antd";
-import { socket } from "../../socket";
+import { socket, socketuser } from "../../socket";
 import {
   Card,
   CardHeader,
@@ -42,6 +42,10 @@ type User = {
   TwoFactor: boolean;
   secretKey: string | null;
   status_user: string;
+  wins:number;
+  losses:number;
+  games_played:number;
+  Progress:number;
 };
 
 function FriendList() {
@@ -57,7 +61,7 @@ function FriendList() {
       date: string;
     }[]
   >([]);
-  const {friends} = useAppSelector((state) => state.app);
+  const { friends } = useAppSelector((state) => state.app);
   const [friend, setFriend] = useState<User[]>([]);
   const [filteredUser, setFilteredUser] = useState<
     {
@@ -80,10 +84,13 @@ function FriendList() {
   const navigate = useNavigate();
   useEffect(() => {
     setUsers(TABLE_ROWS);
-    return () => { };
+    return () => {};
   }, []);
 
   useEffect(() => {
+    if (socket == undefined) {
+      socketuser();
+    }
     if (users.length > 0) {
       console.log(users);
     }
@@ -102,34 +109,46 @@ function FriendList() {
   const [isBlocked, setIsBlocked] = useState(false);
 
   function removeFriend(id_user: number) {
-    axios.post("http://localhost:3000/auth/remove-friends", { id_user }, { withCredentials: true });
+    axios.post(
+      "http://localhost:3000/auth/remove-friends",
+      { id_user },
+      { withCredentials: true }
+    );
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     console.log("id_user", id_user);
     Modal.confirm({
-      title: 'Are you sure, you want to remove this friend?',
-      okText: 'Yes',
+      title: "Are you sure, you want to remove this friend?",
+      okText: "Yes",
       okType: "danger",
       className: " flex justify-center items-center h-100vh",
       onOk: () => {
         const updatedUsers = friend.filter((user) => user.id_user !== id_user);
         setFriend(updatedUsers);
-      }
-    })
-
+      },
+    });
   }
   const handleBlockUser = (id_user: number) => {
-    console.log("ttttttttttttt")
-    axios.post("http://localhost:3000/auth/Block-friends", { id_user }, { withCredentials: true });
+    console.log("ttttttttttttt");
+    axios.post(
+      "http://localhost:3000/auth/Block-friends",
+      { id_user },
+      { withCredentials: true }
+    );
     const updatedUsers = friend.filter((user) => user.id_user !== id_user);
     setFriend(updatedUsers);
     setIsBlocked(true);
     // setBlockedUsers([...blockedUsers, id_user]);
   };
-  const [NotFriends, setNotFriends] = useState< User[]>([]);
+  const [NotFriends, setNotFriends] = useState<User[]>([]);
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true });
-      const dataUser  = await axios.get("http://localhost:3000/profile/NotFriends", { withCredentials: true });
+      const { data } = await axios.get("http://localhost:3000/auth/friends", {
+        withCredentials: true,
+      });
+      const dataUser = await axios.get(
+        "http://localhost:3000/profile/NotFriends",
+        { withCredentials: true }
+      );
       setNotFriends(dataUser.data);
       console.log("dataNotFriends", dataUser.data);
       console.log("data");
@@ -143,20 +162,20 @@ function FriendList() {
 
   function AddMember(id_user: number) {
     console.log("id_user---------->", id_user);
+    // if (socket)
     socket.emit("add-friend", { id_user });
     // axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     Modal.confirm({
-      title: 'Are you sure, you want to add this friend?',
-      okText: 'Yes',
+      title: "Are you sure, you want to add this friend?",
+      okText: "Yes",
       okType: "danger",
       className: " flex justify-center items-center h-100vh",
       onOk: () => {
         const updatedUsers = friend.filter((user) => user.id_user !== id_user);
         setFriend(updatedUsers);
-      }
-    })
-
+      },
+    });
   }
   // const handleProfileClick = (friend: number) => {
   //   // Update selectedFriend with the clicked friend's information
@@ -171,7 +190,7 @@ function FriendList() {
       className=" flex w-full h-[90%] text-white bg-transparent mx-10"
     >
       <Card className=" flex items-center h-[90%] w-full mx-10  bg-transparent  mt-10">
-      {/* /*justify-start items-start*/ }
+        {/* /*justify-start items-start*/}
         {/* <CardHeader floated={false} shadow={false} className="rounded-none"> */}
         <div className=" flex items-center justify-between gap-8 bg-transparent">
           <div className="flex items-center justify-between p-4 space-x-[39rem] mb-5">
@@ -223,7 +242,7 @@ function FriendList() {
               >
                 view all
               </Button> */}
-               
+
               {/* <Button
                 className="flex items-center gap-3 rounded-xl bg-slate-500 sm:bg-indigo-500"
                 size="sm"
@@ -232,38 +251,51 @@ function FriendList() {
               </Button>
                */}
 
-               <Popover className="relative">
-              <Popover.Button
+              <Popover className="relative">
+                <Popover.Button
                   className="flex items-center gap-3 p-2 rounded-xl bg-slate-500 sm:bg-indigo-500"
                   // size="sm"
-                  >
-                  <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add member
+                >
+                  <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add
+                  member
                 </Popover.Button>
                 <Transition
-                as={Fragment}
-                enter="transition ease-out duration-500"
-                enterFrom="opacity-0 translate-y-1"
-                enterTo="opacity-100 translate-y-0"
-                leave="transition ease-in duration-150"
-                leaveFrom="opacity-100 translate-y-0"
-                leaveTo="opacity-0 translate-y-1"
-              >
+                  as={Fragment}
+                  enter="transition ease-out duration-500"
+                  enterFrom="opacity-0 translate-y-1"
+                  enterTo="opacity-100 translate-y-0"
+                  leave="transition ease-in duration-150"
+                  leaveFrom="opacity-100 translate-y-0"
+                  leaveTo="opacity-0 translate-y-1"
+                >
                   <Popover.Panel className="absolute right-0 z-10  w-80 -ml-40 text-white">
-                  <div 
-                  className=" flex flex-col  rounded-[30px] mt-3 bg-[#35324db2] hover:scale-100 ">
+                    <div className=" flex flex-col  rounded-[30px] mt-3 bg-[#35324db2] hover:scale-100 ">
                       {NotFriends.map((data) => {
                         return (
                           <ul
-                            key={data?.id_user} 
-                          role="list" className="p-6 divide-y divide-slate-200">
+                            key={data?.id_user}
+                            role="list"
+                            className="p-6 divide-y divide-slate-200"
+                          >
                             <li className="flex py-4 first:pt-0 last:pb-0">
-                              <img className="h-10 w-10 rounded-full" src={data?.avatar} alt="" />
+                              <img
+                                className="h-10 w-10 rounded-full"
+                                src={data?.avatar}
+                                alt=""
+                              />
                               <div className="ml-3 overflow-hidden">
-                                <p className="text-sm font-medium text-white">{data?.name} </p>
+                                <p className="text-sm font-medium text-white">
+                                  {data?.name}{" "}
+                                </p>
                                 {/* <p className="text-sm text-slate-500 truncate">{data.email}</p> */}
-                                <div className="text-xs text-blue-200 dark:text-blue-200">a few moments ago</div>
+                                <div className="text-xs text-blue-200 dark:text-blue-200">
+                                  a few moments ago
+                                </div>
                               </div>
-                              <button className="ml-auto  bg-indigo-400 hover:bg-indigo-500 text-white font-bold  px-7 rounded-[20px]" onClick={() => AddMember(data.id_user)}>
+                              <button
+                                className="ml-auto  bg-indigo-400 hover:bg-indigo-500 text-white font-bold  px-7 rounded-[20px]"
+                                onClick={() => AddMember(data.id_user)}
+                              >
                                 Add
                               </button>
                             </li>
@@ -271,8 +303,8 @@ function FriendList() {
                         );
                       })}
                     </div>
-               </Popover.Panel>
-               </Transition>
+                  </Popover.Panel>
+                </Transition>
               </Popover>
             </div>
           </div>
@@ -323,6 +355,10 @@ function FriendList() {
                     TwoFactor,
                     secretKey,
                     status_user,
+                    wins,
+                    losses,
+                    games_played,
+                    Progress,
                   }: {
                     id_user: number;
                     name: string;
@@ -330,6 +366,10 @@ function FriendList() {
                     TwoFactor: boolean;
                     secretKey: string | null;
                     status_user: string;
+                    wins: number;
+                    losses: number;
+                    games_played: number;
+                    Progress: number;
                   },
                   index: number
                 ) => {
@@ -338,7 +378,7 @@ function FriendList() {
                   const animationDelay = index * 0.5;
 
                   const handleProfileClick = (friend: any) => {
-                    console.log("friend : ")
+                    console.log("friend : ");
                     console.log(friend.id_user);
                     // Update selectedFriend with the clicked friend's information
                     navigate(`/profileFriend/${friend.id_user}`);
@@ -347,103 +387,108 @@ function FriendList() {
                     // <div
                     //   key={id_user}
                     //  className=" flex justify-center">
-                      <motion.tr
-                        key={id_user}
-                        variants={fadeIn("right", 0.2)}
-                        initial="hidden"
-                        whileInView={"show"}
-                        viewport={{ once: false, amount: 0.7 }}
-                        transition={{ duration: 2.3, delay: animationDelay }}
-                        className="flex bg-black/30 space-x-32 rounded-[27px] w-[70rem] my-2 p-4 ml-32 justify-evenly items-center"
-                        
-                      >
-                        <td className={`${classes} flex`}>
-                          <div className="flex items-center gap-3">
-                            <Avatar
-                              className="flex items-center w-12 h-12 rounded-full"
-                              src={avatar}
-                              alt={name}
-                              size="sm"
-                              onClick={() => handleProfileClick({ id_user })} />
-                            <div className="flex flex-col">
-                              <Typography
-                                variant="small"
-                                color="blue-gray"
-                                className="font-normal text-white w-40 cursor-pointer"
-                                onClick={() => handleProfileClick({ id_user })}
-                              >
-                                {name}
-                              </Typography>
-                              {/* <Typography
+                    <motion.tr
+                      key={id_user}
+                      variants={fadeIn("right", 0.2)}
+                      initial="hidden"
+                      whileInView={"show"}
+                      viewport={{ once: false, amount: 0.7 }}
+                      transition={{ duration: 2.3, delay: animationDelay }}
+                      className="flex bg-black/30 space-x-32 rounded-[27px] w-[70rem] my-2 p-4 ml-32 justify-evenly items-center"
+                    >
+                      <td className={`${classes} flex`}>
+                        <div className="flex items-center gap-3">
+                          <Avatar
+                            className="flex items-center w-12 h-12 rounded-full"
+                            src={avatar}
+                            alt={name}
+                            size="sm"
+                            onClick={() => handleProfileClick({ id_user })}
+                          />
+                          <div className="flex flex-col">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal text-white w-40 cursor-pointer"
+                              onClick={() => handleProfileClick({ id_user })}
+                            >
+                              {name}
+                            </Typography>
+                            {/* <Typography
                                     variant="small"
                                     color="blue-gray"
                                     className="font-normal opacity-70"
                                   >
                                     {email}
                                   </Typography> */}
-                            </div>
                           </div>
-                        </td>
-                        <td className={`${classes} flex`}>
-                          <div className="flex flex-col">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal ml-10 text-gray-500"
-                            >
-                              {14}
-                            </Typography>
-                            {/* <Typography
+                        </div>
+                      </td>
+                      <td className={`${classes} flex`}>
+                        <div className="flex flex-col">
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal ml-10 text-gray-500"
+                          >
+                            {games_played}
+                          </Typography>
+                          {/* <Typography
                                   variant="small"
                                   color="blue-gray"
                                   className="font-normal opacity-70"
                                 >
                                   {org}
                                 </Typography> */}
+                        </div>
+                      </td>
+                      <td className={classes}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal ml-14 text-gray-500"
+                        >
+                          {wins}
+                        </Typography>
+                      </td>
+                      <td className={classes}>
+                        <div className="w-max">
+                          {status_user}
+                          {/* <Chip
+                            variant="ghost"
+                            size="sm"
+                            value={status_user ? "online" : "offline"}
+                            className={`${
+                              status_user ? " text-green-300" : " text-gray-500"
+                            }`}
+                          /> */}
+                        </div>
+                      </td>
+                      <td className={`${classes} flex items-center`}>
+                        {isBlocked ? (
+                          <div className="text-red-400 font-bold -ml-20">
+                            Blocked
                           </div>
-                        </td>
-                        <td className={classes}>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal ml-14 text-gray-500"
-                          >
-                            {125}
-                          </Typography>
-                        </td>
-                        <td className={classes}>
-                          <div className="w-max">
-                            <Chip
-                              variant="ghost"
-                              size="sm"
-                              value={status_user ? "online" : "offline"}
-                              className={`${status_user ? " text-green-300" : " text-gray-500"
-                                }`}
+                        ) : (
+                          <Tooltip content="Block User">
+                            {/* <Button variant="text" className="" > */}
+                            <BiBlock
+                              className="h-8 w-8 text-red-400 -ml-14 cursor-pointer"
+                              onClick={() => handleBlockUser(id_user)}
                             />
-                          </div>
-                        </td>
-                        <td className={`${classes} flex items-center`}>
-                          {isBlocked ? (
-                            <div className="text-red-400 font-bold -ml-20">
-                              Blocked
-                            </div>
-                          ) : (
-                            <Tooltip content="Block User" >
-                              {/* <Button variant="text" className="" > */}
-                                <BiBlock className="h-8 w-8 text-red-400 -ml-14 cursor-pointer" onClick={() => handleBlockUser(id_user)}/>
-                              {/* </Button> */}
-                            </Tooltip>
-                          )}
-                        </td>
-                        <td className={`${classes} flex items-center`}>
-                          <div
-                            onClick={() => removeFriend(id_user)}
-                            className=" text-red-400 font-bold -ml-20 cursor-pointer"
-                          >
-                            remove
-                          </div>
-                        </td>
-                      </motion.tr>
+                            {/* </Button> */}
+                          </Tooltip>
+                        )}
+                      </td>
+                      <td className={`${classes} flex items-center`}>
+                        <div
+                          onClick={() => removeFriend(id_user)}
+                          className=" text-red-400 font-bold -ml-20 cursor-pointer"
+                        >
+                          remove
+                        </div>
+                      </td>
+                    </motion.tr>
                     // </div>
                   );
                 }
@@ -453,10 +498,10 @@ function FriendList() {
         </CardBody>
         {/* </div> */}
         {/* <CardFooter className="flex items-center justify-end mr-5  border-blue-gray-50 p-4 "> */}
-          {/* <Typography variant="small" color="blue-gray" className="font-normal">
+        {/* <Typography variant="small" color="blue-gray" className="font-normal">
             Page 1 of 10
           </Typography> */}
-          {/* <div className="flex gap-2 justify-end">
+        {/* <div className="flex gap-2 justify-end">
             <Button
               className="text-white rounded-xl p-2"
               variant="outlined"

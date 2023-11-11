@@ -16,9 +16,9 @@ exports.SocketGateway = void 0;
 const common_1 = require("@nestjs/common");
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
-const jwtservice_service_1 = require("../jwt/jwtservice.service");
+const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
 const prisma_service_1 = require("../prisma/prisma.service");
-const JwtGuard_1 = require("../jwt/JwtGuard");
+const JwtGuard_1 = require("../auth/jwt/JwtGuard");
 let SocketGateway = class SocketGateway {
     constructor(jwt, prisma) {
         this.jwt = jwt;
@@ -51,6 +51,7 @@ let SocketGateway = class SocketGateway {
             },
         });
         console.log(this.SocketContainer.keys());
+        this.server.emit("online", { id_user: decoded.id });
     }
     async handleDisconnect(client) {
         console.log('client ' + client.id + ' has disconnected');
@@ -62,6 +63,9 @@ let SocketGateway = class SocketGateway {
                 status_user: "offline",
             },
         });
+        console.log("ofliiiiiine" + user);
+        this.server.emit("offline", { id_user: decoded.id });
+        console.log('hnaaaaa');
     }
     handleUserOnline(client) {
     }
@@ -75,7 +79,6 @@ let SocketGateway = class SocketGateway {
         const decoded = this.decodeCookie(client);
         const data = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
         const notify = await this.prisma.notification.findFirst({ where: { userId: body.id_user, id_user: decoded.id } });
-        console.log(notify);
         if (notify == null) {
             console.log('heeeeere');
             const user = await this.prisma.user.update({

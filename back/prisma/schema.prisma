@@ -20,6 +20,8 @@ model User{
   About String?
   status_user String?
   stat Stat?
+  WonBot Int?
+  LoseBot Int?
   wins Int?
   losses Int?
   games_played Int?
@@ -68,9 +70,13 @@ model Stat {
 model History{
   winner Boolean?
   id_history Int @id @default(autoincrement())
+  useravatar String?
+  username String?
   userId Int
   userscore Int?
   enemyId Int?
+  enemyname String?
+  enemyavatar String?
   enemyscore Int?
   user User @relation (fields: [userId], references: [id_user])
 }

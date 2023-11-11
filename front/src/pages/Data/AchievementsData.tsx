@@ -4,20 +4,17 @@ import Badge from "../../img/badge.png"
 export const AchievementsData = [
   {
     id:1,
-    name:"Ping Pong",
+    msg:"Tbarkellah 3lik",
     src: Badge,
-    status:"ACHIEVED"
   },
   {
     id:2,
-    name:"Ping Pong",
+    msg:"Wa Rak Nad...Khomasiya",
     src: Badge,
-    status:"NOT-ACHIEVED"
   },
   {
     id:3,
-    name:"Ping Pong",
+    msg:"papapapapa...3Ashra",
     src: Badge,
-    status:"ACHIEVED"
   }
 ]

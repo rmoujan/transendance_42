@@ -9,7 +9,7 @@ import {
 import { Logger } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import { Data, Room, RoomBall, RoomPlayer } from "./interfaces";
-import { JwtService } from "./jwt/jwtservice.service";
+import { JwtService } from "./auth/jwt/jwtservice.service";
 import { PrismaService } from "./prisma/prisma.service";
 
 @WebSocketGateway()
@@ -205,12 +205,17 @@ export class AppGateway
         EnemyScore = enemy.score;
         
         const user = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
+        const enemyUser = await this.prisma.user.findUnique({where:{id_user:OppositeId}});
         let gameP:number = user.games_played + 1;
         let gameW:number = user.wins;
         let gameL:number = user.losses;
         let progress:number;
         let winspercent:number;
         let lossespercent:number;
+        let useravatar:string = user.avatar;
+        let enemyavatar:string = enemyUser.avatar;
+        let username:string = user.name;
+        let enemyname:string = enemyUser.name;
         if (!player.won)
         {
             gameL++;
@@ -229,9 +234,13 @@ export class AppGateway
                         Losses_percent: lossespercent,
                         history:{
                             create:{
-                                winner: true,
+                                useravatar: useravatar,
+                                username: username,
+                                winner: false,
                                 userscore: UserScore,
                                 enemyId: OppositeId,
+                                enemyname: enemyname,
+                                enemyavatar: enemyavatar,
                                 enemyscore: EnemyScore,
                             }
                         }
@@ -255,9 +264,13 @@ export class AppGateway
                         Losses_percent: lossespercent,
                         history:{
                             create:{
-                                winner: false,
+                                useravatar: useravatar,
+                                winner: true,
+                                username: username,
                                 userscore: UserScore,
                                 enemyId: OppositeId,
+                                enemyname: enemyname,
+                                enemyavatar: enemyavatar,
                                 enemyscore: EnemyScore,
                             }
                         }
@@ -414,6 +427,7 @@ export class AppGateway
                     room.roomBall.speed += 0.2;
                 }
 
+                
                 this.updateScore(room);
 
                 if (room.roomPlayers[0].score === 5) {

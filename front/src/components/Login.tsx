@@ -83,7 +83,7 @@ function Login() {
             <a href="http://localhost:3000/auth/login/42">
               <button className='font-bold hover:scale-105 duration-300 mobile:w-60 tablet:w-80  bg-gradient-to-br from-[#FE754D] to-[#ce502a]  text-white p-2 rounded-full mb-6'>
                 <img src={logo42} alt="42" className='w-6 h-6 inline mr-2' />
-                <a >Log In with Intra</a>
+                <span >Log In with Intra</span>
               </button>
             </a>
             <div className='text-center text-white text-xs'>

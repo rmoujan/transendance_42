@@ -1,4 +1,4 @@
-import React, { useState, Fragment} from "react";
+import React, {useEffect, useState, Fragment} from "react";
 import Arcane from "../../img/Arcane.png";
 import { Data } from "../Data/AccountOwnerData";
 import scr from "../../img/Screenshot.png";
@@ -8,6 +8,7 @@ import { Modal } from "antd"
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import { Popover, Transition } from "@headlessui/react";
 import { topData } from "../Data/TopStreamerData";
+import { socket ,socketuser} from "../../socket";
 // import { topData } from "../Data/TopData";
 // import { Modal, Popover } from "antd";
 import axios from "axios";
@@ -18,6 +19,12 @@ type User = {
   TwoFactor: boolean;
   secretKey: string | null;
   status_user: string;
+  wins:number;
+  losses:number;
+  games_played:number;
+  Progress:number;
+  Wins_percent:number;
+  Losses_percent:number;
 };
 type AccountOwnerProps = {
   user: User[];
@@ -39,8 +46,18 @@ function AccountOwner({ user }: AccountOwnerProps) {
     //   setIsEditingName(true);
     // }
   }
+  const [NotFriends, setNotFriends] = useState< User[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const {data}  = await axios.get("http://localhost:3000/profile/NotFriends", { withCredentials: true });
+      setNotFriends(data);
+    };
+    fetchData();
+  }
+    , []);  
   const [friend, setFriend] = useState<User[]>([]);
   function AddMember(id_user: number) {
+    socket.emit("add-friend", { id_user });
     axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     console.log("id_user", id_user);
@@ -92,7 +109,7 @@ function AccountOwner({ user }: AccountOwnerProps) {
               <div className=" mt-4 flex flex-col md:!gap-7 justify-center tablet:flex-row ">
                 <div className="flex flex-col items-center justify-center ">
                   <h3 className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">
-                    {155}
+                    {data.games_played}
                   </h3>
                   <p className="text-[#A3AED0] text-sm font-normal w-24 ">
                     Games Played
@@ -100,12 +117,12 @@ function AccountOwner({ user }: AccountOwnerProps) {
                 </div>
                 <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
                 <div className="flex flex-col items-center justify-center">
-                  <h3 className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">{64} %</h3>
+                  <h3 className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">{data.Wins_percent} %</h3>
                   <p className="text-[#A3AED0] text-sm font-normal">Win</p>
                 </div>
                 <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
                 <div className="flex flex-col items-center justify-center">
-                  <h3 className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">{45} %</h3>
+                  <h3 className="text-white text-lg tablet:text-3xl font-bold font-PalanquinDark">{data.Losses_percent} %</h3>
                   <p className="text-[#A3AED0] text-sm font-normal">Loss</p>
                 </div>
               </div>
@@ -136,20 +153,20 @@ function AccountOwner({ user }: AccountOwnerProps) {
                   <Popover.Panel className="absolute right-0 z-10  w-80 ml-[80%] text-white">
                   <div 
                   className=" flex flex-col  rounded-[30px] mt-10 bg-[#35324d] hover:scale-100 ">
-                      {topData.map((data) => {
+                      {NotFriends.map((data) => {
                         return (
                           <ul
-                            key={data.id} 
+                            key={data.id_user} 
                           role="list" className="p-6 divide-y divide-slate-200">
                             <li className="flex py-4 first:pt-0 last:pb-0">
-                              <img className="h-11 w-11 rounded-full" src={data.src} alt="" />
+                              <img className="h-11 w-11 rounded-full" src={data.avatar} alt="" />
                               <div className="ml-3 overflow-hidden">
                                 <p className="text-lg font-medium text-white">{data.name} </p>
-                                <p className="text-sm text-slate-500 truncate">{data.email}</p>
+                                {/* <p className="text-sm text-slate-500 truncate">{data.email}</p> */}
                                 <div className="text-xs text-blue-200 dark:text-blue-200">a few moments ago</div>
                               </div>
                               
-                              <button className="ml-auto  bg-indigo-400 hover:bg-indigo-500 text-white font-bold  px-6 rounded-[20px]" onClick={() => AddMember(data.id)}>
+                              <button className="ml-auto  bg-indigo-400 hover:bg-indigo-500 text-white font-bold  px-6 rounded-[20px]" onClick={() => AddMember(data.id_user)}>
                                 Add
                               </button>
                             </li>
