@@ -180,6 +180,20 @@ export class AuthController {
         // console.log(user);
     }
 
+    @Post('DeBlock-friends')
+    async DeBlock_friends(@Body() Body, @Req() req){
+      
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+
+        await this.prisma.blockedUser.deleteMany({
+          where:{
+              AND:[
+                {id_blocked_user: Body.id_user},
+                {userId: decoded.id},
+              ],
+            }
+          });
+    }
 
     /************************************** */
 

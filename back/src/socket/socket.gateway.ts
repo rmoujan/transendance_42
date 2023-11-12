@@ -100,77 +100,94 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   }
 
 
-  	@SubscribeMessage('invite-game')
-  	async invite_game(@ConnectedSocket() client: Socket ,@MessageBody() body){
-		const decoded = this.decodeCookie(client);
-      console.log('inviiiiite to play');
-		const data = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
-    console.log("in game ", data.InGame);
-		if (data.InGame == false){
-			const user = await this.prisma.user.update({
-				where:{id_user : body.id_user},
-				data:{
-					notification:{
-						create:{
-							AcceptFriend: false,
-							GameInvitation: true,
-							id_user: decoded.id,
-							avatar: data.avatar,
-							name: data.name,
-						}
-					}
-				}
-			});
-		}
-    console.log('bodyyyyy ', body);
-    const sock = this.SocketContainer.get(body.id_user);
-    console.log('sooock ', sock);
-    this.server.to(sock).emit('notification');
-	}
-
-
-  @SubscribeMessage('add-friend')
-  async add_friend(@ConnectedSocket() client: Socket ,@MessageBody() body){
-    const decoded = this.decodeCookie(client);
-    // console.log("hhdhdhdh"+body.id_user);
-    const data = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
-    console.log('hehehe');
-    const notify = await this.prisma.notification.findFirst({where:{userId: body.id_user, id_user: decoded.id}});
-    // console.log(notify);
-    if (notify == null){
-      console.log('heeeeere');
-      const user = await this.prisma.user.update({
-        where:{id_user: body.id_user},
-        data:{
-          notification:{
-            create:{
-              AcceptFriend: true,
-              GameInvitation: false,
-              id_user: decoded.id,
-              avatar: data.avatar,
-              name: data.name,
+  @SubscribeMessage('invite-game')
+  async invite_game(@ConnectedSocket() client: Socket ,@MessageBody() body){
+  const decoded = this.decodeCookie(client);
+  console.log('inviiiiite to play');
+  const data = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
+  console.log("in game ", data.InGame);
+  const notify = await this.prisma.notification.findFirst({where:{userId: body.id_user, id_user: decoded.id}});
+  // const verify = notify.find((element) => { ((element.userId == body.id_user) && (element.GameInvitation == true)) })
+  if (notify == null){
+      if (data.InGame == false){
+        const user = await this.prisma.user.update({
+          where:{id_user : body.id_user},
+          data:{
+            notification:{
+              create:{
+                AcceptFriend: false,
+                GameInvitation: true,
+                id_user: decoded.id,
+                avatar: data.avatar,
+                name: data.name,
+              }
             }
           }
-        }
-      });
+        });
+        console.log('bodyyyyy ', body);
+        const sock = this.SocketContainer.get(body.id_user);
+        console.log('sooock ', sock);
+        this.server.to(sock).emit('notification');
+      }
     }
-    console.log('hehehe');
-    // const payload = await this.prisma.notification.findMany({where:{userId: body.id_user}});
-    const sock = this.SocketContainer.get(body.id_user);
-    this.server.to(sock).emit('notification');
-  }
+}
 
-  @SubscribeMessage('newfriend')
+
+@SubscribeMessage('add-friend')
+async add_friend(@ConnectedSocket() client: Socket ,@MessageBody() body){
+  const decoded = this.decodeCookie(client);
+  // console.log("hhdhdhdh"+body.id_user);
+  const data = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
+  console.log('hehehe');
+  const notify = await this.prisma.notification.findFirst({where:{userId: body.id_user, id_user: decoded.id}});
+  // console.log(notify);
+  if (notify == null){
+    console.log('heeeeere');
+    const user = await this.prisma.user.update({
+      where:{id_user: body.id_user},
+      data:{
+        notification:{
+          create:{
+            AcceptFriend: true,
+            GameInvitation: false,
+            id_user: decoded.id,
+            avatar: data.avatar,
+            name: data.name,
+          }
+        }
+      }
+    });
+  }
+  console.log('hehehe');
+  // const payload = await this.prisma.notification.findMany({where:{userId: body.id_user}});
+  const sock = this.SocketContainer.get(body.id_user);
+  this.server.to(sock).emit('notification');
+}
+
+@SubscribeMessage('newfriend')
   async NewFriend(@ConnectedSocket() client: Socket, @MessageBody() body){
     console.log(body);
     const decoded = this.decodeCookie(client);
     const sockrecv = this.SocketContainer.get(decoded.id);
-    const user = await this.prisma.user.findUnique({where:{id_user: decoded.id},include:{freind:true}});
+    // const user = await this.prisma.user.findUnique({where:{id_user: decoded.id},include:{freind:true}});
     // const usersend = await this.prisma.user.findUnique({where:{id_user: body.id_user},include:{freind:true}});
     // console.log('newfriend recv : ' , user.freind, "newfriend send : ", usersend.freind);
+    console.log('right bar gatway ', body);
     const socksend = this.SocketContainer.get(body);
     this.server.to(sockrecv).emit('RefreshFriends');
     this.server.to(socksend).emit('RefreshFriends');
+  }
+
+
+  @SubscribeMessage('friends-list')
+  async friends_list(@ConnectedSocket() client: Socket, @MessageBody() body){
+    const decoded = this.decodeCookie(client);
+    console.log('friends list : ', body);
+  
+    const sockrecv = this.SocketContainer.get(decoded.id);
+    const socksend = this.SocketContainer.get(body);
+    this.server.to(sockrecv).emit('list-friends');
+    this.server.to(socksend).emit('list-friends');
   }
 
 }

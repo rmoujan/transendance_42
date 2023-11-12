@@ -122,11 +122,17 @@ function FriendList() {
       okType: "danger",
       className: " flex justify-center items-center h-100vh",
       onOk: () => {
+        if (socket)
+        {
+          socket.emit("friends-list",  id_user );
+          socket.emit("newfriend",  id_user );
+        }
         const updatedUsers = friend.filter((user) => user.id_user !== id_user);
         setFriend(updatedUsers);
       },
     });
   }
+
   const handleBlockUser = (id_user: number) => {
     console.log("ttttttttttttt");
     axios.post(
@@ -134,31 +140,77 @@ function FriendList() {
       { id_user },
       { withCredentials: true }
     );
-    const updatedUsers = friend.filter((user) => user.id_user !== id_user);
-    setFriend(updatedUsers);
-    setIsBlocked(true);
+    // const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+    // setFriend(updatedUsers);
+    // if (socket){
+      //   socket.emit("friends-list",  id_user );
+      //   socket.emit("newfriend",  id_user );
+      // }
+      Modal.confirm({
+        title: "Are you sure, you want to block this friend?",
+        okText: "Yes",
+        okType: "danger",
+        className: " flex justify-center items-center h-100vh",
+        onOk: () => {
+          if (socket)
+          {
+            socket.emit("friends-list",  id_user );
+            socket.emit("newfriend",  id_user );
+          }
+          const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+          setFriend(updatedUsers);
+          setIsBlocked(true);
+      },
+    });
     // setBlockedUsers([...blockedUsers, id_user]);
   };
+
   const [NotFriends, setNotFriends] = useState<User[]>([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await axios.get("http://localhost:3000/auth/friends", {
-        withCredentials: true,
-      });
-      const dataUser = await axios.get(
-        "http://localhost:3000/profile/NotFriends",
-        { withCredentials: true }
+  const fetchData = async () => {
+    const { data } = await axios.get("http://localhost:3000/auth/friends", {
+      withCredentials: true,
+    });
+    const dataUser = await axios.get(
+      "http://localhost:3000/profile/NotFriends",
+      { withCredentials: true }
       );
       setNotFriends(dataUser.data);
       console.log("dataNotFriends", dataUser.data);
       console.log("data");
       setFriend(data);
     };
-    fetchData();
-    // fetch('https://fakestoreapi.com/users')
-    //   .then((res) => res.json())
-    //   .then((data) => setUsers(data))
-  }, []);
+  useEffect(() => {
+      fetchData();
+      // fetch('https://fakestoreapi.com/users')
+      //   .then((res) => res.json())
+      //   .then((data) => setUsers(data))
+    }, []);
+    if (socket){
+      socket.on("list-friends", async () => {
+        fetchData();
+      });
+      socket.on("offline", (data: any) => {
+        setFriend(prevUsers => {
+          return prevUsers.map((user: User) => {
+            if (user.id_user === data.id_user) {
+              return { ...user, status_user: "offline" };
+            }
+            return user;
+          });
+        });
+      } );
+      socket.on("online", (data: any) => {
+        setFriend(prevUsers => {
+          return prevUsers.map((user: User) => {
+            if (user.id_user === data.id_user) {
+              return { ...user, status_user: "online" };
+            }
+            return user;
+          });
+        });
+      });
+
+    }
 
   function AddMember(id_user: number) {
     console.log("id_user---------->", id_user);
@@ -464,11 +516,11 @@ function FriendList() {
                         </div>
                       </td>
                       <td className={`${classes} flex items-center`}>
-                        {isBlocked ? (
+                        {/* {isBlocked ? (
                           <div className="text-red-400 font-bold -ml-20">
                             Blocked
                           </div>
-                        ) : (
+                        ) : ( */}
                           <Tooltip content="Block User">
                             {/* <Button variant="text" className="" > */}
                             <BiBlock
@@ -477,7 +529,7 @@ function FriendList() {
                             />
                             {/* </Button> */}
                           </Tooltip>
-                        )}
+                        {/* // )} */}
                       </td>
                       <td className={`${classes} flex items-center`}>
                         <div

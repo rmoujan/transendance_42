@@ -131,6 +131,17 @@ let AuthController = class AuthController {
         });
         this.Remove_friends(Body, req);
     }
+    async DeBlock_friends(Body, req) {
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+        await this.prisma.blockedUser.deleteMany({
+            where: {
+                AND: [
+                    { id_blocked_user: Body.id_user },
+                    { userId: decoded.id },
+                ],
+            }
+        });
+    }
     async Get_FriendsList(req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
         const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id }, });
@@ -267,6 +278,14 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "Block_friends", null);
+__decorate([
+    (0, common_1.Post)('DeBlock-friends'),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "DeBlock_friends", null);
 __decorate([
     (0, common_1.Get)('get-friendsList'),
     __param(0, (0, common_1.Req)()),

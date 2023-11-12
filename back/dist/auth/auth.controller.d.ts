@@ -14,6 +14,7 @@ export declare class AuthController {
     Insert_Friends(body: any, req: any): Promise<void>;
     Remove_friends(Body: any, req: any): Promise<void>;
     Block_friends(Body: any, req: any): Promise<void>;
+    DeBlock_friends(Body: any, req: any): Promise<void>;
     Get_FriendsList(req: any): Promise<{
         FriendList: {};
     }>;

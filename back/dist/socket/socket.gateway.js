@@ -85,26 +85,29 @@ let SocketGateway = class SocketGateway {
         console.log('inviiiiite to play');
         const data = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
         console.log("in game ", data.InGame);
-        if (data.InGame == false) {
-            const user = await this.prisma.user.update({
-                where: { id_user: body.id_user },
-                data: {
-                    notification: {
-                        create: {
-                            AcceptFriend: false,
-                            GameInvitation: true,
-                            id_user: decoded.id,
-                            avatar: data.avatar,
-                            name: data.name,
+        const notify = await this.prisma.notification.findFirst({ where: { userId: body.id_user, id_user: decoded.id } });
+        if (notify == null) {
+            if (data.InGame == false) {
+                const user = await this.prisma.user.update({
+                    where: { id_user: body.id_user },
+                    data: {
+                        notification: {
+                            create: {
+                                AcceptFriend: false,
+                                GameInvitation: true,
+                                id_user: decoded.id,
+                                avatar: data.avatar,
+                                name: data.name,
+                            }
                         }
                     }
-                }
-            });
+                });
+                console.log('bodyyyyy ', body);
+                const sock = this.SocketContainer.get(body.id_user);
+                console.log('sooock ', sock);
+                this.server.to(sock).emit('notification');
+            }
         }
-        console.log('bodyyyyy ', body);
-        const sock = this.SocketContainer.get(body.id_user);
-        console.log('sooock ', sock);
-        this.server.to(sock).emit('notification');
     }
     async add_friend(client, body) {
         const decoded = this.decodeCookie(client);
@@ -136,10 +139,18 @@ let SocketGateway = class SocketGateway {
         console.log(body);
         const decoded = this.decodeCookie(client);
         const sockrecv = this.SocketContainer.get(decoded.id);
-        const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id }, include: { freind: true } });
+        console.log('right bar gatway ', body);
         const socksend = this.SocketContainer.get(body);
         this.server.to(sockrecv).emit('RefreshFriends');
         this.server.to(socksend).emit('RefreshFriends');
+    }
+    async friends_list(client, body) {
+        const decoded = this.decodeCookie(client);
+        console.log('friends list : ', body);
+        const sockrecv = this.SocketContainer.get(decoded.id);
+        const socksend = this.SocketContainer.get(body);
+        this.server.to(sockrecv).emit('list-friends');
+        this.server.to(socksend).emit('list-friends');
     }
 };
 exports.SocketGateway = SocketGateway;
@@ -196,6 +207,14 @@ __decorate([
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", Promise)
 ], SocketGateway.prototype, "NewFriend", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('friends-list'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __param(1, (0, websockets_1.MessageBody)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", Promise)
+], SocketGateway.prototype, "friends_list", null);
 exports.SocketGateway = SocketGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({ namespace: 'users' }),
     __metadata("design:paramtypes", [jwtservice_service_1.JwtService, prisma_service_1.PrismaService])

@@ -42,11 +42,20 @@ function Searchbar() {
           withCredentials: true,
         }
       )
-      .then((res) => {
+      .then(async (res) => {
         // console.log("add friends fetch result ", res);
         // window.location.reload();
+        const notif = await axios.get(
+          "http://localhost:3000/profile/Notifications",
+          {
+            withCredentials: true,
+          }
+          );
+          setNotification(notif.data);
+    
         if (socket) {
           // console.log("id_user ", friend.id_user);
+          socket.emit("friends-list", friend.id_user);
           socket.emit("newfriend", friend.id_user);
         }
       })

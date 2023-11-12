@@ -18,4 +18,5 @@ export declare class SocketGateway implements OnGatewayInit, OnGatewayConnection
     invite_game(client: Socket, body: any): Promise<void>;
     add_friend(client: Socket, body: any): Promise<void>;
     NewFriend(client: Socket, body: any): Promise<void>;
+    friends_list(client: Socket, body: any): Promise<void>;
 }
