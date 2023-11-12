@@ -39,6 +39,7 @@ export class JwtAuthGuard implements CanActivate {
         }
     }
 
+
     isTokenNotExpired(expirationTimestamp: number): boolean {
         console.log(expirationTimestamp);
         const currentTimestamp = Math.floor(Date.now() / 1000); // Current time in seconds

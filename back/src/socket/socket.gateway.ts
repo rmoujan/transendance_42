@@ -40,7 +40,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     console.log('client ' + client.id + ' has conected');
     const decoded = this.decodeCookie(client);
-    // console.log(decoded);
+    console.log(decoded);
     let user_id:number = decoded.id;
     this.SocketContainer.set(user_id, client.id);
     const user = await this.prisma.user.update({
@@ -52,9 +52,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     console.log(this.SocketContainer.keys());
     this.server.emit("online", { id_user: decoded.id });
     // console.log(user);
-
   }
-
 
    async handleDisconnect(client: Socket) {
     console.log('client ' + client.id + ' has disconnected');
@@ -127,10 +125,14 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   }
 
   @SubscribeMessage('newfriend')
-  NewFriend(@ConnectedSocket() client: Socket, @MessageBody() body){
+  async NewFriend(@ConnectedSocket() client: Socket, @MessageBody() body){
+    console.log(body);
     const decoded = this.decodeCookie(client);
     const sockrecv = this.SocketContainer.get(decoded.id);
-    const socksend = this.SocketContainer.get(body.id_user);
+    const user = await this.prisma.user.findUnique({where:{id_user: decoded.id},include:{freind:true}});
+    // const usersend = await this.prisma.user.findUnique({where:{id_user: body.id_user},include:{freind:true}});
+    // console.log('newfriend recv : ' , user.freind, "newfriend send : ", usersend.freind);
+    const socksend = this.SocketContainer.get(body);
     this.server.to(sockrecv).emit('RefreshFriends');
     this.server.to(socksend).emit('RefreshFriends');
   }

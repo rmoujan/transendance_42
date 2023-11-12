@@ -73,7 +73,7 @@ export function FetchFriends() {
                 dispatch(AppSlice.actions.updateFriends(response.data))
             })
             .catch((err) => {
-                console.log(err);
+                // console.log(err);
             });
     };
 }

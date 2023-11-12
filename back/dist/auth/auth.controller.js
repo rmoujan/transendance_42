@@ -60,7 +60,7 @@ let AuthController = class AuthController {
     async Insert_Friends(body, req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
         try {
-            const user = await this.prisma.user.update({
+            await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
                     freind: {
@@ -87,6 +87,11 @@ let AuthController = class AuthController {
                     AND: [{ userId: decoded.id }, { id_user: body.id_user }]
                 },
             });
+            const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id }, include: { freind: true } });
+            const otherUser = await this.prisma.user.findUnique({ where: { id_user: body.id_user }, include: { freind: true } });
+            console.log('adding friends');
+            console.log(user.freind);
+            console.log(otherUser.freind);
         }
         catch (err) {
         }

@@ -40,15 +40,16 @@ function Searchbar() {
         }
       )
       .then((res) => {
-        console.log(res);
+        console.log("add friends fetch result ", res);
         // window.location.reload();
+        if (socket) {
+          console.log("id_user ", friend.id_user);
+          socket.emit("newfriend", friend.id_user);
+        }
       })
       .catch((err) => {
         console.log(err);
       });
-      if (socket) {
-        socket.emit("newfriend", friend.id_user);
-      }
     // console.log(friend);
     // navigate(`/profileFriend/${friend.id}`);
   };
@@ -65,25 +66,27 @@ function Searchbar() {
         {
           withCredentials: true,
         }
-      );
-      setNotification(notif.data);
+        );
+        setNotification(notif.data);
       // console.log("notif");
       // console.log(notif.data);
+      console.log('data : ', data);
       if (data == false) {
         window.location.href = "/login";
         console.log("false");
       }
+
       setUser(data);
       if (socket) {
-        // console.log("socket**************");
         socket.on("notification", async () => {
+          // console.log("socket**************");
           const { data } = await axios.get(
             "http://localhost:3000/profile/Notifications",
             {
               withCredentials: true,
             }
           );
-          setNotification([...Notification, data]);
+          setNotification(data);
         });
         // console.log("socket**********");
         // socket.on("notification", async () => {

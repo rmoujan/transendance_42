@@ -24,6 +24,8 @@ type User = {
   losses:number;
   games_played:number;
   Progress:number;
+  Wins_percent:number;
+  Losses_percent:number;
 };
 type GameHistory = {
   winner: boolean;
@@ -44,9 +46,14 @@ function MaincontentProfile() {
       socketuser();
     }
     const fetchData = async () => {
+      console.log("asfjgaslkfklasfklasdklfklashfgafklsj");
       const { data } = await axios.get("http://localhost:3000/auth/get-user", {
         withCredentials: true,
       });
+      if (data == null) {
+
+        window.location.href = "/login";
+      }
       const History = await axios.get("http://localhost:3000/profile/History", {
         withCredentials: true,
       });

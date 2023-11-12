@@ -58,9 +58,10 @@ const RightbarData: React.FC<RightbarDataProps> = ({ toggle }) => {
         // Assuming you have a socket instance available
         if (socket) {
           socket.on("RefreshFriends", async () => {
-            // const newfriends = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true }); 
-            // console.log("newfriends : " + newfriends.data);
-            setUsers(prevUsers => [...prevUsers, friends]); // Add the new friend to the existing user list
+            const newfriends = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true }); 
+            console.log("newfriends : " , newfriends.data);
+            // console.log("what is inside friends : " , newfriends); 
+            setUsers(newfriends.data); // Add the new friend to the existing user list
           });
           console.log("refreeeeeeeshfriends");
           socket.on("offline", (data: any) => {
@@ -95,12 +96,13 @@ const RightbarData: React.FC<RightbarDataProps> = ({ toggle }) => {
 
     // Clean up the socket listeners when the component unmounts
     return () => {
-      if (socket) {
-        socket.off("statusChange");
-      }
+      // if (socket) {
+      //   socket.off("statusChange");
+      // }
     };
   }, []);
   
+  console.log("debbuging users of rightbar : " , users);
   return (
     <div
       className=""

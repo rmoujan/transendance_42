@@ -42,6 +42,7 @@ let SocketGateway = class SocketGateway {
     async handleConnection(client) {
         console.log('client ' + client.id + ' has conected');
         const decoded = this.decodeCookie(client);
+        console.log(decoded);
         let user_id = decoded.id;
         this.SocketContainer.set(user_id, client.id);
         const user = await this.prisma.user.update({
@@ -100,10 +101,12 @@ let SocketGateway = class SocketGateway {
         const sock = this.SocketContainer.get(body.id_user);
         this.server.to(sock).emit('notification');
     }
-    NewFriend(client, body) {
+    async NewFriend(client, body) {
+        console.log(body);
         const decoded = this.decodeCookie(client);
         const sockrecv = this.SocketContainer.get(decoded.id);
-        const socksend = this.SocketContainer.get(body.id_user);
+        const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id }, include: { freind: true } });
+        const socksend = this.SocketContainer.get(body);
         this.server.to(sockrecv).emit('RefreshFriends');
         this.server.to(socksend).emit('RefreshFriends');
     }
@@ -152,7 +155,7 @@ __decorate([
     __param(1, (0, websockets_1.MessageBody)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], SocketGateway.prototype, "NewFriend", null);
 exports.SocketGateway = SocketGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({ namespace: 'users' }),
