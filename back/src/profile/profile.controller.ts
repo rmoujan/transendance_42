@@ -157,6 +157,7 @@ export class ProfileController {
 
   @Get('Notifications')
   async GetNotifications(@Req() req){
+    // console.log('hnoooooooo');
     const decoded = this.jwt.verify(req.cookies['cookie']);
     const user = await this.prisma.user.findUnique({
       where: {id_user: decoded.id},

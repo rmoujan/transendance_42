@@ -66,7 +66,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         status_user : "offline",
       },
     });
-    console.log("ofliiiiiine" + user);
+    // console.log("ofliiiiiine" + user);
     this.server.emit("offline", { id_user: decoded.id });
     console.log('hnaaaaa');
     // console.log(user);
@@ -100,7 +100,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     const decoded = this.decodeCookie(client);
     // console.log("hhdhdhdh"+body.id_user);
     const data = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
-
+    console.log('hehehe');
     const notify = await this.prisma.notification.findFirst({where:{userId: body.id_user, id_user: decoded.id}});
     // console.log(notify);
     if (notify == null){
@@ -125,4 +125,14 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     const sock = this.SocketContainer.get(body.id_user);
     this.server.to(sock).emit('notification');
   }
+
+  @SubscribeMessage('newfriend')
+  NewFriend(@ConnectedSocket() client: Socket, @MessageBody() body){
+    const decoded = this.decodeCookie(client);
+    const sockrecv = this.SocketContainer.get(decoded.id);
+    const socksend = this.SocketContainer.get(body.id_user);
+    this.server.to(sockrecv).emit('RefreshFriends');
+    this.server.to(socksend).emit('RefreshFriends');
+  }
+
 }

@@ -22,8 +22,8 @@ const prisma_service_1 = require("../../prisma/prisma.service");
 let FortyTwoStrategy = class FortyTwoStrategy extends (0, passport_1.PassportStrategy)(passport_42_1.Strategy, '42') {
     constructor(authservice, jwt, prisma) {
         super({
-            clientID: 'u-s4t2ud-d9fed53f36349b40d82e57fc96436919282944d16170e23ebe8ba4c1a0194679',
-            clientSecret: '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',
+            clientID: 'u-s4t2ud-7660428a75b234d92e16fe0f27a95abbc8a46a63f7c6ba0f3650f63e000a1031',
+            clientSecret: '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',
             callbackURL: 'http://localhost:3000/auth/login/42/redirect',
         });
         this.authservice = authservice;

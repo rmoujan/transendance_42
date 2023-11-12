@@ -38,6 +38,7 @@ export class AuthController {
         where : {id_user: req.user.id},
       });
       if (user.TwoFactor){
+
         res.redirect('http://localhost:5173/Authentication');
         return (req);
       }
@@ -84,37 +85,40 @@ export class AuthController {
 
     @Post('add-friends')
     async Insert_Friends(@Body() body, @Req() req){
-
       const decoded = this.jwt.verify(req.cookies['cookie']);
       // console.log(body.id_user);
-      const user = await this.prisma.user.update({
-        where: {id_user: decoded.id/*decoded.id*/},
-        data: {
-          freind:{
-            create:{
-              name : body.name,
-              id_freind: body.id_user/* body.friend_id */,
-            },
-          },
-        },
-      });
-      await this.prisma.user.update({
-        where:{id_user: body.id_user},
-        data:{
+      try{
+        const user = await this.prisma.user.update({
+          where: {id_user: decoded.id/*decoded.id*/},
+          data: {
             freind:{
               create:{
-                name: body.name,
-                id_freind: decoded.id,
+                name : body.name,
+                id_freind: body.id_user/* body.friend_id */,
               },
             },
           },
-        },
-      );
-
-      await this.prisma.notification.deleteMany({
-        where:{
-          AND:[{userId: decoded.id}, {id_user: body.id_user}]},
-      });
+        });
+        await this.prisma.user.update({
+          where:{id_user: body.id_user},
+          data:{
+              freind:{
+                create:{
+                  name: body.name,
+                  id_freind: decoded.id,
+                },
+              },
+            },
+          },
+        );
+        await this.prisma.notification.deleteMany({
+          where:{
+            AND:[{userId: decoded.id}, {id_user: body.id_user}]},
+        });
+      }
+      catch (err){
+        // console.log(err);
+      }
 
     }
 
@@ -122,7 +126,6 @@ export class AuthController {
 
     @Post('remove-friends')
     async Remove_friends(@Body() Body, @Req() req){
-
       const friendData = await this.prisma.user.findUnique({where: {id_user: Body.id_user}});
       const decoded = this.jwt.verify(req.cookies['cookie']);
       // console.log(decoded);
@@ -235,11 +238,14 @@ export class AuthController {
         return (null);
       const obj = friends.freind;
       const idFriends = obj.map((scope => scope.id_freind));
-
+      if (idFriends.length == 0)
+        return ([]);
       let array: any[] = [];
+      // console.log('idFriends : ' + idFriends);
 
+    
       for (const num of idFriends){
-        // console.log(num);
+        // console.log('num : ' + num);
         const OneFriend = await this.prisma.user.findUnique({
           where: {id_user: num},
         });
@@ -260,6 +266,7 @@ export class AuthController {
       // console.log(req.cookies['cookie']);
 
     //   console.log(decoded);
+    // console.log('hnaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
       let obj: any[] = []
       const user = await this.prisma.user.findUnique({where:{id_user : decoded.id},});
       obj.push(user);

@@ -59,33 +59,37 @@ let AuthController = class AuthController {
     }
     async Insert_Friends(body, req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
-        const user = await this.prisma.user.update({
-            where: { id_user: decoded.id },
-            data: {
-                freind: {
-                    create: {
-                        name: body.name,
-                        id_freind: body.id_user,
+        try {
+            const user = await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    freind: {
+                        create: {
+                            name: body.name,
+                            id_freind: body.id_user,
+                        },
                     },
                 },
-            },
-        });
-        await this.prisma.user.update({
-            where: { id_user: body.id_user },
-            data: {
-                freind: {
-                    create: {
-                        name: body.name,
-                        id_freind: decoded.id,
+            });
+            await this.prisma.user.update({
+                where: { id_user: body.id_user },
+                data: {
+                    freind: {
+                        create: {
+                            name: body.name,
+                            id_freind: decoded.id,
+                        },
                     },
                 },
-            },
-        });
-        await this.prisma.notification.deleteMany({
-            where: {
-                AND: [{ userId: decoded.id }, { id_user: body.id_user }]
-            },
-        });
+            });
+            await this.prisma.notification.deleteMany({
+                where: {
+                    AND: [{ userId: decoded.id }, { id_user: body.id_user }]
+                },
+            });
+        }
+        catch (err) {
+        }
     }
     async Remove_friends(Body, req) {
         const friendData = await this.prisma.user.findUnique({ where: { id_user: Body.id_user } });
@@ -161,6 +165,8 @@ let AuthController = class AuthController {
             return (null);
         const obj = friends.freind;
         const idFriends = obj.map((scope => scope.id_freind));
+        if (idFriends.length == 0)
+            return ([]);
         let array = [];
         for (const num of idFriends) {
             const OneFriend = await this.prisma.user.findUnique({

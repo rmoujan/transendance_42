@@ -43,64 +43,70 @@ const RightbarData: React.FC<RightbarDataProps> = ({ toggle }) => {
   };
   const [users, setUsers] = useState<User[]>([]);
   const [AccountOwner, setAccountOwner] = useState<User[]>([]);
-
   useEffect(() => {
-    const fetchUsers = async () => {
-      const { data } = await axios.get("http://localhost:3000/auth/friends", {
-        withCredentials: true,
-      });
-      const { data: data2 } = await axios.get("http://localhost:3000/auth/get-user", {
-        withCredentials: true,
-      });
-      setUsers(data);
-      if (socket) {
-        socket.on("offline", (data: any) => {
-          console.log("data");
-          console.log(data);
-          const updateFriends = users.map((user: User) => {
-            if (user.id_user === data.id_user) {
-              return { ...user, status_user: "offline" };
-            }
-            return user;
+    const fetchData = async () => {
+      try {
+        const friendsResponse = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true });
+        const userResponse = await axios.get("http://localhost:3000/auth/get-user", { withCredentials: true });
+
+        const friends = friendsResponse.data;
+        const user = userResponse.data;
+
+        setUsers(friends);
+        setAccountOwner(user);
+
+        // Assuming you have a socket instance available
+        if (socket) {
+          socket.on("RefreshFriends", async () => {
+            // const newfriends = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true }); 
+            // console.log("newfriends : " + newfriends.data);
+            setUsers(prevUsers => [...prevUsers, friends]); // Add the new friend to the existing user list
           });
-          setUsers(updateFriends);
-        });
-        socket.on("online", (data: any) => {
-          console.log("data");
-          console.log(data);
-          const updateFriends = users.map((user: User) => {
-            if (user.id_user === data.id_user) {
-              return { ...user, status_user: "online" };
-            }
-            return user;
+          console.log("refreeeeeeeshfriends");
+          socket.on("offline", (data: any) => {
+            setUsers(prevUsers => {
+              return prevUsers.map((user: User) => {
+                if (user.id_user === data.id_user) {
+                  return { ...user, status_user: "offline" };
+                }
+                return user;
+              });
+            });
           });
-          setUsers(updateFriends);
-        });
+          socket.on("online", (data: any) => {
+            setUsers(prevUsers => {
+              return prevUsers.map((user: User) => {
+                if (user.id_user === data.id_user) {
+                  return { ...user, status_user: "online" };
+                }
+                return user;
+              });
+            });
+          });
+        }
+      } catch (error) {
+        console.log(error);
         
+        // Handle errors here
       }
-      setAccountOwner(data2);
-      const updateFriends = data.filter((user:User) => user.id_user !== data2.id_user);
-      setUsers(updateFriends);
-      console.log("============================================???");
-    }
-    fetchUsers();
-    // Use a delay (e.g., setTimeout) to gradually show the divs after component mounts.
-     // Adjust the delay as needed
+    };
 
-    // Clear the timeout when the component unmounts to avoid memory leaks.
+    fetchData();
+
+    // Clean up the socket listeners when the component unmounts
+    return () => {
+      if (socket) {
+        socket.off("statusChange");
+      }
+    };
   }, []);
-
+  
   return (
     <div
       className=""
       
     >
       {" "}
-      {/* Add a container */}
-      <div className="">
-        
-       
-      </div>
       {users.map((data) => (
         <div
           className={`${
@@ -128,3 +134,103 @@ const RightbarData: React.FC<RightbarDataProps> = ({ toggle }) => {
 };
 
 export default RightbarData;
+
+    // useEffect(() => {
+    //   const fetchUsers = async () => {
+    //     const { data } = await axios.get("http://localhost:3000/auth/friends", {
+    //       withCredentials: true,
+    //     });
+    //     console.log("frienddddddddddddddd");
+    //     console.log(data);
+    //     const { data: data2 } = await axios.get("http://localhost:3000/auth/get-user", {
+    //       withCredentials: true,
+    //     });
+    //     setUsers(data);
+    //     if (socket) {
+    //       socket.on("offline", (data: any) => {
+    //         console.log("data");
+    //         console.log(data);
+    //         const updateFriends = users.map((user: User) => {
+    //           if (user.id_user === data.id_user) {
+    //             return { ...user, status_user: "offline" };
+    //           }
+    //           return user;
+    //         });
+    //         setUsers(updateFriends);
+    //       });
+    //       socket.on("online", (data: any) => {
+    //         console.log("data");
+    //         console.log(data);
+    //         const updateFriends = users.map((user: User) => {
+    //           if (user.id_user === data.id_user) {
+    //             return { ...user, status_user: "online" };
+    //           }
+    //           return user;
+    //         });
+    //         setUsers(updateFriends);
+    //       });
+          
+    //     }
+    //     setAccountOwner(data2);
+    //     const updateFriends = data.filter((user:User) => user.id_user !== data2.id_user);
+    //     setUsers(updateFriends);
+    //     console.log("============================================???");
+    //   }
+    //   fetchUsers();
+    //   // Use a delay (e.g., setTimeout) to gradually show the divs after component mounts.
+    //    // Adjust the delay as needed
+  
+    //   // Clear the timeout when the component unmounts to avoid memory leaks.
+    // }, []);
+      
+        // useEffect(() => {
+        //   const fetchData = async () => {
+        //     try {
+        //       const friendsResponse = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true });
+        //       const userResponse = await axios.get("http://localhost:3000/auth/get-user", { withCredentials: true });
+      
+        //       const friends = friendsResponse.data;
+        //       const user = userResponse.data;
+      
+        //       setUsers(friends);
+        //       setAccountOwner(user);
+      
+        //       // Assuming you have a socket instance available
+        //       if (socket) {
+        //         socket.on("offline", (data: any) => {
+        //           console.log("data");
+        //           console.log(data);
+        //           const updateFriends = users.map((user: User) => {
+        //             if (user.id_user === data.id_user) {
+        //               return { ...user, status_user: "offline" };
+        //             }
+        //             return user;
+        //           });
+        //           setUsers(updateFriends);
+        //         });
+        //         socket.on("online", (data: any) => {
+        //           console.log("data");
+        //           console.log(data);
+        //           const updateFriends = users.map((user: User) => {
+        //             if (user.id_user === data.id_user) {
+        //               return { ...user, status_user: "online" };
+        //             }
+        //             return user;
+        //           });
+        //           setUsers(updateFriends);
+        //         });
+        //       }
+        //     } catch (error) {
+        //       // Handle errors here
+        //     }
+        //   };
+      
+        //   fetchData();
+      
+        //   // Clean up the socket listeners when the component unmounts
+        //   return () => {
+        //     if (socket) {
+        //       socket.off("statusChange");
+        //     }
+        //   };
+        // }, []);

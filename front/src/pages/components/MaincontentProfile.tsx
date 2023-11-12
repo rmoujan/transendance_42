@@ -180,17 +180,17 @@ function MaincontentProfile() {
                 initial="hidden"
                 whileInView={"show"}
                 viewport={{ once: false, amount: 0.7 }}
-                className="flex flex-col overflow-scroll resultContainer h-[25rem] max-h-[25rem] p-4 rounded-3xl tablet:min-w-[60vh] tablet:w-4/5 tablet:mt-10 tablet:mb-10 lg-laptop:w-1/2 bg-[#3f3b5b91] laptop:mb-20  shadow-2xl mx-2 lg-laptop:min-w-[80%]  md:mx-10 "
+                className="flex flex-col overflow-scroll resultContainer h-[25rem] max-h-[25rem] p-4 rounded-3xl tablet:min-w-[60vh] tablet:w-4/5 tablet:mt-10 tablet:mb-10 lg-laptop:w-[17rem] bg-[#3f3b5b91] laptop:mb-20  shadow-2xl mx-2 lg-laptop:min-w-[80%]  md:mx-10 "
                 // className=" flex flex-col overflow-scroll resultContainer mx-h-[10rem] flex-1 p-4  rounded-3xl tablet:min-w-[60vh] tablet:w-4/5 tablet:mt-10 tablet:mb-10 lg-laptop:w-1/2 bg-[#3f3b5b91] laptop:mb-20  shadow-2xl mx-2 lg-laptop:min-w-[80%]  md:mx-10 justify-center "
               >
                 <div className="text-white flex text-center justify-center font-PalanquinDark text-2xl  tablet:text-4xl mb-5">
                   Game History
                 </div>
-                <div className="my-1 flex flex-col w-[16rem] max-w-[23rem] mx-h-[50rem]  ">
+                <div className="my-1 flex flex-col max-w-[20]  mx-h-[50rem]  ">
                   {/* //if no game history display this space */}
                   {GameHistory.length === 0 && (
                     <div className="flex justify-center items-center mt-4">
-                      <p className=" mt-20 text-center text-gray-300 text-2xl opacity-50">
+                      <p className="mt-20 text-center text-gray-300 text-2xl opacity-50">
                         You don't have any game history yet !
                       </p>
                     </div>
@@ -203,9 +203,9 @@ function MaincontentProfile() {
                     >
                       {
                         item.winner ? (
-                          <span className=" px-3 font-bold text-emerald-400 ml-9 ">Win</span>
+                          <span className=" px-3 font-bold text-emerald-400 ml-2 ">Win</span>
                         ) : (
-                          <span className=" font-bold text-red-400  px-3  -ml-7">Loss</span>
+                          <span className=" font-bold text-red-400  px-3  ml-2">Loss</span>
                         )
                       }
                       <span className=" text-white font-bold px-3">{item.username}</span>
@@ -222,7 +222,7 @@ function MaincontentProfile() {
                           </>
                         ) : (
                           <>
-                            <img src={item.enemyavatar} alt="" className="rounded-full w-10 h-10 ml-5 border-2" />
+                            <img src={item.enemyavatar} alt="" className="rounded-full w-12 h-12 ml-5 border-2" />
                             <span className=" text-white px-3 font-bold">{item.enemyname}</span>
                           </>
                         )

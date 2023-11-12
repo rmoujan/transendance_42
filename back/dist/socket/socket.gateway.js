@@ -63,7 +63,6 @@ let SocketGateway = class SocketGateway {
                 status_user: "offline",
             },
         });
-        console.log("ofliiiiiine" + user);
         this.server.emit("offline", { id_user: decoded.id });
         console.log('hnaaaaa');
     }
@@ -78,6 +77,7 @@ let SocketGateway = class SocketGateway {
     async add_friend(client, body) {
         const decoded = this.decodeCookie(client);
         const data = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
+        console.log('hehehe');
         const notify = await this.prisma.notification.findFirst({ where: { userId: body.id_user, id_user: decoded.id } });
         if (notify == null) {
             console.log('heeeeere');
@@ -99,6 +99,13 @@ let SocketGateway = class SocketGateway {
         console.log('hehehe');
         const sock = this.SocketContainer.get(body.id_user);
         this.server.to(sock).emit('notification');
+    }
+    NewFriend(client, body) {
+        const decoded = this.decodeCookie(client);
+        const sockrecv = this.SocketContainer.get(decoded.id);
+        const socksend = this.SocketContainer.get(body.id_user);
+        this.server.to(sockrecv).emit('RefreshFriends');
+        this.server.to(socksend).emit('RefreshFriends');
     }
 };
 exports.SocketGateway = SocketGateway;
@@ -139,6 +146,14 @@ __decorate([
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", Promise)
 ], SocketGateway.prototype, "add_friend", null);
+__decorate([
+    (0, websockets_1.SubscribeMessage)('newfriend'),
+    __param(0, (0, websockets_1.ConnectedSocket)()),
+    __param(1, (0, websockets_1.MessageBody)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:returntype", void 0)
+], SocketGateway.prototype, "NewFriend", null);
 exports.SocketGateway = SocketGateway = __decorate([
     (0, websockets_1.WebSocketGateway)({ namespace: 'users' }),
     __metadata("design:paramtypes", [jwtservice_service_1.JwtService, prisma_service_1.PrismaService])

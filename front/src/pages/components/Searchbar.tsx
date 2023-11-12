@@ -28,7 +28,6 @@ function Searchbar() {
   // }
   //function accepte friend
   const accepteFriend = (friend: any) => {
-    // Update selectedFriend with the clicked friend's information
     console.log(friend);
     axios
       .post(
@@ -47,6 +46,9 @@ function Searchbar() {
       .catch((err) => {
         console.log(err);
       });
+      if (socket) {
+        socket.emit("newfriend", friend.id_user);
+      }
     // console.log(friend);
     // navigate(`/profileFriend/${friend.id}`);
   };
@@ -58,9 +60,12 @@ function Searchbar() {
         withCredentials: true,
       });
       //protection of notificaton
-      const notif = await axios.get("http://localhost:3000/profile/Notifications",{
+      const notif = await axios.get(
+        "http://localhost:3000/profile/Notifications",
+        {
           withCredentials: true,
-      });
+        }
+      );
       setNotification(notif.data);
       // console.log("notif");
       // console.log(notif.data);
@@ -72,9 +77,12 @@ function Searchbar() {
       if (socket) {
         // console.log("socket**************");
         socket.on("notification", async () => {
-               const { data } = await axios.get("http://localhost:3000/profile/Notifications",{
+          const { data } = await axios.get(
+            "http://localhost:3000/profile/Notifications",
+            {
               withCredentials: true,
-          });
+            }
+          );
           setNotification([...Notification, data]);
         });
         // console.log("socket**********");
@@ -86,9 +94,9 @@ function Searchbar() {
         //     // console.log(data.obj);
         //     // setNotification(data.obj);
         //   });
-        }
+      }
     };
-      fetchData();
+    fetchData();
   }, [Notification]);
   return (
     <header className="flex items-center justify-between p-4 space-x-2 ">
@@ -138,14 +146,14 @@ function Searchbar() {
                   </strong>
                   <div className="flex absolute bg-[#35324b] rounded-3xl w-full  shadow-2xl max-h-72 overflow-scroll resultContainer">
                     {/* this is the panel */}
-                      {/* if notification is empty */}
-                      {Notification.length == 0 && (
-                        <div className="flex justify-center items-center w-full h-full">
-                          <p className="mt-4 text-lg text-gray-400 ">
-                            No Notification yet ! <br />
-                          </p>
-                        </div>
-                      )}
+                    {/* if notification is empty */}
+                    {Notification.length == 0 && (
+                      <div className="flex justify-center items-center w-full h-full">
+                        <p className="mt-4 text-lg text-gray-400 ">
+                          No Notification yet ! <br />
+                        </p>
+                      </div>
+                    )}
                     <div className=" flex flex-col">
                       {Notification.map((data) => {
                         return (
@@ -179,7 +187,7 @@ function Searchbar() {
                             </li>
                           </ul>
                         );
-                      })} 
+                      })}
                     </div>
                   </div>
                 </Popover.Panel>

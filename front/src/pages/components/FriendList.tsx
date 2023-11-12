@@ -162,8 +162,8 @@ function FriendList() {
 
   function AddMember(id_user: number) {
     console.log("id_user---------->", id_user);
-    // if (socket)
-    socket.emit("add-friend", { id_user });
+    if (socket)
+      socket.emit("add-friend", { id_user });
     // axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     Modal.confirm({
@@ -453,15 +453,14 @@ function FriendList() {
                       </td>
                       <td className={classes}>
                         <div className="w-max">
-                          {status_user}
-                          {/* <Chip
+                          {/* {status_user} */}
+                          <Chip
                             variant="ghost"
                             size="sm"
-                            value={status_user ? "online" : "offline"}
-                            className={`${
-                              status_user ? " text-green-300" : " text-gray-500"
+                            value={status_user}
+                            className={`${status_user === "online" ?  " text-green-500" : "text-red-500"
                             }`}
-                          /> */}
+                          />
                         </div>
                       </td>
                       <td className={`${classes} flex items-center`}>
