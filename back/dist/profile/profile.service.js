@@ -37,7 +37,7 @@ let ProfileService = class ProfileService {
     }
     async ModifyPhoto(photo, req, res) {
         const verifyToken = this.jwt.verify(req.cookies['cookie']);
-        const filePath = '/goinfre/lelbakna/new/last_push/front/public/uploads/' + photo.originalname;
+        const filePath = '/goinfre/moel-asr/last_transendance/front/public/uploads/' + photo.originalname;
         const rightPath = 'public/uploads/' + photo.originalname;
         console.log(photo.originalname);
         fs.writeFileSync(filePath, photo.buffer);

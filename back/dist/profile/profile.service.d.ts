@@ -12,6 +12,7 @@ export declare class ProfileService {
         avatar: string;
         TwoFactor: boolean;
         IsFirstTime: boolean;
+        InGame: boolean;
         secretKey: string;
         About: string;
         status_user: string;
@@ -23,5 +24,8 @@ export declare class ProfileService {
         Progress: number;
         Wins_percent: number;
         Losses_percent: number;
+        homies: boolean;
+        invited: boolean;
+        homie_id: number;
     }>;
 }

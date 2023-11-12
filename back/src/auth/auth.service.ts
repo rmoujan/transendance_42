@@ -51,6 +51,10 @@ export class AuthService {
                     Progress: 0,
                     Wins_percent: 0,
                     Losses_percent: 0,
+					InGame: false,
+					homies: false,
+					invited: false,
+					homie_id: 0,
                 },
             });
             return obj;

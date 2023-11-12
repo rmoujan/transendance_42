@@ -25,6 +25,7 @@ export declare class AuthController {
         avatar: string;
         TwoFactor: boolean;
         IsFirstTime: boolean;
+        InGame: boolean;
         secretKey: string;
         About: string;
         status_user: string;
@@ -36,6 +37,9 @@ export declare class AuthController {
         Progress: number;
         Wins_percent: number;
         Losses_percent: number;
+        homies: boolean;
+        invited: boolean;
+        homie_id: number;
     }[]>;
     TwofactorAuth(body: any, req: any): Promise<void>;
 }

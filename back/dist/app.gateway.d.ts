@@ -17,10 +17,10 @@ export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, O
     private logger;
     decodeCookie(client: Socket): any;
     afterInit(server: Server): void;
-    handleConnection(client: Socket, ...args: any[]): void;
-    handleDisconnect(client: Socket): void;
-    handleDisconnectEvent(client: Socket): void;
-    handleJoinRoom(client: Socket): void;
+    handleConnection(client: Socket, ...args: any[]): Promise<void>;
+    handleDisconnect(client: Socket): Promise<void>;
+    handleJoinFriendsRoom(client: Socket, invited: boolean, friendId: number): Promise<void>;
+    handleJoinRoom(client: Socket): Promise<void>;
     handleUpdatePlayer(client: Socket, data: Data): void;
     handleLeave(client: Socket, roomID: string): Promise<void>;
     findRoomBySocketId(socketId: string): Room;

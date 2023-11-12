@@ -20,6 +20,7 @@ export declare class ProfileController {
         avatar: string;
         TwoFactor: boolean;
         IsFirstTime: boolean;
+        InGame: boolean;
         secretKey: string;
         About: string;
         status_user: string;
@@ -31,6 +32,9 @@ export declare class ProfileController {
         Progress: number;
         Wins_percent: number;
         Losses_percent: number;
+        homies: boolean;
+        invited: boolean;
+        homie_id: number;
     }[]>;
     GetNotifications(req: any): Promise<{
         id: number;
@@ -49,6 +53,7 @@ export declare class ProfileController {
         avatar: string;
         TwoFactor: boolean;
         IsFirstTime: boolean;
+        InGame: boolean;
         secretKey: string;
         About: string;
         status_user: string;
@@ -60,6 +65,9 @@ export declare class ProfileController {
         Progress: number;
         Wins_percent: number;
         Losses_percent: number;
+        homies: boolean;
+        invited: boolean;
+        homie_id: number;
     }[]>;
     Achievments(req: any): Promise<{
         id: number;
@@ -79,4 +87,12 @@ export declare class ProfileController {
         enemyavatar: string;
         enemyscore: number;
     }[]>;
+    GetAvatar(req: any): Promise<string>;
+    Gamestatus(req: any, body: any): Promise<void>;
+    gameinfos(req: any, body: any): Promise<void>;
+    Returngameinfos(req: any): Promise<{
+        homies: boolean;
+        invited: boolean;
+        homie_id: number;
+    }>;
 }

@@ -88,7 +88,7 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
                     className="w-14 h-14  rounded-full"
                     src={data.avatar}
                     alt=""
-                    onClick={() => handleProfileClick(data)}
+                    // onClick={() => handleProfileClick(data)}
                   />
                 </div>
                 <div className=" flex flex-row justify-center items-center">

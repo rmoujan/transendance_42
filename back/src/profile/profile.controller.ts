@@ -16,6 +16,7 @@ import { JwtService } from '../auth/jwt/jwtservice.service';
 export class ProfileController {
     constructor (private Profile: ProfileService, private prisma: PrismaService, private jwt: JwtService) {}
 
+	
     @Post('modify-name')
     async Name_Modification(@Body() data: CreateUserDto, @Req() req:any, @Res() res:any)
     {
@@ -209,4 +210,58 @@ export class ProfileController {
 
     return (user);
   }
+
+  @Get('avatar')
+  async GetAvatar(@Req() req){
+	const decoded = this.jwt.verify(req.cookies['cookie']);
+	const user = await this.prisma.user.findUnique({
+	  where: {id_user: decoded.id},
+	});
+	return (user.avatar);
+  }
+
+  @Post('Gamestatus')
+  async Gamestatus(@Req() req, @Body() body){
+
+	const decoded = this.jwt.verify(req.cookies['cookie']);
+	await this.prisma.user.update({
+		where:{id_user: decoded.id},
+		data:{
+			InGame: body.status,
+		},
+	});
+
+  }
+
+  @Post('gameinfos')
+  async gameinfos(@Req() req, @Body() body){
+    const decoded = this.jwt.verify(req.cookies['cookie']);
+    await this.prisma.user.update({
+      where:{id_user: decoded.id},
+      data:{
+        homies: body.homies,
+        invited: body.invited,
+        homie_id: body.homie_id,
+      },
+    });
+
+    if (body.homies == true && body.invited == true){
+      console.log('hna 33333');
+        await this.prisma.notification.deleteMany({where:{
+          AND:[
+            {userId: decoded.id},
+            {GameInvitation: true},
+          ],
+        }});
+    }
+  }
+
+  @Get('returngameinfos')
+  async Returngameinfos(@Req() req){
+	const decoded = this.jwt.verify(req.cookies['cookie']);
+	const user = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
+	const obj = {homies:user.homies, invited:user.invited, homie_id:user.homie_id};
+	return (obj); 
+  }
+
 }

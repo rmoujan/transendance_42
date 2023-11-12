@@ -242,6 +242,8 @@ export class AuthController {
       if (friends == null)
         return (null);
       const obj = friends.freind;
+	  if (obj == null)
+	  	return ([]);
       const idFriends = obj.map((scope => scope.id_freind));
       if (idFriends.length == 0)
         return ([]);

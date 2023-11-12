@@ -37,6 +37,7 @@ type User = {
   Progress:number;
   Wins_percent:number;
   Losses_percent:number;
+  About:string;
 };
 function Maincontent() {
   const [toggle, setToggle] = useState(false);
@@ -258,7 +259,7 @@ function Maincontent() {
                             <span className=" text-white text-6xl font-bold mt-4 -mx-3 ">
                               :
                             </span>
-                            <Friends />
+                            <Friends user={user} />
                     </div>
                     {/* <div className=" flex flex-row w-full h-full space-x-0 lg-laptop:space-x-32 laptop:ml-3  lg-laptop:flex-row 2xl:mt-20 ">
                       <div className="bg-[#8b98e452] flex w-full h-96 lg-laptop:h-[30rem] pl-2 lg:pl-10 pt-10 mt-10 rounded-[46px] lg-laptop:ml-32  mx-auto shadow-2xl">

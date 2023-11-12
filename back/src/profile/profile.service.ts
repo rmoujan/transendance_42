@@ -35,7 +35,7 @@ export class ProfileService {
     async ModifyPhoto(photo:any, req:any, res:any) {
 
         const verifyToken = this.jwt.verify(req.cookies['cookie']);
-        const filePath = '/goinfre/lelbakna/new/last_push/front/public/uploads/' + photo.originalname; // Use the original name or generate a unique name
+        const filePath = '/goinfre/moel-asr/last_transendance/front/public/uploads/' + photo.originalname; // Use the original name or generate a unique name
         const rightPath = 'public/uploads/' + photo.originalname;//path to store in db
         // console.log("filePath");
         console.log(photo.originalname);

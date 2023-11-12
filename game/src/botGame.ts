@@ -20,6 +20,8 @@ class MyBotGame {
     buttons!: NodeListOf<HTMLButtonElement>;
 	drawGame!: DrawGame;
     avatars!: HTMLElement;
+	exitBtn!: HTMLButtonElement;
+	botBtn!: HTMLButtonElement;
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -39,6 +41,8 @@ class MyBotGame {
         this.buttons = document.querySelectorAll<HTMLButtonElement>(".btn");
 		this.drawGame = new DrawGame(this.canvas, this.ctx);
         this.avatars = document.getElementById("avatars") as HTMLElement;
+		this.exitBtn = document.getElementById("exit-btn") as HTMLButtonElement;
+		this.botBtn = document.getElementById("bot-game") as HTMLButtonElement;
 
 		this.buttons[1].addEventListener("click", () => {
 			this.gameOver = false;
@@ -165,7 +169,7 @@ class MyBotGame {
         this.checkGameStatus();
     }
 
-    render(): void {
+    async render(): Promise<void> {
         if (this.gameOver) {
             this.avatars.style.display = "none";
             this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, "#B2C6E4");
@@ -177,6 +181,8 @@ class MyBotGame {
                 this.message.innerHTML = "Game Over, You Lost!";
             }
 
+			await axios.post('http://localhost:3000/profile/Gamestatus', {status:true}, {withCredentials:false});
+
 			axios.post("http://localhost:3000/profile/Bot-Pong", {
 				won: this.userWon,
 				userScore: player_1.score,
@@ -187,6 +193,21 @@ class MyBotGame {
 
 			this.buttons[0].style.display = "block";
 			this.buttons[1].style.display = "block";
+			this.buttons[1].addEventListener("click", () => {
+				this.gameOver = false;
+				this.userWon = false;
+				this.compWon = false;
+				this.renderingStopped = false;
+				this.countdown = 3;
+				this.isPaused = false;
+				player_1.score = 0;
+				player_2.score = 0;
+				ball.x = 1088 / 2;
+				ball.y = 644 / 2;
+				ball.speed = 7;
+				ball.velocityX = ball.speed;
+				ball.velocityY = ball.speed;
+			});
         } else {
             this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, "#B2C6E4");
             this.drawGame.drawRect(player_1.x, player_1.y, player_1.w, player_1.h, player_1.color);
@@ -207,18 +228,19 @@ class MyBotGame {
 		}
     }
 
-    startBotGame(): void {
+    async startBotGame(): Promise<void> {
         this.avatars.style.display = "flex";
         for (const button of this.buttons) {
             button.style.display = "none";
         }
         console.log("Starting Bot Game");
+		await axios.post('http://localhost:3000/profile/Gamestatus', {status:true}, {withCredentials:true});
         this.message.innerHTML = `The game will start in ${this.countdown} seconds...`;
         const countdownInterval = setInterval(() => {
 			this.checkLocation();
 			if (this.gameOver) {
 				clearInterval(countdownInterval);
-				// this.render();
+				this.render();
 			}
             this.countdown--;
             if (this.countdown) {

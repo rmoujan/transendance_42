@@ -40,7 +40,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     console.log('client ' + client.id + ' has conected');
     const decoded = this.decodeCookie(client);
-    console.log(decoded);
+    // console.log(decoded);
     let user_id:number = decoded.id;
     this.SocketContainer.set(user_id, client.id);
     const user = await this.prisma.user.update({
@@ -91,6 +91,35 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     console.log(body);
     return 'Hello world!';
   }
+
+
+  	@SubscribeMessage('invite-game')
+  	async invite_game(@ConnectedSocket() client: Socket ,@MessageBody() body){
+		const decoded = this.decodeCookie(client);
+      console.log('inviiiiite to play');
+		const data = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
+    console.log("in game ", data.InGame);
+		if (data.InGame == false){
+			const user = await this.prisma.user.update({
+				where:{id_user : body.id_user},
+				data:{
+					notification:{
+						create:{
+							AcceptFriend: false,
+							GameInvitation: true,
+							id_user: decoded.id,
+							avatar: data.avatar,
+							name: data.name,
+						}
+					}
+				}
+			});
+		}
+    console.log('bodyyyyy ', body);
+    const sock = this.SocketContainer.get(body.id_user);
+    console.log('sooock ', sock);
+    this.server.to(sock).emit('notification');
+	}
 
 
   @SubscribeMessage('add-friend')

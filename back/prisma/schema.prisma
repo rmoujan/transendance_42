@@ -16,6 +16,7 @@ model User{
   avatar String?
   TwoFactor Boolean?
   IsFirstTime Boolean?
+  InGame Boolean?
   secretKey String?
   About String?
   status_user String?
@@ -31,6 +32,9 @@ model User{
   achievments Achievments[]
   history History[]
   notification Notification[]
+  homies Boolean?
+  invited Boolean?
+  homie_id Int?
   blockedUser BlockedUser[]
   freind Freind[]
   dms Dm[]

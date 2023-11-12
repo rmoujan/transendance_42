@@ -12,6 +12,7 @@ import ProfileCard from "./ProfileCard";
 import axios from "axios";
 import { socket } from "../../socket";
 import { set } from "react-hook-form";
+import { notification } from "antd";
 
 type User = {
   id_user: number;
@@ -27,8 +28,10 @@ function Searchbar() {
   //     if(e)
   // }
   //function accepte friend
+  const [AcceptFrienf , setAcceptFrienf] = useState<boolean>()
+
   const accepteFriend = (friend: any) => {
-    console.log(friend);
+    // console.log(friend);
     axios
       .post(
         "http://localhost:3000/auth/add-friends",
@@ -40,10 +43,10 @@ function Searchbar() {
         }
       )
       .then((res) => {
-        console.log("add friends fetch result ", res);
+        // console.log("add friends fetch result ", res);
         // window.location.reload();
         if (socket) {
-          console.log("id_user ", friend.id_user);
+          // console.log("id_user ", friend.id_user);
           socket.emit("newfriend", friend.id_user);
         }
       })
@@ -53,56 +56,88 @@ function Searchbar() {
     // console.log(friend);
     // navigate(`/profileFriend/${friend.id}`);
   };
+
+  
   const [user, setUser] = useState<User[]>([]);
   const [Notification, setNotification] = useState<Array<any>>([]);
-  useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await axios.get("http://localhost:3000/auth/get-user", {
+  const fetchData = async () => {
+    const { data } =  await axios.get("http://localhost:3000/auth/get-user", {
+      withCredentials: true ,
+    });
+    //protection of notificaton
+    const notif = await axios.get(
+      "http://localhost:3000/profile/Notifications",
+      {
         withCredentials: true,
-      });
-      //protection of notificaton
-      const notif = await axios.get(
-        "http://localhost:3000/profile/Notifications",
-        {
-          withCredentials: true,
-        }
-        );
-        setNotification(notif.data);
-      // console.log("notif");
-      // console.log(notif.data);
-      console.log('data : ', data);
-      if (data == false) {
-        window.location.href = "/login";
-        console.log("false");
       }
-
-      setUser(data);
-      if (socket) {
-        socket.on("notification", async () => {
-          // console.log("socket**************");
-          const { data } = await axios.get(
-            "http://localhost:3000/profile/Notifications",
-            {
-              withCredentials: true,
-            }
-          );
-          setNotification(data);
-        });
-        // console.log("socket**********");
-        // socket.on("notification", async () => {
-        //   const { data } = await axios.get("http://localhost:3000/profile/Notifications",{
-        //       withCredentials: true,
-        //   });
-        //     setNotification(data);
-        //     // console.log(data.obj);
-        //     // setNotification(data.obj);
-        //   });
-      }
-    };
-    fetchData();
-  }, [Notification]);
-  return (
-    <header className="flex items-center justify-between p-4 space-x-2 ">
+      );
+      setNotification(notif.data);
+    // console.log("notif");
+    // console.log(notif.data);
+    // console.log('data : ', data);
+    if (data == false) {
+      window.location.href = "/login";
+      console.log("false");
+    }
+    
+    setUser(data);
+    // if (socket) {
+    //   socket.on("notification", async () => {
+    //     // console.log("socket**************");
+    //     const { data } = await axios.get(
+    //       "http://localhost:3000/profile/Notifications",
+    //       {
+    //         withCredentials: true,
+    //       }
+    //       );
+    //       setNotification(data);
+    //     });
+    //     // console.log("socket**********");
+    //     // socket.on("notification", async () => {
+    //       //   const { data } = await axios.get("http://localhost:3000/profile/Notifications",{
+    //         //       withCredentials: true,
+    //         //   });
+    //         //     setNotification(data);
+    //         //     // console.log(data.obj);
+    //         //     // setNotification(data.obj);
+    //         //   });
+    //       }
+        };
+        const accepteGame = (friend: any) => {
+      
+          axios.post("http://localhost:3000/profile/gameinfos", {
+            homies: true,
+            invited: true,
+            homie_id: friend.id_user,
+            }, {
+            withCredentials: true,
+            });
+            fetchData();
+            window.location.href = "http://localhost:5173/game";
+        };
+        useEffect( () => {
+          
+          if (socket){
+            //get notification
+            socket.on('notification', async () => {
+              console.log("event notification")
+              const { data } = await axios.get("http://localhost:3000/profile/Notifications", {
+                withCredentials: true,
+              })
+              // console.log("event notification111111")
+              // console.log(data);
+              setNotification(data);
+              // fetch();
+              // console.log(data.obj);
+              // setNotification(data.obj);
+            });
+            // const fetch = async () => {
+            // }
+          }
+          fetchData();
+        }, []);
+        return (
+          <header className="flex items-center justify-between p-4 space-x-2 ">
       <h1 className=" text-white text-3xl 2xl:text-4xl lg:ml-32 font-PalanquinDark font-bold">
         Ping Pong{" "}
       </h1>
@@ -181,12 +216,26 @@ function Searchbar() {
                                 </div>
                               </div>
                               {/* Accepte button */}
+                              {data.AcceptFriend == true ? (
                               <button
                                 className="ml-auto bg-[#FE754D] hover:bg-[#ce502a] text-white font-bold  px-4 rounded-[20px]"
                                 onClick={() => accepteFriend(data)}
                               >
                                 Accept
                               </button>
+                              ):(
+
+                              <button
+                                className="ml-auto bg-[#FE754D] hover:bg-[#ce502a] text-sm text-white font-bold  px-2 rounded-[20px]"
+                                onClick={() => accepteGame(data)}
+                              >
+                                Accept game
+                              </button>
+                              )
+                              }
+                              
+
+          
                             </li>
                           </ul>
                         );

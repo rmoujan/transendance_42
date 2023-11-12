@@ -43,10 +43,9 @@ const ProfileCardUser: React.FC = () => {
     };
     fetchData();
   }, []);
-  const [isEventEmitted, setIsEventEmitted] = useState(false);
+
   function AddMember(id_user: number) {
-      socket.emit("add-friend", { id_user });
-    // axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
+    axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     console.log("id_user", id_user);
     Modal.confirm({
@@ -59,6 +58,7 @@ const ProfileCardUser: React.FC = () => {
         setFriend(updatedUsers);
       }
     })
+
   }
 
   const friendInfo = user.find((friend) => friend.id_user === friendIdNumber);
@@ -134,10 +134,8 @@ const ProfileCardUser: React.FC = () => {
                 {/* <button className="bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] rounded-2xl px-3 mx-4 shadow-2xl">
                   Edit Profile Photo
                 </button> */}
-                <button className="w-28 font-semibold rounded-2xl px-3 text-white shadow-2xl hidden lg-laptop:block mr-5" 
-                // onClick={()=>AddMember(friendInfo?.id_user)}
-                >
-                  {/* Add Friend + */}
+                <button className="bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] font-semibold rounded-2xl px-3 text-white shadow-2xl hidden lg-laptop:block mr-5" onClick={()=>AddMember(friendInfo?.id_user)}>
+                  Add Friend +
                 </button>
               </div>
             </div>

@@ -3,6 +3,7 @@ import { Room } from "./interfaces";
 import DrawGame from "./drawGame";
 import io, { Socket } from "socket.io-client";
 import { pathn } from "../../front/src/pages/Home";
+import axios from "axios";
 
 class MyMultiplayerGame {
     canvas: HTMLCanvasElement;
@@ -21,6 +22,7 @@ class MyMultiplayerGame {
 	right!: boolean;
 	userId!: number;
 	avatars!: HTMLElement;
+	exitBtn!: HTMLButtonElement;
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -39,6 +41,7 @@ class MyMultiplayerGame {
 		this.drawGame = new DrawGame(this.canvas, this.ctx);
 		this.onlineBtn = document.getElementById("online-game") as HTMLButtonElement;
 		this.avatars = document.getElementById("avatars") as HTMLElement;
+		this.exitBtn = document.getElementById("exit-btn") as HTMLButtonElement;
 
 		this.onlineBtn.addEventListener("click", () => {
 			this.socket = io("http://localhost:3000", {
@@ -59,11 +62,15 @@ class MyMultiplayerGame {
 		}
 	};
 
-	startMultiplayerGame(): void {
+	async startMultiplayerGame(): Promise<void> {
 		let flag = false;
+		const data = await axios.get('http://localhost:3000/profile/returngameinfos',  { withCredentials: true });
+		console.log("dataaaaaaa");
+		console.log(data);
 		for (const button of this.buttons) {
 			button.style.display = "none";
 		}
+		this.exitBtn.style.display = "block";
 
 		const interval = setInterval(() => {
 			if (this.socket.connected) {
@@ -73,7 +80,12 @@ class MyMultiplayerGame {
 				this.checkLocation();
 				this.message.innerHTML = "Waiting for opponent to join...";
 				if (flag === false) {
-					this.socket.emit("join-room");
+					if (data.data.homies) {
+						this.buttons[0].innerHTML = "Play With Your Homie";
+						this.socket.emit("join-friends-room", data.data.invited, data.data.homie_id);
+					} else {
+						this.socket.emit("join-room");
+					}
 					flag = true;
 				}
 			} else {
@@ -100,6 +112,7 @@ class MyMultiplayerGame {
 			this.buttons[0].style.display = "block";
 			this.buttons[0].innerHTML = "Play Again";
 			this.buttons[1].style.display = "block";
+			this.buttons[2].style.display = "block";
 			this.onlineBtn.addEventListener("click", () => {
 				this.gameStarted = false;
 				this.playerNumber = 0;
@@ -131,8 +144,9 @@ class MyMultiplayerGame {
 				this.right = true;
 			}
 		});
-		
+
 		this.socket.on("start-game", () => {
+			this.exitBtn.style.display = "none";
 			this.avatars.style.display = "flex";
 			console.log("Starting game.");
 			this.gameStarted = true;

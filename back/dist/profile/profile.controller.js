@@ -172,6 +172,48 @@ let ProfileController = class ProfileController {
         });
         return (user);
     }
+    async GetAvatar(req) {
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+        const user = await this.prisma.user.findUnique({
+            where: { id_user: decoded.id },
+        });
+        return (user.avatar);
+    }
+    async Gamestatus(req, body) {
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+        await this.prisma.user.update({
+            where: { id_user: decoded.id },
+            data: {
+                InGame: body.status,
+            },
+        });
+    }
+    async gameinfos(req, body) {
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+        await this.prisma.user.update({
+            where: { id_user: decoded.id },
+            data: {
+                homies: body.homies,
+                invited: body.invited,
+                homie_id: body.homie_id,
+            },
+        });
+        if (body.homies == true && body.invited == true) {
+            console.log('hna 33333');
+            await this.prisma.notification.deleteMany({ where: {
+                    AND: [
+                        { userId: decoded.id },
+                        { GameInvitation: true },
+                    ],
+                } });
+        }
+    }
+    async Returngameinfos(req) {
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+        const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
+        const obj = { homies: user.homies, invited: user.invited, homie_id: user.homie_id };
+        return (obj);
+    }
 };
 exports.ProfileController = ProfileController;
 __decorate([
@@ -254,6 +296,36 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "History", null);
+__decorate([
+    (0, common_1.Get)('avatar'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "GetAvatar", null);
+__decorate([
+    (0, common_1.Post)('Gamestatus'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "Gamestatus", null);
+__decorate([
+    (0, common_1.Post)('gameinfos'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "gameinfos", null);
+__decorate([
+    (0, common_1.Get)('returngameinfos'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "Returngameinfos", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)('profile'),
     __metadata("design:paramtypes", [profile_service_1.ProfileService, prisma_service_1.PrismaService, jwtservice_service_1.JwtService])
