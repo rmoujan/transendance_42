@@ -18,12 +18,15 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 		let cookieHeader;
     // console.log(client);
 		cookieHeader = client.handshake.headers.cookie;
+		if (cookieHeader == undefined)
+			return null;
+	//
+		// console.log(cookieHeader);
 		const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
 			const [name, value] = cookie.trim().split("=");
 			acc[name] = value;
 			return acc;
 		}, {});
-
 		const specificCookie = cookies["cookie"];
     // console.log(specificCookie);
 		const decoded = this.jwt.verify(specificCookie);
@@ -40,6 +43,8 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     console.log('client ' + client.id + ' has conected');
     const decoded = this.decodeCookie(client);
+	if (decoded == null)
+		return;
     // console.log(decoded);
     let user_id:number = decoded.id;
     this.SocketContainer.set(user_id, client.id);
@@ -57,6 +62,8 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
    async handleDisconnect(client: Socket) {
     console.log('client ' + client.id + ' has disconnected');
     const decoded = this.decodeCookie(client);
+	if (decoded == null)
+	  return;
     this.SocketContainer.delete(decoded.id);
     const user = await this.prisma.user.update({
       where : {id_user : decoded.id},

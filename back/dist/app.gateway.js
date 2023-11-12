@@ -21,6 +21,7 @@ let AppGateway = class AppGateway {
         this.prisma = prisma;
         this.users = new Map();
         this.rooms = [];
+        this.frRooms = [];
         this.framePerSec = 50;
         this.isPaused = false;
         this.logger = new common_1.Logger("AppGateway");
@@ -42,14 +43,6 @@ let AppGateway = class AppGateway {
     }
     async handleConnection(client, ...args) {
         this.logger.log(`Client connected: ${client.id}`);
-        const userId = this.decodeCookie(client).id;
-        const decoded = this.decodeCookie(client);
-        const user = await this.prisma.user.findUnique({
-            where: { id_user: decoded.id },
-        });
-        if (this.users.has(userId)) {
-            client.disconnect();
-        }
     }
     async handleDisconnect(client) {
         const room = this.findRoomBySocketId(client.id);
@@ -58,6 +51,9 @@ let AppGateway = class AppGateway {
             where: { id_user: decoded.id },
             data: {
                 InGame: false,
+                homies: false,
+                invited: false,
+                homie_id: 0,
             }
         });
         if (room) {
@@ -77,7 +73,8 @@ let AppGateway = class AppGateway {
         }
         this.users.delete(this.decodeCookie(client).id);
     }
-    async handleJoinFriendsRoom(client, invited, friendId) {
+    async handleJoinFriendsRoom(client, data) {
+        console.log("Motherfuckers");
         const userId = this.decodeCookie(client).id;
         if (!this.users.has(userId)) {
             this.users.set(userId, client.id);
@@ -90,51 +87,51 @@ let AppGateway = class AppGateway {
             });
         }
         let room = null;
-        if (invited) {
-            for (let singleRoom of this.rooms) {
-                for (let player of singleRoom.roomPlayers) {
-                    let friend = this.decodeCookie(player.socket).id;
-                    if (friend === friendId) {
-                        room = singleRoom;
+        if (data.invited === true) {
+            for (let singleRoom of this.frRooms) {
+                if (singleRoom.roomPlayers.length === 1) {
+                    for (let player of singleRoom.roomPlayers) {
+                        if (player.userId === data.homie_id) {
+                            room = singleRoom;
+                        }
                     }
                 }
             }
         }
         if (room) {
-            if (userId === friendId) {
-                this.player01 = userId;
-                client.join(room.id);
-                client.emit("player-number", 2);
-                room.roomPlayers.push({
-                    won: false,
-                    socket: client,
-                    socketId: client.id,
-                    playerNumber: 2,
-                    x: 1088 - 20,
-                    y: 644 / 2 - 100 / 2,
-                    h: 100,
-                    w: 6,
-                    score: 0,
-                });
-                this.server.to(room.id).emit("start-game");
-                setTimeout(() => {
-                    this.server.to(room.id).emit("game-started", room);
-                    this.pauseGame(500);
-                    this.startRoomGame(room);
-                }, 3100);
-            }
+            this.player01 = userId;
+            client.join(room.id);
+            client.emit("player-number", 2);
+            room.roomPlayers.push({
+                won: false,
+                userId: userId,
+                socketId: client.id,
+                playerNumber: 2,
+                x: 1088 - 20,
+                y: 644 / 2 - 100 / 2,
+                h: 100,
+                w: 6,
+                score: 0,
+            });
+            this.server.to(room.id).emit("start-game");
+            setTimeout(() => {
+                this.server.to(room.id).emit("game-started", room);
+                this.pauseGame(500);
+                this.startRoomGame(room);
+            }, 3100);
         }
         else {
             this.player02 = userId;
             room = {
+                friends: true,
                 gameAbondoned: false,
                 stopRendering: false,
                 winner: 0,
-                id: (this.rooms.length + 1).toString(),
+                id: (this.frRooms.length + 100).toString(),
                 roomPlayers: [
                     {
                         won: false,
-                        socket: client,
+                        userId: userId,
                         socketId: client.id,
                         playerNumber: 1,
                         x: 10,
@@ -153,7 +150,7 @@ let AppGateway = class AppGateway {
                     velocityY: 7,
                 },
             };
-            this.rooms.push(room);
+            this.frRooms.push(room);
             client.join(room.id);
             client.emit("player-number", 1);
         }
@@ -181,7 +178,7 @@ let AppGateway = class AppGateway {
             client.emit("player-number", 2);
             room.roomPlayers.push({
                 won: false,
-                socket: client,
+                userId: userId,
                 socketId: client.id,
                 playerNumber: 2,
                 x: 1088 - 20,
@@ -200,6 +197,7 @@ let AppGateway = class AppGateway {
         else {
             this.player02 = userId;
             room = {
+                friends: false,
                 gameAbondoned: false,
                 stopRendering: false,
                 winner: 0,
@@ -207,7 +205,7 @@ let AppGateway = class AppGateway {
                 roomPlayers: [
                     {
                         won: false,
-                        socket: client,
+                        userId: userId,
                         socketId: client.id,
                         playerNumber: 1,
                         x: 10,
@@ -233,7 +231,10 @@ let AppGateway = class AppGateway {
         }
     }
     handleUpdatePlayer(client, data) {
-        const room = this.rooms.find((room) => room.id === data.roomID);
+        let room = this.rooms.find((room) => room.id === data.roomID);
+        if (!room) {
+            room = this.frRooms.find((room) => room.id === data.roomID);
+        }
         if (room) {
             if (data.direction === "mouse") {
                 room.roomPlayers[data.playerNumber - 1].y =
@@ -252,22 +253,36 @@ let AppGateway = class AppGateway {
                 }
             }
         }
-        this.rooms = this.rooms.map((oldRoom) => {
-            if (room && oldRoom.id === room.id) {
-                return room;
-            }
-            else {
-                return oldRoom;
-            }
-        });
+        if (room.friends === false) {
+            this.rooms = this.rooms.map((oldRoom) => {
+                if (room && oldRoom.id === room.id) {
+                    return room;
+                }
+                else {
+                    return oldRoom;
+                }
+            });
+        }
+        else {
+            this.frRooms = this.frRooms.map((oldRoom) => {
+                if (room && oldRoom.id === room.id) {
+                    return room;
+                }
+                else {
+                    return oldRoom;
+                }
+            });
+        }
         if (room) {
             this.server.to(room.id).emit("update-game", room);
         }
     }
     async handleLeave(client, roomID) {
         const decoded = this.decodeCookie(client);
-        const room = this.rooms.find((room) => room.id === roomID);
-        console.log(room);
+        let room = this.rooms.find((room) => room.id === roomID);
+        if (!room) {
+            room = this.frRooms.find((room) => room.id === roomID);
+        }
         const player = room.roomPlayers.find((player) => client.id === player.socketId);
         const enemy = room.roomPlayers.find((player) => client.id !== player.socketId);
         let OppositeId;
@@ -307,6 +322,9 @@ let AppGateway = class AppGateway {
                     Wins_percent: winspercent,
                     Losses_percent: lossespercent,
                     InGame: false,
+                    homies: false,
+                    invited: false,
+                    homie_id: 0,
                     history: {
                         create: {
                             useravatar: useravatar,
@@ -396,11 +414,18 @@ let AppGateway = class AppGateway {
         }
         client.leave(roomID);
         this.rooms = this.rooms.filter((r) => r.id !== room.id);
+        this.frRooms = this.frRooms.filter((r) => r.id !== room.id);
         this.users.delete(this.decodeCookie(client).id);
         client.disconnect();
     }
     findRoomBySocketId(socketId) {
         for (const room of this.rooms) {
+            const playerInRoom = room.roomPlayers.find((player) => player.socketId === socketId);
+            if (playerInRoom) {
+                return room;
+            }
+        }
+        for (const room of this.frRooms) {
             const playerInRoom = room.roomPlayers.find((player) => player.socketId === socketId);
             if (playerInRoom) {
                 return room;
@@ -505,7 +530,7 @@ __decorate([
 __decorate([
     (0, websockets_1.SubscribeMessage)("join-friends-room"),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, Boolean, Number]),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", Promise)
 ], AppGateway.prototype, "handleJoinFriendsRoom", null);
 __decorate([

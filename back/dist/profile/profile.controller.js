@@ -190,6 +190,7 @@ let ProfileController = class ProfileController {
     }
     async gameinfos(req, body) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
+        console.log('gameinfoos ', body);
         await this.prisma.user.update({
             where: { id_user: decoded.id },
             data: {

@@ -22,6 +22,7 @@ export class AppGateway
     @WebSocketServer() server: Server;
     private users = new Map();
     private rooms: Room[] = [];
+    private frRooms: Room[] = [];
     private framePerSec: number = 50;
     private isPaused: boolean = false;
     private player01: number;
@@ -51,14 +52,14 @@ export class AppGateway
 
     async handleConnection(client: Socket, ...args: any[]) {
 		this.logger.log(`Client connected: ${client.id}`);
-		const userId: number = this.decodeCookie(client).id;
-		const decoded = this.decodeCookie(client);
-		const user = await this.prisma.user.findUnique({
-			where:{id_user: decoded.id},
-		});
-		if (this.users.has(userId)) {
-			client.disconnect();
-		}
+		// const userId: number = this.decodeCookie(client).id;
+		// const decoded = this.decodeCookie(client);
+		// const user = await this.prisma.user.findUnique({
+		// 	where:{id_user: decoded.id},
+		// });
+		// if (this.users.has(userId)) {
+		// 	client.disconnect();
+		// }
     }
 
     async handleDisconnect(client: Socket) {
@@ -68,6 +69,9 @@ export class AppGateway
 			where:{id_user: decoded.id},
 			data:{
 				InGame: false,
+				homies: false,
+				invited: false,
+				homie_id: 0,
 			}
 		});
         if (room) {
@@ -80,16 +84,15 @@ export class AppGateway
                 room.winner = 1;
             }
             this.server.to(room.id).emit("endGame", room);
-            // this.rooms = this.rooms.filter((r) => r.id !== room.id);
         } else {
 			this.logger.log(`User disconnected : ${client.id}`);
         }
 		this.users.delete(this.decodeCookie(client).id);
-		// console.log(this.users);
     }
 
 	@SubscribeMessage("join-friends-room")
-    async handleJoinFriendsRoom(client: Socket, invited: boolean, friendId: number) {
+    async handleJoinFriendsRoom(client: Socket, data: any) {
+		console.log("Motherfuckers");
         const userId: number = this.decodeCookie(client).id;
 		if (!this.users.has(userId)) {
 			this.users.set(userId, client.id);
@@ -103,53 +106,53 @@ export class AppGateway
 		}
         let room: Room = null;
 
-		if (invited) {
-			for (let singleRoom of this.rooms) {
-				for (let player of singleRoom.roomPlayers) {
-					let friend = this.decodeCookie(player.socket).id;
-					if (friend === friendId) {
-						room = singleRoom;
+		if (data.invited === true) {
+			for (let singleRoom of this.frRooms) {
+				if (singleRoom.roomPlayers.length === 1) {
+					for (let player of singleRoom.roomPlayers) {
+						if (player.userId === data.homie_id) {
+							room = singleRoom;
+						}
 					}
 				}
 			}
 		}
 
         if (room) {
-			if (userId === friendId) {
-				this.player01 = userId;
-				client.join(room.id);
-				client.emit("player-number", 2);
-				room.roomPlayers.push({
-					won: false,
-					socket: client,
-					socketId: client.id,
-					playerNumber: 2,
-					x: 1088 - 20,
-					y: 644 / 2 - 100 / 2,
-					h: 100,
-					w: 6,
-					score: 0,
-				});
+			this.player01 = userId;
+			client.join(room.id);
+			client.emit("player-number", 2);
+			room.roomPlayers.push({
+				won: false,
+				userId: userId,
+				socketId: client.id,
+				playerNumber: 2,
+				x: 1088 - 20,
+				y: 644 / 2 - 100 / 2,
+				h: 100,
+				w: 6,
+				score: 0,
+			});
 	
-				this.server.to(room.id).emit("start-game");
+			this.server.to(room.id).emit("start-game");
 	
-				setTimeout(() => {
-					this.server.to(room.id).emit("game-started", room);
-					this.pauseGame(500);
-					this.startRoomGame(room);
-				}, 3100);
-			}
+			setTimeout(() => {
+				this.server.to(room.id).emit("game-started", room);
+				this.pauseGame(500);
+				this.startRoomGame(room);
+			}, 3100);
         } else {
             this.player02 = userId;
             room = {
+				friends: true,
                 gameAbondoned: false,
                 stopRendering: false,
                 winner: 0,
-                id: (this.rooms.length + 1).toString(),
+                id: (this.frRooms.length + 100).toString(),
                 roomPlayers: [
                     {
                         won: false,
-						socket: client,
+						userId: userId,
                         socketId: client.id,
                         playerNumber: 1,
                         x: 10,
@@ -168,7 +171,7 @@ export class AppGateway
                     velocityY: 7,
                 },
             };
-            this.rooms.push(room);
+            this.frRooms.push(room);
             client.join(room.id);
             client.emit("player-number", 1);
         }
@@ -203,7 +206,7 @@ export class AppGateway
             client.emit("player-number", 2);
             room.roomPlayers.push({
                 won: false,
-				socket: client,
+				userId: userId,
                 socketId: client.id,
                 playerNumber: 2,
                 x: 1088 - 20,
@@ -223,6 +226,7 @@ export class AppGateway
         } else {
             this.player02 = userId;
             room = {
+				friends: false,
                 gameAbondoned: false,
                 stopRendering: false,
                 winner: 0,
@@ -230,7 +234,7 @@ export class AppGateway
                 roomPlayers: [
                     {
                         won: false,
-						socket: client,
+						userId: userId,
                         socketId: client.id,
                         playerNumber: 1,
                         x: 10,
@@ -258,7 +262,10 @@ export class AppGateway
 
     @SubscribeMessage("update-player")
     handleUpdatePlayer(client: Socket, data: Data) {
-        const room = this.rooms.find((room) => room.id === data.roomID);
+        let room = this.rooms.find((room) => room.id === data.roomID);
+		if (!room) {
+			room = this.frRooms.find((room) => room.id === data.roomID);
+		}
 
         if (room) {
             if (data.direction === "mouse") {
@@ -277,13 +284,23 @@ export class AppGateway
             }
         }
 
-        this.rooms = this.rooms.map((oldRoom) => {
-            if (room && oldRoom.id === room.id) {
-                return room;
-            } else {
-                return oldRoom;
-            }
-        });
+		if (room.friends === false) {
+			this.rooms = this.rooms.map((oldRoom) => {
+				if (room && oldRoom.id === room.id) {
+					return room;
+				} else {
+					return oldRoom;
+				}
+			});
+		} else {
+			this.frRooms = this.frRooms.map((oldRoom) => {
+				if (room && oldRoom.id === room.id) {
+					return room;
+				} else {
+					return oldRoom;
+				}
+			});
+		}
 
         if (room) {
             this.server.to(room.id).emit("update-game", room);
@@ -293,8 +310,10 @@ export class AppGateway
     @SubscribeMessage("leave")
     async handleLeave(client: Socket, roomID: string) {
 		const decoded = this.decodeCookie(client);
-        const room = this.rooms.find((room) => room.id === roomID);
-		console.log(room);
+        let room = this.rooms.find((room) => room.id === roomID);
+		if (!room) {
+			room = this.frRooms.find((room) => room.id === roomID);
+		}
         const player = room.roomPlayers.find((player) => client.id === player.socketId);
         const enemy = room.roomPlayers.find((player) => client.id !== player.socketId);
 
@@ -339,6 +358,9 @@ export class AppGateway
                         Wins_percent: winspercent,
                         Losses_percent: lossespercent,
 						InGame:false,
+						homies: false,
+						invited: false,
+						homie_id: 0,
                         history:{
                             create:{
                                 useravatar: useravatar,
@@ -432,6 +454,7 @@ export class AppGateway
         }
         client.leave(roomID);
         this.rooms = this.rooms.filter((r) => r.id !== room.id);
+		this.frRooms = this.frRooms.filter((r) => r.id !== room.id);
 		this.users.delete(this.decodeCookie(client).id);
 		client.disconnect();
     }
@@ -445,6 +468,14 @@ export class AppGateway
                 return room;
             }
         }
+		for (const room of this.frRooms) {
+			const playerInRoom = room.roomPlayers.find(
+				(player) => player.socketId === socketId
+			);
+			if (playerInRoom) {
+				return room;
+			}
+		}
         return null;
     }
 

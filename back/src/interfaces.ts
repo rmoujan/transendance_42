@@ -29,7 +29,8 @@ interface Ball {
 
 interface RoomPlayer {
     won: boolean;
-	socket: Socket;
+	// socket: Socket;
+	userId: number;
     socketId: string;
     playerNumber: number;
     x: number;
@@ -49,6 +50,7 @@ interface RoomBall {
 }
 
 interface Room {
+	friends: boolean;
 	gameAbondoned: boolean;
 	stopRendering: boolean;
 	winner: number;

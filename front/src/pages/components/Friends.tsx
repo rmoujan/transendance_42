@@ -60,16 +60,16 @@ function Friends({user}: AccountOwnerProps) {
 	  }, {
 		withCredentials: true,
 	  });
-	  // window.location.href = "http://localhost:5173/game";
 	  // setaccountOwner(false);
-	console.log("accountOwner id");
-	// console.log(user[0].id_user);            
-	console.log("status ");
-	console.log(false);
-	console.log(true);
-
-    // Update selectedFriend with the clicked friend's information
-    setSelectedFriend(friend);
+	  console.log("accountOwner id");
+	  // console.log(user[0].id_user);            
+	  console.log("status ");
+	  console.log(false);
+	  console.log(true);
+	  
+	  // Update selectedFriend with the clicked friend's information
+	  setSelectedFriend(friend);
+	  window.location.href = "http://localhost:5173/game";
     // console.log(friend);
     // setLoding(true);
   };

@@ -104,16 +104,24 @@ function Searchbar() {
     //       }
         };
         const accepteGame = (friend: any) => {
-      
-          axios.post("http://localhost:3000/profile/gameinfos", {
+			console.log("accepteGame00000000");
+        axios.post("http://localhost:3000/profile/gameinfos", {
             homies: true,
             invited: true,
             homie_id: friend.id_user,
             }, {
             withCredentials: true,
             });
+			// const getgame = axios.get("http://localhost:3000/profile/returngameinfos", {
+			// 	withCredentials: true,
+			// });
+			// console.log("getgame");
+			// console.log(getgame);
+			setTimeout(() => {
+			window.location.href = "http://localhost:5173/game";
+			}, 1000);
+			// console.log(getgame);
             fetchData();
-            window.location.href = "http://localhost:5173/game";
         };
         useEffect( () => {
           

@@ -81,8 +81,7 @@ class MyMultiplayerGame {
 				this.message.innerHTML = "Waiting for opponent to join...";
 				if (flag === false) {
 					if (data.data.homies) {
-						this.buttons[0].innerHTML = "Play With Your Homie";
-						this.socket.emit("join-friends-room", data.data.invited, data.data.homie_id);
+						this.socket.emit("join-friends-room", data.data);
 					} else {
 						this.socket.emit("join-room");
 					}

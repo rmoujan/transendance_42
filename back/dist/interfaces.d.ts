@@ -1,4 +1,3 @@
-import { Socket } from "socket.io";
 interface Player {
     x: number;
     y: number;
@@ -25,7 +24,7 @@ interface Ball {
 }
 interface RoomPlayer {
     won: boolean;
-    socket: Socket;
+    userId: number;
     socketId: string;
     playerNumber: number;
     x: number;
@@ -43,6 +42,7 @@ interface RoomBall {
     velocityY: number;
 }
 interface Room {
+    friends: boolean;
     gameAbondoned: boolean;
     stopRendering: boolean;
     winner: number;

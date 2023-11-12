@@ -236,7 +236,8 @@ export class ProfileController {
   @Post('gameinfos')
   async gameinfos(@Req() req, @Body() body){
     const decoded = this.jwt.verify(req.cookies['cookie']);
-    await this.prisma.user.update({
+    console.log('gameinfoos ', body)
+	await this.prisma.user.update({
       where:{id_user: decoded.id},
       data:{
         homies: body.homies,

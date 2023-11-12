@@ -28,6 +28,8 @@ let SocketGateway = class SocketGateway {
     decodeCookie(client) {
         let cookieHeader;
         cookieHeader = client.handshake.headers.cookie;
+        if (cookieHeader == undefined)
+            return null;
         const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
             const [name, value] = cookie.trim().split("=");
             acc[name] = value;
@@ -42,6 +44,8 @@ let SocketGateway = class SocketGateway {
     async handleConnection(client) {
         console.log('client ' + client.id + ' has conected');
         const decoded = this.decodeCookie(client);
+        if (decoded == null)
+            return;
         let user_id = decoded.id;
         this.SocketContainer.set(user_id, client.id);
         const user = await this.prisma.user.update({
@@ -56,6 +60,8 @@ let SocketGateway = class SocketGateway {
     async handleDisconnect(client) {
         console.log('client ' + client.id + ' has disconnected');
         const decoded = this.decodeCookie(client);
+        if (decoded == null)
+            return;
         this.SocketContainer.delete(decoded.id);
         const user = await this.prisma.user.update({
             where: { id_user: decoded.id },
