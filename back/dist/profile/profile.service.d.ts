@@ -16,6 +16,7 @@ export declare class ProfileService {
         secretKey: string;
         About: string;
         status_user: string;
+        email: string;
         WonBot: number;
         LoseBot: number;
         wins: number;

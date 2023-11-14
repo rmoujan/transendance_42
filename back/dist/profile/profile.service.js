@@ -37,10 +37,12 @@ let ProfileService = class ProfileService {
     }
     async ModifyPhoto(photo, req, res) {
         const verifyToken = this.jwt.verify(req.cookies['cookie']);
-        const filePath = '/goinfre/moel-asr/last_transendance/front/public/uploads/' + photo.originalname;
-        const rightPath = 'public/uploads/' + photo.originalname;
+        console.log('orginal name : ', photo.originalname);
+        const filePath = '/goinfre/lelbakna/last/last_transendance/front/public/uploads/' + photo.originalname;
+        const rightPath = '/public/uploads/' + photo.originalname;
         console.log(photo.originalname);
         fs.writeFileSync(filePath, photo.buffer);
+        console.log('tswiraaaaaaa');
         try {
             await this.prisma.user.update({
                 where: { id_user: verifyToken.id },

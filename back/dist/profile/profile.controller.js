@@ -135,6 +135,8 @@ let ProfileController = class ProfileController {
     }
     async GetNotifications(req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
+        if (decoded == null)
+            return;
         const user = await this.prisma.user.findUnique({
             where: { id_user: decoded.id },
             include: {
@@ -158,6 +160,8 @@ let ProfileController = class ProfileController {
     }
     async Achievments(req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
+        if (decoded == null)
+            return;
         const userAchievements = await this.prisma.achievments.findMany({
             where: {
                 userId: decoded.id,
@@ -167,6 +171,8 @@ let ProfileController = class ProfileController {
     }
     async History(req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
+        if (decoded == null)
+            return;
         const user = await this.prisma.history.findMany({
             where: { userId: decoded.id },
         });
@@ -174,6 +180,8 @@ let ProfileController = class ProfileController {
     }
     async GetAvatar(req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
+        if (decoded == null)
+            return;
         const user = await this.prisma.user.findUnique({
             where: { id_user: decoded.id },
         });
@@ -181,6 +189,8 @@ let ProfileController = class ProfileController {
     }
     async Gamestatus(req, body) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
+        if (decoded == null)
+            return;
         await this.prisma.user.update({
             where: { id_user: decoded.id },
             data: {
@@ -190,6 +200,8 @@ let ProfileController = class ProfileController {
     }
     async gameinfos(req, body) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
+        if (decoded == null)
+            return;
         console.log('gameinfoos ', body);
         await this.prisma.user.update({
             where: { id_user: decoded.id },
@@ -211,9 +223,22 @@ let ProfileController = class ProfileController {
     }
     async Returngameinfos(req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
+        if (decoded == null)
+            return;
         const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
         const obj = { homies: user.homies, invited: user.invited, homie_id: user.homie_id };
         return (obj);
+    }
+    async Logout(req) {
+        const decoded = this.jwt.verify(req.cookies['cookie']);
+        if (decoded == null)
+            return;
+        await this.prisma.user.update({
+            where: { id_user: decoded.id },
+            data: {
+                status_user: 'offline',
+            },
+        });
     }
 };
 exports.ProfileController = ProfileController;
@@ -327,6 +352,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "Returngameinfos", null);
+__decorate([
+    (0, common_1.Get)('Logout'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "Logout", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)('profile'),
     __metadata("design:paramtypes", [profile_service_1.ProfileService, prisma_service_1.PrismaService, jwtservice_service_1.JwtService])

@@ -30,6 +30,7 @@ export declare class AuthController {
         secretKey: string;
         About: string;
         status_user: string;
+        email: string;
         WonBot: number;
         LoseBot: number;
         wins: number;

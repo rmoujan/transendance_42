@@ -24,6 +24,7 @@ export declare class ProfileController {
         secretKey: string;
         About: string;
         status_user: string;
+        email: string;
         WonBot: number;
         LoseBot: number;
         wins: number;
@@ -57,6 +58,7 @@ export declare class ProfileController {
         secretKey: string;
         About: string;
         status_user: string;
+        email: string;
         WonBot: number;
         LoseBot: number;
         wins: number;
@@ -95,4 +97,5 @@ export declare class ProfileController {
         invited: boolean;
         homie_id: number;
     }>;
+    Logout(req: any): Promise<void>;
 }

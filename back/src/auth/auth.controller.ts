@@ -269,6 +269,10 @@ export class AuthController {
         // console.log('num : ' + num);
         const OneFriend = await this.prisma.user.findUnique({
           where: {id_user: num},
+          include:{
+            history: true,
+            achievments: true,
+          }
         });
         // console.log(OneFriend);
         array.push(OneFriend);

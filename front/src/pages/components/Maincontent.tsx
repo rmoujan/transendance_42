@@ -39,17 +39,19 @@ type User = {
   Losses_percent:number;
   About:string;
 };
+
+
 function Maincontent() {
   const [toggle, setToggle] = useState(false);
 
   const [open, setOpen] = React.useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
-
+  
   const handleClickOpen = () => {
     setOpen(true);
   };
- 
+  
   const handleClose = () => {
     setOpen(false);
   };

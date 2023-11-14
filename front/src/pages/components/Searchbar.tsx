@@ -22,6 +22,7 @@ type User = {
   secretKey: string | null;
   status_user: string;
 };
+
 function Searchbar() {
   // const [activeSearch, setActiveSearch] = useState([]);
   // const handleSearch = (e) =>{
@@ -135,7 +136,9 @@ function Searchbar() {
         useEffect( () => {
           
           if (socket){
-            //get notification
+            //get notification    
+            socket.emit('userOnline');
+
             socket.on('notification', async () => {
               console.log("event notification")
               const { data } = await axios.get("http://localhost:3000/profile/Notifications", {
@@ -153,6 +156,32 @@ function Searchbar() {
           }
           fetchData();
         }, []);
+        const calculateTimeElapsed = (createdAt: string) => {
+          const currentTime = new Date(); // Current time
+          const messageTime = new Date(createdAt); // Time the message was created
+        
+          const timeDifference = currentTime.getTime() - messageTime.getTime(); // Difference in milliseconds
+          const seconds = Math.floor(timeDifference / 1000); // Convert milliseconds to seconds
+          const minutes = Math.floor(seconds / 60); // Convert seconds to minutes
+          const hours = Math.floor(minutes / 60); // Convert minutes to hours
+          const days = Math.floor(hours / 24); // Convert hours to days
+        
+          if (days > 0 && days == 1) {
+            return `${days} day ago`;
+          } else if (days > 0) {
+            return `${days} days ago`;
+          } else if (hours > 0 && hours == 1) {
+            return `${hours} hour ago`;
+          } else if (hours > 0) {
+            return `${hours} hours ago`;
+          } else if (minutes > 0 && minutes == 1) {
+            return `${minutes} minute ago`;
+          } else if (minutes > 0) {
+            return `${minutes} minutes ago`;
+          } else if (seconds > 0 ) {
+            return `a few moments ago`;
+          }
+        };
         return (
           <header className="flex items-center justify-between p-4 space-x-2 ">
       <h1 className=" text-white text-3xl 2xl:text-4xl lg:ml-32 font-PalanquinDark font-bold">
@@ -215,7 +244,7 @@ function Searchbar() {
                           <ul
                             key={data.id_user}
                             role="list"
-                            className="p-6 divide-y divide-slate-200"
+                            className="p-6 divide-y divide-slate-200 -mb-5"
                           >
                             <li className="flex py-4 first:pt-0 last:pb-0">
                               <img
@@ -229,13 +258,14 @@ function Searchbar() {
                                 </p>
                                 {/* <p className="text-sm text-slate-500 truncate">{data.email}</p> */}
                                 <div className="text-xs text-blue-200 dark:text-blue-200">
-                                  a few moments ago
+                                  {/* a few moments ago */}
+                                  {calculateTimeElapsed(data.createdAt)}
                                 </div>
                               </div>
                               {/* Accepte button */}
                               {data.AcceptFriend == true ? (
                               <button
-                                className="ml-auto bg-[#FE754D] hover:bg-[#ce502a] text-white font-bold  px-4 rounded-[20px]"
+                                className="ml-3 bg-[#FE754D] hover:bg-[#ce502a] text-white font-bold  px-4 rounded-[20px]"
                                 onClick={() => accepteFriend(data)}
                               >
                                 Accept

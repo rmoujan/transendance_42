@@ -43,19 +43,20 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     console.log('client ' + client.id + ' has conected');
     const decoded = this.decodeCookie(client);
-	if (decoded == null)
-		return;
-    // console.log(decoded);
+    if (decoded == null)
+      return;
+    // console.log('hamdleconnection : ', decoded);
     let user_id:number = decoded.id;
     this.SocketContainer.set(user_id, client.id);
-    const user = await this.prisma.user.update({
-      where : {id_user : decoded.id},
-      data :{
-        status_user : "online",
-      },
-    });
-    console.log(this.SocketContainer.keys());
-    this.server.emit("online", { id_user: decoded.id });
+    try{
+      // const user = await this.prisma.user.findUnique({where : {id_user : decoded.id},});
+      console.log(this.SocketContainer.keys());
+      // this.server.emit("online", { id_user: decoded.id });
+
+    }
+    catch(e){
+      // console.log(e);
+    }
     // console.log(user);
   }
 
@@ -64,33 +65,56 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     const decoded = this.decodeCookie(client);
 	if (decoded == null)
 	  return;
+  // console.log('hamdleDisconnect : ', decoded);
     this.SocketContainer.delete(decoded.id);
-    const user = await this.prisma.user.update({
-      where : {id_user : decoded.id},
-      data :{
-        status_user : "offline",
-      },
-    });
-    // console.log("ofliiiiiine" + user);
-    this.server.emit("offline", { id_user: decoded.id });
-    console.log('hnaaaaa');
+    try{
+      const user = await this.prisma.user.update({
+        where : {id_user : decoded.id},
+        data :{
+          status_user : "offline",
+        },
+      });
+      // console.log("ofliiiiiine" + user);
+      this.server.emit("offline", { id_user: decoded.id });
+      // console.log('hnaaaaa');
+    }
+    catch(e){
+      // console.log(e);
+    }
     // console.log(user);
   }
 
+  
   @SubscribeMessage('userOnline')
-  handleUserOnline(client: Socket) {
-    // this.handleConnection(client);
-    // Handle when a user comes online
+  async handleUserOnline(client: Socket) {
+    console.log('onliiiiiiiiiiiiiiine');
+    const decoded = this.decodeCookie(client);
+    if (decoded == null)
+      return;
+    await this.prisma.user.update({
+      where:{id_user: decoded.id},
+      data:{
+        status_user: "online",
+      }
+    });
+    this.server.emit("online", { id_user: decoded.id });
   }
 
   @SubscribeMessage('userOffline')
-  handleUserOffline(client: Socket) {
-    // this.handleDisconnect(client);
-    // this.handleConnection(client);
-    // console.log(decoded);
-    // console.log('lawaaal');
-    // return (decoded);
-    // Handle when a user goes offline
+  async handleUserOffline(client: Socket) {
+    console.log('offliiiiine');
+    const decoded = this.decodeCookie(client);
+    if (decoded == null)
+    return;
+    await this.prisma.user.update({
+      where:{id_user: decoded.id},
+      data:{
+        status_user: "offline",
+      }
+    })
+    const sockid = this.SocketContainer.get(decoded.id);
+    this.server.to(sockid).emit('RefreshFriends');
+    this.server.to(sockid).emit('list-friends');
   }
 
   @SubscribeMessage('message')
@@ -163,6 +187,8 @@ async add_friend(@ConnectedSocket() client: Socket ,@MessageBody() body){
   const sock = this.SocketContainer.get(body.id_user);
   this.server.to(sock).emit('notification');
 }
+//updat name
+
 
 @SubscribeMessage('newfriend')
   async NewFriend(@ConnectedSocket() client: Socket, @MessageBody() body){
@@ -189,5 +215,5 @@ async add_friend(@ConnectedSocket() client: Socket ,@MessageBody() body){
     this.server.to(sockrecv).emit('list-friends');
     this.server.to(socksend).emit('list-friends');
   }
-
+ 
 }

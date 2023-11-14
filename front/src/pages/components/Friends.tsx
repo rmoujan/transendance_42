@@ -146,7 +146,7 @@ function Friends({user}: AccountOwnerProps) {
                   <ul
                     key={data.id_user}
                     role="list"
-                    className="p-6 divide-y divide-slate-200"
+                    className="p-6 divide-y divide-slate-200 -mb-5"
                   >
                     <li className="flex py-4 first:pt-0 last:pb-0">
                       <img
@@ -161,7 +161,7 @@ function Friends({user}: AccountOwnerProps) {
                       </div>
                         {/* //when click on button invite to playe the color of button change to gray and stay like this until the friend accept the invitation */}
                       <button
-                        className="ml-auto  bg-[#868686] hover:bg-[#616060] text-white font-bold  px-7 rounded-[15px]"
+                        className="ml-3  bg-[#868686] hover:bg-[#616060] text-white font-bold  px-7 rounded-[15px]"
                         onClick={() => InviteToPlaye(data)}
                       >
                         invite to playe

@@ -59,7 +59,7 @@ function AccountOwner({ user }: AccountOwnerProps) {
   function AddMember(id_user: number) {
     if (socket)
       socket.emit("add-friend", { id_user });
-    axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
+    // axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     console.log("id_user", id_user);
     Modal.confirm({
@@ -164,7 +164,7 @@ function AccountOwner({ user }: AccountOwnerProps) {
                               <div className="ml-3 overflow-hidden">
                                 <p className="text-lg font-medium text-white">{data.name} </p>
                                 {/* <p className="text-sm text-slate-500 truncate">{data.email}</p> */}
-                                <div className="text-xs text-blue-200 dark:text-blue-200">a few moments ago</div>
+                                <div className="text-xs text-blue-200 dark:text-blue-200">{data.email}</div>
                               </div>
                               
                               <button className="ml-auto  bg-indigo-400 hover:bg-indigo-500 text-white font-bold  px-6 rounded-[20px]" onClick={() => AddMember(data.id_user)}>

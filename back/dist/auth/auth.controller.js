@@ -189,6 +189,10 @@ let AuthController = class AuthController {
         for (const num of idFriends) {
             const OneFriend = await this.prisma.user.findUnique({
                 where: { id_user: num },
+                include: {
+                    history: true,
+                    achievments: true,
+                }
             });
             array.push(OneFriend);
         }

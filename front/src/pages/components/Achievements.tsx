@@ -29,7 +29,7 @@ function Achievements() {
           <div className="flex justify-center items-center mt-4">
           <p className=" mt-20 text-center text-gray-300 text-2xl opacity-50">
             No Achievements yet !
-            </p>
+          </p>
           </div>
         )
       }

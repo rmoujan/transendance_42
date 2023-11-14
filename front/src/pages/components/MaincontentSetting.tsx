@@ -45,16 +45,16 @@ function MaincontentSetting() {
   const [photo, setPhoto] = useState<File | null>(null);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+  const fetchData = async () => {
+    const { data } = await axios.get("http://localhost:3000/auth/get-user", {
+      withCredentials: true,
+    });
+    setTwoFactor(data);
+  };
   useEffect(() => {
     if (socket == undefined){
       socketuser();
     }
-    const fetchData = async () => {
-      const { data } = await axios.get("http://localhost:3000/auth/get-user", {
-        withCredentials: true,
-      });
-      setTwoFactor(data);
-    };
     fetchData();
   }, []);
 
@@ -245,6 +245,7 @@ function MaincontentSetting() {
         console.error("Error:", error);
       }
     }
+    fetchData();
   };
 
   const [p, setP] = useState<string | undefined>(undefined);
@@ -358,7 +359,7 @@ function MaincontentSetting() {
                       <img
                         className=" flex items-end justify-end mobile:w-20 mobile:h-20 tablet:w-20 tablet:h-20 mt-10  p-0.5 rounded-full ring-4 ring-gray-300 dark:ring-[#3b3c5a]"
                         src={data.avatar}
-                        alt=""
+                        alt={data.name}
                       />
                     </div>
                     <div className=" flex flex-col  items-center mt-8">

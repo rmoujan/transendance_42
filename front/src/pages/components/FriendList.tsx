@@ -341,7 +341,7 @@ function FriendList() {
                                 </p>
                                 {/* <p className="text-sm text-slate-500 truncate">{data.email}</p> */}
                                 <div className="text-xs text-blue-200 dark:text-blue-200">
-                                  a few moments ago
+                                  {data.email}
                                 </div>
                               </div>
                               <button

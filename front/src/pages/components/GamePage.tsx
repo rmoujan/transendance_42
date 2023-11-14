@@ -75,7 +75,12 @@ function GamePage() {
     }, []);
 
     return (
-        <div className="flex flex-col w-full justify-end items-center">
+        <motion.div 
+        variants={fadeIn("down", 0.2)}
+          initial="hidden"
+          whileInView={"show"}
+          viewport={{ once: false, amount: 0.7 }}
+        className="flex flex-col w-full justify-end items-center">
             <motion.div
                 id="avatars"
                 variants={fadeIn("down", 0.2)}
@@ -96,30 +101,42 @@ function GamePage() {
                         className="relative text-bluish-purple inset-0 text-2xl font-roboto font-normal px-4 text-center"
                         id="message"
                     ></p>
-                    <button
-                        className="btn text-bluish-purple bg-reddish-orange block relative text-4xl border-none rounded-main font-zenkaku text-center font-medium tracking-normal my-2 mx-auto pt-1 px-7 pb-2 cursor-pointer"
+                    <motion.button
+                    variants={fadeIn("left", 0.2)}
+                    initial="hidden"
+                    whileInView={"show"}
+                    viewport={{ once: false, amount: 0.7 }}
+                        className="btn text-bluish-purple bg-gradient-to-br from-[#f78562] to-[#ce502a] hover:scale-105 duration-300   block relative text-4xl border-none rounded-[18px] font-PalanquinDark text-center font-medium tracking-normal my-2 mx-auto pt-1 px-7 pb-2 cursor-pointer"
                         id="online-game"
                         onClick={handleMultiplayerGameClick}
                     >
                         Play Online
-                    </button>
-                    <button
-                        className="btn text-pale-blue bg-bluish-purple block relative text-4xl border-none rounded-main font-zenkaku text-center font-medium tracking-normal my-2 mx-auto pt-1 px-7 pb-2 cursor-pointer"
+                    </motion.button>
+                    <motion.button
+                    variants={fadeIn("right", 0.2)}
+                    initial="hidden"
+                    whileInView={"show"}
+                    viewport={{ once: false, amount: 0.7 }}
+                        className="btn text-pale-blue bg-gradient-to-tr from-[#2A2742] to-[#3f3a5f] hover:scale-105 duration-300  block relative text-4xl border-none rounded-[18px] font-zcool text-center font-medium tracking-normal my-2 mx-auto pt-1 px-7 pb-2 cursor-pointer"
                         id="bot-game"
                         onClick={handleBotGameClick}
                     >
                         Play vs Bot
-                    </button>
-                    <button
-                        className="btn text-pale-blue bg-red-500 block relative text-4xl border-none rounded-main font-zenkaku text-center font-medium tracking-normal my-2 mx-auto pt-1 px-7 pb-2 cursor-pointer"
+                    </motion.button>
+                    <motion.button
+                    variants={fadeIn("left", 0.2)}
+                    initial="hidden"
+                    whileInView={"show"}
+                    viewport={{ once: false, amount: 0.7 }}
+                        className="btn text-[#3f3a5f]  bg-gradient-to-br from-[#3f3a5f] to-[#ce502acc] hover:scale-105 duration-300  block relative text-4xl border-none rounded-[18px] font-PalanquinDark text-center font-medium tracking-normal my-2 mx-auto pt-1 px-7 pb-2 cursor-pointer"
                         id="exit-btn"
                         onClick={handleExitButton}
                     >
                         Back Home
-                    </button>
+                    </motion.button>
                 </div>
             </div>
-        </div>
+        </motion.div>
     );
 }
 

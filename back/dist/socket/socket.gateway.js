@@ -48,14 +48,11 @@ let SocketGateway = class SocketGateway {
             return;
         let user_id = decoded.id;
         this.SocketContainer.set(user_id, client.id);
-        const user = await this.prisma.user.update({
-            where: { id_user: decoded.id },
-            data: {
-                status_user: "online",
-            },
-        });
-        console.log(this.SocketContainer.keys());
-        this.server.emit("online", { id_user: decoded.id });
+        try {
+            console.log(this.SocketContainer.keys());
+        }
+        catch (e) {
+        }
     }
     async handleDisconnect(client) {
         console.log('client ' + client.id + ' has disconnected');
@@ -63,18 +60,45 @@ let SocketGateway = class SocketGateway {
         if (decoded == null)
             return;
         this.SocketContainer.delete(decoded.id);
-        const user = await this.prisma.user.update({
+        try {
+            const user = await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    status_user: "offline",
+                },
+            });
+            this.server.emit("offline", { id_user: decoded.id });
+        }
+        catch (e) {
+        }
+    }
+    async handleUserOnline(client) {
+        console.log('onliiiiiiiiiiiiiiine');
+        const decoded = this.decodeCookie(client);
+        if (decoded == null)
+            return;
+        await this.prisma.user.update({
+            where: { id_user: decoded.id },
+            data: {
+                status_user: "online",
+            }
+        });
+        this.server.emit("online", { id_user: decoded.id });
+    }
+    async handleUserOffline(client) {
+        console.log('offliiiiine');
+        const decoded = this.decodeCookie(client);
+        if (decoded == null)
+            return;
+        await this.prisma.user.update({
             where: { id_user: decoded.id },
             data: {
                 status_user: "offline",
-            },
+            }
         });
-        this.server.emit("offline", { id_user: decoded.id });
-        console.log('hnaaaaa');
-    }
-    handleUserOnline(client) {
-    }
-    handleUserOffline(client) {
+        const sockid = this.SocketContainer.get(decoded.id);
+        this.server.to(sockid).emit('RefreshFriends');
+        this.server.to(sockid).emit('list-friends');
     }
     handleMessage(body) {
         console.log(body);
@@ -168,13 +192,13 @@ __decorate([
     (0, websockets_1.SubscribeMessage)('userOnline'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], SocketGateway.prototype, "handleUserOnline", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('userOffline'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], SocketGateway.prototype, "handleUserOffline", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('message'),

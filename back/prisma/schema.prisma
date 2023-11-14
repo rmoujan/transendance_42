@@ -20,6 +20,7 @@ model User{
   secretKey String?
   About String?
   status_user String?
+  email String?
   stat Stat?
   WonBot Int?
   LoseBot Int?

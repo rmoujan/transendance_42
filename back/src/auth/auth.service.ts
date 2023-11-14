@@ -43,6 +43,7 @@ export class AuthService {
                     IsFirstTime: true,
                     secretKey: null,
                     About: null,
+                    email: email,
                     WonBot: 0,
                     LoseBot: 0,
                     wins: 0,
@@ -57,8 +58,8 @@ export class AuthService {
 					homie_id: 0,
                 },
             });
+            
             return obj;
-
         }catch(error){
 
             console.log(error);

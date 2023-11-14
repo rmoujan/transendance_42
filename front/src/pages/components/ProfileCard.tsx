@@ -1,9 +1,10 @@
 import React , { useState ,useEffect}from "react";
 import { Data } from "../Data/AccountOwnerData";
 import { fadeIn } from "./variants";
-import { Link } from "react-router-dom";
+import { Link,useLocation } from "react-router-dom";
 import axios from "axios";
 import Cover from "../../img/bg33.png";
+import { socket } from "../../socket";
 type User = {
   id_user: number;
   name: string;
@@ -19,16 +20,41 @@ type User = {
   Wins_percent:number;
   Losses_percent:number;
 };
-function ProfileCard() {
+const ProfileCard = () => {
   const [user, setUser] = useState<User[]>([]);
+  const location = useLocation();
+  // console.log(location.pathname);
+  const [activeSection, setActiveSection] = useState(location.pathname);
+  const handleLogout = (path: string) => {
+    console.log("path", activeSection);
+    if (path === "/login" || path === "/") {
+      console.log("sockeeeeeeeeeeeeeeeeeeeeeeeeeetttt");
+      // useEffect(() => {
+        if (socket){
+          console.log("sockeeeeeeeeeeeeeeeeeeeeeeeeeet",socket);
+          socket.emit('userOffline');
+        }
+      // }
+      // , []);
+        // const updatedUser = user.map((userData) => ({
+        //   ...userData,
+        //   status_user: "offline",
+        // }));
+  
+        // setUser(updatedUser);
+    } else {
+      console.log("path", path);
+    }
+  };
+  const fetchData = async () => {
+    const { data } = await axios.get("http://localhost:3000/auth/get-user", {
+      withCredentials: true,
+    });
+    setUser(data);
+  };
   useEffect(() => {
-    const fetchData = async () => {
-      const { data } = await axios.get("http://localhost:3000/auth/get-user", {
-        withCredentials: true,
-      });
-      setUser(data);
-    };
     fetchData();
+    handleLogout(activeSection);
   }, []);
   return (
     <div className="transition-all">
@@ -68,7 +94,9 @@ function ProfileCard() {
             </div>
             <div className=" flex-row justify-between space-x-5">
               <Link to={"/login"}>
-                <button className=" p-3 cursor-pointer hover:scale-105 duration-500 tra bg-gradient-to-br from-[#FE754D] to-[#ce502a] rounded-[15px] mb-3 -mt-2 shadow-2xl">Logout</button>
+                <button 
+                onClick={() => handleLogout("/login")}
+                className=" p-3 cursor-pointer hover:scale-105 duration-500 tra bg-gradient-to-br from-[#FE754D] to-[#ce502a] rounded-[15px] mb-3 -mt-2 shadow-2xl">Logout</button>
               </Link>
               <Link to={"/setting"}>
                 <button className=" p-3 cursor-pointer hover:scale-105 duration-500 bg-gradient-to-br from-[#FE754D] to-[#ce502a] rounded-[15px] mb-3 -mt-2 shadow-2xl">Setting</button>

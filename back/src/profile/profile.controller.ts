@@ -160,6 +160,8 @@ export class ProfileController {
   async GetNotifications(@Req() req){
     // console.log('hnoooooooo');
     const decoded = this.jwt.verify(req.cookies['cookie']);
+    if (decoded == null)
+      return ;
     // console.log('notification : ', decoded);
     const user = await this.prisma.user.findUnique({
       where: {id_user: decoded.id},
@@ -190,6 +192,8 @@ export class ProfileController {
   async Achievments(@Req() req){
 
     const decoded = this.jwt.verify(req.cookies['cookie']);
+    if (decoded == null)
+      return ;
 
     const userAchievements = await this.prisma.achievments.findMany({
       where: {
@@ -204,6 +208,9 @@ export class ProfileController {
   async History(@Req() req){
     
     const decoded = this.jwt.verify(req.cookies['cookie']);
+    if (decoded == null)
+    return ;
+
     const user = await this.prisma.history.findMany({
       where: {userId: decoded.id},
     });
@@ -214,6 +221,9 @@ export class ProfileController {
   @Get('avatar')
   async GetAvatar(@Req() req){
 	const decoded = this.jwt.verify(req.cookies['cookie']);
+  if (decoded == null)
+  return ;
+
 	const user = await this.prisma.user.findUnique({
 	  where: {id_user: decoded.id},
 	});
@@ -224,6 +234,9 @@ export class ProfileController {
   async Gamestatus(@Req() req, @Body() body){
 
 	const decoded = this.jwt.verify(req.cookies['cookie']);
+  if (decoded == null)
+  return ;
+
 	await this.prisma.user.update({
 		where:{id_user: decoded.id},
 		data:{
@@ -236,6 +249,9 @@ export class ProfileController {
   @Post('gameinfos')
   async gameinfos(@Req() req, @Body() body){
     const decoded = this.jwt.verify(req.cookies['cookie']);
+    if (decoded == null)
+    return ;
+
     console.log('gameinfoos ', body)
 	await this.prisma.user.update({
       where:{id_user: decoded.id},
@@ -260,9 +276,26 @@ export class ProfileController {
   @Get('returngameinfos')
   async Returngameinfos(@Req() req){
 	const decoded = this.jwt.verify(req.cookies['cookie']);
+  if (decoded == null)
+  return ;
+
 	const user = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
 	const obj = {homies:user.homies, invited:user.invited, homie_id:user.homie_id};
 	return (obj); 
+  }
+
+  @Get('Logout')
+  async Logout(@Req() req){
+    const decoded = this.jwt.verify(req.cookies['cookie']);
+    if (decoded == null)
+    return ;
+
+    await this.prisma.user.update({
+      where:{id_user: decoded.id},
+      data:{
+        status_user: 'offline',
+      },
+    });
   }
 
 }

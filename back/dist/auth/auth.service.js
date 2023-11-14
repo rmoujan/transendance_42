@@ -45,6 +45,7 @@ let AuthService = class AuthService {
                     IsFirstTime: true,
                     secretKey: null,
                     About: null,
+                    email: email,
                     WonBot: 0,
                     LoseBot: 0,
                     wins: 0,
