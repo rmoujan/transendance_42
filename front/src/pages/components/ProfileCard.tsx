@@ -25,13 +25,19 @@ const ProfileCard = () => {
   const location = useLocation();
   // console.log(location.pathname);
   const [activeSection, setActiveSection] = useState(location.pathname);
+  const fetchData = async () => {
+    const { data } = await axios.get("http://localhost:3000/auth/get-user", {
+      withCredentials: true,
+    });
+    setUser(data);
+  };
   const handleLogout = (path: string) => {
     console.log("path", activeSection);
     if (path === "/login" || path === "/") {
       console.log("sockeeeeeeeeeeeeeeeeeeeeeeeeeetttt");
       // useEffect(() => {
         if (socket){
-          console.log("sockeeeeeeeeeeeeeeeeeeeeeeeeeet",socket);
+          // console.log("sockeeeeeeeeeeeeeeeeeeeeeeeeeet",socket);
           socket.emit('userOffline');
         }
       // }
@@ -45,12 +51,6 @@ const ProfileCard = () => {
     } else {
       console.log("path", path);
     }
-  };
-  const fetchData = async () => {
-    const { data } = await axios.get("http://localhost:3000/auth/get-user", {
-      withCredentials: true,
-    });
-    setUser(data);
   };
   useEffect(() => {
     fetchData();
