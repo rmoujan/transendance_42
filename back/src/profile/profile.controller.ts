@@ -140,6 +140,8 @@ export class ProfileController {
   async NotFriendsUsers(@Req() req){
 
     const decoded = this.jwt.verify(req.cookies['cookie']);
+    if (decoded == null)
+      return ;
     const users = this.prisma.user.findMany({
       where:{
         NOT:{

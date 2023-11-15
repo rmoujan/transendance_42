@@ -113,8 +113,9 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       }
     })
     const sockid = this.SocketContainer.get(decoded.id);
-    this.server.to(sockid).emit('RefreshFriends');
-    this.server.to(sockid).emit('list-friends');
+
+    this.server.emit('RefreshFriends');
+    this.server.emit('list-friends');
   }
 
   @SubscribeMessage('message')

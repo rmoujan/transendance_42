@@ -117,6 +117,8 @@ let ProfileController = class ProfileController {
     }
     async NotFriendsUsers(req) {
         const decoded = this.jwt.verify(req.cookies['cookie']);
+        if (decoded == null)
+            return;
         const users = this.prisma.user.findMany({
             where: {
                 NOT: {

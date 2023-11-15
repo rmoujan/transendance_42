@@ -25,36 +25,27 @@ const ProfileCard = () => {
   const location = useLocation();
   // console.log(location.pathname);
   const [activeSection, setActiveSection] = useState(location.pathname);
+  
+  const handleLogout = (path: string) => {
+    console.log("path", activeSection);
+    if (path === "/login" || path === "/") {
+        if (socket){
+          socket.emit('userOffline');
+        }
+    } 
+  };
   const fetchData = async () => {
+    try {
     const { data } = await axios.get("http://localhost:3000/auth/get-user", {
       withCredentials: true,
     });
     setUser(data);
-  };
-  const handleLogout = (path: string) => {
-    console.log("path", activeSection);
-    if (path === "/login" || path === "/") {
-      console.log("sockeeeeeeeeeeeeeeeeeeeeeeeeeetttt");
-      // useEffect(() => {
-        if (socket){
-          // console.log("sockeeeeeeeeeeeeeeeeeeeeeeeeeet",socket);
-          socket.emit('userOffline');
-        }
-      // }
-      // , []);
-        // const updatedUser = user.map((userData) => ({
-        //   ...userData,
-        //   status_user: "offline",
-        // }));
-  
-        // setUser(updatedUser);
-    } else {
-      console.log("path", path);
+    }catch (err) {
+      console.log(err);
     }
   };
   useEffect(() => {
     fetchData();
-    handleLogout(activeSection);
   }, []);
   return (
     <div className="transition-all">

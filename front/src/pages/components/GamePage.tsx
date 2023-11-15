@@ -81,6 +81,18 @@ function GamePage() {
           whileInView={"show"}
           viewport={{ once: false, amount: 0.7 }}
         className="flex flex-col w-full justify-end items-center">
+            <ul className="circles">
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+      <li></li>
+</ul>
             <motion.div
                 id="avatars"
                 variants={fadeIn("down", 0.2)}

@@ -97,8 +97,8 @@ let SocketGateway = class SocketGateway {
             }
         });
         const sockid = this.SocketContainer.get(decoded.id);
-        this.server.to(sockid).emit('RefreshFriends');
-        this.server.to(sockid).emit('list-friends');
+        this.server.emit('RefreshFriends');
+        this.server.emit('list-friends');
     }
     handleMessage(body) {
         console.log(body);
