@@ -20,6 +20,7 @@ export class AppGateway
     constructor(private jwt: JwtService, private prisma :PrismaService) {}
 
     @WebSocketServer() server: Server;
+	private roomsId: number = 1;
     private users = new Map();
     private rooms: Room[] = [];
     private frRooms: Room[] = [];
@@ -60,6 +61,11 @@ export class AppGateway
 		// if (this.users.has(userId)) {
 		// 	client.disconnect();
 		// }
+		const decoded = this.decodeCookie(client);
+		const user = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
+		if (user.InGame === true) {
+			client.disconnect();
+		}
     }
 
     async handleDisconnect(client: Socket) {
@@ -84,6 +90,8 @@ export class AppGateway
                 room.winner = 1;
             }
             this.server.to(room.id).emit("endGame", room);
+			// this.rooms = this.rooms.filter((r) => r.id !== room.id);
+			// this.frRooms = this.frRooms.filter((r) => r.id !== room.id);
         } else {
 			this.logger.log(`User disconnected : ${client.id}`);
         }
@@ -106,13 +114,11 @@ export class AppGateway
 		}
         let room: Room = null;
 
-		if (data.invited === true) {
-			for (let singleRoom of this.frRooms) {
-				if (singleRoom.roomPlayers.length === 1) {
-					for (let player of singleRoom.roomPlayers) {
-						if (player.userId === data.homie_id) {
-							room = singleRoom;
-						}
+		for (let singleRoom of this.frRooms) {
+			if (singleRoom.roomPlayers.length === 1) {
+				for (let player of singleRoom.roomPlayers) {
+					if (player.userId === data.homie_id) {
+						room = singleRoom;
 					}
 				}
 			}
@@ -148,7 +154,7 @@ export class AppGateway
                 gameAbondoned: false,
                 stopRendering: false,
                 winner: 0,
-                id: (this.frRooms.length + 100).toString(),
+                id: (this.roomsId).toString(),
                 roomPlayers: [
                     {
                         won: false,
@@ -172,8 +178,10 @@ export class AppGateway
                 },
             };
             this.frRooms.push(room);
-            client.join(room.id);
+			client.join(room.id);
             client.emit("player-number", 1);
+			client.emit("user-id", userId);
+			this.roomsId++;
         }
     }
 
@@ -190,12 +198,16 @@ export class AppGateway
 				}
 			})
 		}
-		// console.log(this.users);
+
         let room: Room = null;
 
         if (
-            this.rooms.length > 0 &&
-            this.rooms[this.rooms.length - 1].roomPlayers.length === 1
+			this.rooms.length > 0 &&
+            this.rooms[this.rooms.length - 1].roomPlayers.length === 1 &&
+			this.rooms[this.rooms.length - 1].roomPlayers[0].userId !== userId &&
+			this.rooms[this.rooms.length - 1].friends === false &&
+			this.rooms[this.rooms.length - 1].gameAbondoned === false &&
+			this.rooms[this.rooms.length - 1].stopRendering === false
         ) {
             room = this.rooms[this.rooms.length - 1];
         }
@@ -230,7 +242,7 @@ export class AppGateway
                 gameAbondoned: false,
                 stopRendering: false,
                 winner: 0,
-                id: (this.rooms.length + 1).toString(),
+                id: (this.roomsId).toString(),
                 roomPlayers: [
                     {
                         won: false,
@@ -257,6 +269,7 @@ export class AppGateway
             client.join(room.id);
             client.emit("player-number", 1);
             client.emit("user-id", userId);
+			this.roomsId++;
         }
     }
 
@@ -284,22 +297,24 @@ export class AppGateway
             }
         }
 
-		if (room.friends === false) {
-			this.rooms = this.rooms.map((oldRoom) => {
-				if (room && oldRoom.id === room.id) {
-					return room;
-				} else {
-					return oldRoom;
-				}
-			});
-		} else {
-			this.frRooms = this.frRooms.map((oldRoom) => {
-				if (room && oldRoom.id === room.id) {
-					return room;
-				} else {
-					return oldRoom;
-				}
-			});
+		if (room) {
+			if (room.friends === false) {
+				this.rooms = this.rooms.map((oldRoom) => {
+					if (room && oldRoom.id === room.id) {
+						return room;
+					} else {
+						return oldRoom;
+					}
+				});
+			} else {
+				this.frRooms = this.frRooms.map((oldRoom) => {
+					if (room && oldRoom.id === room.id) {
+						return room;
+					} else {
+						return oldRoom;
+					}
+				});
+			}
 		}
 
         if (room) {
@@ -309,13 +324,17 @@ export class AppGateway
 
     @SubscribeMessage("leave")
     async handleLeave(client: Socket, roomID: string) {
+		client.leave(roomID);
 		const decoded = this.decodeCookie(client);
         let room = this.rooms.find((room) => room.id === roomID);
 		if (!room) {
 			room = this.frRooms.find((room) => room.id === roomID);
 		}
-        const player = room.roomPlayers.find((player) => client.id === player.socketId);
-        const enemy = room.roomPlayers.find((player) => client.id !== player.socketId);
+        const player = room?.roomPlayers.find((player) => client.id === player.socketId);
+        const enemy = room?.roomPlayers.find((player) => client.id !== player.socketId);
+
+		// this.rooms = this.rooms.filter((r) => r.id !== room.id);
+		// this.frRooms = this.frRooms.filter((r) => r.id !== room.id);
 
         let OppositeId: number;
         if (decoded.id == this.player01)
@@ -326,9 +345,15 @@ export class AppGateway
         let UserScore: number;
         let EnemyScore: number;
 
-        UserScore = player.score;
-        EnemyScore = enemy.score;
-        
+		if (!player || !enemy) {
+			UserScore = 0;
+			EnemyScore = 0;
+		} else {
+			UserScore = player.score;
+			EnemyScore = enemy.score;
+		}
+			
+
         const user = await this.prisma.user.findUnique({where:{id_user:decoded.id}});
         const enemyUser = await this.prisma.user.findUnique({where:{id_user:OppositeId}});
         let gameP:number = user.games_played + 1;
@@ -341,7 +366,7 @@ export class AppGateway
         let enemyavatar:string = enemyUser.avatar;
         let username:string = user.name;
         let enemyname:string = enemyUser.name;
-        if (!player.won)
+        if (player && !player.won)
         {
             gameL++;
             progress = ((gameW - gameL) / gameP) * 100;
@@ -377,7 +402,7 @@ export class AppGateway
                 }
             );
         }
-        else{
+        else if (player){
             gameW++;
             progress = ((gameW - gameL) / gameP) * 100;
             progress = (progress < 0) ? 0 : progress;
@@ -408,7 +433,7 @@ export class AppGateway
                 }
             );
         }
-        if (player.won){
+        if (player && player.won){
             if (gameW == 1){
                 await this.prisma.user.update({
                     where: {id_user: decoded.id},
@@ -452,11 +477,14 @@ export class AppGateway
                 );
             }   
         }
-        client.leave(roomID);
-        this.rooms = this.rooms.filter((r) => r.id !== room.id);
-		this.frRooms = this.frRooms.filter((r) => r.id !== room.id);
+		if (room) {
+			this.rooms = this.rooms.filter((r) => r.id !== room.id);
+			this.frRooms = this.frRooms.filter((r) => r.id !== room.id);
+		}
 		this.users.delete(this.decodeCookie(client).id);
-		client.disconnect();
+		if (client.connected) {
+			client.disconnect();
+		}
     }
 
     findRoomBySocketId(socketId: string) {

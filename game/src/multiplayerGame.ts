@@ -23,6 +23,8 @@ class MyMultiplayerGame {
 	userId!: number;
 	avatars!: HTMLElement;
 	exitBtn!: HTMLButtonElement;
+	colors!: string[];
+	color!: string;
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -42,6 +44,8 @@ class MyMultiplayerGame {
 		this.onlineBtn = document.getElementById("online-game") as HTMLButtonElement;
 		this.avatars = document.getElementById("avatars") as HTMLElement;
 		this.exitBtn = document.getElementById("exit-btn") as HTMLButtonElement;
+		this.colors = ["#adb5bd", "#e5e5e5", "#dee2ff", "#F8F9AB", "#B0E0E6", "#DED6D6", "#FDCFF3", "#E2FCEF", "#FFE8D1", "#ffd6ff"];
+		this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
 
 		this.onlineBtn.addEventListener("click", () => {
 			this.socket = io("http://localhost:3000", {
@@ -65,8 +69,6 @@ class MyMultiplayerGame {
 	async startMultiplayerGame(): Promise<void> {
 		let flag = false;
 		const data = await axios.get('http://localhost:3000/profile/returngameinfos',  { withCredentials: true });
-		console.log("dataaaaaaa");
-		console.log(data);
 		for (const button of this.buttons) {
 			button.style.display = "none";
 		}
@@ -119,9 +121,10 @@ class MyMultiplayerGame {
 				this.countdown = 3;
 				ball.x = 1088 / 2;
 				ball.y = 644 /  2;
+				this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
 			});
 		} else {
-			this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, "#B2C6E4");
+			this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, this.color);
 			this.drawGame.drawRect(player_1.x, player_1.y, player_1.w, player_1.h, player_1.color);
 			this.drawGame.drawRect(player_2.x, player_2.y, player_2.w, player_2.h, player_2.color);
 			this.drawGame.drawLine(midLine.startX, midLine.startY, midLine.endX, midLine.endY, midLine.color);

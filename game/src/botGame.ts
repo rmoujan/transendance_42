@@ -22,6 +22,8 @@ class MyBotGame {
     avatars!: HTMLElement;
 	exitBtn!: HTMLButtonElement;
 	botBtn!: HTMLButtonElement;
+	colors!: string[];
+	color!: string;
 
     constructor(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
@@ -43,6 +45,8 @@ class MyBotGame {
         this.avatars = document.getElementById("avatars") as HTMLElement;
 		this.exitBtn = document.getElementById("exit-btn") as HTMLButtonElement;
 		this.botBtn = document.getElementById("bot-game") as HTMLButtonElement;
+		this.colors = ["#adb5bd", "#e5e5e5", "#dee2ff", "#F8F9AB", "#B0E0E6", "#DED6D6", "#FDCFF3", "#E2FCEF", "#FFE8D1", "#ffd6ff"];
+		this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
 
 		this.buttons[1].addEventListener("click", () => {
 			this.gameOver = false;
@@ -181,7 +185,7 @@ class MyBotGame {
                 this.message.innerHTML = "Game Over, You Lost!";
             }
 
-			await axios.post('http://localhost:3000/profile/Gamestatus', {status:true}, {withCredentials:false});
+			await axios.post('http://localhost:3000/profile/Gamestatus', {status:true}, {withCredentials:true});
 
 			axios.post("http://localhost:3000/profile/Bot-Pong", {
 				won: this.userWon,
@@ -193,6 +197,7 @@ class MyBotGame {
 
 			this.buttons[0].style.display = "block";
 			this.buttons[1].style.display = "block";
+			this.buttons[2].style.display = "block";
 			this.buttons[1].addEventListener("click", () => {
 				this.gameOver = false;
 				this.userWon = false;
@@ -207,9 +212,10 @@ class MyBotGame {
 				ball.speed = 7;
 				ball.velocityX = ball.speed;
 				ball.velocityY = ball.speed;
+				this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
 			});
         } else {
-            this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, "#B2C6E4");
+            this.drawGame.drawRect(0, 0, this.canvasWidth, this.canvasHeight, this.color);
             this.drawGame.drawRect(player_1.x, player_1.y, player_1.w, player_1.h, player_1.color);
             this.drawGame.drawRect(player_2.x, player_2.y, player_2.w, player_2.h, player_2.color);
             this.drawGame.drawLine(midLine.startX, midLine.startY, midLine.endX, midLine.endY, midLine.color );

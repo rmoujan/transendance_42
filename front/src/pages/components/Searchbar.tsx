@@ -128,7 +128,7 @@ function Searchbar() {
 			// console.log("getgame");
 			// console.log(getgame);
 			setTimeout(() => {
-			window.location.href = "http://localhost:5173/game";
+				window.location.href = "http://localhost:5173/game";
 			}, 1000);
 			// console.log(getgame);
             fetchData();

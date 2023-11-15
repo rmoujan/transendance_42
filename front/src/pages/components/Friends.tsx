@@ -56,7 +56,7 @@ function Friends({user}: AccountOwnerProps) {
 	   axios.post("http://localhost:3000/profile/gameinfos", {
 		homies: true,
 		invited: false,
-		homie_id: user[0].id_user,
+		homie_id: friend.id_user,
 	  }, {
 		withCredentials: true,
 	  });
@@ -69,7 +69,10 @@ function Friends({user}: AccountOwnerProps) {
 	  
 	  // Update selectedFriend with the clicked friend's information
 	  setSelectedFriend(friend);
-	  window.location.href = "http://localhost:5173/game";
+	//   console.log(" 2 : ", friend.id_user);
+	  setTimeout(() => {
+		window.location.href = "http://localhost:5173/game";
+		}, 1000);
     // console.log(friend);
     // setLoding(true);
   };
