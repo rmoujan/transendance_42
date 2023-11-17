@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import logo42 from "../img/42logo.png"
+import logo42 from "../img/42logo.png";
 import { motion } from "framer-motion";
 import { fadeIn } from "../pages/components/variants";
 import TextRevealTW from "./text";
@@ -42,9 +42,9 @@ function Login() {
           initial="hidden"
           whileInView={"show"}
           viewport={{ once: false, amount: 0.7 }}
-          className='relative justify-center items-center flex flex-col m-12 space-y-8 mobile:w-72 tablet:w-9/12 laptop:w-10/12 max-h-52 pt-5 pb-4 bg-[#3b376041] shadow-2xl rounded-[40px] md:flex-row md:space-y-0 '
+          className="relative justify-center items-center flex flex-col m-12 space-y-8 mobile:w-72 tablet:w-9/12 laptop:w-10/12 max-h-52 pt-5 pb-4 bg-[#3b376041] shadow-2xl rounded-[40px] md:flex-row md:space-y-0 "
         >
-          <div className='relative flex flex-col justify-center p-8 items-center md:p-14 '>
+          <div className="relative flex flex-col justify-center p-8 items-center md:p-14 ">
             <div>
               {/* {
                 twoFactor.map((user) => (
@@ -81,14 +81,17 @@ function Login() {
               </button>
             )} */}
             <a href="http://localhost:3000/auth/login/42">
-              <button className='font-bold hover:scale-105 duration-300 mobile:w-60 tablet:w-80  bg-gradient-to-br from-[#FE754D] to-[#ce502a]  text-white p-2 rounded-full mb-6'>
-                <img src={logo42} alt="42" className='w-6 h-6 inline mr-2' />
-                <span >Log In with Intra</span>
+              <button className="font-bold hover:scale-105 duration-300 mobile:w-60 tablet:w-80  bg-gradient-to-br from-[#FE754D] to-[#ce502a]  text-white p-2 rounded-full mb-6">
+                <img src={logo42} alt="42" className="w-6 h-6 inline mr-2" />
+                <span>Log In with Intra</span>
               </button>
             </a>
-            <div className='text-center text-white text-xs'>
-              Or sign in with
-              <a href="#" className='font-bold  text-[#7F7B86] hover:text-white'> Two-Factor Authentication</a>
+            <div className="text-center text-white text-xs">
+              <p className="font-bold  text-[#7F7B86] hover:text-white -mt-2">
+                Login with your 42 account to play the game !
+                {/* {" "}
+                Two-Factor Authentication */}
+              </p>
             </div>
           </div>
         </motion.div>

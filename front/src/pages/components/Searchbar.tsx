@@ -29,7 +29,7 @@ function Searchbar() {
   //     if(e)
   // }
   //function accepte friend
-  const [AcceptFrienf , setAcceptFrienf] = useState<boolean>()
+  const [AcceptFrienf, setAcceptFrienf] = useState<boolean>();
 
   const accepteFriend = (friend: any) => {
     // console.log(friend);
@@ -51,9 +51,9 @@ function Searchbar() {
           {
             withCredentials: true,
           }
-          );
-          setNotification(notif.data);
-    
+        );
+        setNotification(notif.data);
+
         if (socket) {
           // console.log("id_user ", friend.id_user);
           socket.emit("friends-list", friend.id_user);
@@ -67,29 +67,29 @@ function Searchbar() {
     // navigate(`/profileFriend/${friend.id}`);
   };
 
-  
   const [user, setUser] = useState<User[]>([]);
   const [Notification, setNotification] = useState<Array<any>>([]);
   const fetchData = async () => {
-    const { data } =  await axios.get("http://localhost:3000/auth/get-user", {
-      withCredentials: true ,
+    const { data } = await axios.get("http://localhost:3000/auth/get-user", {
+      withCredentials: true,
     });
+    if (data == false) {
+      console.log("faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaalse");
+      window.location.href = "/login";
+      console.log("false");
+    }
     //protection of notificaton
     const notif = await axios.get(
       "http://localhost:3000/profile/Notifications",
       {
         withCredentials: true,
       }
-      );
-      setNotification(notif.data);
+    );
+    setNotification(notif.data);
     // console.log("notif");
     // console.log(notif.data);
     // console.log('data : ', data);
-    if (data == false) {
-      window.location.href = "/login";
-      console.log("false");
-    }
-    
+
     setUser(data);
     // if (socket) {
     //   socket.on("notification", async () => {
@@ -112,78 +112,84 @@ function Searchbar() {
     //         //     // setNotification(data.obj);
     //         //   });
     //       }
-        };
-        const accepteGame = (friend: any) => {
-			console.log("accepteGame00000000");
-        axios.post("http://localhost:3000/profile/gameinfos", {
-            homies: true,
-            invited: true,
-            homie_id: friend.id_user,
-            }, {
-            withCredentials: true,
-            });
-			// const getgame = axios.get("http://localhost:3000/profile/returngameinfos", {
-			// 	withCredentials: true,
-			// });
-			// console.log("getgame");
-			// console.log(getgame);
-			setTimeout(() => {
-				window.location.href = "http://localhost:5173/game";
-			}, 1000);
-			// console.log(getgame);
-            fetchData();
-        };
-        useEffect( () => {
-          
-          if (socket){
-            //get notification    
-            socket.emit('userOnline');
+  };
+  const accepteGame = (friend: any) => {
+    console.log("accepteGame00000000");
+    axios.post(
+      "http://localhost:3000/profile/gameinfos",
+      {
+        homies: true,
+        invited: true,
+        homie_id: friend.id_user,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    // const getgame = axios.get("http://localhost:3000/profile/returngameinfos", {
+    // 	withCredentials: true,
+    // });
+    // console.log("getgame");
+    // console.log(getgame);
+    setTimeout(() => {
+      window.location.href = "http://localhost:5173/game";
+    }, 1000);
+    // console.log(getgame);
+    fetchData();
+  };
+  useEffect(() => {
+    if (socket) {
+      //get notification
+      socket.emit("userOnline");
 
-            socket.on('notification', async () => {
-              console.log("event notification")
-              const { data } = await axios.get("http://localhost:3000/profile/Notifications", {
-                withCredentials: true,
-              })
-              // console.log("event notification111111")
-              // console.log(data);
-              setNotification(data);
-              // fetch();
-              // console.log(data.obj);
-              // setNotification(data.obj);
-            });
-            // const fetch = async () => {
-            // }
+      socket.on("notification", async () => {
+        console.log("event notification");
+        const { data } = await axios.get(
+          "http://localhost:3000/profile/Notifications",
+          {
+            withCredentials: true,
           }
-          fetchData();
-        }, []);
-        const calculateTimeElapsed = (createdAt: string) => {
-          const currentTime = new Date(); // Current time
-          const messageTime = new Date(createdAt); // Time the message was created
-        
-          const timeDifference = currentTime.getTime() - messageTime.getTime(); // Difference in milliseconds
-          const seconds = Math.floor(timeDifference / 1000); // Convert milliseconds to seconds
-          const minutes = Math.floor(seconds / 60); // Convert seconds to minutes
-          const hours = Math.floor(minutes / 60); // Convert minutes to hours
-          const days = Math.floor(hours / 24); // Convert hours to days
-        
-          if (days > 0 && days == 1) {
-            return `${days} day ago`;
-          } else if (days > 0) {
-            return `${days} days ago`;
-          } else if (hours > 0 && hours == 1) {
-            return `${hours} hour ago`;
-          } else if (hours > 0) {
-            return `${hours} hours ago`;
-          } else if (minutes > 0 && minutes == 1) {
-            return `${minutes} minute ago`;
-          } else if (minutes > 0) {
-            return `${minutes} minutes ago`;
-          } else if (seconds > 0 ) {
-            return `a few moments ago`;
-          }
-        };
-        return (
-          <header className="flex items-center justify-between p-4 space-x-2 ">
+        );
+        // console.log("event notification111111")
+        // console.log(data);
+        setNotification(data);
+        // fetch();
+        // console.log(data.obj);
+        // setNotification(data.obj);
+      });
+      // const fetch = async () => {
+      // }
+    }
+    fetchData();
+  }, []);
+  const calculateTimeElapsed = (createdAt: string) => {
+    const currentTime = new Date(); // Current time
+    const messageTime = new Date(createdAt); // Time the message was created
+
+    const timeDifference = currentTime.getTime() - messageTime.getTime(); // Difference in milliseconds
+    const seconds = Math.floor(timeDifference / 1000); // Convert milliseconds to seconds
+    const minutes = Math.floor(seconds / 60); // Convert seconds to minutes
+    const hours = Math.floor(minutes / 60); // Convert minutes to hours
+    const days = Math.floor(hours / 24); // Convert hours to days
+
+    if (days > 0 && days == 1) {
+      return `${days} day ago`;
+    } else if (days > 0) {
+      return `${days} days ago`;
+    } else if (hours > 0 && hours == 1) {
+      return `${hours} hour ago`;
+    } else if (hours > 0) {
+      return `${hours} hours ago`;
+    } else if (minutes > 0 && minutes == 1) {
+      return `${minutes} minute ago`;
+    } else if (minutes > 0) {
+      return `${minutes} minutes ago`;
+    } else if (seconds > 0) {
+      return `a few moments ago`;
+    }
+  };
+  return (
+    <header className="flex items-center justify-between p-4 space-x-2 ">
       <h1 className=" text-white text-3xl 2xl:text-4xl lg:ml-32 font-PalanquinDark font-bold">
         Ping Pong{" "}
       </h1>
@@ -264,25 +270,20 @@ function Searchbar() {
                               </div>
                               {/* Accepte button */}
                               {data.AcceptFriend == true ? (
-                              <button
-                                className="ml-3 bg-[#FE754D] hover:bg-[#ce502a] text-white font-bold  px-4 rounded-[20px]"
-                                onClick={() => accepteFriend(data)}
-                              >
-                                Accept
-                              </button>
-                              ):(
-
-                              <button
-                                className="ml-auto bg-[#FE754D] hover:bg-[#ce502a] text-sm text-white font-bold  px-2 rounded-[20px]"
-                                onClick={() => accepteGame(data)}
-                              >
-                                Accept game
-                              </button>
-                              )
-                              }
-                              
-
-          
+                                <button
+                                  className="ml-3 bg-[#FE754D] hover:bg-[#ce502a] text-white font-bold  px-4 rounded-[20px]"
+                                  onClick={() => accepteFriend(data)}
+                                >
+                                  Accept
+                                </button>
+                              ) : (
+                                <button
+                                  className="ml-auto bg-[#FE754D] hover:bg-[#ce502a] text-sm text-white font-bold  px-2 rounded-[20px]"
+                                  onClick={() => accepteGame(data)}
+                                >
+                                  Accept game
+                                </button>
+                              )}
                             </li>
                           </ul>
                         );

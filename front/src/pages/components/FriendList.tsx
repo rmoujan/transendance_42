@@ -42,10 +42,10 @@ type User = {
   TwoFactor: boolean;
   secretKey: string | null;
   status_user: string;
-  wins:number;
-  losses:number;
-  games_played:number;
-  Progress:number;
+  wins: number;
+  losses: number;
+  games_played: number;
+  Progress: number;
 };
 
 function FriendList() {
@@ -79,6 +79,10 @@ function FriendList() {
       TwoFactor: boolean;
       secretKey: string | null;
       status_user: string;
+      wins: number;
+      losses: number;
+      games_played: number;
+      Progress: number;
     }[]
   >([]);
   const navigate = useNavigate();
@@ -98,12 +102,21 @@ function FriendList() {
   useEffect(() => {
     setFilteredUser(friend);
   }, [users]);
+
   const handelChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const searchTerm = event.target.value.toLowerCase();
     const filter = friend.filter((user) =>
-      user.name.toLowerCase().includes(event.target.value)
+      user.name.toLowerCase().includes(searchTerm)
     );
     setFilteredUser(filter);
   };
+
+  // const handelChange = (event: ChangeEvent<HTMLInputElement>) => {
+  //   const filter = friend.filter((user) =>
+  //     user.name.toLowerCase().includes(event.target.value)
+  //   );
+  //   setFilteredUser(filter);
+  // };
   const [blockedUsers, setBlockedUsers] = useState<number[]>([]);
   const [rmUser, setRmUser] = useState<{ id: number }[]>([]);
   const [isBlocked, setIsBlocked] = useState(false);
@@ -116,21 +129,20 @@ function FriendList() {
     );
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     console.log("id_user", id_user);
-    Modal.confirm({
-      title: "Are you sure, you want to remove this friend?",
-      okText: "Yes",
-      okType: "danger",
-      className: " flex justify-center items-center h-100vh",
-      onOk: () => {
-        if (socket)
-        {
-          socket.emit("friends-list",  id_user );
-          socket.emit("newfriend",  id_user );
-        }
-        const updatedUsers = friend.filter((user) => user.id_user !== id_user);
-        setFriend(updatedUsers);
-      },
-    });
+    // Modal.confirm({
+    //   title: "Are you sure, you want to remove this friend?",
+    //   okText: "Yes",
+    //   okType: "danger",
+    //   className: " flex justify-center items-center h-100vh",
+    // onOk: () => {
+    if (socket) {
+      socket.emit("friends-list", id_user);
+      socket.emit("newfriend", id_user);
+    }
+    const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+    setFriend(updatedUsers);
+    // },
+    // });
   }
 
   const handleBlockUser = (id_user: number) => {
@@ -143,23 +155,22 @@ function FriendList() {
     // const updatedUsers = friend.filter((user) => user.id_user !== id_user);
     // setFriend(updatedUsers);
     // if (socket){
-      //   socket.emit("friends-list",  id_user );
-      //   socket.emit("newfriend",  id_user );
-      // }
-      Modal.confirm({
-        title: "Are you sure, you want to block this friend?",
-        okText: "Yes",
-        okType: "danger",
-        className: " flex justify-center items-center h-100vh",
-        onOk: () => {
-          if (socket)
-          {
-            socket.emit("friends-list",  id_user );
-            socket.emit("newfriend",  id_user );
-          }
-          const updatedUsers = friend.filter((user) => user.id_user !== id_user);
-          setFriend(updatedUsers);
-          setIsBlocked(true);
+    //   socket.emit("friends-list",  id_user );
+    //   socket.emit("newfriend",  id_user );
+    // }
+    Modal.confirm({
+      title: "Are you sure, you want to block this friend?",
+      okText: "Yes",
+      okType: "danger",
+      className: " flex justify-center items-center h-100vh",
+      onOk: () => {
+        if (socket) {
+          socket.emit("friends-list", id_user);
+          socket.emit("newfriend", id_user);
+        }
+        const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+        setFriend(updatedUsers);
+        setIsBlocked(true);
       },
     });
     // setBlockedUsers([...blockedUsers, id_user]);
@@ -173,49 +184,47 @@ function FriendList() {
     const dataUser = await axios.get(
       "http://localhost:3000/profile/NotFriends",
       { withCredentials: true }
-      );
-      setNotFriends(dataUser.data);
-      console.log("dataNotFriends", dataUser.data);
-      console.log("data");
-      setFriend(data);
-    };
+    );
+    setNotFriends(dataUser.data);
+    console.log("dataNotFriends", dataUser.data);
+    console.log("data");
+    setFriend(data);
+  };
   useEffect(() => {
+    fetchData();
+    // fetch('https://fakestoreapi.com/users')
+    //   .then((res) => res.json())
+    //   .then((data) => setUsers(data))
+  }, []);
+  if (socket) {
+    socket.on("list-friends", async () => {
       fetchData();
-      // fetch('https://fakestoreapi.com/users')
-      //   .then((res) => res.json())
-      //   .then((data) => setUsers(data))
-    }, []);
-    if (socket){
-      socket.on("list-friends", async () => {
-        fetchData();
-      });
-      socket.on("offline", (data: any) => {
-        setFriend(prevUsers => {
-          return prevUsers.map((user: User) => {
-            if (user.id_user === data.id_user) {
-              return { ...user, status_user: "offline" };
-            }
-            return user;
-          });
-        });
-      } );
-      socket.on("online", (data: any) => {
-        setFriend(prevUsers => {
-          return prevUsers.map((user: User) => {
-            if (user.id_user === data.id_user) {
-              return { ...user, status_user: "online" };
-            }
-            return user;
-          });
+    });
+    socket.on("offline", (data: any) => {
+      setFriend((prevUsers) => {
+        return prevUsers.map((user: User) => {
+          if (user.id_user === data.id_user) {
+            return { ...user, status_user: "offline" };
+          }
+          return user;
         });
       });
-
-    }
+    });
+    socket.on("online", (data: any) => {
+      setFriend((prevUsers) => {
+        return prevUsers.map((user: User) => {
+          if (user.id_user === data.id_user) {
+            return { ...user, status_user: "online" };
+          }
+          return user;
+        });
+      });
+    });
+  }
 
   function AddMember(id_user: number) {
     console.log("id_user---------->", id_user);
-    if (socket)
-      socket.emit("add-friend", { id_user });
+    if (socket) socket.emit("add-friend", { id_user });
     // axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     Modal.confirm({
@@ -398,125 +407,103 @@ function FriendList() {
               </tr>
             </thead>
             <tbody className="flex flex-col mt-20 w-full mx-auto justify-evenly items-center ">
-              {friend.map(
-                (
-                  {
-                    id_user,
-                    name,
-                    avatar,
-                    TwoFactor,
-                    secretKey,
-                    status_user,
-                    wins,
-                    losses,
-                    games_played,
-                    Progress,
-                  }: {
-                    id_user: number;
-                    name: string;
-                    avatar: string;
-                    TwoFactor: boolean;
-                    secretKey: string | null;
-                    status_user: string;
-                    wins: number;
-                    losses: number;
-                    games_played: number;
-                    Progress: number;
-                  },
-                  index: number
-                ) => {
-                  const isLast = index === TABLE_ROWS.length - 1;
-                  const classes = isLast ? "p-4 w-12 h-12" : "p-4 w-12 h-12";
-                  const animationDelay = index * 0.5;
+              {filteredUser.length > 0
+                ? filteredUser.map((data, index: number) => {
+                    const isLast = index === TABLE_ROWS.length - 1;
+                    const classes = isLast ? "p-4 w-12 h-12" : "p-4 w-12 h-12";
+                    const animationDelay = index * 0.5;
 
-                  const handleProfileClick = (friend: any) => {
-                    console.log("friend : ");
-                    console.log(friend.id_user);
-                    // Update selectedFriend with the clicked friend's information
-                    navigate(`/profileFriend/${friend.id_user}`);
-                  };
-                  return (
-                    // <div
-                    //   key={id_user}
-                    //  className=" flex justify-center">
-                    <motion.tr
-                      key={id_user}
-                      variants={fadeIn("right", 0.2)}
-                      initial="hidden"
-                      whileInView={"show"}
-                      viewport={{ once: false, amount: 0.7 }}
-                      transition={{ duration: 2.3, delay: animationDelay }}
-                      className="flex bg-black/30 space-x-32 rounded-[27px] w-[70rem] my-2 p-4 ml-32 justify-evenly items-center"
-                    >
-                      <td className={`${classes} flex`}>
-                        <div className="flex items-center gap-3">
-                          <Avatar
-                            className="flex items-center w-12 h-12 rounded-full"
-                            src={avatar}
-                            alt={name}
-                            size="sm"
-                            onClick={() => handleProfileClick({ id_user })}
-                          />
-                          <div className="flex flex-col">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal text-white w-40 cursor-pointer"
-                              onClick={() => handleProfileClick({ id_user })}
-                            >
-                              {name}
-                            </Typography>
-                            {/* <Typography
+                    const handleProfileClick = (friend: any) => {
+                      console.log("friend : ");
+                      console.log(friend.id_user);
+                      // Update selectedFriend with the clicked friend's information
+                      navigate(`/profileFriend/${friend.id_user}`);
+                    };
+                    return (
+                      // <div
+                      //   key={id_user}
+                      //  className=" flex justify-center">
+                      <motion.tr
+                        key={data.id_user}
+                        variants={fadeIn("right", 0.2)}
+                        initial="hidden"
+                        whileInView={"show"}
+                        viewport={{ once: false, amount: 0.7 }}
+                        transition={{ duration: 2.3, delay: animationDelay }}
+                        className="flex bg-black/30 space-x-32 rounded-[27px] w-[70rem] my-2 p-4 ml-32 justify-evenly items-center"
+                      >
+                        <td className={`${classes} flex`}>
+                          <div className="flex items-center gap-3">
+                            <Avatar
+                              className="flex items-center w-12 h-12 rounded-full"
+                              src={data.avatar}
+                              alt={data.name}
+                              size="sm"
+                              onClick={() => handleProfileClick(data.id_user)}
+                            />
+                            <div className="flex flex-col">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal text-white w-40 cursor-pointer"
+                                onClick={() => handleProfileClick(data.id_user)}
+                              >
+                                {data.name}
+                              </Typography>
+                              {/* <Typography
                                     variant="small"
                                     color="blue-gray"
                                     className="font-normal opacity-70"
                                   >
                                     {email}
                                   </Typography> */}
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className={`${classes} flex`}>
-                        <div className="flex flex-col">
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal ml-10 text-gray-500"
-                          >
-                            {games_played}
-                          </Typography>
-                          {/* <Typography
+                        </td>
+                        <td className={`${classes} flex`}>
+                          <div className="flex flex-col">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal ml-10 text-gray-500"
+                            >
+                              {data.games_played}
+                            </Typography>
+                            {/* <Typography
                                   variant="small"
                                   color="blue-gray"
                                   className="font-normal opacity-70"
                                 >
                                   {org}
                                 </Typography> */}
-                        </div>
-                      </td>
-                      <td className={classes}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal ml-14 text-gray-500"
-                        >
-                          {wins}
-                        </Typography>
-                      </td>
-                      <td className={classes}>
-                        <div className="w-max">
-                          {/* {status_user} */}
-                          <Chip
-                            variant="ghost"
-                            size="sm"
-                            value={status_user}
-                            className={`${status_user === "online" ?  " text-green-500" : "text-red-500"
-                            }`}
-                          />
-                        </div>
-                      </td>
-                      <td className={`${classes} flex items-center`}>
-                        {/* {isBlocked ? (
+                          </div>
+                        </td>
+                        <td className={classes}>
+                          <Typography
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal ml-14 text-gray-500"
+                          >
+                            {data.wins}
+                          </Typography>
+                        </td>
+                        <td className={classes}>
+                          <div className="w-max">
+                            {/* {status_user} */}
+                            <Chip
+                              variant="ghost"
+                              size="sm"
+                              value={data.status_user}
+                              className={`${
+                                data.status_user === "online"
+                                  ? " text-green-500"
+                                  : "text-red-500"
+                              }`}
+                            />
+                          </div>
+                        </td>
+                        <td className={`${classes} flex items-center`}>
+                          {/* {isBlocked ? (
                           <div className="text-red-400 font-bold -ml-20">
                             Blocked
                           </div>
@@ -525,25 +512,177 @@ function FriendList() {
                             {/* <Button variant="text" className="" > */}
                             <BiBlock
                               className="h-8 w-8 text-red-400 -ml-14 cursor-pointer"
-                              onClick={() => handleBlockUser(id_user)}
+                              onClick={() => handleBlockUser(data.id_user)}
                             />
                             {/* </Button> */}
                           </Tooltip>
-                        {/* // )} */}
-                      </td>
-                      <td className={`${classes} flex items-center`}>
-                        <div
-                          onClick={() => removeFriend(id_user)}
-                          className=" text-red-400 font-bold -ml-20 cursor-pointer"
+                          {/* // )} */}
+                        </td>
+                        <td className={`${classes} flex items-center`}>
+                          <div
+                            onClick={() => removeFriend(data.id_user)}
+                            className=" text-red-400 font-bold -ml-20 cursor-pointer"
+                          >
+                            remove
+                          </div>
+                        </td>
+                      </motion.tr>
+                      // </div>
+                    );
+                  })
+                : friend.map(
+                    (
+                      {
+                        id_user,
+                        name,
+                        avatar,
+                        TwoFactor,
+                        secretKey,
+                        status_user,
+                        wins,
+                        losses,
+                        games_played,
+                        Progress,
+                      }: {
+                        id_user: number;
+                        name: string;
+                        avatar: string;
+                        TwoFactor: boolean;
+                        secretKey: string | null;
+                        status_user: string;
+                        wins: number;
+                        losses: number;
+                        games_played: number;
+                        Progress: number;
+                      },
+                      index: number
+                    ) => {
+                      const isLast = index === TABLE_ROWS.length - 1;
+                      const classes = isLast
+                        ? "p-4 w-12 h-12"
+                        : "p-4 w-12 h-12";
+                      const animationDelay = index * 0.5;
+
+                      const handleProfileClick = (friend: any) => {
+                        console.log("friend : ");
+                        console.log(friend.id_user);
+                        // Update selectedFriend with the clicked friend's information
+                        navigate(`/profileFriend/${friend.id_user}`);
+                      };
+                      return (
+                        // <div
+                        //   key={id_user}
+                        //  className=" flex justify-center">
+                        <motion.tr
+                          key={id_user}
+                          variants={fadeIn("right", 0.2)}
+                          initial="hidden"
+                          whileInView={"show"}
+                          viewport={{ once: false, amount: 0.7 }}
+                          transition={{ duration: 2.3, delay: animationDelay }}
+                          className="flex bg-black/30 space-x-32 rounded-[27px] w-[70rem] my-2 p-4 ml-32 justify-evenly items-center"
                         >
-                          remove
-                        </div>
-                      </td>
-                    </motion.tr>
-                    // </div>
-                  );
-                }
-              )}
+                          <td className={`${classes} flex`}>
+                            <div className="flex items-center gap-3">
+                              <Avatar
+                                className="flex items-center w-12 h-12 rounded-full"
+                                src={avatar}
+                                alt={name}
+                                size="sm"
+                                onClick={() => handleProfileClick({ id_user })}
+                              />
+                              <div className="flex flex-col">
+                                <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal text-white w-40 cursor-pointer"
+                                  onClick={() =>
+                                    handleProfileClick({ id_user })
+                                  }
+                                >
+                                  {name}
+                                </Typography>
+                                {/* <Typography
+                                    variant="small"
+                                    color="blue-gray"
+                                    className="font-normal opacity-70"
+                                  >
+                                    {email}
+                                  </Typography> */}
+                              </div>
+                            </div>
+                          </td>
+                          <td className={`${classes} flex`}>
+                            <div className="flex flex-col">
+                              <Typography
+                                variant="small"
+                                color="blue-gray"
+                                className="font-normal ml-10 text-gray-500"
+                              >
+                                {games_played}
+                              </Typography>
+                              {/* <Typography
+                                  variant="small"
+                                  color="blue-gray"
+                                  className="font-normal opacity-70"
+                                >
+                                  {org}
+                                </Typography> */}
+                            </div>
+                          </td>
+                          <td className={classes}>
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal ml-14 text-gray-500"
+                            >
+                              {wins}
+                            </Typography>
+                          </td>
+                          <td className={classes}>
+                            <div className="w-max">
+                              {/* {status_user} */}
+                              <Chip
+                                variant="ghost"
+                                size="sm"
+                                value={status_user}
+                                className={`${
+                                  status_user === "online"
+                                    ? " text-green-500"
+                                    : "text-red-500"
+                                }`}
+                              />
+                            </div>
+                          </td>
+                          <td className={`${classes} flex items-center`}>
+                            {/* {isBlocked ? (
+                          <div className="text-red-400 font-bold -ml-20">
+                            Blocked
+                          </div>
+                        ) : ( */}
+                            <Tooltip content="Block User">
+                              {/* <Button variant="text" className="" > */}
+                              <BiBlock
+                                className="h-8 w-8 text-red-400 -ml-14 cursor-pointer"
+                                onClick={() => handleBlockUser(id_user)}
+                              />
+                              {/* </Button> */}
+                            </Tooltip>
+                            {/* // )} */}
+                          </td>
+                          <td className={`${classes} flex items-center`}>
+                            <div
+                              onClick={() => removeFriend(id_user)}
+                              className=" text-red-400 font-bold -ml-20 cursor-pointer"
+                            >
+                              remove
+                            </div>
+                          </td>
+                        </motion.tr>
+                        // </div>
+                      );
+                    }
+                  )}
             </tbody>
           </table>
         </CardBody>

@@ -22,7 +22,7 @@ import TwoFactor from "../../components/TwoFactor";
 import { CgSpinner } from "react-icons/cg";
 import astronaut from "../../img/astronaut_.png";
 import { url } from "inspector";
-import {socket, socketuser} from '../../socket'
+import { socket, socketuser } from "../../socket";
 
 type User = {
   id_user: number;
@@ -32,12 +32,12 @@ type User = {
   secretKey: string | null;
   About: string;
   status_user: string;
-  wins:number;
-  losses:number;
-  games_played:number;
-  Progress:number;
-  Wins_percent:number;
-  Losses_percent:number;
+  wins: number;
+  losses: number;
+  games_played: number;
+  Progress: number;
+  Wins_percent: number;
+  Losses_percent: number;
 };
 function MaincontentSetting() {
   const [twoFactor, setTwoFactor] = useState<User[]>([]);
@@ -52,7 +52,7 @@ function MaincontentSetting() {
     setTwoFactor(data);
   };
   useEffect(() => {
-    if (socket == undefined){
+    if (socket == undefined) {
       socketuser();
     }
     fetchData();
@@ -184,28 +184,20 @@ function MaincontentSetting() {
     }
     if (name) {
       try {
-        const responseName = await axios.post(backendURLName, dataName, {
-          withCredentials: true,
-        });
-        // .catch((error) => {
-        //   if (error.response) {
-        //     // The request was made and the server responded with a status code
-        //     console.error("Server responded with status code:", error.response.status);
-        //     console.error("Server response data:", error.response.data);
-        //   } else if (error.request) {
-        //     // The request was made but no response was received
-        //     console.error("No response received from the server");
-        //   } else {
-        //     // Something happened in setting up the request
-        //     console.error("Error setting up the request:", error.message);
-        //   }
-        // })
+        const responseName = await axios
+          .post(backendURLName, dataName, {
+            withCredentials: true,
+          })
+          .then((response) => {
+            console.log("response name =======================", response.data);
+          });
         dispatch(
           showSnackbar({
             severity: "success",
             message: "Name updated successfully",
           })
         );
+        console.log("response name =======================");
         //clear input name
         setName("");
         console.log("Name updated successfully");
@@ -217,7 +209,7 @@ function MaincontentSetting() {
           })
         );
         setName("");
-        console.error("Error:", error);
+        // console.error("Error:", error);
       }
     }
     if (photo) {
@@ -252,6 +244,8 @@ function MaincontentSetting() {
   const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Get the first selected file
     const selectedFile = e.target.files && e.target.files[0];
+    console.log("selectedFile");
+    console.log(selectedFile);
     if (selectedFile) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -370,13 +364,13 @@ function MaincontentSetting() {
                         <div className=" flex flex-row justify-center items-center">
                           <div className="flex flex-col items-center font-semibold mr-4">
                             <div className=" text-xl text-white font-bold font-PalanquinDark">
-                             {data.games_played}
+                              {data.games_played}
                             </div>
                             <div className="text-sm text-[#A3AED0]">
                               Games Played
                             </div>
                           </div>
-              <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
+                          <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
 
                           <div className="flex flex-col items-center font-semibold mx-4 ">
                             <div className=" text-xl text-white font-bold font-PalanquinDark">
@@ -384,7 +378,7 @@ function MaincontentSetting() {
                             </div>
                             <div className="text-sm text-[#A3AED0]">Win</div>
                           </div>
-              <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
+                          <div className="w-px h-10 bg-[#A3AED0] rotate-180 transform origin-center"></div>
 
                           <div className="flex flex-col items-center font-semibold mx-4">
                             <div className=" text-xl text-white font-bold font-PalanquinDark">
@@ -455,50 +449,60 @@ function MaincontentSetting() {
                   <div className="h-full tablet:min-w-[40vh] lg-laptop:min-w-[16vw] lg-laptop:min-h-[30vh]  bg-gradient-to-tr from-[#3F3B5B] via-[#2a2742af] to-[#454069c7] shadow-2xl  p-8 rounded-[46px]">
                     <div className="leading-relaxed mb-6 text-[#A3AED0]">
                       <div
-                       className="relative justify-center bg-cover"
-                       style={{
-                         backgroundImage: `url(${astronaut})`,
-                         backgroundSize: "80% 100%",
-                        backgroundRepeat: "no-repeat",
+                        className="relative justify-center bg-cover"
+                        style={{
+                          backgroundImage: `url(${astronaut})`,
+                          backgroundSize: "80% 100%",
+                          backgroundRepeat: "no-repeat",
                           backgroundPosition: "center",
                           // opacity: "0.4",
-                       }}
-                       >
+                        }}
+                      >
                         <div className="">
-                        <h2 className="text-center text-white  font-PalanquinDark">How to Play ft_transcendence</h2>
-                        <p>
-                          Welcome to Ping Pong Game, a real-time online pong
-                          contest. Here's a quick guide on how to play the game:
-                        </p>
+                          <h2 className="text-center text-white  font-PalanquinDark">
+                            How to Play ft_transcendence
+                          </h2>
+                          <p>
+                            Welcome to Ping Pong Game, a real-time online pong
+                            contest. Here's a quick guide on how to play the
+                            game:
+                          </p>
 
-                        <h3 className="text-center text-white  font-PalanquinDark">Objective</h3>
-                        <p>
-                          Your goal is to score points by hitting the ball past
-                          your opponent's paddle while defending your own goal.
-                        </p>
+                          <h3 className="text-center text-white  font-PalanquinDark">
+                            Objective
+                          </h3>
+                          <p>
+                            Your goal is to score points by hitting the ball
+                            past your opponent's paddle while defending your own
+                            goal.
+                          </p>
 
-                        <h3 className="text-center text-white  font-PalanquinDark">Controls</h3>
-                        <p>Use the following controls to play the game:</p>
-                        <ul>
-                          <li>
-                            <strong>Player 1:</strong> W (Move Up) and S (Move
-                            Down)
-                          </li>
-                          <li>
-                            <strong>Player 2:</strong> Up Arrow (Move Up) and
-                            Down Arrow (Move Down)
-                          </li>
-                        </ul>
-                        <h3 className="text-center text-white  font-PalanquinDark">Chat</h3>
-                        <p>
-                          Feel free to use the real-time chat to communicate
-                          with other players during the game.
-                        </p>
+                          <h3 className="text-center text-white  font-PalanquinDark">
+                            Controls
+                          </h3>
+                          <p>Use the following controls to play the game:</p>
+                          <ul>
+                            <li>
+                              <strong>Player 1:</strong> W (Move Up) and S (Move
+                              Down)
+                            </li>
+                            <li>
+                              <strong>Player 2:</strong> Up Arrow (Move Up) and
+                              Down Arrow (Move Down)
+                            </li>
+                          </ul>
+                          <h3 className="text-center text-white  font-PalanquinDark">
+                            Chat
+                          </h3>
+                          <p>
+                            Feel free to use the real-time chat to communicate
+                            with other players during the game.
+                          </p>
 
-                        <p>
-                          Now that you know the basics, get out there and enjoy
-                          a game!
-                        </p>
+                          <p>
+                            Now that you know the basics, get out there and
+                            enjoy a game!
+                          </p>
                         </div>
                       </div>
                     </div>

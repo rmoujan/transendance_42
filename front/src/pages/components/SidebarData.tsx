@@ -1,10 +1,10 @@
 // import React from "react";
 import { datas } from "../Data/Data";
-import { Link, useRoutes, useLocation} from "react-router-dom";
+import { Link, useRoutes, useLocation } from "react-router-dom";
 import React, { useCallback, useState, useEffect } from "react";
 import axios from "axios";
 import { socket, socketuser } from "../../socket";
-
+import { cp } from "fs";
 
 interface SidebarDataProps {
   toggle: boolean;
@@ -27,11 +27,18 @@ const SidebarData: React.FC<SidebarDataProps> = ({ toggle }) => {
   // };
   const handleLogout = (path: string) => {
     if (path === "/login") {
-      useEffect(() => {
-        if (socket && path === "/login"){
-          socket.emit('userOffline');
-        }
-      }, []);
+      // useEffect(() => {
+      if (socket) {
+        //   console.log("logout=========>");
+        socket.emit("userOffline");
+      }
+      axios.get("http://localhost:3000/profile/deletecookie", {
+        withCredentials: true,
+      });
+      // }, []);
+      // try{
+
+      // }catch(err){
       // Perform logout actions, such as modifying status to offline
       // For example:
       // setOffline(); // Your function to modify status to offline
@@ -41,6 +48,7 @@ const SidebarData: React.FC<SidebarDataProps> = ({ toggle }) => {
       console.log("logoooooooout");
       // history.push("/login"); // Redirect to the login page after logout
     } else {
+      console.log("path====>");
       console.log("path", path);
       setActiveSection(path);
     }
@@ -59,11 +67,16 @@ const SidebarData: React.FC<SidebarDataProps> = ({ toggle }) => {
               to={data.path}
               // onClick={() => setActiveSection(data.path)}
               onClick={() => handleLogout(data.path)}
-              className={`${data.path === activeSection && 'bg-gradient-to-br from-[#f78562] to-[#ce502a] text-white'} "lg:mr-8 text-lg lg:text-[1.7rem] sidebar text-[#7B7987] hover:text-white "`}
+              className={`${
+                data.path === activeSection &&
+                "bg-gradient-to-br from-[#f78562] to-[#ce502a] text-white"
+              } "lg:mr-8 text-lg lg:text-[1.7rem] sidebar text-[#7B7987] hover:text-white "`}
             >
               {data.icon}
             </Link>
-                <span className=" block sidebar-tooltip group-hover:scale-100">{data.text}</span>
+            <span className=" block sidebar-tooltip group-hover:scale-100">
+              {data.text}
+            </span>
             {/* <div className={`${toggle ? "opacity-0 delay-200" : ""} text-[1rem] text-white whitespace-pre`}>{data.text}</div> */}
           </div>
         );

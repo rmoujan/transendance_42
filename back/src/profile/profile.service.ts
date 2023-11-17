@@ -37,7 +37,7 @@ export class ProfileService {
         const verifyToken = this.jwt.verify(req.cookies['cookie']);
         console.log('orginal name : ', photo.originalname);
 
-        const filePath = '/goinfre/lelbakna/last/last_transendance/front/public/uploads/' + photo.originalname; // Use the original name or generate a unique name
+        const filePath = '/goinfre/lelbakna/freez/last_transendance/front/public/uploads/' + photo.originalname; // Use the original name or generate a unique name
         const rightPath = '/public/uploads/' + photo.originalname;//path to store in db
         // console.log("filePath");
         console.log(photo.originalname);
