@@ -10,7 +10,7 @@ import { Logger } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import { Data, Room, RoomBall, RoomPlayer } from "./interfaces";
 import { JwtService } from "./auth/jwt/jwtservice.service";
-import { PrismaService } from "./prisma/prisma.service";
+import { PrismaService } from "./prisma.service";
 import { subscribe } from "diagnostics_channel";
 
 @WebSocketGateway()
@@ -31,6 +31,7 @@ export class AppGateway
   private isPaused: boolean = false;
   private player01: number;
   private player02: number;
+  
 
   private logger: Logger = new Logger("AppGateway");
 
@@ -106,7 +107,7 @@ export class AppGateway
 
   @SubscribeMessage("join-friends-room")
   async handleJoinFriendsRoom(client: Socket, data: any) {
-    console.log("Motherfuckers");
+    // console.log("Motherfuckers");
     const userId: number = this.decodeCookie(client).id;
     if (!this.users.has(userId)) {
       this.users.set(userId, client.id);

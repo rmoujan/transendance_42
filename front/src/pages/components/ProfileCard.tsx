@@ -4,7 +4,7 @@ import { fadeIn } from "./variants";
 import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
 import Cover from "../../img/bg33.png";
-import { socket } from "../../socket";
+import { socket_user } from "../../socket";
 type User = {
   id_user: number;
   name: string;
@@ -29,8 +29,8 @@ const ProfileCard = () => {
   const handleLogout = (path: string) => {
     console.log("path", activeSection);
     if (path === "/login" || path === "/") {
-      if (socket) {
-        socket.emit("userOffline");
+      if (socket_user) {
+        socket_user.emit("userOffline");
       }
       axios.get("http://localhost:3000/profile/deletecookie", {
         withCredentials: true,

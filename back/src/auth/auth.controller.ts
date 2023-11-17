@@ -13,7 +13,7 @@ import { FortyTwoGuard } from "./utils/Guards";
 import { AuthGuard } from "@nestjs/passport";
 import { JwtService } from "../auth/jwt/jwtservice.service";
 import { JwtAuthGuard } from "../auth/jwt/JwtGuard";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "src/prisma.service";
 import { authenticator } from "otplib";
 import * as qrcode from "qrcode";
 import { NumberDto } from "./utils/NumberDto";
@@ -151,9 +151,9 @@ export class AuthController {
         where: { id_user: body.id_user },
         include: { freind: true },
       });
-      console.log("adding friends");
-      console.log(user.freind);
-      console.log(otherUser.freind);
+      // console.log("adding friends");
+      // console.log(user.freind);
+      // console.log(otherUser.freind);
     } catch (err) {
       // console.log(err);
     }

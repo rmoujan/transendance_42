@@ -1,5 +1,5 @@
 import { Injectable, Req, Body ,ForbiddenException} from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/prisma.service';
 import { JwtService } from '../auth/jwt/jwtservice.service';
 import { CreateUserDto } from './nameDto';
 import * as fs from 'fs';

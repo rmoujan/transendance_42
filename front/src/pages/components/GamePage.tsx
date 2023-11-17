@@ -5,9 +5,9 @@ import { motion } from "framer-motion";
 import { fadeIn } from "./variants";
 import Arcan from "../../img/Arcane.png";
 import axios from "axios";
-import { socket, socketuser } from "../../socket";
+import { socket_user, socketuser } from "../../socket";
 
-if (socket == undefined) {
+if (socket_user == undefined) {
   socketuser();
 }
 

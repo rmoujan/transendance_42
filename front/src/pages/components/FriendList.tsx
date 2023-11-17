@@ -14,7 +14,7 @@ import { topData } from "../Data/TopStreamerData";
 import { Popover, Transition } from "@headlessui/react";
 import { useAppSelector } from "../../redux/store/store";
 import { Modal } from "antd";
-import { socket, socketuser } from "../../socket";
+import { socket_user, socketuser } from "../../socket";
 import {
   Card,
   CardHeader,
@@ -92,7 +92,7 @@ function FriendList() {
   }, []);
 
   useEffect(() => {
-    if (socket == undefined) {
+    if (socket_user == undefined) {
       socketuser();
     }
     if (users.length > 0) {
@@ -135,9 +135,9 @@ function FriendList() {
     //   okType: "danger",
     //   className: " flex justify-center items-center h-100vh",
     // onOk: () => {
-    if (socket) {
-      socket.emit("friends-list", id_user);
-      socket.emit("newfriend", id_user);
+    if (socket_user) {
+      socket_user.emit("friends-list", id_user);
+      socket_user.emit("newfriend", id_user);
     }
     const updatedUsers = friend.filter((user) => user.id_user !== id_user);
     setFriend(updatedUsers);
@@ -164,9 +164,9 @@ function FriendList() {
       okType: "danger",
       className: " flex justify-center items-center h-100vh",
       onOk: () => {
-        if (socket) {
-          socket.emit("friends-list", id_user);
-          socket.emit("newfriend", id_user);
+        if (socket_user) {
+          socket_user.emit("friends-list", id_user);
+          socket_user.emit("newfriend", id_user);
         }
         const updatedUsers = friend.filter((user) => user.id_user !== id_user);
         setFriend(updatedUsers);
@@ -196,11 +196,11 @@ function FriendList() {
     //   .then((res) => res.json())
     //   .then((data) => setUsers(data))
   }, []);
-  if (socket) {
-    socket.on("list-friends", async () => {
+  if (socket_user) {
+    socket_user.on("list-friends", async () => {
       fetchData();
     });
-    socket.on("offline", (data: any) => {
+    socket_user.on("offline", (data: any) => {
       setFriend((prevUsers) => {
         return prevUsers.map((user: User) => {
           if (user.id_user === data.id_user) {
@@ -210,7 +210,7 @@ function FriendList() {
         });
       });
     });
-    socket.on("online", (data: any) => {
+    socket_user.on("online", (data: any) => {
       setFriend((prevUsers) => {
         return prevUsers.map((user: User) => {
           if (user.id_user === data.id_user) {
@@ -224,7 +224,7 @@ function FriendList() {
 
   function AddMember(id_user: number) {
     console.log("id_user---------->", id_user);
-    if (socket) socket.emit("add-friend", { id_user });
+    if (socket_user) socket_user.emit("add-friend", { id_user });
     // axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     Modal.confirm({
@@ -350,7 +350,7 @@ function FriendList() {
                                 </p>
                                 {/* <p className="text-sm text-slate-500 truncate">{data.email}</p> */}
                                 <div className="text-xs text-blue-200 dark:text-blue-200">
-                                  {data.email}
+                                  {data?.email}
                                 </div>
                               </div>
                               <button

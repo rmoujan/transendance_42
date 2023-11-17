@@ -17,7 +17,7 @@ import { Card } from "antd";
 import { useAppSelector } from "../../redux/store/store";
 import { fa } from "@faker-js/faker";
 import { CgSpinner } from "react-icons/cg";
-import { socket } from "../../socket";
+import { socket_user } from "../../socket";
 
 type User = {
   id_user: number;
@@ -48,8 +48,8 @@ function Friends({user}: AccountOwnerProps) {
   const InviteToPlaye =  (friend: any) => {
     console.log("invite to playe");
     const id = friend.id_user;
-    if (socket)
-      socket.emit("invite-game", {id_user:id});
+    if (socket_user)
+    socket_user.emit("invite-game", {id_user:id});
 	  //friend.id_user
 	  //accountOwner = false
 	  //get returngameinfos from backend

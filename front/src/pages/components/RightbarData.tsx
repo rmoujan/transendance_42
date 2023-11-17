@@ -8,7 +8,7 @@ import ProfileCardFriend from "./ProfileCardFriend";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import axios from "axios";
-import { socket } from "../../socket";
+import { socket_user } from "../../socket";
 
 export function handelProfile(data: any) {
   return data;
@@ -56,15 +56,15 @@ const RightbarData: React.FC<RightbarDataProps> = ({ toggle }) => {
         setAccountOwner(user);
 
         // Assuming you have a socket instance available
-        if (socket) {
-          socket.on("RefreshFriends", async () => {
+        if (socket_user) {
+          socket_user.on("RefreshFriends", async () => {
             const newfriends = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true }); 
             console.log("newfriends : " , newfriends.data);
             // console.log("what is inside friends : " , newfriends); 
             setUsers(newfriends.data); // Add the new friend to the existing user list
           });
           console.log("refreeeeeeeshfriends");
-          socket.on("offline", (data: any) => {
+          socket_user.on("offline", (data: any) => {
             setUsers(prevUsers => {
               return prevUsers.map((user: User) => {
                 if (user.id_user === data.id_user) {
@@ -74,7 +74,7 @@ const RightbarData: React.FC<RightbarDataProps> = ({ toggle }) => {
               });
             });
           });
-          socket.on("online", (data: any) => {
+          socket_user.on("online", (data: any) => {
             setUsers(prevUsers => {
               return prevUsers.map((user: User) => {
                 if (user.id_user === data.id_user) {

@@ -22,7 +22,7 @@ import Table from "../../img/tableping.png";
 // import Friends from "./friends";
 import Friends from "./Friends";
 import { Key } from "@phosphor-icons/react";
-import {socket, socketuser} from '../../socket'
+import {socket_user, socketuser} from '../../socket'
 
 type User = {
   id_user: number;
@@ -57,7 +57,7 @@ function Maincontent() {
   };
   const [user, setUser] = useState<User[]>([]);
   useEffect(() => {
-    if (socket == undefined){
+    if (socket_user == undefined){
       socketuser();
     }
     const fetchData = async () => {

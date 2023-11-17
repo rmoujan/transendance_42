@@ -1,4 +1,4 @@
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from 'src/prisma.service';
 import { JwtService } from '../auth/jwt/jwtservice.service';
 export declare class ProfileService {
     private prisma;

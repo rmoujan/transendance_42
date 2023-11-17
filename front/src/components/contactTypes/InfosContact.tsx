@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Dialog,
-  DialogTitle,
   Divider,
   IconButton,
   Slide,
@@ -20,7 +19,7 @@ import {
   Trash,
   X,
 } from "@phosphor-icons/react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { toggleDialog, updatedContactInfo } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
@@ -37,8 +36,9 @@ const Transition = React.forwardRef(function Transition(
 
 const InfosContact = () => {
   const dispatch = useAppDispatch();
-  const { contact } = useAppSelector((store) => store);
+  const { contact } = useAppSelector(store => store);
   console.log(contact);
+
 
   const [openBlock, setOpenBlock] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -55,6 +55,10 @@ const InfosContact = () => {
     setOpenMute(false);
   };
 
+  const handleFileUpload = () => {
+    // handle click
+  };
+
   return (
     <Dialog
       open={contact.contactInfos.open}
@@ -63,11 +67,14 @@ const InfosContact = () => {
       onClose={() => {
         dispatch(toggleDialog());
       }}
-      PaperProps={{ style: { backgroundColor: "#AE9BCD", borderRadius: "35px" } }}
+      PaperProps={{
+        style: { backgroundColor: "#AE9BCD", borderRadius: "35px" },
+      }}
       // aria-describedby="alert-dialog-slide-description"
     >
-
-      <Typography sx={{ m: "0 8px", p: 2 }} variant="h6">Contact info</Typography>
+      <Typography sx={{ m: "0 8px", p: 2 }} variant="h6">
+        Contact info
+      </Typography>
       {/* <DialogTitle sx={{ m: "0 8px", p: 2 }} >Contact info</DialogTitle> */}
       <IconButton
         aria-label="close"
@@ -78,7 +85,7 @@ const InfosContact = () => {
           position: "absolute",
           left: "22.7em",
           top: 10,
-          color: (theme) => theme.palette.grey[800],
+          color: theme => theme.palette.grey[800],
         }}
       >
         <X />
@@ -89,7 +96,10 @@ const InfosContact = () => {
           height: "100%",
           position: "relative",
           flexGrow: 1,
-          overflowY: "scroll",
+          overflowY: "auto",
+          "&::-webkit-scrollbar": {
+            width: "0.4em",
+          },
         }}
         p={3}
         spacing={3}
@@ -97,81 +107,18 @@ const InfosContact = () => {
         {/* adding image in and username */}
         <Stack alignItems={"center"} direction={"column"} spacing={2}>
           <Avatar
-            alt={faker.person.firstName()}
-            src={faker.image.avatar()}
+            alt={contact.name}
+            src={contact.avatar}
             sx={{ width: 200, height: 200 }}
           />
           {/* name */}
           <Stack direction={"column"} alignItems={"center"}>
             <Typography variant="h3" color={"#322554"} sx={{ padding: 0 }}>
-              {faker.person.firstName()}
+              {contact.name}
             </Typography>
           </Stack>
         </Stack>
-        {/* media */}
-        <Stack alignItems={"center"} direction={"column"} spacing={1}>
-          <Box
-            sx={{
-              width: 580,
-              height: "100%",
-              padding: "25px",
-              margin: 0,
-              borderRadius: "35px",
-              backgroundColor: "#EADDFF",
-            }}
-          >
-            <Stack
-              alignItems={"center"}
-              direction={"row"}
-              justifyContent={"space-between"}
-            >
-              <Typography variant="subtitle1">Media</Typography>
-              <Button
-                onClick={() => {
-                  dispatch(updatedContactInfo("SHARED"));
-                }}
-                endIcon={<CaretRight />}
-              >
-                {/* {console.log(contact)} */}
-                401
-              </Button>
-            </Stack>
-            <Stack alignItems={"center"} direction={"row"} spacing={2}>
-              {[1, 2, 3].map(() => (
-                <Box
-                  sx={{
-                    borderRadius: "5px",
-                  }}
-                >
-                  <img
-                    src={faker.image.url()}
-                    alt={faker.person.fullName()}
-                    style={{ borderRadius: "15px" }}
-                  />
-                </Box>
-              ))}
-            </Stack>
-          </Box>
-        </Stack>
         <Divider />
-        {/* Starred messages */}
-        <Stack
-          alignItems={"center"}
-          direction={"row"}
-          justifyContent={"space-between"}
-        >
-          <Stack alignItems={"center"} direction={"row"} spacing={2}>
-            <Star />
-            <Typography variant="subtitle1">Starred Messages</Typography>
-          </Stack>
-          <IconButton
-            onClick={() => {
-              dispatch(updatedContactInfo("STARRED"));
-            }}
-          >
-            <CaretRight />
-          </IconButton>
-        </Stack>
         {/* statics */}
         <Stack direction={"row"} alignItems={"center"}>
           <Box

@@ -18,7 +18,7 @@ const passport_1 = require("@nestjs/passport");
 const passport_42_1 = require("passport-42");
 const auth_service_1 = require("../auth.service");
 const jwtservice_service_1 = require("../jwt/jwtservice.service");
-const prisma_service_1 = require("../../prisma/prisma.service");
+const prisma_service_1 = require("../../prisma.service");
 let FortyTwoStrategy = class FortyTwoStrategy extends (0, passport_1.PassportStrategy)(passport_42_1.Strategy, '42') {
     constructor(authservice, jwt, prisma) {
         super({

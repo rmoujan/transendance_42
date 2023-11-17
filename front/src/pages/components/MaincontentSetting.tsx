@@ -22,7 +22,7 @@ import TwoFactor from "../../components/TwoFactor";
 import { CgSpinner } from "react-icons/cg";
 import astronaut from "../../img/astronaut_.png";
 import { url } from "inspector";
-import { socket, socketuser } from "../../socket";
+import { socket_user, socketuser } from "../../socket";
 
 type User = {
   id_user: number;
@@ -52,7 +52,7 @@ function MaincontentSetting() {
     setTwoFactor(data);
   };
   useEffect(() => {
-    if (socket == undefined) {
+    if (socket_user == undefined) {
       socketuser();
     }
     fetchData();

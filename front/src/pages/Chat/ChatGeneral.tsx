@@ -2,18 +2,40 @@ import { Box, Stack } from "@mui/material";
 import InfosContact from "../../components/contactTypes/InfosContact";
 import SharedMsgs from "../../components/contactTypes/SharedMsgs";
 import StarredMsgs from "../../components/contactTypes/StarredMsgs";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { useAppSelector } from "../../redux/store/store";
 import Converstation from "../../sections/Converstation";
 import NoChat from "../../sections/NoChat";
 import ChatTabs from "./ChatTabs";
-
+import { useEffect } from "react";
+import axios from "axios";
+import InfosChannel from "../../components/contactTypes/infosChannel";
 
 const ChatGeneral: React.FC = () => {
-  const { contact, profile } = useAppSelector((state) => state);
-  const dispatch = useAppDispatch();
-  console.log('==========>', profile);
+  const { contact, profile } = useAppSelector(state => state);
 
-  // Create a function to render the component conditionally
+  useEffect(() => {
+    // console.log('chat general', contact.room_id, contact.type_chat);
+    //   function axiosTest() {
+    //     console.log(contact.room_id)
+    //     // create a promise for the axios request
+    //     const promise = axios.get(`http://localhost:3000/chatData/${contact.room_id}`, {
+    //       params: {
+    //         id: contact.room_id,
+    //       },
+    //       withCredentials: true,
+    //     })
+    //     // using .then, create a new promise which extracts the data
+    //     const dataPromise = promise.then((response) => response.data)
+    //     // return it
+    //     return dataPromise
+    // }
+    // axiosTest()
+    // .then(data => {
+    //   console.log(data)
+    //     Response.json({ message: 'Request received!', data })
+    // })
+    // .catch(err => console.log(err))
+  }, []);
   const renderContactInfoComponent = () => {
     if (contact.contactInfos.open) {
       switch (contact.contactInfos.type) {
@@ -23,6 +45,8 @@ const ChatGeneral: React.FC = () => {
           return <StarredMsgs />;
         case "SHARED":
           return <SharedMsgs />;
+        case "CHANNEL":
+          return <InfosChannel />;
         default:
           return null;
       }
@@ -54,7 +78,7 @@ const ChatGeneral: React.FC = () => {
           }}
           className="shadow-2xl bg-gradient-to-tr from-[#2A2742] via-[#3f3a5f] to-[#2A2742]"
         >
-          {contact.type_chat === "individual" && contact.room_id !== "" ? (
+          {contact.type_chat !== "" && contact.room_id.toString() !== "" ? (
             <Converstation />
           ) : (
             <NoChat />
@@ -62,7 +86,6 @@ const ChatGeneral: React.FC = () => {
         </Box>
       </Stack>
 
-      {/* Render the component conditionally using the function */}
       {renderContactInfoComponent()}
     </Stack>
   );

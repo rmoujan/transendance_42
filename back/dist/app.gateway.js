@@ -14,7 +14,7 @@ const websockets_1 = require("@nestjs/websockets");
 const common_1 = require("@nestjs/common");
 const socket_io_1 = require("socket.io");
 const jwtservice_service_1 = require("./auth/jwt/jwtservice.service");
-const prisma_service_1 = require("./prisma/prisma.service");
+const prisma_service_1 = require("./prisma.service");
 let AppGateway = class AppGateway {
     constructor(jwt, prisma) {
         this.jwt = jwt;
@@ -83,7 +83,6 @@ let AppGateway = class AppGateway {
         this.users.delete(this.decodeCookie(client).id);
     }
     async handleJoinFriendsRoom(client, data) {
-        console.log("Motherfuckers");
         const userId = this.decodeCookie(client).id;
         if (!this.users.has(userId)) {
             this.users.set(userId, client.id);

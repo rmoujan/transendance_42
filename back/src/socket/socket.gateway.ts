@@ -11,7 +11,7 @@ import {
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { JwtService } from "../auth/jwt/jwtservice.service";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "src/prisma.service";
 import { JwtAuthGuard } from "../auth/jwt/JwtGuard";
 
 @WebSocketGateway({ namespace: "users" })
@@ -33,7 +33,7 @@ export class SocketGateway
     cookieHeader = client.handshake.headers.cookie;
     if (cookieHeader == undefined) return null;
     //
-    // console.log(cookieHeader);
+    console.log(cookieHeader);
     const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
       const [name, value] = cookie.trim().split("=");
       acc[name] = value;

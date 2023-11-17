@@ -8,7 +8,7 @@ import { Modal } from "antd"
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import { Popover, Transition } from "@headlessui/react";
 import { topData } from "../Data/TopStreamerData";
-import { socket ,socketuser} from "../../socket";
+import { socket_user ,socketuser} from "../../socket";
 // import { topData } from "../Data/TopData";
 // import { Modal, Popover } from "antd";
 import axios from "axios";
@@ -57,8 +57,8 @@ function AccountOwner({ user }: AccountOwnerProps) {
     , []);  
   const [friend, setFriend] = useState<User[]>([]);
   function AddMember(id_user: number) {
-    if (socket)
-      socket.emit("add-friend", { id_user });
+    if (socket_user)
+    socket_user.emit("add-friend", { id_user });
     // axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     console.log("id_user", id_user);

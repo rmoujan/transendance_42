@@ -1,6 +1,6 @@
 import { ExecutionContext, Injectable, Res } from "@nestjs/common";
 import { JwtService } from "../auth/jwt/jwtservice.service";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "src/prisma.service";
 import { authenticator } from "otplib";
 import * as qrcode from "qrcode";
 

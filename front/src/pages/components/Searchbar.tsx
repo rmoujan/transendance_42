@@ -10,7 +10,7 @@ import { da } from "@faker-js/faker";
 import Arcane from "../../img/Arcane.png";
 import ProfileCard from "./ProfileCard";
 import axios from "axios";
-import { socket } from "../../socket";
+import { socket_user } from "../../socket";
 import { set } from "react-hook-form";
 import { notification } from "antd";
 
@@ -54,10 +54,10 @@ function Searchbar() {
         );
         setNotification(notif.data);
 
-        if (socket) {
+        if (socket_user) {
           // console.log("id_user ", friend.id_user);
-          socket.emit("friends-list", friend.id_user);
-          socket.emit("newfriend", friend.id_user);
+          socket_user.emit("friends-list", friend.id_user);
+          socket_user.emit("newfriend", friend.id_user);
         }
       })
       .catch((err) => {
@@ -138,11 +138,11 @@ function Searchbar() {
     fetchData();
   };
   useEffect(() => {
-    if (socket) {
+    if (socket_user) {
       //get notification
-      socket.emit("userOnline");
+      socket_user.emit("userOnline");
 
-      socket.on("notification", async () => {
+      socket_user.on("notification", async () => {
         console.log("event notification");
         const { data } = await axios.get(
           "http://localhost:3000/profile/Notifications",

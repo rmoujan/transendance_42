@@ -1,37 +1,30 @@
 import { faker } from "@faker-js/faker";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Avatar, Button, FormControl, IconButton, InputAdornment, InputLabel, MenuItem, Select, Stack, TextField, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  FormControl,
+  IconButton,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { showSnackbar } from "../../redux/slices/contact";
-import { useAppDispatch } from "../../redux/store/store";
-
-
-
-const channelOptions: Option[] = [
-  { key: 2133140, label: "RandomGamingManiac", value: "Public Channel 1", password: "vDR9i1Lc0uU28" },
-  { key: 3497838, label: "GamingFrenzyFun", value: "Public Channel 2", password: "y5CdnKXAUg2Kw" },
-  { key: 3030394, label: "InsaneGamingQuest", value: "Public Channel 3", password: "Jxd5nSqOb4y1o" },
-  { key: 5173520, label: "TheRandomGameTime", value: "Public Channel 4", password: "EzOcwxBWPWCZH" },
-  { key: 4958154, label: "GamerExtraordinaire", value: "Public Channel 5", password: "OIa6i8AKYbgUc" },
-  { key: 3053517, label: "QuirkyGameGuru", value: "Public Channel 6", password: "ARpWBBiZ2NeAW" },
-  { key: 1019799, label: "GameOnWithRandom", value: "Public Channel 7", password: "3LgJ7ekRPXJ9t" },
-  { key: 606187, label: "LuckyGamingChamp", value: "Public Channel 8", password: "QrLmY7uNibVJb" },
-  { key: 1579342, label: "UnpredictableGamingGuy", value: "Public Channel 9", password: "RGLuEfi4XmOt9" },
-  { key: 2836728, label: "GamingInRandomMode", value: "Public Channel 10", password: "tYwXYWO2pV9b2" },
-  { key: 237783, label: "GameOnWithRandom", value: "Public Channel 11", password: "RopLZn193D9vs" },
-  { key: 2615389, label: "LuckyGamingChamp", value: "Public Channel 8", password: "6MiBzRuZnRgUr" },
-  { key: 438539, label: "UnpredictableGamingGuy", value: "Public Channel 9", password: "szyBoTbXCCGIb" },
-  { key: 3590170, label: "GamingInRandomMode", value: "Public Channel 10", password: "4oDA6PKwYfHdB" },
-  { key: 2979652, label: "GameOnWithRandom", value: "Public Channel 11", password: "VN6aUDXCJgkG2" },
-];
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import axios from "axios";
 
 interface Option {
-  value: string;
-  label: string;
-  key: number;
+  name: string;
+  visibility: string;
+  id_channel: number;
   password: string;
 }
 
@@ -41,15 +34,18 @@ interface JoinProtectedFormData {
 }
 
 const JoinProtectedForm = ({ handleClose }: any) => {
-  
+  const { protectedChannels, channels } = useAppSelector(
+    state => state.channels
+  );
+
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
 
   const ProtectedChannelSchema = Yup.object().shape({
     mySelect: Yup.object().shape({
-      value: Yup.string(),
-      label: Yup.string(),
-      key: Yup.number(),
+      name: Yup.string(),
+      visibility: Yup.string(),
+      id_channel: Yup.number(),
       password: Yup.string(),
     }),
     password: Yup.string().required("Password is required"),
@@ -57,93 +53,119 @@ const JoinProtectedForm = ({ handleClose }: any) => {
 
   const defaultValues = {
     mySelect: {
-      value: "",
-      label: "",
+      name: "",
+      visibility: "",
       password: "",
-      key: 0,
+      id_channel: 0,
     },
     password: "",
   };
 
-  const {
-    register,
-    handleSubmit,
-    formState,
-  } = useForm({
+  const { register, handleSubmit, formState } = useForm({
     defaultValues: {
       mySelect: {
-        value: "",
-        label: "",
-        key: 0,
-      }
+        name: "",
+        visibility: "",
+        id_channel: 0,
+      },
     },
-    resolver: yupResolver(ProtectedChannelSchema)
+    resolver: yupResolver(ProtectedChannelSchema),
   });
 
   const { errors } = formState;
 
   const onSubmit = async (data: JoinProtectedFormData) => {
     try {
-      if (data.mySelect.password === data.password) {
-        dispatch(
-          showSnackbar({
-            severity: "success",
-            message: `You Join to ${data.mySelect.value} successfully`,
-          })
-        );
-        // Call API or perform action here
-        console.log("DATA", data);
-      } else {
-        dispatch(
-          showSnackbar({
-            severity: "warning",
-            message: "Password is incorrect. Please try again.",
-          })
-        );
-      }
+      console.log("DATA", data);
+      const sendData = {
+        id_channel: data.mySelect.id_channel,
+        name: data.mySelect.name,
+        visibility: data.mySelect.visibility,
+        password: data.password,
+      };
+      axios.post(
+        "http://localhost:3000/channels/join",
+        { sendData },
+        { withCredentials: true }
+      );
+      dispatch(
+        showSnackbar({
+          severity: "success",
+          message: `You Join to ${data.mySelect.name} successfully`,
+        })
+      );
+      handleClose();
     } catch (error) {
       console.log("error", error);
       dispatch(
         showSnackbar({
           severity: "failed",
-          message: `You Failed Join to ${data.mySelect.value}`,
+          message: `You Failed Join to ${data.mySelect.name}`,
         })
       );
     }
   };
 
-  const [selectedOption, setSelectedOption] = React.useState<Option>({ key: 0, value: "", label: "", password: "" });
+  const [selectedOption, setSelectedOption] = React.useState<Option>({
+    id_channel: 0,
+    name: "",
+    visibility: "",
+    password: "",
+  });
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
   };
 
   return (
-    <form onSubmit={handleSubmit((data) => onSubmit({ ...data, mySelect: selectedOption }))}>
+    <form
+      onSubmit={handleSubmit(data =>
+        onSubmit({ ...data, mySelect: selectedOption })
+      )}
+    >
       <Stack spacing={3}>
         <FormControl fullWidth>
           <InputLabel>Choose a Channel</InputLabel>
           <Select
-            {...register("mySelect.value")}
-            onChange={(event) => {
-              const selectedValue = event.target.value;
-              const selectedOption = channelOptions.find((option) => option.value === selectedValue);
-              setSelectedOption(selectedOption || channelOptions[0]);
+            {...register("mySelect.name")}
+            onChange={(event: any) => {
+              const selectedValue: any = event.target.value;
+              const selectedOption: any = protectedChannels.find(
+                (option: any) => option.name === selectedValue
+              );
+              setSelectedOption(
+                selectedOption || protectedChannels[0] || undefined
+              );
             }}
             label="Choose a Channel"
             fullWidth
             required
           >
-            {channelOptions.map((option) => (
-              <MenuItem key={option.key} value={option.value}>
-                <Stack direction={"row"} alignItems={"center"} justifyContent={"space-around"}>
-                  <Avatar src={faker.image.avatar()} sx={{ width: 52, height: 52, marginRight: 2 }} />
-                  <Typography variant="subtitle2" color={"black"}>
-                    {option.label}
-                  </Typography>
-                </Stack>
-              </MenuItem>
-            ))}
+            {protectedChannels
+              .filter(
+                protectedChannel =>
+                  !channels.some(
+                    channel =>
+                      channel.channel_id === protectedChannel?.id_channel
+                  )
+              )
+              .map((option: any) => (
+                <MenuItem key={option.id_channel} value={option.name}>
+                  <Stack
+                    direction={"row"}
+                    alignItems={"center"}
+                    justifyContent={"space-around"}
+                  >
+                    <Avatar
+                      src={faker.image.avatar()}
+                      sx={{ width: 52, height: 52, marginRight: 2 }}
+                    />
+                    <Typography variant="subtitle2" color={"black"}>
+                      {option.name}
+                    </Typography>
+                  </Stack>
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
         <FormControl fullWidth>
@@ -175,9 +197,8 @@ const JoinProtectedForm = ({ handleClose }: any) => {
             "&:hover": {
               backgroundColor: "#684C83",
               color: "#C7BBD1",
-            }
-          }
-          }
+            },
+          }}
           type="submit"
           variant="contained"
         >

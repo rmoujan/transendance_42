@@ -2,7 +2,7 @@ import { Res, Injectable, CanActivate, ExecutionContext } from "@nestjs/common";
 // import { JwtService } from '@nestjs/jwt';
 import * as jwt from "jsonwebtoken";
 import { JwtService } from "./jwtservice.service";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "src/prisma.service";
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -45,7 +45,7 @@ export class JwtAuthGuard implements CanActivate {
       //  }
       return true;
     } catch (error) {
-      console.log("falsyyyyyy");
+      // console.log("falsyyyyyy");
       return false;
     }
   }

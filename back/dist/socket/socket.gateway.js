@@ -17,7 +17,7 @@ const common_1 = require("@nestjs/common");
 const websockets_1 = require("@nestjs/websockets");
 const socket_io_1 = require("socket.io");
 const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
-const prisma_service_1 = require("../prisma/prisma.service");
+const prisma_service_1 = require("../prisma.service");
 const JwtGuard_1 = require("../auth/jwt/JwtGuard");
 let SocketGateway = class SocketGateway {
     constructor(jwt, prisma) {
@@ -30,6 +30,7 @@ let SocketGateway = class SocketGateway {
         cookieHeader = client.handshake.headers.cookie;
         if (cookieHeader == undefined)
             return null;
+        console.log(cookieHeader);
         const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
             const [name, value] = cookie.trim().split("=");
             acc[name] = value;

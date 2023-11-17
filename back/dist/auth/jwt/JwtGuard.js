@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.JwtAuthGuard = void 0;
 const common_1 = require("@nestjs/common");
 const jwtservice_service_1 = require("./jwtservice.service");
-const prisma_service_1 = require("../../prisma/prisma.service");
+const prisma_service_1 = require("../../prisma.service");
 let JwtAuthGuard = class JwtAuthGuard {
     constructor(prisma, JwtService) {
         this.prisma = prisma;
@@ -38,7 +38,6 @@ let JwtAuthGuard = class JwtAuthGuard {
             return true;
         }
         catch (error) {
-            console.log("falsyyyyyy");
             return false;
         }
     }

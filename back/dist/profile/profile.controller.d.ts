@@ -1,6 +1,6 @@
 import { ProfileService } from "./profile.service";
 import { CreateUserDto } from "./nameDto";
-import { PrismaService } from "src/prisma/prisma.service";
+import { PrismaService } from "src/prisma.service";
 import { JwtService } from "../auth/jwt/jwtservice.service";
 import { ProfileDto } from "./AboutDto";
 import { MixedDto } from "./BotDto";

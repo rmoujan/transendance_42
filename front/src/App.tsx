@@ -8,26 +8,29 @@ import { closeSnackBar } from "./redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "./redux/store/store";
 import { FetchProfile } from "./redux/slices/profile";
 import { FetchFriends } from "./redux/slices/app";
+import { FetchChannels, FetchProtectedChannels, FetchPublicChannels } from "./redux/slices/channels";
 
 const vertical = "top";
 const horizontal = "center";
 
-const Alert = React.forwardRef((props, ref) => (
+const Alert = React.forwardRef((props: any, ref: any) => (
   <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
 ));
 
 function App() {
   const { severity, message, open } = useAppSelector(
-    (state) => state.contact.snackbar
+    state => state.contact.snackbar
   );
   const dispatch = useAppDispatch();
-  dispatch(FetchProfile())
-  dispatch(FetchFriends())
- 
+  // dispatch(FetchFriends());
+  // dispatch(FetchChannels());
+  // dispatch(FetchProtectedChannels());
+  // dispatch(FetchPublicChannels());
+
   return (
-        <div>
+    <div>
       <BrowserRouter>
-          <Home />
+        <Home />
       </BrowserRouter>
       {message && open ? (
         <Snackbar
@@ -36,13 +39,11 @@ function App() {
           autoHideDuration={4000}
           key={vertical + horizontal}
           onClose={() => {
-            console.log("This is clicked");
             dispatch(closeSnackBar());
           }}
         >
           <Alert
             onClose={() => {
-              console.log("This is clicked");
               dispatch(closeSnackBar());
             }}
             severity={severity}
@@ -54,7 +55,7 @@ function App() {
       ) : (
         <></>
       )}
-        </div>
+    </div>
   );
 }
 

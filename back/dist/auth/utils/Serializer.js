@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SessionSerializer = void 0;
 const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
-const prisma_service_1 = require("../../prisma/prisma.service");
+const prisma_service_1 = require("../../prisma.service");
 let SessionSerializer = class SessionSerializer extends passport_1.PassportSerializer {
     constructor(prisma) {
         super();

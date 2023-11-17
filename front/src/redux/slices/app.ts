@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { useAppDispatch } from "../store/store";
 import { useDispatch } from "react-redux";
 // import { useAppDispatch } from "../store/store";
 
@@ -27,6 +26,7 @@ export const AppSlice = createSlice({
             state.users = action.payload;
         },
         fetchFriends(state, action) {
+            // console.log(action);
             // ~ get all friends
             state.friends = action.payload;
         },
@@ -36,7 +36,6 @@ export const AppSlice = createSlice({
         },
         updateFriends(state, action) {
             // * update friends
-            // console.log(action);
             state.friends = action.payload;
         },
         addFriend(state, action) {
@@ -58,10 +57,11 @@ export const AppSlice = createSlice({
 });
 
 export function FetchFriends() {
-    const dispatch = useDispatch();
     // const user_id = localStorage.getItem("user_id");
+    const dispatch = useDispatch();
     return async () => {
-        await axios.get("http://localhost:3000/auth/friends", { withCredentials: true,
+        await axios.get("http://localhost:3000/auth/friends", {
+            withCredentials: true,
             headers: {
                 "Content-Type": "application/json",
                 // Authorization: `Bearer ${getState().auth.token}`,
@@ -70,12 +70,15 @@ export function FetchFriends() {
         )
             .then((response) => {
                 // console.log(response.data);
-                dispatch(AppSlice.actions.updateFriends(response.data))
+                dispatch(updateFriends(response.data));
+                // AppSlice.actions.updateFriends({ friends: response.data.data });
             })
             .catch((err) => {
-                // console.log(err);
+                console.log(err);
             });
     };
 }
 
 export default AppSlice.reducer;
+
+export const { fetchUsers, fetchFriends, fetchRequestFriends, updateFriends, addFriend, acceptFriend, removeFriend, declineFriend } = AppSlice.actions;

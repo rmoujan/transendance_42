@@ -10,7 +10,7 @@ exports.ProfileModule = void 0;
 const common_1 = require("@nestjs/common");
 const profile_service_1 = require("./profile.service");
 const profile_controller_1 = require("./profile.controller");
-const prisma_service_1 = require("../prisma/prisma.service");
+const prisma_service_1 = require("../prisma.service");
 const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
 let ProfileModule = class ProfileModule {
 };

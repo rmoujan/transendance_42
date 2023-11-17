@@ -3,7 +3,7 @@ import { datas } from "../Data/Data";
 import { Link, useRoutes, useLocation } from "react-router-dom";
 import React, { useCallback, useState, useEffect } from "react";
 import axios from "axios";
-import { socket, socketuser } from "../../socket";
+import { socket_user, socketuser } from "../../socket";
 import { cp } from "fs";
 
 interface SidebarDataProps {
@@ -28,9 +28,9 @@ const SidebarData: React.FC<SidebarDataProps> = ({ toggle }) => {
   const handleLogout = (path: string) => {
     if (path === "/login") {
       // useEffect(() => {
-      if (socket) {
+      if (socket_user) {
         //   console.log("logout=========>");
-        socket.emit("userOffline");
+        socket_user.emit("userOffline");
       }
       axios.get("http://localhost:3000/profile/deletecookie", {
         withCredentials: true,

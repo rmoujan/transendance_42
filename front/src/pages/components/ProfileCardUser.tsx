@@ -15,7 +15,7 @@ import { MdModeEditOutline } from "react-icons/md";
 import ProgressBar from "@ramonak/react-progress-bar";
 import axios from "axios";
 import { Modal } from "antd";
-import { socket } from "../../socket";
+import { socket_user } from "../../socket";
 import { number } from "prop-types";
 import { type } from "os";
 import bot from "../../img/bot.png";

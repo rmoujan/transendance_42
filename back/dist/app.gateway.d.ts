@@ -2,7 +2,7 @@ import { OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect } from "@nestjs
 import { Server, Socket } from "socket.io";
 import { Data, Room, RoomBall, RoomPlayer } from "./interfaces";
 import { JwtService } from "./auth/jwt/jwtservice.service";
-import { PrismaService } from "./prisma/prisma.service";
+import { PrismaService } from "./prisma.service";
 export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     private jwt;
     private prisma;

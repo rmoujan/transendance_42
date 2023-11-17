@@ -9,7 +9,7 @@ import bages from "../../img/bdg.png";
 import ProfileCardUser from "./ProfileCardUser";
 import axios from "axios";
 import AboutMe from "./AboutMe";
-import {socket, socketuser} from "../../socket";
+import {socket_user, socketuser} from "../../socket";
 import bot from "../../img/bot.png";
 // import '../../../';
 type User = {
@@ -42,7 +42,7 @@ function MaincontentProfile() {
   const [user, setUser] = useState<User[]>([]);
   const [GameHistory, setGameHistory] = useState<GameHistory[]>([]);
   useEffect(() => {
-    if (socket == undefined){
+    if (socket_user == undefined){
       socketuser();
     }
     const fetchData = async () => {
