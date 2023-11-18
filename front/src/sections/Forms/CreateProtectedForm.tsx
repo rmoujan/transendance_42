@@ -11,7 +11,7 @@ import { RHFUploadAvatar } from "../../components/hook-form/RHFUploadAvatar";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
-const CreateProtectedForm = ({ handleClose, el }: any) => {
+const CreateProtectedForm = ({ handleClose }: any) => {
   const [file, setFile] = React.useState<any>();
   const { friends } = useAppSelector(state => state.app);
   const dispatch = useAppDispatch();
@@ -30,28 +30,16 @@ const CreateProtectedForm = ({ handleClose, el }: any) => {
     avatar: Yup.string().required("Avatar is required").nullable(true),
   });
 
-  let defaultValues;
+  const defaultValues = {
+    title: "",
+    members: [],
+    password: "",
+    passwordConfirm: "",
+    type: "protected",
+    avatar:
+      "https://cdn6.aptoide.com/imgs/1/2/2/1221bc0bdd2354b42b293317ff2adbcf_icon.png",
+  };
 
-  if (!el) {
-    defaultValues = {
-      title: "",
-      members: [],
-      password: "",
-      passwordConfirm: "",
-      type: "protected",
-      avatar:
-        "https://cdn6.aptoide.com/imgs/1/2/2/1221bc0bdd2354b42b293317ff2adbcf_icon.png",
-    };
-  } else {
-    defaultValues = {
-      title: el.name,
-      members: el.users.map((user: any) => user.user.name),
-      password: el.password,
-      passwordConfirm: el.password,
-      type: "protected",
-      avatar: el.img,
-    };
-  }
   const methods = useForm({
     resolver: yupResolver(ProtectedSchema),
     defaultValues,
@@ -59,67 +47,35 @@ const CreateProtectedForm = ({ handleClose, el }: any) => {
 
   const {
     reset,
-    setError,
     setValue, // setValue by input name
     handleSubmit,
-    formState: { errors },
+    formState: {},
   } = methods;
 
   const onSubmit = async (data: any) => {
-    if (!el) {
-      try {
-        data.avatar = file?.preview;
-        await axios.post("http://localhost:3000/channels/create", data, {
-          withCredentials: true,
-        });
-        dispatch(
-          showSnackbar({
-            severity: "success",
-            message: "New Protected Channel has Created",
-          })
-        );
-        handleClose();
-        reset();
-      } catch (error) {
-        console.error(error);
-        reset();
-        dispatch(
-          showSnackbar({
-            severity: "failed",
-            message: "Create Protected Channel Failed",
-          })
-        );
-        handleClose();
-      }
-    } else {
-      try {
-        data.avatar = file?.preview;
-        // await axios.put(
-        //   `http://localhost:3000/channels/${el._id}/update`,
-        //   data,
-        //   {
-        //     withCredentials: true,
-        //   }
-        // );
-        dispatch(
-          showSnackbar({
-            severity: "success",
-            message: "Protected Channel has Updated",
-          })
-        );
-        handleClose();
-        reset();
-      } catch (error) {
-        console.error(error);
-        reset();
-        dispatch(
-          showSnackbar({
-            severity: "failed",
-            message: "Update Protected Channel Failed",
-          })
-        );
-        handleClose();
-      }
+    try {
+      data.avatar = file?.preview;
+      await axios.post("http://localhost:3000/channels/create", data, {
+        withCredentials: true,
+      });
+      dispatch(
+        showSnackbar({
+          severity: "success",
+          message: "New Protected Channel has Created",
+        })
+      );
+      handleClose();
+      reset();
+    } catch (error) {
+      console.error(error);
+      reset();
+      dispatch(
+        showSnackbar({
+          severity: "failed",
+          message: "Create Protected Channel Failed",
+        })
+      );
+      handleClose();
     }
   };
 

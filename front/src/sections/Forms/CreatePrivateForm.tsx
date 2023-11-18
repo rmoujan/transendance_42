@@ -1,16 +1,17 @@
-import React from "react";
-import axios from "axios";
-import * as Yup from "yup";
-import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Stack } from "@mui/material";
+import axios from "axios";
+import React from "react";
+import { useForm } from "react-hook-form";
+import * as Yup from "yup";
 import { RHFAutocomplete, RHFTextField } from "../../components/hook-form";
 import FormProvider from "../../components/hook-form/FormProvider";
 import { RHFUploadAvatar } from "../../components/hook-form/RHFUploadAvatar";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
-const CreatePrivateForm = ({ handleClose, el }: any) => {
+const CreatePrivateForm = ({ handleClose }: any) => {
+  const { friends } = useAppSelector(state => state.app);
   const [file, setFile] = React.useState<any>();
   const dispatch = useAppDispatch();
   const PrivateSchema = Yup.object().shape({
@@ -19,24 +20,14 @@ const CreatePrivateForm = ({ handleClose, el }: any) => {
     avatar: Yup.string().required("Avatar is required").nullable(true),
   });
 
-  let defaultValues;
+  const defaultValues = {
+    title: "",
+    members: [],
+    type: "private",
+    avatar:
+      "https://cdn6.aptoide.com/imgs/1/2/2/1221bc0bdd2354b42b293317ff2adbcf_icon.png",
+  };
 
-  if (!el) {
-    defaultValues = {
-      title: "",
-      members: [],
-      type: "private",
-      avatar:
-        "https://cdn6.aptoide.com/imgs/1/2/2/1221bc0bdd2354b42b293317ff2adbcf_icon.png",
-    };
-  } else {
-    defaultValues = {
-      title: el.name,
-      members: el.users.map((user: any) => user.user.name),
-      type: "private",
-      avatar: el.img,
-    };
-  }
   const methods = useForm({
     resolver: yupResolver(PrivateSchema),
     defaultValues,
@@ -44,16 +35,13 @@ const CreatePrivateForm = ({ handleClose, el }: any) => {
 
   const {
     reset, // reset the form
-    watch, // watch input value by passing the name of it
-    setError, // setError by input name
     handleSubmit, // form submit function
     setValue, // setValue by input name
-    formState: { errors, isSubmitted, isSubmitSuccessful, isValid }, // errors and form state
+    formState: {}, // errors and form state
   } = methods; // useful methods from useForm()
 
-  const { friends } = useAppSelector(state => state.app);
   const onSubmit = async (data: any) => {
-   if (!el) { try {
+    try {
       data.avatar = file?.preview;
       await axios.post("http://localhost:3000/channels/create", data, {
         withCredentials: true,
@@ -76,31 +64,6 @@ const CreatePrivateForm = ({ handleClose, el }: any) => {
       );
       reset();
       handleClose();
-    }}
-    else {
-      try {
-        data.avatar = file?.preview;
-        // await axios.post("http://localhost:3000/channels/create", data, {
-        //   withCredentials: true,
-        // });
-        dispatch(
-          showSnackbar({
-            severity: "success",
-            message: "Private Channel has Updated Successfully",
-          })
-        );
-        handleClose();
-      } catch (error) {
-        console.log("error", error);
-        dispatch(
-          showSnackbar({
-            severity: "failed",
-            message: "Update into Private Channel has Failed",
-          })
-        );
-        reset();
-        handleClose();
-      }
     }
   };
 

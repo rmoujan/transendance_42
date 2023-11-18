@@ -4,7 +4,6 @@ import { connectSocket, socket } from "../../socket";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { FetchFriends } from "../../redux/slices/app";
 
-
 function Messages() {
   const { profile, converstation, contact } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
@@ -17,8 +16,8 @@ function Messages() {
       // console.log("socket not found");
       connectSocket(profile._id.toString());
       console.log("socket connected", profile._id);
-
-}}, [profile, socket, converstation]);
+    }
+  }, [profile, socket, converstation]);
 
   return (
     <div>

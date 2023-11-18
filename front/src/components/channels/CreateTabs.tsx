@@ -13,13 +13,13 @@ const CreateTabs = ({ handleClose, el }: any) => {
         <StyledTab value={2}>Private</StyledTab>
       </StyledTabsList>
       <StyledTabPanel value={0}>
-        <CreatePublicForm handleClose={handleClose} el={el} />
+        <CreatePublicForm handleClose={handleClose} />
       </StyledTabPanel>
       <StyledTabPanel value={1}>
-        <CreateProtectedForm handleClose={handleClose} el={el} />
+        <CreateProtectedForm handleClose={handleClose} />
       </StyledTabPanel>
       <StyledTabPanel value={2}>
-        <CreatePrivateForm handleClose={handleClose} el={el} />
+        <CreatePrivateForm handleClose={handleClose} />
       </StyledTabPanel>
     </Tabs>
   );

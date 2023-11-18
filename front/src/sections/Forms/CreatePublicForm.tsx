@@ -10,7 +10,7 @@ import { RHFUploadAvatar } from "../../components/hook-form/RHFUploadAvatar";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
-const CreatePublicForm = ({ handleClose, el }: any) => {
+const CreatePublicForm = ({ handleClose }: any) => {
   const [file, setFile] = useState<any>();
   const { friends } = useAppSelector(state => state.app);
   const dispatch = useAppDispatch();
@@ -21,24 +21,14 @@ const CreatePublicForm = ({ handleClose, el }: any) => {
     type: Yup.string(),
   });
 
-  let defaultValues;
+  const defaultValues = {
+    title: "",
+    members: [],
+    type: "public",
+    avatar:
+      "https://cdn6.aptoide.com/imgs/1/2/2/1221bc0bdd2354b42b293317ff2adbcf_icon.png",
+  };
 
-  if (!el) {
-    defaultValues = {
-      title: "",
-      members: [],
-      type: "public",
-      avatar:
-        "https://cdn6.aptoide.com/imgs/1/2/2/1221bc0bdd2354b42b293317ff2adbcf_icon.png",
-    };
-  } else {
-    defaultValues = {
-      title: el.name,
-      members: el.users.map((user: any) => user.user.name),
-      type: "public",
-      avatar: el.img,
-    };
-  }
   const methods = useForm({
     resolver: yupResolver(PublicSchema),
     defaultValues,
@@ -46,67 +36,36 @@ const CreatePublicForm = ({ handleClose, el }: any) => {
 
   const {
     reset, // reset the form
-    watch, // watch input value by passing the name of it
-    setError, // setError by input name
     setValue, // setValue by input name
     handleSubmit, // form submit function
-    formState: { errors }, // errors and form state
+    formState: {}, // errors and form state
   } = methods; // useful methods from useForm()
 
   const onSubmit = async (data: any) => {
-    if (!el) {
-      try {
-        data.avatar = file?.preview;
-        await axios.post("http://localhost:3000/channels/create", data, {
-          withCredentials: true,
-        });
-        dispatch(
-          showSnackbar({
-            severity: "success",
-            message: "New Public Channel has Created",
-          })
-        );
-        reset();
-        handleClose();
-        // call api
-      } catch (error) {
-        dispatch(
-          showSnackbar({
-            severity: "failed",
-            message: "Create Public Channel Failed",
-          })
-        );
-        console.log("error", error);
-        reset();
-        handleClose();
-      }
-    }
-    else {
-      try {
-        data.avatar = file?.preview;
-        // await axios.put(`http://localhost:3000/channels/${el.id_channel}`, data, {
-        //   withCredentials: true,
-        // });
-        dispatch(
-          showSnackbar({
-            severity: "success",
-            message: "Public Channel has Updated",
-          })
-        );
-        reset();
-        handleClose();
-        // call api
-      } catch (error) {
-        dispatch(
-          showSnackbar({
-            severity: "failed",
-            message: "Update Public Channel Failed",
-          })
-        );
-        console.log("error", error);
-        reset();
-        handleClose();
-      }
+    try {
+      data.avatar = file?.preview;
+      await axios.post("http://localhost:3000/channels/create", data, {
+        withCredentials: true,
+      });
+      dispatch(
+        showSnackbar({
+          severity: "success",
+          message: "New Public Channel has Created",
+        })
+      );
+      reset();
+      handleClose();
+      // call api
+    } catch (error) {
+      dispatch(
+        showSnackbar({
+          severity: "failed",
+          message: "Create Public Channel Failed",
+        })
+      );
+      console.log("error", error);
+      reset();
+      handleClose();
     }
   };
   const handleDrop = useCallback(

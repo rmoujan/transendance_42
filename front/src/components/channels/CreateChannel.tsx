@@ -12,8 +12,7 @@ const Transition = React.forwardRef(function Transition(
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const CreateChannel = ({ open, handleClose, el }: any) => {
-  console.log(el);
+const CreateChannel = ({ open, handleClose }: any) => {
   return (
     <Dialog
       fullWidth
@@ -39,7 +38,7 @@ const CreateChannel = ({ open, handleClose, el }: any) => {
       {/* {console.log(handleClose)} */}
       <DialogTitle sx={{ mb: 4 }}>Create a New Channel</DialogTitle>
       <DialogContent sx={{ mb: 2 }}>
-        <CreateTabs handleClose={handleClose} el={el} />
+        <CreateTabs handleClose={handleClose} />
       </DialogContent>
     </Dialog>
   );

@@ -49,7 +49,7 @@ const All = () => {
       unread,
     })),
   };
-  console.log(combinedObject);
+  // console.log(combinedObject);
   // useEffect(() => {
   //   console.log(ChatList);
   // }, [channels, conversations]);
