@@ -3,11 +3,13 @@ import ChatGeneral from "../Chat/ChatGeneral";
 import { connectSocket, socket } from "../../socket";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { FetchFriends } from "../../redux/slices/app";
+import { FetchProfile } from "../../redux/slices/profile";
+import { FetchCharacters } from "../../redux/slices/anime";
 
 function Messages() {
   const { profile, converstation, contact } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
-  dispatch(FetchFriends());
+
   // dispatch(FetchChannels());
   // dispatch(FetchProtectedChannels());
   // dispatch(FetchPublicChannels());

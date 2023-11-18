@@ -26,8 +26,8 @@ const CreateProtectedForm = ({ handleClose }: any) => {
       .required("Password is required"),
     passwordConfirm: Yup.string()
       .required("Confirm password is required")
-      .oneOf([Yup.ref("password"), null], "Passwords must match"),
-    avatar: Yup.string().required("Avatar is required").nullable(true),
+      .oneOf([Yup.ref("password")], "Passwords must match"),
+    avatar: Yup.string().required("Avatar is required").nullable(),
   });
 
   const defaultValues = {

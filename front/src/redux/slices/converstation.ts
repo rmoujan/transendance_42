@@ -30,7 +30,6 @@ interface ChatState {
 
 interface State {
   direct_chat: ChatState;
-  channel_chat: ChatState & { type_channel: string | null };
 }
 
 const initialState: State = {
@@ -38,12 +37,6 @@ const initialState: State = {
     conversations: [],
     current_conversation: null,
     current_messages: [],
-  },
-  channel_chat: {
-    conversations: [],
-    current_conversation: null,
-    current_messages: [],
-    type_channel: null,
   },
 };
 
@@ -72,7 +65,7 @@ export const ConverstationSlice = createSlice({
               return inputDate.toLocaleDateString(undefined, options);
             }
           };
-          
+
 
           return {
             room_id: el?.id_room,
@@ -119,7 +112,7 @@ export const ConverstationSlice = createSlice({
               img: this_conversation?.img,
               msg: this_conversation?.message,
               time: formatDateTime(this_conversation?.time),
-              unread: this_conversation?.unread,
+              unread: this_conversation?.unread + 1,
               pinned: this_conversation?.pinned,
             };
           }
@@ -170,21 +163,13 @@ export const ConverstationSlice = createSlice({
     setCurrentConverstation(state, action) {
       // ~ set current converstation
       console.log(action.payload);
+      // const room_id = action.payload.conversation_id;
       const user_id = action.payload.user_id;
-      state.direct_chat.current_conversation = action.payload;
+      const room_id = action.payload.data[0]?.idDm;
+      state.direct_chat.current_conversation = state.direct_chat.conversations.filter((el: any) => el?.room_id === room_id)[0];
+      // check if room_id is in converstations id list
+      console.log(state.direct_chat.current_conversation);
       const messages: any = action.payload.data;
-      /**
-       *  data: Array(8) [
-      {
-        id: 60,
-        text: 'hello there',
-        dateSent: '2023-11-16T19:41:46.239Z',
-        outgoing: 90240,
-        incoming: 90351,
-        type: 'text',
-        idDm: 12
-      },
-       */
       const formatted_messages = messages.map((el: any) => ({
         id: el.idDm,
         msg_id: el.id,
@@ -198,9 +183,27 @@ export const ConverstationSlice = createSlice({
     },
     fetchCurrentMessages(state, action) {
       // ~ get all messages of current converstation
-      // console.log(action.payload);
-      const messages: any = action.payload;
-      state.direct_chat.current_messages.push(messages);
+      console.log(action.payload);
+      console.log(state.direct_chat.current_conversation);
+      const messages: any = {
+        id: action.payload.id,
+        type: action.payload.type,
+        message: action.payload.message,
+        incoming: action.payload.incoming,
+        outgoing: action.payload.outgoing,
+      };
+      // console.log(state.direct_chat.current_conversation)
+      // console.log(state.direct_chat.conversations);
+      if (state.direct_chat.current_conversation?.room_id === messages.id) {
+        state.direct_chat.current_messages.push(messages);
+      }
+      // state.direct_chat.current_messages = [];
+      // }
+      // else {
+
+      // }
+
+
     },
     updateUnread(state, action) {
       // ~ update unread messages
@@ -218,7 +221,7 @@ export const ConverstationSlice = createSlice({
           };
         }
       });
-    }
+    },
   },
 });
 

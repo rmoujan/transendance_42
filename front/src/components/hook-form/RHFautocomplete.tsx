@@ -1,20 +1,40 @@
-import { Autocomplete, TextField } from "@mui/material";
-import PropTypes from "prop-types";
+import PropTypes, { InferProps } from "prop-types";
+// form
 import { Controller, useFormContext } from "react-hook-form";
+// @mui
+import { Autocomplete, TextField } from "@mui/material";
 
-interface RHFAutocompleteProps {
+// ----------------------------------------------------------------------
+
+type RHFAutocompleteProps = {
   name: string;
   label: string;
   helperText?: React.ReactNode;
-}
-
+  multiple?: boolean;
+  freeSolo?: boolean;
+  options?: any[];
+  ChipProps: {
+    size: string;
+  };
+  // Add the multiple property to the type definition
+};
 RHFAutocomplete.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
   helperText: PropTypes.node,
+  multiple: PropTypes.bool,
+  freeSolo: PropTypes.bool,
+  options: PropTypes.array,
+  ChipProps: PropTypes.shape({
+    size: PropTypes.string,
+  }),
 };
-
-export default function RHFAutocomplete({ name, label, helperText, ...other }:RHFAutocompleteProps) {
+export default function RHFAutocomplete({
+  name,
+  label,
+  helperText,
+  ...other
+}: InferProps<RHFAutocompleteProps>) {
   const { control, setValue } = useFormContext();
 
   return (
@@ -24,9 +44,10 @@ export default function RHFAutocomplete({ name, label, helperText, ...other }:RH
       render={({ field, fieldState: { error } }) => (
         <Autocomplete
           {...field}
-        //   options={top100Films}
-          onChange={(event, newValue) => setValue(name, newValue, { shouldValidate: true })}
-          renderInput={(params) => (
+          onChange={(event, newValue) =>
+            setValue(name, newValue, { shouldValidate: true })
+          }
+          renderInput={params => (
             <TextField
               label={label}
               error={!!error}
@@ -34,6 +55,7 @@ export default function RHFAutocomplete({ name, label, helperText, ...other }:RH
               {...params}
             />
           )}
+          options={other.options}
           {...other}
         />
       )}

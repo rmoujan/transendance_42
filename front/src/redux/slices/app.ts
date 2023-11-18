@@ -58,8 +58,7 @@ export const AppSlice = createSlice({
 
 export function FetchFriends() {
     // const user_id = localStorage.getItem("user_id");
-    const dispatch = useDispatch();
-    return async () => {
+    return async (dispatch: any) => {
         await axios.get("http://localhost:3000/auth/friends", {
             withCredentials: true,
             headers: {
@@ -69,8 +68,8 @@ export function FetchFriends() {
         }
         )
             .then((response) => {
-                // console.log(response.data);
-                dispatch(updateFriends(response.data));
+                console.log(response.data);
+                dispatch(AppSlice.actions.updateFriends(response.data));
                 // AppSlice.actions.updateFriends({ friends: response.data.data });
             })
             .catch((err) => {

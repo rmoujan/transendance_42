@@ -1,15 +1,7 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  IconButton,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Avatar, Box, IconButton, Stack, Typography } from "@mui/material";
 import React from "react";
 import { toggleDialog } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import StyledBadge from "../StyledBadge";
 import { InviteDialog } from "../dialogs/Dialogs";
 import { MenuOptions } from "./MsgTypes";
 
@@ -60,7 +52,7 @@ const HeaderChannels = () => {
             {/* bold */}
             <Typography
               variant="h6"
-              color={"#fff"}
+              color={"#B7B7C9"}
               sx={{ padding: 0, fontWeight: "bold" }}
             >
               {contact.name}

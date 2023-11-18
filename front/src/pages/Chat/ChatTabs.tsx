@@ -4,7 +4,7 @@ import { TabPanel as BaseTabPanel, TabPanelProps } from "@mui/base/TabPanel";
 import { Tabs } from "@mui/base/Tabs";
 import { TabsList as BaseTabsList, TabsListProps } from "@mui/base/TabsList";
 import { useTheme } from "@mui/system";
-import { UserCircle } from "@phosphor-icons/react";
+import { User, UserCircle } from "@phosphor-icons/react";
 import clsx from "clsx";
 import All from "../../sections/All";
 import Channels from "../../sections/Channels";
@@ -41,7 +41,7 @@ const TabPanel = React.forwardRef<HTMLDivElement, TabPanelProps>(
       <BaseTabPanel
         ref={ref}
         className={clsx(
-          " py-5 px-3 bg--[#FABA91] dark:bg-[#FABA91] border-slate-200 dark:border-slate-700 rounded-[46px] w-full h-full font-sans text-sm",
+          " py-5 px-3 bg--[#FABA91] dark:bg-[#696693] border-slate-200 dark:border-slate-700 rounded-[46px] w-full h-full font-sans text-sm",
           className
         )}
         {...other}
@@ -80,7 +80,7 @@ const ChatTabs = () => {
       <Tabs defaultValue={0}>
         <TabsList>
           <Tab value={0}>
-            <UserCircle size={21} />
+            <User size={21} weight="bold" />
           </Tab>
           <Tab value={1}>All</Tab>
           <Tab value={2}>Private</Tab>
@@ -122,8 +122,8 @@ const Tab = React.forwardRef<HTMLButtonElement, TabProps>((props, ref) => {
             className: clsx(
               `font-sans ${
                 ownerState.selected
-                  ? "text-[#443263] bg-[#f78562]"
-                  : "text-[#f78562] bg-[#06254f] focus:text-[#EADDFF] hover:bg-[#514371B8]"
+                  ? "text-[#f78562] bg-[#696693]"
+                  : "text-[#B7B7C9] bg-[#3D3C65] focus:text-[#EADDFF] hover:bg-[#f78562] hover:text-[#3D3C65]"
               } ${
                 ownerState.disabled
                   ? "cursor-not-allowed opacity-50"

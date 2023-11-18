@@ -34,6 +34,7 @@ RHFSelect.propTypes = {
       label: PropTypes.string.isRequired,
     })
   ).isRequired,
+  onChange: PropTypes.func,
 };
 
 RHFSelect.defaultProps = {
@@ -51,11 +52,11 @@ export default function RHFSelect({
     undefined
   ); // State to hold the selected option
 
-  const handleSelectChange = (
-    event: React.ChangeEvent<{ value: unknown }>
-  ) => {
+  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     const selectedValue = event.target.value as string;
-    const selectedOption = options.find((option) => option.value === selectedValue);
+    const selectedOption = options.find(
+      option => option.value === selectedValue
+    );
     setSelectedOption(selectedOption);
   };
 
@@ -74,8 +75,12 @@ export default function RHFSelect({
             label={label}
             fullWidth
           >
-            {options.map((option) => (
-              <MenuItem key={option.value} value={option.value} className="align-middle">
+            {options.map(option => (
+              <MenuItem
+                key={option.value}
+                value={option.value}
+                className="align-middle"
+              >
                 <Stack
                   direction={"row"}
                   alignItems={"center"}

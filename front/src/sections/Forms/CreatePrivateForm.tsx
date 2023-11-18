@@ -17,7 +17,7 @@ const CreatePrivateForm = ({ handleClose }: any) => {
   const PrivateSchema = Yup.object().shape({
     title: Yup.string().required("Title is Required!!"),
     members: Yup.array().min(2, "Must have at least 2 Members"),
-    avatar: Yup.string().required("Avatar is required").nullable(true),
+    avatar: Yup.string().required("Avatar is required").nullable(),
   });
 
   const defaultValues = {

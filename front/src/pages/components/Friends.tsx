@@ -1,23 +1,11 @@
-import React, {
-  KeyboardEvent,
-  ChangeEvent,
-  useState,
-  Fragment,
-  useEffect,
-  useRef,
-} from "react";
 import { Popover, Transition } from "@headlessui/react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { topData } from "../Data/TopStreamerData";
+import { ChangeEvent, Fragment, KeyboardEvent, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FriendCard from "./FriendCard";
-import DefaultCard from "./DefaultCard";
-import { Card } from "antd";
 import { useAppSelector } from "../../redux/store/store";
-import { fa } from "@faker-js/faker";
-import { CgSpinner } from "react-icons/cg";
 import { socket_user } from "../../socket";
+import DefaultCard from "./DefaultCard";
+import FriendCard from "./FriendCard";
 
 type User = {
   id_user: number;
@@ -26,57 +14,59 @@ type User = {
   TwoFactor: boolean;
   secretKey: string | null;
   status_user: string;
-  wins:number;
-  losses:number;
-  games_played:number;
-  Progress:number;
-  Wins_percent:number;
-  Losses_percent:number;
-  About:string;
+  wins: number;
+  losses: number;
+  games_played: number;
+  Progress: number;
+  Wins_percent: number;
+  Losses_percent: number;
+  About: string;
 };
 type AccountOwnerProps = {
-	user: User[];
-  };
-function Friends({user}: AccountOwnerProps) {
-
-  const {friends} = useAppSelector((state) => state.app);
+  user: User[];
+};
+function Friends({ user }: AccountOwnerProps) {
+  const { friends } = useAppSelector(state => state.app);
   console.log("friends");
   console.log(friends);
   // const [friends, setFriends] = useState<User[]>([]);
   const [selectedFriend, setSelectedFriend] = useState<User | null>(null);
-  const [accountOwner , setaccountOwner] = useState<boolean>();
-  const InviteToPlaye =  (friend: any) => {
+  const [accountOwner, setaccountOwner] = useState<boolean>();
+  const InviteToPlaye = (friend: any) => {
     console.log("invite to playe");
     const id = friend.id_user;
-    if (socket_user)
-    socket_user.emit("invite-game", {id_user:id});
-	  //friend.id_user
-	  //accountOwner = false
-	  //get returngameinfos from backend
-	   axios.post("http://localhost:3000/profile/gameinfos", {
-		homies: true,
-		invited: false,
-		homie_id: friend.id_user,
-	  }, {
-		withCredentials: true,
-	  });
-	  // setaccountOwner(false);
-	  console.log("accountOwner id");
-	  // console.log(user[0].id_user);            
-	  console.log("status ");
-	  console.log(false);
-	  console.log(true);
-	  
-	  // Update selectedFriend with the clicked friend's information
-	  setSelectedFriend(friend);
-	//   console.log(" 2 : ", friend.id_user);
-	  setTimeout(() => {
-		window.location.href = "http://localhost:5173/game";
-		}, 1000);
+    if (socket_user) socket_user.emit("invite-game", { id_user: id });
+    //friend.id_user
+    //accountOwner = false
+    //get returngameinfos from backend
+    axios.post(
+      "http://localhost:3000/profile/gameinfos",
+      {
+        homies: true,
+        invited: false,
+        homie_id: friend.id_user,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+    // setaccountOwner(false);
+    console.log("accountOwner id");
+    // console.log(user[0].id_user);
+    console.log("status ");
+    console.log(false);
+    console.log(true);
+
+    // Update selectedFriend with the clicked friend's information
+    setSelectedFriend(friend);
+    //   console.log(" 2 : ", friend.id_user);
+    setTimeout(() => {
+      window.location.href = "http://localhost:5173/game";
+    }, 1000);
     // console.log(friend);
     // setLoding(true);
   };
- 
+
   const [query, setQuery] = useState("");
   const [users, setUsers] = useState<User[]>([]);
   const [searchResults, setSearchResults] = useState<User[]>([]);
@@ -87,7 +77,7 @@ function Friends({user}: AccountOwnerProps) {
     const searchTerm = event.target.value.toLowerCase();
     setQuery(searchTerm);
 
-    const filteredUsers = users.filter((user) =>
+    const filteredUsers = users.filter(user =>
       // user.name.firstname.toLowerCase().includes(searchTerm)
       user.name.toLowerCase().includes(searchTerm)
     );
@@ -116,13 +106,11 @@ function Friends({user}: AccountOwnerProps) {
     <div>
       <Popover className="relative">
         <Popover.Button className="">
-          
-            {selectedFriend ? (
-              <FriendCard friend={selectedFriend} />
-            ) : (
-              <DefaultCard />
-            )}
-           
+          {selectedFriend ? (
+            <FriendCard friend={selectedFriend} />
+          ) : (
+            <DefaultCard />
+          )}
         </Popover.Button>
         <Transition
           as={Fragment}
@@ -144,7 +132,7 @@ function Friends({user}: AccountOwnerProps) {
                 </div>
               )} */}
               {/* //if friend show this messag*/}
-              {friends.map((data:any) => {
+              {friends.map((data: any) => {
                 return (
                   <ul
                     key={data.id_user}
@@ -162,7 +150,7 @@ function Friends({user}: AccountOwnerProps) {
                           {data.name}
                         </p>
                       </div>
-                        {/* //when click on button invite to playe the color of button change to gray and stay like this until the friend accept the invitation */}
+                      {/* //when click on button invite to playe the color of button change to gray and stay like this until the friend accept the invitation */}
                       <button
                         className="ml-3  bg-[#868686] hover:bg-[#616060] text-white font-bold  px-7 rounded-[15px]"
                         onClick={() => InviteToPlaye(data)}

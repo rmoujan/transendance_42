@@ -17,8 +17,8 @@ const All = () => {
 
   // add channels and conversations together
   // const ChatList = [...conversations, ...channels];
-  console.log(conversations);
-  console.log(channels);
+  // console.log(conversations);
+  // console.log(channels);
 
   const combinedObject = {
     channels: channels.map(
@@ -34,8 +34,8 @@ const All = () => {
         id: channel_id,
         name,
         image,
-        last_message: last_messages,
         time,
+        msg: last_messages,
         unread,
         channel_type,
       })
@@ -44,15 +44,20 @@ const All = () => {
       id: room_id,
       name,
       image: img,
-      last_message: msg,
       time,
+      msg: msg,
       unread,
+      channel_type: "direct",
     })),
   };
-  // console.log(combinedObject);
-  // useEffect(() => {
-  //   console.log(ChatList);
-  // }, [channels, conversations]);
+  const mergedConversation = [
+    ...combinedObject.channels,
+    ...combinedObject.users,
+  ];
+  const sortedConversation = mergedConversation.sort(
+    (a: any, b: any) => a.time - b.time
+  );
+
   return (
     <Box
       sx={{
@@ -68,7 +73,7 @@ const All = () => {
         <Stack padding={1} sx={{ width: "100%" }}>
           <Search>
             <SearchIconWrapper>
-              <MagnifyingGlass /> {/* SVG */}
+              <MagnifyingGlass />
             </SearchIconWrapper>
             <StyledInputBase
               placeholder="Search…"
@@ -88,10 +93,10 @@ const All = () => {
           }}
         >
           <Stack>
-            hellow
-            {/* {ChatList.filter(el => !el.pinned).map(el => {
-              return <ChatElements {...el} />;
-            })} */}
+            {/* hellow */}
+            {sortedConversation.map((el: any, index) => {
+              return <ChatElements key={index} {...el} />;
+            })}
           </Stack>
         </Stack>
       </Stack>

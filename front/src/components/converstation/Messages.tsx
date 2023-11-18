@@ -2,6 +2,7 @@ import { Box, Stack } from "@mui/material";
 import { useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store.ts";
 import { MediaMsg, ReplyMsg, TextMsg, Timeline } from "./MsgTypes.tsx";
+import { getCurrentConverstation } from "../../redux/slices/converstation.ts";
 
 const Messages = () => {
   const dispatch = useAppDispatch();
@@ -14,7 +15,7 @@ const Messages = () => {
     const { current_messages } = useAppSelector(
       state => state.converstation.direct_chat
     );
-
+    // dispatch(getCurrentConverstation(room_id));
     messages = current_messages;
   } else {
     const { current_messages } = useAppSelector(state => state.channels);
@@ -32,10 +33,6 @@ const Messages = () => {
               return <Timeline key={index} el={el} />;
             case "msg":
               switch (el.subtype) {
-                case "img":
-                  return <MediaMsg key={index} el={el} />;
-                case "reply":
-                  return <ReplyMsg key={index} el={el} />;
                 default:
                   return <TextMsg key={index} el={el} />;
               }

@@ -1,7 +1,5 @@
-import React, { useRef, useState } from "react";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { styled } from "@mui/material/styles";
 import {
   Box,
   IconButton,
@@ -10,7 +8,9 @@ import {
   TextField,
   Tooltip,
 } from "@mui/material";
-import { ImageSquare, PaperPlaneRight, Smiley } from "@phosphor-icons/react";
+import { styled } from "@mui/material/styles";
+import { PaperPlaneRight, Smiley } from "@phosphor-icons/react";
+import React, { useRef, useState } from "react";
 import { useAppSelector } from "../../redux/store/store";
 import { socket } from "../../socket";
 
@@ -19,7 +19,8 @@ const StyledInput = styled(TextField)(() => ({
     height: "40px",
     paddingTop: "12px",
     paddingBottom: "12px",
-    color: "#C7BBD1",
+    fontSize: "19px",
+    color: "#fff",
   },
 }));
 
@@ -29,7 +30,6 @@ const ChatInput = ({ setOpenEmojis, setValue, value, inputRef }: any) => {
     if (event.key === "Enter") {
       // Prevent the default behavior of "Enter" key in a textarea
       event.preventDefault();
-      console.log(linkify(value));
       console.log(contact.room_id);
       console.log(profile._id);
       if (!value) return;
@@ -68,7 +68,7 @@ const ChatInput = ({ setOpenEmojis, setValue, value, inputRef }: any) => {
                 }}
               >
                 {" "}
-                <Smiley size={32} color="#C7BBD1" />{" "}
+                <Smiley size={32} color="#B7B7C9" />{" "}
               </IconButton>
             </Tooltip>
             <Tooltip title="Send">
@@ -76,7 +76,7 @@ const ChatInput = ({ setOpenEmojis, setValue, value, inputRef }: any) => {
                 {" "}
                 <PaperPlaneRight
                   size={32}
-                  color="#C7BBD1"
+                  color="#B7B7C9"
                   onClick={() => {
                     // console.log(contact.room_id);
                     // console.log(profile._id);
@@ -146,7 +146,7 @@ const Chatbox = () => {
       sx={{
         padding: "16px 24px",
         width: "100%",
-        background: "#8979AC",
+        background: "#696693",
         WebkitBorderBottomLeftRadius: "25px",
         WebkitBorderBottomRightRadius: "25px",
       }}
@@ -155,10 +155,17 @@ const Chatbox = () => {
         direction="row"
         alignItems={"center"}
         spacing={3}
-        sx={{ backgroundColor: "#5E4F80", borderRadius: "23px" }}
+        sx={{ backgroundColor: "#5E4F80", borderRadius: "21px" }}
       >
         {/* chatinput */}
-        <Stack sx={{ width: "100%" }}>
+        <Stack
+          sx={{
+            width: "100%",
+            "&.css-18plez3-MuiInputBase-root-MuiFilledInput-root": {
+              borderRadius: "51px",
+            },
+          }}
+        >
           <Box
             sx={{
               display: openEmojis ? "inline" : "none",
@@ -172,6 +179,7 @@ const Chatbox = () => {
               data={data}
               onEmojiSelect={(emoji: any) => {
                 handleEmojiClick(emoji.native);
+                setOpenEmojis(false);
               }}
             />
           </Box>

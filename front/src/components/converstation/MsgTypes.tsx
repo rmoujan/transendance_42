@@ -58,10 +58,7 @@ const StyledMenu = styled((props: MenuPropsState) => (
     borderRadius: 6,
     marginTop: theme.spacing(1),
     minWidth: 180,
-    color:
-      theme.palette.mode === "light"
-        ? "rgb(55, 65, 81)"
-        : theme.palette.grey[300],
+    color: theme.palette.mode === "light" ? "#B7B7C9" : theme.palette.grey[300],
     boxShadow:
       "rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px",
     "& .MuiMenu-list": {
@@ -323,12 +320,12 @@ const MenuOptions = () => {
     <IconButton
       size="small"
       sx={{
-        backgroundColor: "#8979AC",
+        backgroundColor: "#3D3C65",
       }}
     >
       <DotsThreeCircle
         size={36}
-        color="#EADDFF"
+        color="#B7B7C9"
         id="converstation-positioned-button"
         aria-controls={
           openConversationMenu ? "conversation-positioned-menu" : undefined
@@ -347,7 +344,7 @@ const MenuOptions = () => {
         }}
         PaperProps={{
           style: {
-            backgroundColor: "#AE9BCD",
+            backgroundColor: "#3D3C65",
           },
         }}
         isrtl={true}

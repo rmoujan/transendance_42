@@ -1,16 +1,14 @@
 import { Box, Button, Divider, Stack } from "@mui/material";
 import { MagnifyingGlass, PlusCircle } from "@phosphor-icons/react";
 import { useState } from "react";
-import ChatElements from "../../components/ChatElements";
+import ChannelElements from "../../components/ChannelsElements";
+import CreateChannel from "../../components/channels/CreateChannel";
+import JoinChannel from "../../components/channels/JoinChannel";
 import {
   Search,
   SearchIconWrapper,
   StyledInputBase,
 } from "../../components/search";
-import CreateChannel from "../../components/channels/CreateChannel";
-import JoinChannel from "../../components/channels/JoinChannel";
-import { ChatList } from "../../data";
-import ChannelElements from "../../components/ChannelsElements";
 import { useAppSelector } from "../../redux/store/store";
 
 const Channels = () => {
@@ -72,7 +70,7 @@ const Channels = () => {
                   // neeed to make it center
                   backgroundColor: "#806EA9", // Change the background color to purple
                   color: "#3D2E5F", // Change the text color to white
-                  borderRadius: "21px",
+                  borderRadius: "18px",
                   "&:hover": {
                     backgroundColor: "#684C83", // Change the background color on hover
                     color: "#C7BBD1",
@@ -92,7 +90,7 @@ const Channels = () => {
                   padding: "10px 17px",
                   backgroundColor: "#806EA9",
                   color: "#3D2E5F",
-                  borderRadius: "21px",
+                  borderRadius: "18px",
                   "&:hover": {
                     backgroundColor: "#684C83",
                     color: "#C7BBD1",
@@ -118,7 +116,7 @@ const Channels = () => {
           >
             {/* <SimpleBarStyle> */}
             <Stack sx={{ backgroundColor: "#F3A162", borderRadius: "25px" }}>
-              {channels.channels.map((el, index) => {
+              {channels.channels.map((el: any, index) => {
                 return <ChannelElements key={index} {...el} />;
               })}
             </Stack>

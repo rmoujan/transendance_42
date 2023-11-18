@@ -392,7 +392,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     const decoded = this.decodeCookie(client);
 
     const user = await this.UsersService.findById(decoded.id);
-    console.log(data);
+    // console.log(data);
     if (user) {
       // // start old version
       // const messages = await  this.ChatService.getAllMessages(data.room_id);
@@ -407,6 +407,10 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
         // console.log(messages);
         client.emit('historyDms', messages);
 
+      }
+      else {
+        // console.log('empty')
+        client.emit('historyDms', []);
       }
 
       // this.server.to(room).emit('Response_messages_Dms', messages);

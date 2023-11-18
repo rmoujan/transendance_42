@@ -80,20 +80,27 @@ const ContactElements = (cont: any) => {
 
   useEffect(() => {
     const handleHistoryDms = (data: any) => {
-      if (data === null) {
-        dispatch(emptyConverstation([]));
+      // console.log("data", data);
+      if (data.length === 0 || !data[0]) {
+        // console.log("empty");
+        dispatch(emptyConverstation());
       } else {
-        dispatch(setCurrentConverstation({ data, user_id: profile._id }));
+        dispatch(
+          setCurrentConverstation({
+            data,
+            user_id: profile._id,
+            room_id: contact.room_id,
+          })
+        );
       }
     };
 
     if (!contact.room_id) return;
-
     socket.emit("allMessagesDm", {
       room_id: contact.room_id, // selected conversation
       user_id: profile._id, // current user
     });
-    socket.once("historyDms", handleHistoryDms);
+    socket.on("historyDms", handleHistoryDms);
 
     return () => {
       socket.off("historyDms", handleHistoryDms);
@@ -136,6 +143,7 @@ const ContactElements = (cont: any) => {
           <IconButton
             onClick={() => {
               // ! emit "start_converstation" event
+
               // console.log("start_converstation", id);
               dispatch(updatedContactInfo("CONTACT"));
               dispatch(
@@ -165,7 +173,7 @@ const ContactElements = (cont: any) => {
           <IconButton
             onClick={() => {
               console.log("Block Contact");
-              // !  "block_contact" 
+              // !  "block_contact"
             }}
           >
             <Prohibit />

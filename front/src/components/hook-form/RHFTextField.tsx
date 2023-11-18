@@ -1,20 +1,28 @@
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { useFormContext, Controller } from "react-hook-form";
 import { TextField } from "@mui/material";
 
 interface RHFTextFieldProps {
   name: string;
   label: string;
+  type?: string;
+  InputProps?: any;
   helperText?: React.ReactNode;
 }
 
 RHFTextField.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
+  type: PropTypes.string,
+  InputProps: PropTypes.any,
   helperText: PropTypes.node,
 };
 
-export default function RHFTextField({ name, helperText, ...other }:RHFTextFieldProps) {
+export default function RHFTextField({
+  name,
+  helperText,
+  ...other
+}: RHFTextFieldProps) {
   const { control } = useFormContext();
 
   return (

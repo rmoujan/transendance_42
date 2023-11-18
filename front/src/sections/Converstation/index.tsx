@@ -25,8 +25,13 @@ const Converstation = () => {
     messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
 
     const handleChatToDm = (data: any) => {
+      console.log(data);
+      // console.log(conversations);
+      // console.log(current_messages);
       dispatch(
         fetchCurrentMessages({
+          user_id: profile._id,
+          room_id: data.recieve,
           id: data.id,
           type: "msg",
           message: data.message,
@@ -35,7 +40,7 @@ const Converstation = () => {
         })
       );
       const now = new Date();
-      console.log(conversations);
+      // console.log(conversations);
 
       const newDataConversation = {
         id: data.id,
@@ -50,13 +55,14 @@ const Converstation = () => {
       const existingConversation = conversations.find(
         el => el.room_id === data.id
       );
-      console.log(existingConversation);
+      // console.log(existingConversation);
       if (!existingConversation) {
-        console.log(data);
+        // console.log(data);
+        newDataConversation.unread = 1;
         dispatch(addNewConversation(newDataConversation));
         // dispatch(updateUnread(data));
       } else {
-        console.log(data);
+        // console.log(data);
         dispatch(updatedConverstation(newDataConversation));
         // dispatch(updateUnread(data));
       }
@@ -73,12 +79,6 @@ const Converstation = () => {
       maxHeight={"100vh"}
       width={"auto"}
       className="shadow-2xl"
-      sx={
-        {
-          // borderRadius: "44px",
-          // backgroundColor: "#806EA9",
-        }
-      }
     >
       {/* header chat */}
       <Header />

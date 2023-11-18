@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { Box, Button, Divider, Stack } from "@mui/material";
 import { MagnifyingGlass, PlusCircle } from "@phosphor-icons/react";
-import { useState } from "react";
 import ContactElements from "../../components/ContactElements";
 import ScrollBar from "../../components/ScrollBar";
 import CreateChannel from "../../components/channels/CreateChannel";
@@ -9,7 +9,6 @@ import {
   SearchIconWrapper,
   StyledInputBase,
 } from "../../components/search";
-import { ContactList } from "../../data";
 import { useAppSelector } from "../../redux/store/store";
 // import CreateChannel from "./CreateChannel";
 
@@ -19,7 +18,6 @@ const Friends = () => {
     setOpenCreateChannel(false);
   };
   const { friends } = useAppSelector(state => state.app);
-  // console.log(friends)
 
   return (
     <>
@@ -64,7 +62,7 @@ const Friends = () => {
                   // neeed to make it center
                   backgroundColor: "#443263", // Change the background color to purple
                   color: "#C7BBD1", // Change the text color to white
-                  borderRadius: "21px",
+                  borderRadius: "18px",
                   "&:hover": {
                     backgroundColor: "#684C83", // Change the background color on hover
                     color: "#C7BBD1",
@@ -91,8 +89,7 @@ const Friends = () => {
               {
                 // ~ ==>  here's where i will do contact <==
               }
-              {friends.map((el, index) => {
-                // console.log(el);
+              {friends.map((el: any, index) => {
                 return <ContactElements key={index} {...el} />;
               })}
             </ScrollBar>

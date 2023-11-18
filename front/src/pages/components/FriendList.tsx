@@ -61,7 +61,7 @@ function FriendList() {
       date: string;
     }[]
   >([]);
-  const { friends } = useAppSelector((state) => state.app);
+  const { friends } = useAppSelector(state => state.app);
   const [friend, setFriend] = useState<User[]>([]);
   const [filteredUser, setFilteredUser] = useState<
     {
@@ -105,7 +105,7 @@ function FriendList() {
 
   const handelChange = (event: ChangeEvent<HTMLInputElement>) => {
     const searchTerm = event.target.value.toLowerCase();
-    const filter = friend.filter((user) =>
+    const filter = friend.filter(user =>
       user.name.toLowerCase().includes(searchTerm)
     );
     setFilteredUser(filter);
@@ -139,7 +139,7 @@ function FriendList() {
       socket_user.emit("friends-list", id_user);
       socket_user.emit("newfriend", id_user);
     }
-    const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+    const updatedUsers = friend.filter(user => user.id_user !== id_user);
     setFriend(updatedUsers);
     // },
     // });
@@ -168,7 +168,7 @@ function FriendList() {
           socket_user.emit("friends-list", id_user);
           socket_user.emit("newfriend", id_user);
         }
-        const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+        const updatedUsers = friend.filter(user => user.id_user !== id_user);
         setFriend(updatedUsers);
         setIsBlocked(true);
       },
@@ -201,7 +201,7 @@ function FriendList() {
       fetchData();
     });
     socket_user.on("offline", (data: any) => {
-      setFriend((prevUsers) => {
+      setFriend(prevUsers => {
         return prevUsers.map((user: User) => {
           if (user.id_user === data.id_user) {
             return { ...user, status_user: "offline" };
@@ -211,7 +211,7 @@ function FriendList() {
       });
     });
     socket_user.on("online", (data: any) => {
-      setFriend((prevUsers) => {
+      setFriend(prevUsers => {
         return prevUsers.map((user: User) => {
           if (user.id_user === data.id_user) {
             return { ...user, status_user: "online" };
@@ -233,7 +233,7 @@ function FriendList() {
       okType: "danger",
       className: " flex justify-center items-center h-100vh",
       onOk: () => {
-        const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+        const updatedUsers = friend.filter(user => user.id_user !== id_user);
         setFriend(updatedUsers);
       },
     });
@@ -331,7 +331,7 @@ function FriendList() {
                 >
                   <Popover.Panel className="absolute right-0 z-10  w-80 -ml-40 text-white">
                     <div className=" flex flex-col  rounded-[30px] mt-3 bg-[#35324db2] hover:scale-100 ">
-                      {NotFriends.map((data) => {
+                      {NotFriends.map(data => {
                         return (
                           <ul
                             key={data?.id_user}
@@ -393,7 +393,7 @@ function FriendList() {
           <table className="w-[90%] min-w-max table-auto text-left flex flex-col justify-center ">
             <thead className=" flex justify-center items-center">
               <tr className=" flex ml-[32%] mr-[32%] items-center justify-between space-x-24 fixed">
-                {TABLE_HEAD.map((head) => (
+                {TABLE_HEAD.map(head => (
                   <th key={head} className=" bg-blue-gray-50/50 p-4  ">
                     <Typography
                       variant="small"
