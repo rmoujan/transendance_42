@@ -68,12 +68,12 @@ const Channels = () => {
                   fontSize: "18px", // Adjust the font size as needed
                   padding: "10px 17px", // Adjust the padding as needed
                   // neeed to make it center
-                  backgroundColor: "#806EA9", // Change the background color to purple
-                  color: "#3D2E5F", // Change the text color to white
+                  backgroundColor: "#3D3C65", // Change the background color to purple
+                  color: "#B7B7C9", // Change the text color to white
                   borderRadius: "18px",
                   "&:hover": {
-                    backgroundColor: "#684C83", // Change the background color on hover
-                    color: "#C7BBD1",
+                    backgroundColor: "#3D3954", // Change the background color on hover
+                    color: "#B7B7C9",
                   },
                 }}
                 variant="contained"
@@ -88,12 +88,12 @@ const Channels = () => {
                 sx={{
                   fontSize: "18px",
                   padding: "10px 17px",
-                  backgroundColor: "#806EA9",
-                  color: "#3D2E5F",
+                  backgroundColor: "#3D3C65",
+                  color: "#B7B7C9",
                   borderRadius: "18px",
                   "&:hover": {
-                    backgroundColor: "#684C83",
-                    color: "#C7BBD1",
+                    backgroundColor: "#3D3954",
+                    color: "#B7B7C9",
                   },
                 }}
                 variant="contained"
@@ -101,7 +101,7 @@ const Channels = () => {
                 Join Channel
               </Button>
             </Stack>
-            <Divider sx={{ paddingTop: "1px", background: "#684C83" }} />
+            <Divider sx={{ background: "#3D3954" }} />
           </Stack>
           <Stack
             direction={"column"}

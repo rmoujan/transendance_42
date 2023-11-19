@@ -1,4 +1,10 @@
-import { Dialog, DialogContent, DialogTitle, Slide } from "@mui/material";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Slide,
+  Typography,
+} from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import React from "react";
 import CreateTabs from "./CreateTabs";
@@ -29,14 +35,23 @@ const CreateChannel = ({ open, handleClose }: any) => {
       }}
       PaperProps={{
         style: {
-          backgroundColor: "#AE9BCD",
+          backgroundColor: "#696693",
           borderRadius: "28px",
           // padding: "32px 135px",
         },
       }}
     >
       {/* {console.log(handleClose)} */}
-      <DialogTitle sx={{ mb: 4 }}>Create a New Channel</DialogTitle>
+      <DialogTitle sx={{ my: 2 }}>
+        <Typography
+          variant="h4"
+          align="center"
+          fontWeight={600}
+          color={"#25213B"}
+        >
+          Create a New Channel
+        </Typography>
+      </DialogTitle>
       <DialogContent sx={{ mb: 2 }}>
         <CreateTabs handleClose={handleClose} />
       </DialogContent>

@@ -60,19 +60,19 @@ const Friends = () => {
                   fontSize: "18px", // Adjust the font size as needed
                   padding: "10px 38px", // Adjust the padding as needed
                   // neeed to make it center
-                  backgroundColor: "#443263", // Change the background color to purple
-                  color: "#C7BBD1", // Change the text color to white
+                  backgroundColor: "#3D3C65", // Change the background color to purple
+                  color: "#B7B7C9", // Change the text color to white
                   borderRadius: "18px",
                   "&:hover": {
-                    backgroundColor: "#684C83", // Change the background color on hover
-                    color: "#C7BBD1",
+                    backgroundColor: "#3D3954", // Change the background color on hover
+                    color: "#B7B7C9",
                   },
                 }}
               >
                 Create a New Channel
               </Button>
             </Stack>
-            <Divider sx={{ paddingTop: "1px", background: "#684C83" }} />
+            <Divider sx={{ paddingTop: "1px", background: "#3D3C65" }} />
           </Stack>
           <Stack
             direction={"column"}

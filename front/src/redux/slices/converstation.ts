@@ -162,13 +162,13 @@ export const ConverstationSlice = createSlice({
     },
     setCurrentConverstation(state, action) {
       // ~ set current converstation
-      console.log(action.payload);
+      // console.log(action.payload);
       // const room_id = action.payload.conversation_id;
       const user_id = action.payload.user_id;
       const room_id = action.payload.data[0]?.idDm;
       state.direct_chat.current_conversation = state.direct_chat.conversations.filter((el: any) => el?.room_id === room_id)[0];
       // check if room_id is in converstations id list
-      console.log(state.direct_chat.current_conversation);
+      // console.log(state.direct_chat.current_conversation);
       const messages: any = action.payload.data;
       const formatted_messages = messages.map((el: any) => ({
         id: el.idDm,

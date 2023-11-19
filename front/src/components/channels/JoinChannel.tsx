@@ -1,4 +1,10 @@
-import { Dialog, DialogContent, DialogTitle, Slide } from "@mui/material";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Slide,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import JoinTabs from "./JoinTabs";
 import { TransitionProps } from "@mui/material/transitions";
@@ -27,9 +33,25 @@ const JoinChannel = ({ open, handleClose }: any) => {
           borderRadius: "26px",
         },
       }}
+      PaperProps={{
+        style: {
+          backgroundColor: "#696693",
+          borderRadius: "28px",
+        },
+      }}
     >
       {/* {console.log(handleClose)} */}
-      <DialogTitle sx={{ mb: 4 }}>Join to a New Channel</DialogTitle>
+      <DialogTitle sx={{ my: 2 }}>
+        {" "}
+        <Typography
+          variant="h4"
+          align="center"
+          fontWeight={600}
+          color={"#25213B"}
+        >
+          Join to a New Channel
+        </Typography>
+      </DialogTitle>
       <DialogContent>
         <JoinTabs handleClose={handleClose} />
       </DialogContent>

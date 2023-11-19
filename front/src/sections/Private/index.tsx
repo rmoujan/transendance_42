@@ -1,7 +1,6 @@
-import { Box, Button, ButtonProps, Stack } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useEffect } from "react";
+import { Box, Stack } from "@mui/material";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 import ChatElements from "../../components/ChatElements";
 import {
   Search,
@@ -14,14 +13,6 @@ import {
 } from "../../redux/slices/converstation";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { socket } from "../../socket";
-
-const ColorButton = styled(Button)<ButtonProps>(() => ({
-  color: "#C7BBD1",
-  backgroundColor: "#443263",
-  "&:hover": {
-    backgroundColor: "darkpurple",
-  },
-}));
 
 const Privates = () => {
   const dispatch = useAppDispatch();
@@ -36,14 +27,12 @@ const Privates = () => {
       // console.log("history data", data);
       if (data === null) {
         // console.log("null");
-        dispatch(emptyConverstation([]));
+        dispatch(emptyConverstation());
       } else {
         dispatch(setCurrentConverstation(data));
       }
     };
     if (!contact.room_id) return;
-    // console.log(contact.room_id);
-    // console.log(profile._id);
     socket.emit("allMessagesDm", {
       room_id: contact.room_id, // selected conversation
       user_id: profile._id, // current user

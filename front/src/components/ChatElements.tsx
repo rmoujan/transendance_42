@@ -12,11 +12,13 @@ import StyledBadge from "./StyledBadge";
 
 interface IdType {
   id: number;
+  user_id?: number | undefined;
   room_id: number;
   name: string;
   img: string;
   time: string;
   msg: string;
+  channel_type?: string | undefined;
   unread: number;
   online: boolean;
   pinned: boolean;
@@ -31,14 +33,13 @@ const StyledChatBox = styled(Box)(() => ({
 const ChatElements = (id: IdType) => {
   const { contact, profile } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
-  const selected_id = id.id;
-  console.log(id);
-
-  const selectedChatId = contact.room_id;
-  let isSelected = +selectedChatId === id.id;
-
-  if (!selectedChatId) {
-    isSelected = false;
+  let selected_id: number = 0;
+  if (id.id && id.user_id && id.room_id) {
+    selected_id = id.id;
+  } else if (id?.channel_type === "channel") {
+    selected_id = id.id;
+  } else {
+    selected_id = id.room_id;
   }
 
   useEffect(() => {

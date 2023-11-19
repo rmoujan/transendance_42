@@ -17,7 +17,7 @@ const CreatePublicForm = ({ handleClose }: any) => {
   const PublicSchema = Yup.object().shape({
     title: Yup.string().required("Title is Required!!"),
     members: Yup.array().min(2, "Must have at least 2 Members"),
-    avatar: Yup.string().required("Avatar is required").nullable(true),
+    avatar: Yup.string().required("Avatar is required").nullable(),
     type: Yup.string(),
   });
 
@@ -105,30 +105,35 @@ const CreatePublicForm = ({ handleClose }: any) => {
         >
           <Button
             sx={{
-              backgroundColor: "#806EA9", // Change the background color to purple
-              color: "#C7BBD1", // Change the text color to white
+              // backgroundColor: "#806EA9", // Change the background color to purple
+              color: "#3D3C65", // Change the text color to white
               borderRadius: "12px",
               width: "150px",
               height: "50px",
+              fontSize: "18px",
+              fontWeight: 600,
               "&:hover": {
-                backgroundColor: "#684C83", // Change the background color on hover
-                color: "#C7BBD1",
+                backgroundColor: "#3D3C65", // Change the background color on hover
+                color: "#b7b7c9",
               },
             }}
-            variant="contained"
+            variant="outlined"
             onClick={handleClose}
           >
             Cancel
           </Button>
+
           <Button
             sx={{
-              backgroundColor: "#806EA9", // Change the background color to purple
-              color: "#C7BBD1", // Change the text color to white
+              backgroundColor: "#3D3C65", // Change the background color to purple 3D3C65
+              color: "#f78562", // Change the text color to white
               borderRadius: "12px",
               height: "50px",
+              fontSize: "18px",
+              fontWeight: 600,
               "&:hover": {
-                backgroundColor: "#684C83", // Change the background color on hover
-                color: "#C7BBD1",
+                backgroundColor: "#3D3C65", // Change the background color on hover
+                color: "#b7b7c9",
               },
             }}
             type="submit"

@@ -180,7 +180,7 @@ const ContactElements = (cont: any) => {
           </IconButton>
         </Stack>
       </Stack>
-      <Divider sx={{ paddingTop: "1px", background: "#335f8e" }} />
+      <Divider sx={{ background: "#3D3C65" }} />
     </Box>
   );
 };

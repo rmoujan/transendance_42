@@ -33,22 +33,25 @@ const All = () => {
       }) => ({
         id: channel_id,
         name,
-        image,
+        img: image,
         time,
         msg: last_messages,
         unread,
         channel_type,
       })
     ),
-    users: conversations.map(({ room_id, name, img, msg, time, unread }) => ({
-      id: room_id,
-      name,
-      image: img,
-      time,
-      msg: msg,
-      unread,
-      channel_type: "direct",
-    })),
+    users: conversations.map(
+      ({ room_id, id, name, img, msg, time, unread }) => ({
+        id: room_id,
+        room_id: id,
+        name,
+        img,
+        time,
+        msg: msg,
+        unread,
+        channel_type: "direct",
+      })
+    ),
   };
   const mergedConversation = [
     ...combinedObject.channels,

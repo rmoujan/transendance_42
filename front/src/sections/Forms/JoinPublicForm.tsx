@@ -16,6 +16,7 @@ import * as Yup from "yup";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import axios from "axios";
+import { grey } from "@mui/material/colors";
 
 interface Option {
   id_channel: number;
@@ -31,8 +32,8 @@ interface JoinPublicFormData {
 const JoinPublicForm = ({ handleClose }: any) => {
   const dispatch = useAppDispatch();
   const { publicChannels, channels } = useAppSelector(state => state.channels);
-  console.log(channels);
-  console.log(publicChannels);
+  // console.log(channels);
+  // console.log(publicChannels);
 
   const schema = Yup.object().shape({
     mySelect: Yup.object().shape({
@@ -127,51 +128,85 @@ const JoinPublicForm = ({ handleClose }: any) => {
             fullWidth
             required
           >
-            {publicChannels
-              .filter(
-                publicChannel =>
-                  !channels.some(
-                    channel => channel.channel_id === publicChannel?.id_channel
-                  )
-              )
-              .map((option: any) => (
-                //  .filter((el: any) => !(el.id_channel === channels || el.user_id !== action.payload.user_id))
-                // console.log(option),
-                <MenuItem key={option.id_channel} value={option.name}>
-                  <Stack
-                    direction={"row"}
-                    alignItems={"center"}
-                    justifyContent={"space-around"}
-                  >
-                    <Avatar
-                      src={faker.image.avatar()}
-                      sx={{ width: 52, height: 52, marginRight: 2 }}
-                    />
-                    <Typography variant="subtitle2" color={"black"}>
-                      {option.name}
-                    </Typography>
-                  </Stack>
-                </MenuItem>
-              ))}
+            {publicChannels.length === 0 ? (
+              // Render a message when publicChannels is empty
+              <Typography variant="subtitle1" alignItems={"center"} padding={2}>
+                There are no channels at the moment.
+              </Typography>
+            ) : (
+              publicChannels
+                .filter(
+                  (publicChannel: any) =>
+                    !channels.some(
+                      (channel: any) =>
+                        channel.channel_id === publicChannel?.id_channel
+                    )
+                )
+                .map((option: any) => (
+                  <MenuItem key={option.id_channel} value={option.name}>
+                    <Stack
+                      direction={"row"}
+                      alignItems={"center"}
+                      justifyContent={"space-around"}
+                    >
+                      <Avatar
+                        src={faker.image.avatar()}
+                        sx={{ width: 52, height: 52, marginRight: 2 }}
+                      />
+                      <Typography variant="subtitle2" color={"black"}>
+                        {option.name}
+                      </Typography>
+                    </Stack>
+                  </MenuItem>
+                ))
+            )}
           </Select>
         </FormControl>
 
-        <Button onClick={handleClose}>Cancel</Button>
-        <Button
-          sx={{
-            backgroundColor: "#806EA9",
-            color: "#C7BBD1",
-            borderRadius: "21px",
-            "&:hover": {
-              backgroundColor: "#684C83",
-              color: "#C7BBD1",
-            },
-          }}
-          type="submit"
-          variant="contained"
+        <Stack
+          direction={"row"}
+          alignContent={"center"}
+          justifyContent={"space-evenly"}
         >
-          Join Channel
-        </Button>
+          <Button
+            sx={{
+              // backgroundColor: "#806EA9", // Change the background color to purple
+              color: "#3D3C65", // Change the text color to white
+              borderRadius: "12px",
+              width: "150px",
+              height: "50px",
+              fontSize: "18px",
+              fontWeight: 600,
+              "&:hover": {
+                backgroundColor: "#3D3C65", // Change the background color on hover
+                color: "#b7b7c9",
+              },
+            }}
+            variant="outlined"
+            onClick={handleClose}
+          >
+            Cancel
+          </Button>
+
+          <Button
+            sx={{
+              backgroundColor: "#3D3C65", // Change the background color to purple 3D3C65
+              color: "#f78562", // Change the text color to white
+              borderRadius: "12px",
+              height: "50px",
+              fontSize: "18px",
+              fontWeight: 600,
+              "&:hover": {
+                backgroundColor: "#3D3C65", // Change the background color on hover
+                color: "#b7b7c9",
+              },
+            }}
+            type="submit"
+            variant="contained"
+          >
+            Create Channel
+          </Button>
+        </Stack>
       </Stack>
     </form>
   );
