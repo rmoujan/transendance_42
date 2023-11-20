@@ -25,25 +25,17 @@ const Converstation = () => {
     messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
 
     const handleChatToDm = (data: any) => {
-      console.log(data);
+      // console.log(data);
+
       // console.log(conversations);
       // console.log(current_messages);
-      dispatch(
-        fetchCurrentMessages({
-          user_id: profile._id,
-          room_id: data.recieve,
-          id: data.id,
-          type: "msg",
-          message: data.message,
-          outgoing: data.send === profile._id,
-          incoming: data.recieve === profile._id,
-        })
-      );
+
       const now = new Date();
       // console.log(conversations);
 
       const newDataConversation = {
-        id: data.id,
+        room_id: data.id,
+        id: data.recieve,
         user_id: profile._id,
         name: contact.name,
         img: contact.avatar,
@@ -58,7 +50,8 @@ const Converstation = () => {
       // console.log(existingConversation);
       if (!existingConversation) {
         // console.log(data);
-        newDataConversation.unread = 1;
+        // console.log(newDataConversation);
+        // newDataConversation.unread = 1;
         dispatch(addNewConversation(newDataConversation));
         // dispatch(updateUnread(data));
       } else {
@@ -66,6 +59,17 @@ const Converstation = () => {
         dispatch(updatedConverstation(newDataConversation));
         // dispatch(updateUnread(data));
       }
+      dispatch(
+        fetchCurrentMessages({
+          user_id: profile._id,
+          room_id: data.recieve,
+          id: data.id,
+          type: "msg",
+          message: data.message,
+          outgoing: data.send === profile._id,
+          incoming: data.recieve === profile._id,
+        })
+      );
     };
     socket.on("chatToDm", handleChatToDm);
     return () => {

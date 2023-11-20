@@ -1,6 +1,6 @@
-import { useEffect } from "react";
 import { Box, Stack } from "@mui/material";
 import { MagnifyingGlass } from "@phosphor-icons/react";
+import { useEffect, useState } from "react";
 import ChatElements from "../../components/ChatElements";
 import {
   Search,
@@ -16,12 +16,18 @@ import { socket } from "../../socket";
 
 const Privates = () => {
   const dispatch = useAppDispatch();
+  const [searchQuery, setSearchQuery] = useState("");
 
+  const { profile, contact } = useAppSelector(state => state);
   const { conversations } = useAppSelector(
     state => state.converstation.direct_chat
   );
-  const { profile, contact } = useAppSelector(state => state);
-
+  const filteredConversations = conversations.filter((conversation: any) =>
+    conversation.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
   useEffect(() => {
     const handleHistoryDms = (data: any) => {
       // console.log("history data", data);
@@ -44,6 +50,10 @@ const Privates = () => {
     };
   }, [contact.room_id, profile._id, dispatch]);
 
+  const conversationsToDisplay = searchQuery
+    ? filteredConversations
+    : conversations;
+
   return (
     <Box
       sx={{
@@ -61,6 +71,7 @@ const Privates = () => {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
+              onChange={onChange}
             />
           </Search>
         </Stack>
@@ -82,7 +93,7 @@ const Privates = () => {
         >
           {/* <SimpleBarStyle timeout={500} clickOnTrack={false}> */}
           <Stack>
-            {conversations.map((el, index) => {
+            {conversationsToDisplay.map((el, index) => {
               return <ChatElements key={index} {...el} />;
             })}
           </Stack>

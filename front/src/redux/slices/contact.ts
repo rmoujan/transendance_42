@@ -78,6 +78,20 @@ export const ContactSlice = createSlice({
       state.snackbar.open = false;
       state.snackbar.message = "";
     },
+    resetContact(state) {
+      state.contactInfos.open = false;
+      state.contactInfos.type = "CONTACT";
+      state.name = "";
+      state.avatar = "";
+      state.type_chat = "";
+      state.room_id = 0;
+      state.chat_id = 0;
+      state.muted = false;
+      state.blocked = false;
+      state.snackbar.open = false;
+      state.snackbar.severity = "";
+      state.snackbar.message = "";
+    }
   },
 });
 
@@ -102,5 +116,6 @@ export const {
   mutedContact,
   closeSnackBar,
   selectChat,
+  resetContact
 } = ContactSlice.actions;
 export default ContactSlice.reducer;

@@ -13,11 +13,22 @@ import { useAppSelector } from "../../redux/store/store";
 // import CreateChannel from "./CreateChannel";
 
 const Friends = () => {
+  const { friends } = useAppSelector(state => state.app);
   const [openCreateChannel, setOpenCreateChannel] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const handleCloseCreateChannel = () => {
     setOpenCreateChannel(false);
   };
-  const { friends } = useAppSelector(state => state.app);
+
+  const filteredFriends = friends.filter((friend: any) =>
+    friend.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const friendsToDisplay = searchQuery ? filteredFriends : friends;
 
   return (
     <>
@@ -37,6 +48,7 @@ const Friends = () => {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ "aria-label": "search" }}
+                onChange={onChange}
               />
             </Search>
           </Stack>
@@ -89,7 +101,7 @@ const Friends = () => {
               {
                 // ~ ==>  here's where i will do contact <==
               }
-              {friends.map((el: any, index) => {
+              {friendsToDisplay.map((el: any, index) => {
                 return <ContactElements key={index} {...el} />;
               })}
             </ScrollBar>

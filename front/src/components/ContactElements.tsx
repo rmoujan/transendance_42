@@ -145,6 +145,7 @@ const ContactElements = (cont: any) => {
               // ! emit "start_converstation" event
 
               // console.log("start_converstation", id);
+              console.log(conversations);
               dispatch(updatedContactInfo("CONTACT"));
               dispatch(
                 selectConversation({

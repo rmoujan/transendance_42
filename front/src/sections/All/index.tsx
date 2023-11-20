@@ -1,6 +1,6 @@
 import { Box, Stack } from "@mui/material";
 import { MagnifyingGlass } from "@phosphor-icons/react";
-import { useEffect } from "react";
+import { useState } from "react";
 import ChatElements from "../../components/ChatElements";
 import {
   Search,
@@ -10,6 +10,7 @@ import {
 import { useAppSelector } from "../../redux/store/store";
 
 const All = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const { conversations } = useAppSelector(
     state => state.converstation.direct_chat
   );
@@ -40,18 +41,16 @@ const All = () => {
         channel_type,
       })
     ),
-    users: conversations.map(
-      ({ room_id, id, name, img, msg, time, unread }) => ({
-        id: room_id,
-        room_id: id,
-        name,
-        img,
-        time,
-        msg: msg,
-        unread,
-        channel_type: "direct",
-      })
-    ),
+    users: conversations.map((el: any) => ({
+      id: el.room_id,
+      room_id: el.id,
+      name: el.name,
+      img: el.img,
+      time: el.time,
+      msg: el.msg,
+      unread: el.unread,
+      channel_type: "direct",
+    })),
   };
   const mergedConversation = [
     ...combinedObject.channels,
@@ -60,6 +59,17 @@ const All = () => {
   const sortedConversation = mergedConversation.sort(
     (a: any, b: any) => a.time - b.time
   );
+
+  const filteredConversations = sortedConversation.filter((conversation: any) =>
+    conversation.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+  const conversationsToDisplay = searchQuery
+    ? filteredConversations
+    : sortedConversation;
 
   return (
     <Box
@@ -81,9 +91,11 @@ const All = () => {
             <StyledInputBase
               placeholder="Search…"
               inputProps={{ "aria-label": "search" }}
+              onChange={onChange}
             />
           </Search>
         </Stack>
+        <Stack padding={"10px 35px 20px"} spacing={2}></Stack>
         <Stack
           direction={"column"}
           sx={{
@@ -97,7 +109,7 @@ const All = () => {
         >
           <Stack>
             {/* hellow */}
-            {sortedConversation.map((el: any, index) => {
+            {conversationsToDisplay.map((el: any, index) => {
               return <ChatElements key={index} {...el} />;
             })}
           </Stack>

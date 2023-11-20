@@ -5,10 +5,12 @@ import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { FetchFriends } from "../../redux/slices/app";
 import { FetchProfile } from "../../redux/slices/profile";
 import { FetchCharacters } from "../../redux/slices/anime";
+import { resetContact } from "../../redux/slices/contact";
 
 function Messages() {
   const { profile, converstation, contact } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
+  // dispatch(resetContact());
 
   // dispatch(FetchChannels());
   // dispatch(FetchProtectedChannels());

@@ -1,19 +1,18 @@
-import * as React from "react";
 import { Tab as BaseTab, TabProps } from "@mui/base/Tab";
 import { TabPanel as BaseTabPanel, TabPanelProps } from "@mui/base/TabPanel";
 import { Tabs } from "@mui/base/Tabs";
 import { TabsList as BaseTabsList, TabsListProps } from "@mui/base/TabsList";
 import { useTheme } from "@mui/system";
-import { User, UserCircle } from "@phosphor-icons/react";
+import { User } from "@phosphor-icons/react";
 import clsx from "clsx";
+import * as React from "react";
+import { fetchConverstations } from "../../redux/slices/converstation";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import All from "../../sections/All";
 import Channels from "../../sections/Channels";
 import Friends from "../../sections/Friends";
 import Privates from "../../sections/Private";
 import { socket } from "../../socket";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { fetchConverstations } from "../../redux/slices/converstation";
-import { FetchChannels, setCurrentChannel } from "../../redux/slices/channels";
 
 const resolveSlotProps = (fn: unknown, args: unknown) =>
   typeof fn === "function" ? fn(args) : fn;
@@ -41,7 +40,7 @@ const TabPanel = React.forwardRef<HTMLDivElement, TabPanelProps>(
       <BaseTabPanel
         ref={ref}
         className={clsx(
-          " py-5 px-3 bg--[#FABA91] dark:bg-[#696693] border-slate-200 dark:border-slate-700 rounded-[46px] w-full h-full font-sans text-sm",
+          " py-5 px-3 bg-[#696693] rounded-[46px] w-full h-full font-sans text-sm",
           className
         )}
         {...other}

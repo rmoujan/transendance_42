@@ -9,7 +9,7 @@ interface Message {
   outgoing: boolean;
 }
 
-interface Conversation {
+export interface Conversation {
   room_id: string | null;
   id: string | null;
   user_id: string | null;
@@ -45,7 +45,7 @@ export const ConverstationSlice = createSlice({
   initialState,
   reducers: {
     fetchConverstations(state, action) {
-      console.log(action.payload.conversations);
+      // console.log(action.payload.conversations);
       // ! get all converstation
       const list: any[] = action.payload.conversations
         .filter((el: any) => !(el.room_id === action.payload.user_id || el.user_id !== action.payload.user_id))
@@ -127,6 +127,7 @@ export const ConverstationSlice = createSlice({
     ,
     addNewConversation(state, action) {
       // ~ adding new conversation
+      // console.log(action.payload)
 
       const formatDateTime = (dateString: string): string => {
         const inputDate = new Date(dateString);
@@ -146,7 +147,7 @@ export const ConverstationSlice = createSlice({
 
       const data = action.payload;
       const new_conversation: Conversation = {
-        room_id: data?.id_room,
+        room_id: data.room_id,
         id: data.id,
         user_id: data.user_id,
         name: data.name,
@@ -158,11 +159,13 @@ export const ConverstationSlice = createSlice({
         pinned: data.pinned,
       };
       state.direct_chat.conversations.push(new_conversation);
+      // console.log(state.direct_chat.conversations);
 
     },
     setCurrentConverstation(state, action) {
       // ~ set current converstation
       // console.log(action.payload);
+      // console.log(state.direct_chat.conversations);
       // const room_id = action.payload.conversation_id;
       const user_id = action.payload.user_id;
       const room_id = action.payload.data[0]?.idDm;
@@ -183,8 +186,8 @@ export const ConverstationSlice = createSlice({
     },
     fetchCurrentMessages(state, action) {
       // ~ get all messages of current converstation
-      console.log(action.payload);
-      console.log(state.direct_chat.current_conversation);
+      // console.log(action.payload);
+      // console.log(state.direct_chat.current_conversation);
       const messages: any = {
         id: action.payload.id,
         type: action.payload.type,
@@ -192,6 +195,10 @@ export const ConverstationSlice = createSlice({
         incoming: action.payload.incoming,
         outgoing: action.payload.outgoing,
       };
+      // if (state.direct_chat.current_conversation?.room_id === messages.id) {
+      //   console.log('im in')
+      state.direct_chat.current_conversation = state.direct_chat.conversations.filter((el: any) => el?.room_id === messages.id)[0];
+      // }
       // console.log(state.direct_chat.current_conversation)
       // console.log(state.direct_chat.conversations);
       if (state.direct_chat.current_conversation?.room_id === messages.id) {
