@@ -65,10 +65,9 @@ export function FetchFriends() {
                 "Content-Type": "application/json",
                 // Authorization: `Bearer ${getState().auth.token}`,
             },
-        }
-        )
+        })
             .then((response) => {
-                console.log(response.data);
+                // console.log(response.data);
                 dispatch(AppSlice.actions.updateFriends(response.data));
                 // AppSlice.actions.updateFriends({ friends: response.data.data });
             })

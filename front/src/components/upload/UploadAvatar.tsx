@@ -7,7 +7,6 @@ import { styled, alpha } from "@mui/material/styles";
 import AvatarPreview from "./preview/AvatarPreview";
 import { Image } from "@phosphor-icons/react";
 
-
 // ----------------------------------------------------------------------
 
 const StyledDropZone = styled("div")(({ theme }) => ({
@@ -70,6 +69,7 @@ export default function UploadAvatar({
   const hasFile = !!file;
 
   const isError = isDragReject || !!error;
+  console.log(file);
 
   return (
     <>

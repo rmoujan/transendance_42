@@ -3,7 +3,11 @@ import { useEffect } from "react";
 import InfosChannel from "../../components/contactTypes/InfosChannel";
 import InfosContact from "../../components/contactTypes/InfosContact";
 import { FetchFriends } from "../../redux/slices/app";
-import { FetchProfile } from "../../redux/slices/profile";
+import {
+  FetchChannels,
+  FetchProtectedChannels,
+  FetchPublicChannels,
+} from "../../redux/slices/channels";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import Converstation from "../../sections/Converstation";
 import NoChat from "../../sections/NoChat";
@@ -18,10 +22,11 @@ const ChatGeneral: React.FC = () => {
     // if (!profile._id) {
     //   dispatch(FetchProfile());
     // }
+    console.log("fetching channels");
+    dispatch(FetchProtectedChannels());
+    dispatch(FetchPublicChannels());
+    dispatch(FetchChannels());
     dispatch(FetchFriends());
-    // dispatch(FetchChannels());
-    // dispatch(FetchProtectedChannels());
-    // dispatch(FetchPublicChannels());
   }, [profile._id]);
   const renderContactInfoComponent = () => {
     if (contact.contactInfos.open) {

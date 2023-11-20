@@ -43,6 +43,7 @@ const CreatePublicForm = ({ handleClose }: any) => {
 
   const onSubmit = async (data: any) => {
     try {
+      console.log(file);
       data.avatar = file?.preview;
       await axios.post("http://localhost:3000/channels/create", data, {
         withCredentials: true,
@@ -71,7 +72,8 @@ const CreatePublicForm = ({ handleClose }: any) => {
   const handleDrop = useCallback(
     (acceptedFiles: any) => {
       const file = acceptedFiles[0];
-
+      console.log("file", file);
+      console.log(acceptedFiles);
       setFile(file);
 
       const newFile = Object.assign(file, {
@@ -81,6 +83,8 @@ const CreatePublicForm = ({ handleClose }: any) => {
 
       if (file) {
         setValue(title, newFile, { shouldValidate: true });
+        const filePath = file.path;
+        console.log("File Path:", filePath);
       }
     },
     [setValue]

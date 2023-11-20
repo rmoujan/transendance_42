@@ -1,11 +1,12 @@
 import { useEffect } from "react";
-import ChatGeneral from "../Chat/ChatGeneral";
-import { connectSocket, socket } from "../../socket";
+import {
+  FetchChannels,
+  FetchProtectedChannels,
+  FetchPublicChannels,
+} from "../../redux/slices/channels";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { FetchFriends } from "../../redux/slices/app";
-import { FetchProfile } from "../../redux/slices/profile";
-import { FetchCharacters } from "../../redux/slices/anime";
-import { resetContact } from "../../redux/slices/contact";
+import { connectSocket, socket } from "../../socket";
+import ChatGeneral from "../Chat/ChatGeneral";
 
 function Messages() {
   const { profile, converstation, contact } = useAppSelector(state => state);

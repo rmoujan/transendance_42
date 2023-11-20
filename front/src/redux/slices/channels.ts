@@ -33,7 +33,7 @@ export interface ChannelState {
   privateChannels: [];
   channels_conversation: ConversationChannel[];
   current_channel: Channel | null;
-  current_messages: [];
+  current_messages: any[];
 }
 
 const initialState: ChannelState = {
@@ -112,7 +112,7 @@ export const ChannelsSlice = createSlice({
     updateChannelsMessages(state, action) {
       const message: any = action.payload.messages; // Assuming 'messages' is a single message object
       const user_id: any = action.payload.user_id;
-      const formatted_message = {
+      const formatted_message: any = {
         id: message.id,
         type: message.type,
         message: message.message,
@@ -130,8 +130,8 @@ export const ChannelsSlice = createSlice({
 
 
 export function FetchChannels() {
-  const dispatch = useDispatch();
-  return async () => {
+  // const dispatch = useDispatch();
+  return async (dispatch: any) => {
     await axios
       .get("http://localhost:3000/channels/allChannels", {
         withCredentials: true, headers: {
@@ -139,16 +139,15 @@ export function FetchChannels() {
         },
       })
       .then((res) => {
-        // console.log(res.data);
-        dispatch(fetchChannels(res.data));
+        console.log(res.data);
+        dispatch(ChannelsSlice.actions.fetchChannels(res.data));
       })
       .catch((err) => console.log(err));
   };
 }
 
 export function FetchPublicChannels() {
-  const dispatch = useDispatch();
-  return async () => {
+  return async (dispatch: any) => {
     await axios
       .get("http://localhost:3000/channels/allPublic", {
         withCredentials: true, headers: {
@@ -157,15 +156,14 @@ export function FetchPublicChannels() {
       })
       .then((res) => {
         // console.log(res.data);
-        dispatch(fetchPublicChannels(res.data));
+        dispatch(ChannelsSlice.actions.fetchPublicChannels(res.data));
       })
       .catch((err) => console.log(err));
   };
 }
 
 export function FetchProtectedChannels() {
-  const dispatch = useDispatch();
-  return async () => {
+  return async (dispatch: any) => {
     await axios
       .get("http://localhost:3000/channels/allProtected", {
         withCredentials: true, headers: {
@@ -174,7 +172,7 @@ export function FetchProtectedChannels() {
       })
       .then((res) => {
         console.log(res.data);
-        dispatch(fetchProtectedChannels(res.data));
+        dispatch(ChannelsSlice.actions.fetchProtectedChannels(res.data));
       })
       .catch((err) => console.log(err));
   };

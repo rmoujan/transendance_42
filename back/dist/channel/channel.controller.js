@@ -33,7 +33,7 @@ let ChannelsController = class ChannelsController {
             return (true);
         }
         catch (error) {
-            console.log(...oo_oo(`3891194695_29_6_29_32_4`, error.message));
+            console.log(...oo_oo(`4149211955_28_6_28_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
@@ -60,7 +60,7 @@ let ChannelsController = class ChannelsController {
             }
         }
         catch (error) {
-            console.log(...oo_oo(`3891194695_87_6_87_32_4`, error.message));
+            console.log(...oo_oo(`4149211955_83_6_83_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
@@ -74,13 +74,13 @@ let ChannelsController = class ChannelsController {
             }
         }
         catch (error) {
-            console.log(...oo_oo(`3891194695_107_6_107_32_4`, error.message));
+            console.log(...oo_oo(`4149211955_101_6_101_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
     async setPass(req, data) {
-        console.log(...oo_oo(`3891194695_116_4_116_87_4`, "-------------------------- SET PASSWORD  -------------------------- "));
-        console.log(...oo_oo(`3891194695_117_4_117_21_4`, data));
+        console.log(...oo_oo(`4149211955_109_4_109_87_4`, "-------------------------- SET PASSWORD  -------------------------- "));
+        console.log(...oo_oo(`4149211955_110_4_110_21_4`, data));
         try {
             const decode = this.jwt.verify(req.cookies['cookie']);
             const user = await this.UsersService.findById(decode.id);
@@ -90,25 +90,25 @@ let ChannelsController = class ChannelsController {
             }
         }
         catch (error) {
-            console.log(...oo_oo(`3891194695_129_6_129_32_4`, error.message));
+            console.log(...oo_oo(`4149211955_121_6_121_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
     async setAdmin(req, data) {
-        console.log(...oo_oo(`3891194695_137_4_137_84_4`, "-------------------------- SET ADMIN  -------------------------- "));
-        console.log(...oo_oo(`3891194695_138_4_138_21_4`, data));
+        console.log(...oo_oo(`4149211955_128_4_128_84_4`, "-------------------------- SET ADMIN  -------------------------- "));
+        console.log(...oo_oo(`4149211955_129_4_129_21_4`, data));
         try {
             await this.channelsService.setAdmin(data);
             return (true);
         }
         catch (error) {
-            console.log(...oo_oo(`3891194695_144_6_144_32_4`, error.message));
+            console.log(...oo_oo(`4149211955_135_6_135_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
     async removeChannel(req, data) {
-        console.log(...oo_oo(`3891194695_153_4_153_84_4`, "-------------------------- SET ADMIN  -------------------------- "));
-        console.log(...oo_oo(`3891194695_154_4_154_21_4`, data));
+        console.log(...oo_oo(`4149211955_143_4_143_84_4`, "-------------------------- SET ADMIN  -------------------------- "));
+        console.log(...oo_oo(`4149211955_144_4_144_21_4`, data));
         try {
             const user = await this.UsersService.findById(data.user_id);
             if (user) {
@@ -117,7 +117,7 @@ let ChannelsController = class ChannelsController {
             }
         }
         catch (error) {
-            console.log(...oo_oo(`3891194695_164_6_164_32_4`, error.message));
+            console.log(...oo_oo(`4149211955_153_6_153_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
@@ -126,7 +126,7 @@ let ChannelsController = class ChannelsController {
             return this.channelsService.getPublicChannels();
         }
         catch (error) {
-            console.log(...oo_oo(`3891194695_175_6_175_32_4`, error.message));
+            console.log(...oo_oo(`4149211955_163_6_163_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
@@ -135,7 +135,7 @@ let ChannelsController = class ChannelsController {
             return this.channelsService.getProtectedChannels();
         }
         catch (error) {
-            console.log(...oo_oo(`3891194695_186_6_186_32_4`, error.message));
+            console.log(...oo_oo(`4149211955_173_6_173_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
@@ -175,7 +175,7 @@ let ChannelsController = class ChannelsController {
             }
         }
         catch (error) {
-            console.log(...oo_oo(`3891194695_235_4_235_30_4`, error.message));
+            console.log(...oo_oo(`4149211955_219_6_219_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }

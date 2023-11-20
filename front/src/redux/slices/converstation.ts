@@ -127,7 +127,6 @@ export const ConverstationSlice = createSlice({
     ,
     addNewConversation(state, action) {
       // ~ adding new conversation
-      // console.log(action.payload)
 
       const formatDateTime = (dateString: string): string => {
         const inputDate = new Date(dateString);
@@ -159,19 +158,13 @@ export const ConverstationSlice = createSlice({
         pinned: data.pinned,
       };
       state.direct_chat.conversations.push(new_conversation);
-      // console.log(state.direct_chat.conversations);
-
     },
     setCurrentConverstation(state, action) {
       // ~ set current converstation
-      // console.log(action.payload);
-      // console.log(state.direct_chat.conversations);
-      // const room_id = action.payload.conversation_id;
       const user_id = action.payload.user_id;
       const room_id = action.payload.data[0]?.idDm;
       state.direct_chat.current_conversation = state.direct_chat.conversations.filter((el: any) => el?.room_id === room_id)[0];
       // check if room_id is in converstations id list
-      // console.log(state.direct_chat.current_conversation);
       const messages: any = action.payload.data;
       const formatted_messages = messages.map((el: any) => ({
         id: el.idDm,
@@ -186,8 +179,6 @@ export const ConverstationSlice = createSlice({
     },
     fetchCurrentMessages(state, action) {
       // ~ get all messages of current converstation
-      // console.log(action.payload);
-      // console.log(state.direct_chat.current_conversation);
       const messages: any = {
         id: action.payload.id,
         type: action.payload.type,
@@ -195,20 +186,10 @@ export const ConverstationSlice = createSlice({
         incoming: action.payload.incoming,
         outgoing: action.payload.outgoing,
       };
-      // if (state.direct_chat.current_conversation?.room_id === messages.id) {
-      //   console.log('im in')
       state.direct_chat.current_conversation = state.direct_chat.conversations.filter((el: any) => el?.room_id === messages.id)[0];
-      // }
-      // console.log(state.direct_chat.current_conversation)
-      // console.log(state.direct_chat.conversations);
       if (state.direct_chat.current_conversation?.room_id === messages.id) {
         state.direct_chat.current_messages.push(messages);
       }
-      // state.direct_chat.current_messages = [];
-      // }
-      // else {
-
-      // }
 
 
     },
