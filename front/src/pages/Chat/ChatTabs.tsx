@@ -13,6 +13,8 @@ import Channels from "../../sections/Channels";
 import Friends from "../../sections/Friends";
 import Privates from "../../sections/Private";
 import { socket } from "../../socket";
+import { FetchFriends } from "../../redux/slices/app";
+import { FetchProfile } from "../../redux/slices/profile";
 
 const resolveSlotProps = (fn: unknown, args: unknown) =>
   typeof fn === "function" ? fn(args) : fn;
@@ -60,9 +62,17 @@ const ChatTabs = () => {
 
   // !!! fetch all conversations with user_is
   const { profile, contact } = useAppSelector(state => state);
+  const { friends } = useAppSelector(state => state.app);
   React.useEffect(() => {
-    // console.log(socket?.connected);
+    if (friends.length == 0) {
+      console.log("hey");
+      dispatch(FetchFriends());
+    }
+    if (profile._id == 0) {
+      dispatch(FetchProfile());
+    }
     if (socket) {
+      // console.log(socket?.connected);
       socket.emit("allConversationsDm", { _id: profile._id });
       socket.on("response", (data: any) => {
         // console.log(data);

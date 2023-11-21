@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
 
 export interface Channel {
   members: [];
@@ -68,7 +67,7 @@ export const ChannelsSlice = createSlice({
     },
     fetchChannels(state, action) {
       //! get all channels conversation
-      // console.log(action.payload);
+      console.log(action.payload);
       // state.channels = action.payload;
       state.channels = action.payload.map((el: any) => ({
         channel_id: el.channel_id,
@@ -77,7 +76,7 @@ export const ChannelsSlice = createSlice({
         owner: el.owner,
         admin: el.admin,
         members: el.members,
-        last_messages: el.latest_message,
+        last_messages: el.last_messages,
         time: el.time,
         unread: el.unread,
         channel_type: el.channel_type,
@@ -92,10 +91,14 @@ export const ChannelsSlice = createSlice({
       state.channels.push(action.payload);
     },
     setCurrentChannel(state, action) {
+
       //! set current channel
-      state.current_channel = action.payload;
-      const user_id = action.payload.user_id;
+
       const messages: any = action.payload.messages;
+      const idChannel = messages[0]?.channelId;
+      // console.log(idChannel)
+      state.current_channel = state.channels.filter((el: any) => el?.channel_id === idChannel)[0];
+      const user_id = action.payload.user_id;
       const formatted_messages = messages.map((el: any) => ({
         id: el.id,
         type: "msg",
@@ -104,6 +107,10 @@ export const ChannelsSlice = createSlice({
         outgoing: el.userId === user_id,
       }));
       state.current_messages = formatted_messages;
+    },
+    setEmptyChannel(state) {
+      state.current_channel = null;
+      state.current_messages = [];
     },
     fetchCurrentMessages(state, action: PayloadAction<[]>) {
       //! get all messages of current channel
@@ -130,7 +137,6 @@ export const ChannelsSlice = createSlice({
 
 
 export function FetchChannels() {
-  // const dispatch = useDispatch();
   return async (dispatch: any) => {
     await axios
       .get("http://localhost:3000/channels/allChannels", {
@@ -139,7 +145,7 @@ export function FetchChannels() {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         dispatch(ChannelsSlice.actions.fetchChannels(res.data));
       })
       .catch((err) => console.log(err));
@@ -171,7 +177,7 @@ export function FetchProtectedChannels() {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         dispatch(ChannelsSlice.actions.fetchProtectedChannels(res.data));
       })
       .catch((err) => console.log(err));
@@ -185,6 +191,7 @@ export const {
   updatedChannels,
   addNewChannel,
   setCurrentChannel,
+  setEmptyChannel,
   fetchCurrentMessages,
   updateChannelsMessages,
 } = ChannelsSlice.actions;

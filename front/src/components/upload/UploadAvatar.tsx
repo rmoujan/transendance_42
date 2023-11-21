@@ -34,7 +34,7 @@ const StyledPlaceholder = styled("div")(({ theme }) => ({
   width: `calc(100%)`,
   height: `calc(100%)`,
   color: theme.palette.text.disabled, // ! Override parent color
-  backgroundColor: theme.palette.background?.neutral, //! Override parent bgcolor
+  backgroundColor: "gray", //! Override parent bgcolor
   transition: theme.transitions.create("opacity", {
     easing: theme.transitions.easing.easeInOut,
     duration: theme.transitions.duration.shorter,

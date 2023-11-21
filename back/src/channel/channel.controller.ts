@@ -14,7 +14,7 @@ export class ChannelsController {
   @Post('create')
   async create(@Req() req, @Body() data: any) {
 
-    // console.log("-------------------------- Starting Creating a Channel -------------------------- ");
+    console.log("-------------------------- Starting Creating a Channel -------------------------- ");
     // console.log(data);
     try {
       const decode = this.jwt.verify(req.cookies['cookie']);
@@ -22,6 +22,7 @@ export class ChannelsController {
       const user = await this.UsersService.findById(decode.id);
       if (user) {
         const channel = await this.channelsService.createChannel(data, user.id_user);
+        console.log(channel)
       }
       return (true);
     } catch (error) {

@@ -10,6 +10,7 @@ import FormProvider from "../../components/hook-form/FormProvider";
 import { RHFUploadAvatar } from "../../components/hook-form/RHFUploadAvatar";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { FetchChannels } from "../../redux/slices/channels";
 
 const CreateProtectedForm = ({ handleClose }: any) => {
   const [file, setFile] = React.useState<any>();
@@ -64,6 +65,7 @@ const CreateProtectedForm = ({ handleClose }: any) => {
           message: "New Protected Channel has Created",
         })
       );
+      dispatch(FetchChannels());
       handleClose();
       reset();
     } catch (error) {

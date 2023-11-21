@@ -20,6 +20,7 @@ import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { FetchChannels } from "../../redux/slices/channels";
 
 interface Option {
   name: string;
@@ -94,6 +95,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
           message: `You Join to ${data.mySelect.name} successfully`,
         })
       );
+      dispatch(FetchChannels());
       handleClose();
     } catch (error) {
       console.log("error", error);

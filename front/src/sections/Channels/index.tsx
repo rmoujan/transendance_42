@@ -15,6 +15,7 @@ const Channels = () => {
   const [openCreateChannel, setOpenCreateChannel] = useState(false);
   const [openJoinChannel, setOpenJoinChannel] = useState(false);
   const { channels } = useAppSelector(state => state);
+  // console.log(channels);
 
   // this is will close join channel modal
   const handleCloseJoinChannel = () => {
@@ -115,11 +116,11 @@ const Channels = () => {
             }}
           >
             {/* <SimpleBarStyle> */}
-            <Stack sx={{ backgroundColor: "#F3A162", borderRadius: "25px" }}>
-              {channels.channels.map((el: any, index) => {
-                return <ChannelElements key={index} {...el} />;
-              })}
-            </Stack>
+            {/* <Stack sx={{ backgroundColor: "#F3A162", borderRadius: "25px" }}> */}
+            {channels.channels.map((el: any, index) => {
+              return <ChannelElements key={index} {...el} />;
+            })}
+            {/* </Stack> */}
             {/* </SimpleBarStyle> */}
           </Stack>
         </Stack>

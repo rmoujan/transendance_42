@@ -22,6 +22,8 @@ import axios from "axios";
 const MembersSettings = (el: any) => {
   const { _id } = useAppSelector(state => state.profile);
   const { user } = el.el;
+  console.log(el.isOwner);
+
   console.log(_id, user);
   const [owner, setOwner] = useState(false);
   const [admin, setAdmin] = useState(false);
@@ -29,11 +31,11 @@ const MembersSettings = (el: any) => {
   const [muted, setMuted] = useState(false);
 
   useEffect(() => {
-    setOwner(user.userId === _id && user.status_UserInChannel === "owner");
+    setOwner(user.userId === _id && el.isOwner);
     setAdmin(user.userId === _id && user.status_UserInChannel === "admin");
     setMember(user.userId === _id && user.status_UserInChannel === "member");
     console.log(el.el, owner);
-  }, [user, _id]);
+  }, [user, _id, el.isOwner]);
 
   const friendRequest = () => {
     console.log("friend request");

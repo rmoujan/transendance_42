@@ -17,6 +17,7 @@ import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import axios from "axios";
 import { grey } from "@mui/material/colors";
+import { FetchChannels } from "../../redux/slices/channels";
 
 interface Option {
   id_channel: number;
@@ -80,6 +81,7 @@ const JoinPublicForm = ({ handleClose }: any) => {
           message: `You Join to ${data.mySelect.name} successfully`,
         })
       );
+      dispatch(FetchChannels());
       handleClose();
     } catch (error) {
       console.error("error", error);

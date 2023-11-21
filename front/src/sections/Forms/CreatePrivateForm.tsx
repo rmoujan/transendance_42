@@ -9,6 +9,7 @@ import FormProvider from "../../components/hook-form/FormProvider";
 import { RHFUploadAvatar } from "../../components/hook-form/RHFUploadAvatar";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { FetchChannels } from "../../redux/slices/channels";
 
 const CreatePrivateForm = ({ handleClose }: any) => {
   const { friends } = useAppSelector(state => state.app);
@@ -53,6 +54,7 @@ const CreatePrivateForm = ({ handleClose }: any) => {
           message: "New Private Channel has Created",
         })
       );
+      dispatch(FetchChannels());
       handleClose();
     } catch (error) {
       console.log("error", error);

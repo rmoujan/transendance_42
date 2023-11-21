@@ -3,9 +3,13 @@ import { styled } from "@mui/system";
 import { useEffect } from "react";
 import {
   setCurrentChannel,
+  setEmptyChannel,
   updateChannelsMessages,
 } from "../redux/slices/channels";
-import { selectConversation, updatedContactInfo } from "../redux/slices/contact";
+import {
+  selectConversation,
+  updatedContactInfo,
+} from "../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../redux/store/store";
 import { socket } from "../socket";
 
@@ -32,7 +36,7 @@ const SmallAvatar = styled(Avatar)(() => ({
 }));
 
 const ChannelElements = (id: IdType) => {
-  console.log(id);
+  // console.log(id);
   const { contact, profile } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
   const selected_id = id.channel_id;
@@ -46,12 +50,17 @@ const ChannelElements = (id: IdType) => {
 
   useEffect(() => {
     const handleHistoryChannel = (data: any) => {
-      console.log("history data", data);
-      dispatch(setCurrentChannel({ messages: data, user_id: profile._id }));
+      // console.log(data);
+      if (data.length == 0) {
+        // console.log("new ones");
+        dispatch(setEmptyChannel());
+      } else {
+        dispatch(setCurrentChannel({ messages: data, user_id: profile._id }));
+      }
     };
 
     const handleChatToGroup = (data: any) => {
-      console.log("chat data", data);
+      // console.log("chat data", data);
       dispatch(
         updateChannelsMessages({ messages: data, user_id: profile._id })
       );
@@ -77,7 +86,7 @@ const ChannelElements = (id: IdType) => {
   return (
     <StyledChatBox
       onClick={() => {
-        console.log("id", selected_id);
+        // console.log("id", selected_id);
         dispatch(updatedContactInfo("CHANNEL"));
         dispatch(
           selectConversation({
@@ -91,7 +100,8 @@ const ChannelElements = (id: IdType) => {
       sx={{
         width: "100%",
         height: 85,
-        backgroundColor: isSelected ? "#3A3B3C" : "transparent",
+        backgroundColor: isSelected ? "#FE754D" : "transparent",
+        borderRadius: "15px",
       }}
       p={2}
     >
@@ -118,7 +128,13 @@ const ChannelElements = (id: IdType) => {
             <Avatar src={id.image} sx={{ width: 52, height: 52 }} />
           )}
           <Stack spacing={1.2} px={1}>
-            <Typography variant="h6" color={"black"}>
+            <Typography
+              variant="h6"
+              color={"#25213B"}
+              sx={{
+                fontWeight: 700,
+              }}
+            >
               {id.name}
             </Typography>
             <Typography
