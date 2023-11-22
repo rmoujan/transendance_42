@@ -34,14 +34,20 @@ const ChatElements = (id: IdType) => {
   const { contact, profile } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
   let selected_id: number = 0;
+  const selectedChatId = contact.room_id;
+  console.log(id);
   if (id.id && id.user_id && id.room_id) {
     selected_id = id.id;
-    // console.log(id.id);
     // console.log(id.id, id.user_id, id.room_id);
   } else if (id?.channel_type === "channel") {
     selected_id = id.id;
   } else {
     selected_id = id.room_id;
+  }
+  let isSelected = +selectedChatId === selected_id;
+
+  if (!selectedChatId) {
+    isSelected = false;
   }
 
   useEffect(() => {
@@ -60,7 +66,7 @@ const ChatElements = (id: IdType) => {
     <StyledChatBox
       onClick={() => {
         dispatch(updatedContactInfo("CONTACT"));
-        console.log(id);
+        console.log(selected_id, id.name, id.img);
         dispatch(
           selectConversation({
             room_id: selected_id,
@@ -73,6 +79,8 @@ const ChatElements = (id: IdType) => {
       sx={{
         width: "100%",
         height: 85,
+        backgroundColor: isSelected ? "#FE754D" : "transparent",
+        borderRadius: "15px",
       }}
       p={2}
     >

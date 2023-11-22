@@ -8,7 +8,7 @@ const Messages = () => {
   const dispatch = useAppDispatch();
   const { contact, profile } = useAppSelector(state => state);
   const { room_id, type_chat } = contact;
-  // console.log(type_chat);
+  console.log(type_chat);
   var messages: any = [];
   if (type_chat === "individual") {
     // console.log("individual");
@@ -19,6 +19,7 @@ const Messages = () => {
     messages = current_messages;
   } else {
     const { current_messages } = useAppSelector(state => state.channels);
+    console.log(current_messages);
     messages = current_messages;
   }
 

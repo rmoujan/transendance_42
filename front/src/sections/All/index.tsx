@@ -1,7 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import { MagnifyingGlass } from "@phosphor-icons/react";
 import { useState } from "react";
-import ChatElements from "../../components/ChatElements";
+import AllElements from "../../components/AllElements";
 import {
   Search,
   SearchIconWrapper,
@@ -33,6 +33,7 @@ const All = () => {
         channel_type,
       }) => ({
         id: channel_id,
+        room_id: channel_id,
         name,
         img: image,
         time,
@@ -110,7 +111,7 @@ const All = () => {
           <Stack>
             {/* hellow */}
             {conversationsToDisplay.map((el: any, index) => {
-              return <ChatElements key={index} {...el} />;
+              return <AllElements key={index} {...el} />;
             })}
           </Stack>
         </Stack>

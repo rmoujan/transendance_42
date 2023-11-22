@@ -165,8 +165,8 @@ const TextMsg = ({ el }: any) => {
       <Box
         p={1.5}
         sx={{
-          backgroundColor: el.incoming ? "#5E4F80" : "#3D2E5F",
-          borderRadius: 1.5,
+          backgroundColor: el.incoming ? "#B7B7C9" : "#696693",
+          borderRadius: "18px",
           width: "max-content",
         }}
       >
@@ -174,8 +174,8 @@ const TextMsg = ({ el }: any) => {
           <MsgOptions el={el} />
         </Stack>
         <Typography
-          variant="body1"
-          sx={{ color: el.incoming ? "#000" : "#EADDFF" }}
+          variant="subtitle1"
+          sx={{ color: el.incoming ? "#16132B" : "#16132B" }}
         >
           {el.message}
         </Typography>
@@ -225,7 +225,7 @@ const MsgOptions = (el: any) => {
     <>
       <CaretDown
         size={20}
-        color="#EADDFF"
+        color="#16132B"
         id="basic-button"
         aria-controls={openConversationMenu ? "basic-menu" : undefined}
         aria-haspopup="true"

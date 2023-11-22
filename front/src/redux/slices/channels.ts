@@ -67,7 +67,22 @@ export const ChannelsSlice = createSlice({
     },
     fetchChannels(state, action) {
       //! get all channels conversation
-      console.log(action.payload);
+      const formatDateTime = (dateString: string): string => {
+        const inputDate = new Date(dateString);
+        const currentDate = new Date();
+
+        const isToday = inputDate.toDateString() === currentDate.toDateString();
+
+        if (isToday) {
+          const hours = inputDate.getHours();
+          const minutes = inputDate.getMinutes();
+          return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+        } else {
+          const options: Intl.DateTimeFormatOptions = { year: "numeric", month: "long", day: "numeric" };
+          return inputDate.toLocaleDateString(undefined, options);
+        }
+      };
+      // console.log(action.payload);
       // state.channels = action.payload;
       state.channels = action.payload.map((el: any) => ({
         channel_id: el.channel_id,
@@ -77,7 +92,7 @@ export const ChannelsSlice = createSlice({
         admin: el.admin,
         members: el.members,
         last_messages: el.last_messages,
-        time: el.time,
+        time: formatDateTime(el.time),
         unread: el.unread,
         channel_type: el.channel_type,
       }));

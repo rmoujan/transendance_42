@@ -86,7 +86,7 @@ const ChannelElements = (id: IdType) => {
   return (
     <StyledChatBox
       onClick={() => {
-        // console.log("id", selected_id);
+        console.log(selected_id, id.name, id.channel_type, id.image);
         dispatch(updatedContactInfo("CHANNEL"));
         dispatch(
           selectConversation({

@@ -50,6 +50,7 @@ export const ContactSlice = createSlice({
       state.contactInfos.type = action.payload;
     },
     selectConversation(state, action) {
+      console.log(action.payload)
       state.type_chat = action.payload.type_chat;
       state.room_id = action.payload.room_id;
       state.name = action.payload.name;
