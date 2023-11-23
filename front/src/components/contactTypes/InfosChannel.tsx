@@ -23,6 +23,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import ChangeChannels from "../channels/ChangeChannels";
 import { LeaveDialog, MuteDialog, RemoveDialog } from "../dialogs/Dialogs";
 import MembersSettings from "./MembersSettings";
+import { set } from "react-hook-form";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -36,6 +37,8 @@ const Transition = React.forwardRef(function Transition(
 const InfosChannel = () => {
   const currentInfos = useRef<any>(null);
   const [owner, setOwner] = useState(false);
+  const [admin, setAdmin] = useState(false);
+  const [member, setMember] = useState(false);
   const dispatch = useAppDispatch();
   const { contact, channels, profile } = useAppSelector(store => store);
 
@@ -47,11 +50,40 @@ const InfosChannel = () => {
         );
       });
     });
-    if (isOwner) {
-      setOwner(true);
-    } else {
+    const isAdmin = channels.publicChannels.find((channel: any) => {
+      return channel.users.some((user: any) => {
+        return (
+          user.userId === profile._id && user.status_UserInChannel === "admin"
+        );
+      });
+    });
+    const isMember = channels.publicChannels.find((channel: any) => {
+      return channel.users.some((user: any) => {
+        return (
+          user.userId === profile._id && user.status_UserInChannel === "member"
+        );
+      });
+    });
+    if (isMember && !isAdmin && !isOwner) {
+      setMember(true);
+      setAdmin(false);
       setOwner(false);
     }
+    else if (isAdmin && !isOwner && !isMember) {
+      setMember(false);
+      setAdmin(true);
+      setOwner(false);
+    }
+    else if (isOwner && !isAdmin && !isMember) {
+      setMember(false);
+      setAdmin(false);
+      setOwner(true);
+    }
+    // if (isOwner) {
+    //   setOwner(true);
+    // } else {
+    //   setOwner(false);
+    // }
     //
   }, [contact, profile, channels]);
   // console.log(channels.publicChannels);
@@ -176,6 +208,15 @@ const InfosChannel = () => {
             <Typography variant="h5" color={"#322554"} sx={{ padding: 0 }}>
               {currentInfos.current?.users.length} members
             </Typography>
+            {owner &&<Typography variant="h5" color={"#322554"} sx={{ padding: 0 }}>
+              [ Owner ]
+            </Typography>}
+            {admin &&<Typography variant="h5" color={"#322554"} sx={{ padding: 0 }}>
+              [ Admin ]
+            </Typography>}
+            {member &&<Typography variant="h5" color={"#322554"} sx={{ padding: 0 }}>
+              [ Member ]
+            </Typography>}
           </Stack>
         </Stack>
         <Divider />
@@ -201,7 +242,7 @@ const InfosChannel = () => {
             {/* make an array */}
             <Stack spacing={1}>
               {currentInfos.current?.users.map((member: any) => (
-                <MembersSettings el={member} isOwner={owner} />
+                <MembersSettings el={member} isOwner={owner} isAdmin={admin} isMember={member}/>
               ))}
             </Stack>
           </Box>

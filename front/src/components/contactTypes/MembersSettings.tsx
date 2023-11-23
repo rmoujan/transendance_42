@@ -23,6 +23,9 @@ const MembersSettings = (el: any) => {
   const { _id } = useAppSelector(state => state.profile);
   const { user } = el.el;
   console.log(el.isOwner);
+  console.log(el.isAdmin);
+  console.log(el.isMember);
+  console.log(el.el);
 
   console.log(_id, user);
   const [owner, setOwner] = useState(false);
@@ -52,9 +55,7 @@ const MembersSettings = (el: any) => {
       from: user.userId,
       channel_id: el.el.channelId,
     });
-
-    // socket.emit("make_admin", { to: el.el.userId, from: _id });
-    // dispatch(updatedContactInfo({ admin: true }));
+    // ! dispatch "updatedChannels" action
   };
   const handleClickMuted = () => {
     // ! emit "mute_converstation" event
@@ -77,8 +78,12 @@ const MembersSettings = (el: any) => {
         channel_id: el.el.channelId,
       });
     }
+    socket.on("ResponsekickUser", (data: any) => {
+      console.log(data);
+    });
     setMuted(() => !muted);
   };
+  //696693
   return (
     <Box
       sx={{
@@ -86,7 +91,7 @@ const MembersSettings = (el: any) => {
         padding: "25px 25px",
         margin: "1px",
         borderRadius: "15px",
-        backgroundColor: "#806EA9",
+        backgroundColor: (_id === el.el.userId) ? "#DC5833" : "#696693",
       }}
     >
       <Stack
@@ -102,34 +107,32 @@ const MembersSettings = (el: any) => {
         </Stack>
         {!(_id === el.el.userId) && (
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
-            {/* {console.log(el)} */}
-
-            {el.el.status_UserInChannel === "member" &&
+            {(el.isOwner) && el.el.status_UserInChannel === "member" &&
               el.el.status_UserInChannel !== "owner" && (
                 <Box
                   sx={{
                     width: "50px",
                     padding: "5px",
                     borderRadius: "15px",
-                    backgroundColor: "#806149",
+                    backgroundColor: "#3D3C65",
                   }}
                 >
                   <Tooltip title="Make admin">
                     <IconButton aria-label="friend request" onClick={makeAdmin}>
-                      <UserGear />
+                      <UserGear color="#FE754D"/>
                     </IconButton>
                   </Tooltip>
                 </Box>
               )}
 
-            {el.el.status_UserInChannel !== "member" &&
+            {(el.isAdmin || el.isOwner) && el.el.status_UserInChannel !== "member" &&
               el.el.status_UserInChannel !== "owner" && (
                 <Box
                   sx={{
                     width: "50px",
                     padding: "5px",
                     borderRadius: "15px",
-                    backgroundColor: "#806149",
+                    backgroundColor: "#3D3C65",
                   }}
                 >
                   <Tooltip title="Send Friend Request">
@@ -137,18 +140,18 @@ const MembersSettings = (el: any) => {
                       aria-label="friend request"
                       onClick={friendRequest}
                     >
-                      <UserPlus />
+                      <UserPlus color="#FE754D"/>
                     </IconButton>
                   </Tooltip>
                 </Box>
               )}
 
-            <Box
+            {(el.isAdmin || el.isOwner) && el.el.status_UserInChannel !== "owner" && <Box
               sx={{
                 width: "50px",
                 padding: "5px",
                 borderRadius: "15px",
-                backgroundColor: "#806149",
+                backgroundColor: "#3D3C65",
               }}
             >
               <Tooltip title="Mute">
@@ -156,18 +159,18 @@ const MembersSettings = (el: any) => {
                   aria-label="mute contact"
                   onClick={handleClickMuted}
                 >
-                  {muted ? <SpeakerSimpleSlash /> : <SpeakerSimpleNone />}
+                  {muted ? <SpeakerSimpleSlash color="#FE754D"/> : <SpeakerSimpleNone color="#FE754D"/>}
                 </IconButton>
               </Tooltip>
-            </Box>
+            </Box>}
 
-            {el.el.status_UserInChannel === "member" && (
+            {(el.isAdmin || el.isOwner) && el.el.status_UserInChannel === "member" && (
               <Box
                 sx={{
                   width: "50px",
                   padding: "5px",
                   borderRadius: "15px",
-                  backgroundColor: "#806149",
+                  backgroundColor: "#3D3C65",
                 }}
               >
                 <Tooltip title="Kick">
@@ -183,19 +186,19 @@ const MembersSettings = (el: any) => {
                       // socket.emit("delete_contact", { to: el.el.userId, from: _id });
                     }}
                   >
-                    <UserMinus />
+                    <UserMinus color="#FE754D"/>
                   </IconButton>
                 </Tooltip>
               </Box>
             )}
 
-            {el.el.status_UserInChannel === "member" && (
+            {(el.isAdmin || el.isOwner) && el.el.status_UserInChannel === "member" && (
               <Box
                 sx={{
                   width: "50px",
                   padding: "5px",
                   borderRadius: "15px",
-                  backgroundColor: "#806149",
+                  backgroundColor: "#3D3C65",
                 }}
               >
                 <Tooltip title="Ban">
@@ -207,11 +210,9 @@ const MembersSettings = (el: any) => {
                         from: _id,
                         channel_id: el.el.channelId,
                       });
-                      // ! emit "ban_contact" event
-                      // socket.emit("block_contact", { to: el.el.userId, from: _id });
                     }}
                   >
-                    <Gavel />
+                    <Gavel color="#FE754D"/>
                   </IconButton>
                 </Tooltip>
               </Box>
