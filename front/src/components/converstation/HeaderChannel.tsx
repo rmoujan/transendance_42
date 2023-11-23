@@ -23,7 +23,7 @@ const HeaderChannels = () => {
       sx={{
         padding: "14px 32px",
         width: "100%",
-        background: "#5E4F80",
+        background: "#696693",
         boxShadow: "0px 0px 2px rgba(0, 0, 0, 0.25)",
         borderRadius: "44px 44px 0 0",
       }}

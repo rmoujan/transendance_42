@@ -84,19 +84,30 @@ const JoinProtectedForm = ({ handleClose }: any) => {
         visibility: data.mySelect.visibility,
         password: data.password,
       };
-      axios.post(
+      const res: any = axios.post(
         "http://localhost:3000/channels/join",
         { sendData },
         { withCredentials: true }
       );
-      dispatch(
-        showSnackbar({
-          severity: "success",
-          message: `You Join to ${data.mySelect.name} successfully`,
-        })
-      );
-      dispatch(FetchChannels());
-      handleClose();
+      console.log("res", res);
+      if (res?.data === true) {
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: `You joined ${data.mySelect.name} successfully`,
+          })
+        );
+        dispatch(FetchChannels());
+        handleClose();
+      } else {
+        dispatch(
+          showSnackbar({
+            severity: "failed",
+            message: `Failed to join ${data.mySelect.name}`,
+          })
+        );
+        handleClose();
+      }
     } catch (error) {
       console.log("error", error);
       dispatch(

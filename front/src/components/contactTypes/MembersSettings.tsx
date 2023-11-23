@@ -15,12 +15,15 @@ import {
   UserMinus,
   UserPlus,
 } from "@phosphor-icons/react";
-import { useAppSelector } from "../../redux/store/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { socket } from "../../socket";
 import axios from "axios";
+import { FetchChannels } from "../../redux/slices/channels";
+import { toggleDialog } from "../../redux/slices/contact";
 
 const MembersSettings = (el: any) => {
   const { _id } = useAppSelector(state => state.profile);
+  const dispatch = useAppDispatch();
   const { user } = el.el;
   console.log(el.isOwner);
   console.log(el.isAdmin);
@@ -34,9 +37,9 @@ const MembersSettings = (el: any) => {
   const [muted, setMuted] = useState(false);
 
   useEffect(() => {
-    setOwner(user.userId === _id && el.isOwner);
-    setAdmin(user.userId === _id && user.status_UserInChannel === "admin");
-    setMember(user.userId === _id && user.status_UserInChannel === "member");
+    setOwner(user.id_user === _id && el.isOwner);
+    setAdmin(user.id_user === _id && user.status_UserInChannel === "admin");
+    setMember(user.id_user === _id && user.status_UserInChannel === "member");
     console.log(el.el, owner);
   }, [user, _id, el.isOwner]);
 
@@ -49,32 +52,32 @@ const MembersSettings = (el: any) => {
   };
   const makeAdmin = () => {
     console.log("make admin");
+    console.log(user.id_user, _id, el.el.channelId)
     // ! emit "make_admin" event
     axios.post("http://localhost:3000/channels/setAdmin", {
-      to: _id,
-      from: user.userId,
+      to: user.id_user,
+      from: _id,
       channel_id: el.el.channelId,
     });
+    dispatch(FetchChannels());
+    dispatch(toggleDialog())
     // ! dispatch "updatedChannels" action
   };
   const handleClickMuted = () => {
     // ! emit "mute_converstation" event
 
-    // socket.emit("mute_converstation", { to: _id, from: user_id });
-    // dispatch(mutedContact({ room_id: id }));
-
     if (muted === true) {
       console.log("unmute");
       socket.emit("unmuteUserFromChannel", {
-        to: _id,
-        from: user.userId,
+        to: user.id_user,
+        from: _id,
         channel_id: el.el.channelId,
       });
     } else {
       console.log("mute");
       socket.emit("muteUserFromChannel", {
-        to: _id,
-        from: user.userId,
+        to: user.id_user,
+        from: _id,
         channel_id: el.el.channelId,
       });
     }
@@ -83,7 +86,7 @@ const MembersSettings = (el: any) => {
     });
     setMuted(() => !muted);
   };
-  //696693
+
   return (
     <Box
       sx={{
@@ -108,7 +111,7 @@ const MembersSettings = (el: any) => {
         {!(_id === el.el.userId) && (
           <Stack direction={"row"} alignItems={"center"} spacing={1}>
             {(el.isOwner) && el.el.status_UserInChannel === "member" &&
-              el.el.status_UserInChannel !== "owner" && (
+              el.el.status_UserInChannel !== "admin" && (
                 <Box
                   sx={{
                     width: "50px",
@@ -179,7 +182,7 @@ const MembersSettings = (el: any) => {
                       console.log("kick Contact");
                       // ! emit "kick_contact" event
                       socket.emit("kickUserFromChannel", {
-                        to: el.el.userId,
+                        to: user.id_user,
                         from: _id,
                         channel_id: el.el.channelId,
                       });

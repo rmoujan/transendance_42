@@ -155,7 +155,7 @@ const Chatbox = () => {
         direction="row"
         alignItems={"center"}
         spacing={3}
-        sx={{ backgroundColor: "#5E4F80", borderRadius: "21px" }}
+        sx={{ backgroundColor: "#3D3C65", borderRadius: "21px" }}
       >
         {/* chatinput */}
         <Stack

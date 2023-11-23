@@ -1,8 +1,6 @@
 import { Box, Stack } from "@mui/material";
-import { useRef } from "react";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store.ts";
-import { MediaMsg, ReplyMsg, TextMsg, Timeline } from "./MsgTypes.tsx";
-import { getCurrentConverstation } from "../../redux/slices/converstation.ts";
+import { TextMsg, Timeline } from "./MsgTypes.tsx";
 
 const Messages = () => {
   const dispatch = useAppDispatch();
