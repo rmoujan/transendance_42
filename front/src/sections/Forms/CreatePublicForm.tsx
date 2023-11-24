@@ -62,7 +62,7 @@ const CreatePublicForm = ({ handleClose }: any) => {
     } catch (error) {
       dispatch(
         showSnackbar({
-          severity: "failed",
+          severity: "error",
           message: "Create Public Channel Failed",
         })
       );

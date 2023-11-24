@@ -60,7 +60,7 @@ const CreatePrivateForm = ({ handleClose }: any) => {
       console.log("error", error);
       dispatch(
         showSnackbar({
-          severity: "failed",
+          severity: "error",
           message: "Create Private Channel Failed",
         })
       );

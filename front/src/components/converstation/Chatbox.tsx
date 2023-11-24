@@ -30,8 +30,8 @@ const ChatInput = ({ setOpenEmojis, setValue, value, inputRef }: any) => {
     if (event.key === "Enter") {
       // Prevent the default behavior of "Enter" key in a textarea
       event.preventDefault();
-      console.log(contact.room_id);
-      console.log(profile._id);
+      // console.log(contact.room_id);
+      // console.log(profile._id);
       if (!value) return;
       socket.emit(
         contact.type_chat === "individual"

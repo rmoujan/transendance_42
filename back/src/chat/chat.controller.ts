@@ -28,6 +28,7 @@ export class ChatController {
     @Get('allMessagesRoom')
     async getAllMessagesRoom(@Req() req, @Body() data: any)
     {
+        console.log(data);
         // const decode = this.jwt.verify(req.cookies['cookie']);
         // const user = await this.UsersService.findById(decode.id);
         return this.chatService.getAllMessagesRoom(data.idRoom); 

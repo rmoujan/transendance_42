@@ -87,7 +87,7 @@ const JoinPublicForm = ({ handleClose }: any) => {
       console.error("error", error);
       dispatch(
         showSnackbar({
-          severity: "failed",
+          severity: "error",
           message: `You Failed Join to ${data.mySelect.name}`,
         })
       );

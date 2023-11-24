@@ -23,25 +23,33 @@ import { toggleDialog } from "../../redux/slices/contact";
 
 const MembersSettings = (el: any) => {
   const { _id } = useAppSelector(state => state.profile);
+  const {friends} = useAppSelector(state => state.app);
+  // console.log('**************************')
+  // console.log(_id, friends, el.el.userId);
+  // console.log('**************************')
   const dispatch = useAppDispatch();
   const { user } = el.el;
-  console.log(el.isOwner);
-  console.log(el.isAdmin);
-  console.log(el.isMember);
-  console.log(el.el);
+  // console.log(el.isOwner);
+  // console.log(el.isAdmin);
+  // console.log(el.isMember);
+  // console.log(el.el);
 
-  console.log(_id, user);
-  const [owner, setOwner] = useState(false);
-  const [admin, setAdmin] = useState(false);
-  const [member, setMember] = useState(false);
+  // console.log(_id, user);
+  const [friend, setFriend] = useState(false);
   const [muted, setMuted] = useState(false);
 
   useEffect(() => {
-    setOwner(user.id_user === _id && el.isOwner);
-    setAdmin(user.id_user === _id && user.status_UserInChannel === "admin");
-    setMember(user.id_user === _id && user.status_UserInChannel === "member");
-    console.log(el.el, owner);
-  }, [user, _id, el.isOwner]);
+   
+    // console.log(el.el, owner);
+    // check friends is true or false using el.el.userId
+    if (friends.length > 0 && el.el.userId !== _id) {
+      const isFriend = friends.some((friend: any) => {
+        return friend.id_user === el.el.userId;
+      });
+      // console.log(isFriend);
+      setFriend(isFriend);
+    }
+  }, [user, _id, el]);
 
   const friendRequest = () => {
     console.log("friend request");
@@ -51,8 +59,8 @@ const MembersSettings = (el: any) => {
     // dispatch(updatedContactInfo({ friend_request: true }));
   };
   const makeAdmin = () => {
-    console.log("make admin");
-    console.log(user.id_user, _id, el.el.channelId)
+    // console.log("make admin");
+    // console.log(user.id_user, _id, el.el.channelId)
     // ! emit "make_admin" event
     axios.post("http://localhost:3000/channels/setAdmin", {
       to: user.id_user,
@@ -128,8 +136,7 @@ const MembersSettings = (el: any) => {
                 </Box>
               )}
 
-            {(el.isAdmin || el.isOwner) && el.el.status_UserInChannel !== "member" &&
-              el.el.status_UserInChannel !== "owner" && (
+            { !friend && (
                 <Box
                   sx={{
                     width: "50px",

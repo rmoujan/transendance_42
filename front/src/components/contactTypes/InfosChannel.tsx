@@ -14,16 +14,14 @@ import {
   Gear,
   Prohibit,
   SignOut,
-  SpeakerSimpleX,
-  X,
+  X
 } from "@phosphor-icons/react";
 import React, { useEffect, useRef, useState } from "react";
 import { toggleDialog } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import ChangeChannels from "../channels/ChangeChannels";
-import { LeaveDialog, MuteDialog, RemoveDialog } from "../dialogs/Dialogs";
+import { LeaveDialog, RemoveDialog } from "../dialogs/Dialogs";
 import MembersSettings from "./MembersSettings";
-import { set } from "react-hook-form";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -41,29 +39,42 @@ const InfosChannel = () => {
   const [member, setMember] = useState(false);
   const dispatch = useAppDispatch();
   const { contact, channels, profile } = useAppSelector(store => store);
+  console.log(contact);
 
   useEffect(() => {
-    const isOwner = channels.publicChannels.find((channel: any) => {
-      return channel.users.some((user: any) => {
+    let selectedChannel:any;
+    if (contact.type_chat === "public") {
+      selectedChannel = channels.publicChannels.find((channel: any) => {
+        return channel?.id_channel === contact.room_id;
+      });
+    }
+    if (contact.type_chat === "protected") {
+      selectedChannel = channels.protectedChannels.find(
+        (channel: any) => channel?.id_channel === contact.room_id
+      );
+    }
+    if (contact.type_chat === "private") {
+      selectedChannel = channels.privateChannels.find(
+        (channel: any) => channel?.id_channel === contact.room_id
+      );
+    }
+    // console.log(selectedChannel);
+    const isOwner = selectedChannel.users.some((user: any) => {
         return (
           user.userId === profile._id && user.status_UserInChannel === "owner"
         );
       });
-    });
-    const isAdmin = channels.publicChannels.find((channel: any) => {
-      return channel.users.some((user: any) => {
+    const isAdmin = selectedChannel.users.some((user: any) => {
         return (
           user.userId === profile._id && user.status_UserInChannel === "admin"
         );
       });
-    });
-    const isMember = channels.publicChannels.find((channel: any) => {
-      return channel.users.some((user: any) => {
+    const isMember = selectedChannel.users.some((user: any) => {
         return (
           user.userId === profile._id && user.status_UserInChannel === "member"
         );
       });
-    });
+
     if (isMember && !isAdmin && !isOwner) {
       setMember(true);
       setAdmin(false);
@@ -79,14 +90,9 @@ const InfosChannel = () => {
       setAdmin(false);
       setOwner(true);
     }
-    // if (isOwner) {
-    //   setOwner(true);
-    // } else {
-    //   setOwner(false);
-    // }
-    //
+
   }, [contact, profile, channels]);
-  // console.log(channels.publicChannels);
+  console.log(channels.publicChannels);
   if (contact.type_chat === "public") {
     // console.log("public");
     const channel = channels.publicChannels.find((channel: any) => {
@@ -158,7 +164,7 @@ const InfosChannel = () => {
           position: "absolute",
           left: "22.7em",
           top: 10,
-          color: theme => theme.palette.grey[800],
+          color: "#25213B",
         }}
       >
         <X />
@@ -173,7 +179,7 @@ const InfosChannel = () => {
             position: "absolute",
             left: "21em",
             top: 10,
-            color: theme => theme.palette.grey[800],
+            color: "#25213B",
           }}
         >
           <Gear />

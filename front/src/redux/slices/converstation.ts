@@ -162,6 +162,8 @@ export const ConverstationSlice = createSlice({
     setCurrentConverstation(state, action) {
       // ~ set current converstation
       const user_id = action.payload.user_id;
+      console.log(action.payload.data);
+      console.log(action.payload.data[0]);
       const room_id = action.payload.data[0]?.idDm;
       state.direct_chat.current_conversation = state.direct_chat.conversations.filter((el: any) => el?.room_id === room_id)[0];
       // check if room_id is in converstations id list

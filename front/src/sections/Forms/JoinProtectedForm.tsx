@@ -89,8 +89,8 @@ const JoinProtectedForm = ({ handleClose }: any) => {
         { sendData },
         { withCredentials: true }
       );
-      console.log("res", res);
-      if (res?.data === true) {
+      console.log("res", res.data);
+      if (res.data === true) {
         dispatch(
           showSnackbar({
             severity: "success",
@@ -102,7 +102,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
       } else {
         dispatch(
           showSnackbar({
-            severity: "failed",
+            severity: "error",
             message: `Failed to join ${data.mySelect.name}`,
           })
         );
@@ -112,7 +112,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
       console.log("error", error);
       dispatch(
         showSnackbar({
-          severity: "failed",
+          severity: "error",
           message: `You Failed Join to ${data.mySelect.name}`,
         })
       );
