@@ -64,11 +64,11 @@ const ChatTabs = () => {
   const { profile, contact } = useAppSelector(state => state);
   const { friends } = useAppSelector(state => state.app);
   React.useEffect(() => {
-    if (friends.length == 0) {
+    if (!friends) {
       console.log("hey");
       dispatch(FetchFriends());
     }
-    if (profile._id == 0) {
+    if (!profile._id) {
       dispatch(FetchProfile());
     }
     if (socket) {

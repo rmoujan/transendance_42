@@ -53,16 +53,18 @@ export const ProfileSlice = createSlice({
 export default ProfileSlice.reducer;
 
 export function FetchProfile() {
-    const dispatch = useDispatch();
-    return async () => {
-        await axios
-            .get("http://localhost:3000/auth/get-user", { withCredentials: true })
-            .then((res) => {
+    // const dispatch = useDispatch();
+    return async (dispatch: any) => {
+        try {
+            const res = await axios.get("http://localhost:3000/auth/get-user", { withCredentials: true })
+            if (res.data)
+            {
                 dispatch(ProfileSlice.actions.fetchProfile(res.data));
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+            }
+            console.log('fetch profile succefully!!');
+        } catch (error) {
+            console.log("unfortunally there's no friends");
+        }
     };
 }
 

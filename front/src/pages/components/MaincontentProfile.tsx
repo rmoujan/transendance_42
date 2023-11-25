@@ -203,9 +203,9 @@ function MaincontentProfile() {
                     </div>
                   )}
                   {/* //if game history display this space */}
-                  {GameHistory.map((item) => (
+                  {GameHistory.map((item, index) => (
                     <div
-                      key={item}
+                      key={index}
                       className=" bg-black/20 rounded-2xl shadow-2xl flex justify-center items-center p-4 w-[30rem] -mr-10 my-3"
                     >
                       {
