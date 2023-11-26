@@ -21,31 +21,43 @@ const ChangePassword = ({ handleClose, el }: any) => {
   return (
     <Tabs defaultValue={0}>
       <StyledTabsList>
-       {(el.el.visibility === 'public') && <StyledTab value={0}>Set New Password</StyledTab>}
-        {(el.el.visibility === 'protected') && <StyledTab value={1}>Remove Password</StyledTab>}
-        {(el.el.visibility === 'protected') &&<StyledTab value={2}>Change Password</StyledTab>}
+        {el.el.visibility === "public" && (
+          <StyledTab value={0}>Set New Password</StyledTab>
+        )}
+        {el.el.visibility === "protected" && (
+          <StyledTab value={1}>Remove Password</StyledTab>
+        )}
+        {el.el.visibility === "protected" && (
+          <StyledTab value={2}>Change Password</StyledTab>
+        )}
       </StyledTabsList>
-      {(el.el.visibility === 'public') && <StyledTabPanel value={0}>
-        <SetPassword
-          handleClose={handleClose}
-          el={el.el}
-          user_id={el.user_id}
-        />
-      </StyledTabPanel>}
-     {(el.el.visibility === 'protected') && <StyledTabPanel value={1}>
-        <RemovePassword
-          handleClose={handleClose}
-          el={el.el}
-          user_id={el.user_id}
-        />
-      </StyledTabPanel>}
-     {(el.el.visibility === 'protected') && <StyledTabPanel value={2}>
-        <UpdatePassword
-          handleClose={handleClose}
-          el={el.el}
-          user_id={el.user_id}
-        />
-      </StyledTabPanel>}
+      {el.el.visibility === "public" && (
+        <StyledTabPanel value={0}>
+          <SetPassword
+            handleClose={handleClose}
+            el={el.el}
+            user_id={el.user_id}
+          />
+        </StyledTabPanel>
+      )}
+      {el.el.visibility === "protected" && (
+        <StyledTabPanel value={1}>
+          <RemovePassword
+            handleClose={handleClose}
+            el={el.el}
+            user_id={el.user_id}
+          />
+        </StyledTabPanel>
+      )}
+      {el.el.visibility === "protected" && (
+        <StyledTabPanel value={2}>
+          <UpdatePassword
+            handleClose={handleClose}
+            el={el.el}
+            user_id={el.user_id}
+          />
+        </StyledTabPanel>
+      )}
     </Tabs>
   );
 };
@@ -78,13 +90,16 @@ const ChangeChannels = ({ open, handleClose, el }: any) => {
     >
       {/* {console.log(handleClose)} */}
       <DialogTitle
-      sx={{
+        sx={{
           my: 2,
         }}
         variant="h4"
         align="center"
         fontWeight={600}
-        color={"#25213B"}>Modify Current Channel</DialogTitle>
+        color={"#25213B"}
+      >
+        Modify Current Channel
+      </DialogTitle>
       <DialogContent sx={{ mb: 2 }}>
         <ChangePassword handleClose={handleClose} el={el} />
       </DialogContent>

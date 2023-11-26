@@ -18,9 +18,9 @@ import axios from "axios";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { FetchChannels } from "../../redux/slices/channels";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { FetchChannels } from "../../redux/slices/channels";
 
 interface Option {
   name: string;
@@ -84,7 +84,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
         visibility: data.mySelect.visibility,
         password: data.password,
       };
-      const res: any = axios.post(
+      const res: any = await axios.post(
         "http://localhost:3000/channels/join",
         { sendData },
         { withCredentials: true }

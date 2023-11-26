@@ -12,7 +12,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { FetchChannels } from "../../redux/slices/channels";
 
 const CreatePrivateForm = ({ handleClose }: any) => {
-  const { friends } = useAppSelector(state => state.app);
+  const { friends } = useAppSelector((state) => state.app);
   const [file, setFile] = React.useState<any>();
   const dispatch = useAppDispatch();
   const PrivateSchema = Yup.object().shape({
@@ -44,18 +44,33 @@ const CreatePrivateForm = ({ handleClose }: any) => {
   const onSubmit = async (data: any) => {
     try {
       data.avatar = file?.preview;
-      await axios.post("http://localhost:3000/channels/create", data, {
-        withCredentials: true,
-      });
-
-      dispatch(
-        showSnackbar({
-          severity: "success",
-          message: "New Private Channel has Created",
-        })
+      const res: any = await axios.post(
+        "http://localhost:3000/channels/create",
+        data,
+        {
+          withCredentials: true,
+        }
       );
-      dispatch(FetchChannels());
-      handleClose();
+
+      if (res.data === true) {
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: "New Private Channel has Created",
+          })
+        );
+        dispatch(FetchChannels());
+        handleClose();
+      } else {
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: "Create Private Channel Failed",
+          })
+        );
+        reset();
+        handleClose();
+      }
     } catch (error) {
       console.log("error", error);
       dispatch(

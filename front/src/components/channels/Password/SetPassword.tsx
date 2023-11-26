@@ -22,7 +22,7 @@ const SetPassword = ({ handleClose, el, user_id }: any) => {
       .required("Password is required"),
     passwordConfirm: Yup.string()
       .required("Confirm password is required")
-      .oneOf([Yup.ref("password"), 'null'], "Passwords must match"),
+      .oneOf([Yup.ref("password"), "null"], "Passwords must match"),
   });
 
   const defaultValues = {
@@ -54,8 +54,8 @@ const SetPassword = ({ handleClose, el, user_id }: any) => {
           message: "You upgrated to Protected channel",
         })
       );
-      dispatch(toggleDialog())
-      dispatch(FetchChannels())
+      dispatch(toggleDialog());
+      dispatch(FetchChannels());
     } catch (err) {
       console.error(err);
       reset();
@@ -114,41 +114,41 @@ const SetPassword = ({ handleClose, el, user_id }: any) => {
         alignContent={"center"}
         justifyContent={"space-evenly"}
       >
-         <Button
-            sx={{
-              // backgroundColor: "#806EA9", // Change the background color to purple
-              color: "#3D3C65", // Change the text color to white
-              borderRadius: "12px",
-              width: "150px",
-              height: "50px",
-              fontSize: "18px",
-              fontWeight: 600,
-              "&:hover": {
-                backgroundColor: "#3D3C65", // Change the background color on hover
-                color: "#b7b7c9",
-              },
-            }}
-            variant="outlined"
-            onClick={handleClose}
-          >
+        <Button
+          sx={{
+            // backgroundColor: "#806EA9", // Change the background color to purple
+            color: "#3D3C65", // Change the text color to white
+            borderRadius: "12px",
+            width: "150px",
+            height: "50px",
+            fontSize: "18px",
+            fontWeight: 600,
+            "&:hover": {
+              backgroundColor: "#3D3C65", // Change the background color on hover
+              color: "#b7b7c9",
+            },
+          }}
+          variant="outlined"
+          onClick={handleClose}
+        >
           Cancel
         </Button>
         <Button
-            sx={{
-              backgroundColor: "#3D3C65", // Change the background color to purple 3D3C65
-              color: "#f78562", // Change the text color to white
-              borderRadius: "12px",
-              height: "50px",
-              fontSize: "18px",
-              fontWeight: 600,
-              "&:hover": {
-                backgroundColor: "#3D3C65", // Change the background color on hover
-                color: "#b7b7c9",
-              },
-            }}
-            type="submit"
-            variant="contained"
-          >
+          sx={{
+            backgroundColor: "#3D3C65", // Change the background color to purple 3D3C65
+            color: "#f78562", // Change the text color to white
+            borderRadius: "12px",
+            height: "50px",
+            fontSize: "18px",
+            fontWeight: 600,
+            "&:hover": {
+              backgroundColor: "#3D3C65", // Change the background color on hover
+              color: "#b7b7c9",
+            },
+          }}
+          type="submit"
+          variant="contained"
+        >
           Set New Password
         </Button>
       </Stack>

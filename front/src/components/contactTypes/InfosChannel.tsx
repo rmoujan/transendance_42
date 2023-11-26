@@ -10,12 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
-import {
-  Gear,
-  Prohibit,
-  SignOut,
-  X
-} from "@phosphor-icons/react";
+import { Gear, Prohibit, SignOut, X } from "@phosphor-icons/react";
 import React, { useEffect, useRef, useState } from "react";
 import { toggleDialog } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
@@ -38,11 +33,11 @@ const InfosChannel = () => {
   const [admin, setAdmin] = useState(false);
   const [member, setMember] = useState(false);
   const dispatch = useAppDispatch();
-  const { contact, channels, profile } = useAppSelector(store => store);
+  const { contact, channels, profile } = useAppSelector((store) => store);
   console.log(contact);
 
   useEffect(() => {
-    let selectedChannel:any;
+    let selectedChannel: any;
     if (contact.type_chat === "public") {
       selectedChannel = channels.publicChannels.find((channel: any) => {
         return channel?.id_channel === contact.room_id;
@@ -60,37 +55,34 @@ const InfosChannel = () => {
     }
     // console.log(selectedChannel);
     const isOwner = selectedChannel.users.some((user: any) => {
-        return (
-          user.userId === profile._id && user.status_UserInChannel === "owner"
-        );
-      });
+      return (
+        user.userId === profile._id && user.status_UserInChannel === "owner"
+      );
+    });
     const isAdmin = selectedChannel.users.some((user: any) => {
-        return (
-          user.userId === profile._id && user.status_UserInChannel === "admin"
-        );
-      });
+      return (
+        user.userId === profile._id && user.status_UserInChannel === "admin"
+      );
+    });
     const isMember = selectedChannel.users.some((user: any) => {
-        return (
-          user.userId === profile._id && user.status_UserInChannel === "member"
-        );
-      });
+      return (
+        user.userId === profile._id && user.status_UserInChannel === "member"
+      );
+    });
 
     if (isMember && !isAdmin && !isOwner) {
       setMember(true);
       setAdmin(false);
       setOwner(false);
-    }
-    else if (isAdmin && !isOwner && !isMember) {
+    } else if (isAdmin && !isOwner && !isMember) {
       setMember(false);
       setAdmin(true);
       setOwner(false);
-    }
-    else if (isOwner && !isAdmin && !isMember) {
+    } else if (isOwner && !isAdmin && !isMember) {
       setMember(false);
       setAdmin(false);
       setOwner(true);
     }
-
   }, [contact, profile, channels]);
   console.log(channels.publicChannels);
   if (contact.type_chat === "public") {
@@ -214,15 +206,21 @@ const InfosChannel = () => {
             <Typography variant="h5" color={"#322554"} sx={{ padding: 0 }}>
               {currentInfos.current?.users.length} members
             </Typography>
-            {owner &&<Typography variant="h5" color={"#322554"} sx={{ padding: 0 }}>
-              [ Owner ]
-            </Typography>}
-            {admin &&<Typography variant="h5" color={"#322554"} sx={{ padding: 0 }}>
-              [ Admin ]
-            </Typography>}
-            {member &&<Typography variant="h5" color={"#322554"} sx={{ padding: 0 }}>
-              [ Member ]
-            </Typography>}
+            {owner && (
+              <Typography variant="h5" color={"#322554"} sx={{ padding: 0 }}>
+                [ Owner ]
+              </Typography>
+            )}
+            {admin && (
+              <Typography variant="h5" color={"#322554"} sx={{ padding: 0 }}>
+                [ Admin ]
+              </Typography>
+            )}
+            {member && (
+              <Typography variant="h5" color={"#322554"} sx={{ padding: 0 }}>
+                [ Member ]
+              </Typography>
+            )}
           </Stack>
         </Stack>
         <Divider />
@@ -248,7 +246,12 @@ const InfosChannel = () => {
             {/* make an array */}
             <Stack spacing={1}>
               {currentInfos.current?.users.map((member: any) => (
-                <MembersSettings el={member} isOwner={owner} isAdmin={admin} isMember={member}/>
+                <MembersSettings
+                  el={member}
+                  isOwner={owner}
+                  isAdmin={admin}
+                  isMember={member}
+                />
               ))}
             </Stack>
           </Box>
