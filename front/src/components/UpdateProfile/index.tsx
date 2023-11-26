@@ -4,7 +4,7 @@ import {
   DialogTitle,
   Slide,
   Stack,
-  Typography
+  Typography,
 } from "@mui/material";
 import Button from "@mui/material/Button";
 import { TransitionProps } from "@mui/material/transitions";
@@ -29,7 +29,7 @@ const Transition = React.forwardRef(function Transition(
 });
 
 const UpdateProfile = () => {
-  const { profile } = useAppSelector(state => state);
+  const { profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const [openGallery, setOpenGallery] = React.useState(false);
 
@@ -66,7 +66,7 @@ const UpdateProfile = () => {
       }}
       PaperProps={{
         style: {
-          backgroundColor: "#AE9BCD",
+          background: `linear-gradient(to top right, #3F3B5B, #2a2742, #454069)`,
           borderRadius: "35px",
           padding: "12px",
         },
@@ -74,8 +74,16 @@ const UpdateProfile = () => {
       maxWidth={"md"}
     >
       {" "}
-      <DialogTitle className="justify-center">
-        {"Update the Profile Picture"}
+      <DialogTitle sx={{ my: 2 }}>
+        {" "}
+        <Typography
+          variant="h4"
+          align="center"
+          fontWeight={600}
+          color={"#B7B7C9"}
+        >
+          Update the Profile Picture
+        </Typography>
       </DialogTitle>
       <Stack alignItems={"center"} direction={"column"} spacing={2}>
         <Avatar
@@ -85,7 +93,12 @@ const UpdateProfile = () => {
         />
         {/* name */}
         <Stack direction={"column"} alignItems={"center"}>
-          <Typography variant="h2" color={"#322554"} sx={{ padding: 0 }}>
+          <Typography
+            variant="h2"
+            fontWeight={600}
+            color={"#B7B7C9"}
+            sx={{ padding: 0 }}
+          >
             {profile.name}
           </Typography>
         </Stack>
@@ -111,15 +124,16 @@ const UpdateProfile = () => {
               );
             }}
             variant="contained"
-            endIcon={<ClockClockwise size={30} />}
+            endIcon={<ClockClockwise size={30} weight="bold" />}
             sx={{
               borderRadius: "15px",
               fontSize: "20px",
               padding: "10px 22px",
-              color: "#EADDFF",
-              backgroundColor: "#322554",
+              color: "#3D3954",
+              backgroundColor: "#DC5833",
+              fontWeight: 600,
               "&:hover": {
-                backgroundColor: "#806EA9",
+                backgroundColor: "#FE754D",
               },
             }}
           >
@@ -128,15 +142,16 @@ const UpdateProfile = () => {
           <Button
             variant="contained"
             component="label"
-            endIcon={<ArrowSquareUp size={30} />}
+            endIcon={<ArrowSquareUp size={30} weight="bold" />}
             sx={{
               borderRadius: "15px",
               fontSize: "20px",
               padding: "10px 22px",
-              color: "#EADDFF",
-              backgroundColor: "#322554",
+              color: "#3D3954",
+              backgroundColor: "#DC5833",
+              fontWeight: 600,
               "&:hover": {
-                backgroundColor: "#806EA9",
+                backgroundColor: "#FE754D",
               },
             }}
           >
@@ -157,15 +172,16 @@ const UpdateProfile = () => {
               // dispatch(toggleProfile());
             }}
             variant="contained"
-            endIcon={<FinnTheHuman size={30} />}
+            endIcon={<FinnTheHuman size={30} weight="bold" />}
             sx={{
               borderRadius: "15px",
               fontSize: "20px",
               padding: "10px 22px",
-              color: "#EADDFF",
-              backgroundColor: "#DF1D1D",
+              color: "#3D3954",
+              backgroundColor: "#DC5833",
+              fontWeight: 600,
               "&:hover": {
-                backgroundColor: "#ef8285",
+                backgroundColor: "#FE754D",
               },
             }}
           >

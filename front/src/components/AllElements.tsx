@@ -25,8 +25,8 @@ const AllElements = (el: any) => {
   return (
     <StyledChatBox
       onClick={() => {
-        console.log(el.channel_type);
-        console.log(selected_id, el.name, el.img);
+        // console.log(el.channel_type);
+        // console.log(selected_id, el.name, el.img);
         el.channel_type === "direct"
           ? dispatch(updatedContactInfo("CONTACT"))
           : dispatch(updatedContactInfo("CHANNEL"));

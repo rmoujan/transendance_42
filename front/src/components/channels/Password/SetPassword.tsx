@@ -3,12 +3,13 @@ import axios from "axios";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { showSnackbar } from "../../../redux/slices/contact";
+import { showSnackbar, toggleDialog } from "../../../redux/slices/contact";
 import { useAppDispatch } from "../../../redux/store/store";
 import FormProvider from "../../hook-form/FormProvider";
 import { Button, IconButton, InputAdornment, Stack } from "@mui/material";
 import { RHFTextField } from "../../../components/hook-form";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
+import { FetchChannels } from "../../../redux/slices/channels";
 
 const SetPassword = ({ handleClose, el, user_id }: any) => {
   const dispatch = useAppDispatch();
@@ -21,7 +22,7 @@ const SetPassword = ({ handleClose, el, user_id }: any) => {
       .required("Password is required"),
     passwordConfirm: Yup.string()
       .required("Confirm password is required")
-      .oneOf([Yup.ref("password"), null], "Passwords must match"),
+      .oneOf([Yup.ref("password"), "null"], "Passwords must match"),
   });
 
   const defaultValues = {
@@ -34,7 +35,7 @@ const SetPassword = ({ handleClose, el, user_id }: any) => {
     defaultValues,
   });
 
-  const { handleSubmit, errors, reset } = methods;
+  const { handleSubmit, reset } = methods;
 
   const onSubmit = async (data: any) => {
     try {
@@ -53,12 +54,14 @@ const SetPassword = ({ handleClose, el, user_id }: any) => {
           message: "You upgrated to Protected channel",
         })
       );
+      dispatch(toggleDialog());
+      dispatch(FetchChannels());
     } catch (err) {
       console.error(err);
       reset();
       dispatch(
         showSnackbar({
-          severity: "failed",
+          severity: "error",
           message: "update into Protected Channel Failed",
         })
       );
@@ -113,30 +116,34 @@ const SetPassword = ({ handleClose, el, user_id }: any) => {
       >
         <Button
           sx={{
-            backgroundColor: "#806EA9", // Change the background color to purple
-            color: "#C7BBD1", // Change the text color to white
+            // backgroundColor: "#806EA9", // Change the background color to purple
+            color: "#3D3C65", // Change the text color to white
             borderRadius: "12px",
             width: "150px",
             height: "50px",
+            fontSize: "18px",
+            fontWeight: 600,
             "&:hover": {
-              backgroundColor: "#684C83", // Change the background color on hover
-              color: "#C7BBD1",
+              backgroundColor: "#3D3C65", // Change the background color on hover
+              color: "#b7b7c9",
             },
           }}
-          variant="contained"
+          variant="outlined"
           onClick={handleClose}
         >
           Cancel
         </Button>
         <Button
           sx={{
-            backgroundColor: "#806EA9", // Change the background color to purple
-            color: "#C7BBD1", // Change the text color to white
+            backgroundColor: "#3D3C65", // Change the background color to purple 3D3C65
+            color: "#f78562", // Change the text color to white
             borderRadius: "12px",
             height: "50px",
+            fontSize: "18px",
+            fontWeight: 600,
             "&:hover": {
-              backgroundColor: "#684C83", // Change the background color on hover
-              color: "#C7BBD1",
+              backgroundColor: "#3D3C65", // Change the background color on hover
+              color: "#b7b7c9",
             },
           }}
           type="submit"

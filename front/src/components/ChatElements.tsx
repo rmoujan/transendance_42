@@ -35,7 +35,7 @@ const ChatElements = (id: IdType) => {
   const dispatch = useAppDispatch();
   let selected_id: number = 0;
   const selectedChatId = contact.room_id;
-  console.log(id);
+  // console.log(id);
   if (id.id && id.user_id && id.room_id) {
     selected_id = id.id;
     // console.log(id.id, id.user_id, id.room_id);
@@ -66,7 +66,7 @@ const ChatElements = (id: IdType) => {
     <StyledChatBox
       onClick={() => {
         dispatch(updatedContactInfo("CONTACT"));
-        console.log(selected_id, id.name, id.img);
+        // console.log(selected_id, id.name, id.img);
         dispatch(
           selectConversation({
             room_id: selected_id,

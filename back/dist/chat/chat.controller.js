@@ -32,6 +32,7 @@ let ChatController = class ChatController {
         return this.chatService.getAllMessages(data.idDm);
     }
     async getAllMessagesRoom(req, data) {
+        console.log(data);
         return this.chatService.getAllMessagesRoom(data.idRoom);
     }
 };

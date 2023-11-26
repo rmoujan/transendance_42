@@ -13,7 +13,7 @@ import { FetchChannels } from "../../redux/slices/channels";
 
 const CreatePublicForm = ({ handleClose }: any) => {
   const [file, setFile] = useState<any>();
-  const { friends } = useAppSelector(state => state.app);
+  const { friends } = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
   const PublicSchema = Yup.object().shape({
     title: Yup.string().required("Title is Required!!"),
@@ -46,23 +46,38 @@ const CreatePublicForm = ({ handleClose }: any) => {
     try {
       console.log(file);
       data.avatar = file?.preview;
-      await axios.post("http://localhost:3000/channels/create", data, {
-        withCredentials: true,
-      });
-      dispatch(
-        showSnackbar({
-          severity: "success",
-          message: "New Public Channel has Created",
-        })
+      const res: any = await axios.post(
+        "http://localhost:3000/channels/create",
+        data,
+        {
+          withCredentials: true,
+        }
       );
-      dispatch(FetchChannels());
-      reset();
-      handleClose();
-      // call api
+      if (res.data === true) {
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: "New Public Channel has Created",
+          })
+        );
+        dispatch(FetchChannels());
+        reset();
+        handleClose();
+      } else {
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: "Create Public Channel Failed",
+          })
+        );
+        console.log("error", res.error);
+        reset();
+        handleClose();
+      }
     } catch (error) {
       dispatch(
         showSnackbar({
-          severity: "failed",
+          severity: "error",
           message: "Create Public Channel Failed",
         })
       );

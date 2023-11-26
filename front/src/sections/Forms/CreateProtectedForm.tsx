@@ -56,9 +56,10 @@ const CreateProtectedForm = ({ handleClose }: any) => {
   const onSubmit = async (data: any) => {
     try {
       data.avatar = file?.preview;
-      await axios.post("http://localhost:3000/channels/create", data, {
+      const res: any = await axios.post("http://localhost:3000/channels/create", data, {
         withCredentials: true,
       });
+      if (res.data === true) {
       dispatch(
         showSnackbar({
           severity: "success",
@@ -68,6 +69,17 @@ const CreateProtectedForm = ({ handleClose }: any) => {
       dispatch(FetchChannels());
       handleClose();
       reset();
+      } else {
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: "Create Protected Channel Failed",
+          })
+        );
+        console.log("error", res.error);
+        reset();
+        handleClose();
+      }
     } catch (error) {
       console.error(error);
       reset();

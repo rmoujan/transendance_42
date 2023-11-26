@@ -36,7 +36,7 @@ const ColorButton = styled(Button)<ButtonProps>(() => ({
 }));
 
 const GalleryDialog = ({ open, handleClose }: any) => {
-  const { characters } = useAppSelector(state => state.characters);
+  const { characters } = useAppSelector((state) => state.characters);
   const dispatch = useAppDispatch();
 
   const handleImageClick = (img: string) => {
@@ -63,7 +63,7 @@ const GalleryDialog = ({ open, handleClose }: any) => {
       aria-describedby="alert-dialog-slide-description"
       PaperProps={{
         style: {
-          backgroundColor: "#AE9BCD",
+          background: `linear-gradient(to top right, #3F3B5B, #2a2742, #454069)`,
           boxShadow: "none",
           margin: "10",
           borderRadius: "35px",
@@ -80,19 +80,19 @@ const GalleryDialog = ({ open, handleClose }: any) => {
         display={"block"}
       >
         <ColorButton
-          startIcon={<Shuffle size={26} />}
+          startIcon={<Shuffle size={26} weight="bold" color="#3D2E5F" />}
           sx={{
             // margin: " 0 20px",
             width: "100%",
             fontSize: "18px", // Adjust the font size as needed
             padding: "8px 53px", // Adjust the padding as needed
             // neeed to make it center
-            backgroundColor: "#806EA9", // Change the background color to purple
+            backgroundColor: "#DC5833",
             color: "#3D2E5F", // Change the text color to white
-            borderRadius: "21px",
+            borderRadius: "15px",
+            fontWeight: 600,
             "&:hover": {
-              backgroundColor: "#684C83", // Change the background color on hover
-              color: "#C7BBD1",
+              backgroundColor: "#FE754D", // Change the background color on hover
             },
           }}
           variant="contained"
@@ -105,7 +105,7 @@ const GalleryDialog = ({ open, handleClose }: any) => {
           <ScrollBar>
             <Grid item xs={12}>
               <Grid container justifyContent="center" spacing={2}>
-                {characters.map(el => (
+                {characters.map((el) => (
                   <Grid key={el.id} item>
                     <Paper
                       sx={{

@@ -10,14 +10,13 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
+import { FetchChannels } from "../../redux/slices/channels";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import axios from "axios";
-import { grey } from "@mui/material/colors";
-import { FetchChannels } from "../../redux/slices/channels";
 
 interface Option {
   id_channel: number;
@@ -32,7 +31,9 @@ interface JoinPublicFormData {
 
 const JoinPublicForm = ({ handleClose }: any) => {
   const dispatch = useAppDispatch();
-  const { publicChannels, channels } = useAppSelector(state => state.channels);
+  const { publicChannels, channels } = useAppSelector(
+    (state) => state.channels
+  );
   // console.log(channels);
   // console.log(publicChannels);
 
@@ -57,11 +58,9 @@ const JoinPublicForm = ({ handleClose }: any) => {
 
   const { errors } = formState;
 
-  const onSubmit = (data: JoinPublicFormData) => {
+  const onSubmit = async (data: JoinPublicFormData) => {
     try {
       // Access the selected option value and label from the form data
-      // const selectedValue = data.mySelect.name;
-      // const selectedLabel = data.mySelect.label;
       const sendData = {
         id_channel: data.mySelect.id_channel,
         name: data.mySelect.name,
@@ -69,25 +68,35 @@ const JoinPublicForm = ({ handleClose }: any) => {
         password: data.mySelect?.password,
       };
       console.log("DATA", data.mySelect);
-      axios.post(
+      const res: any = await axios.post(
         "http://localhost:3000/channels/join",
         { sendData },
         { withCredentials: true }
       );
       // Call API with form data, including the selected channel value and label
-      dispatch(
-        showSnackbar({
-          severity: "success",
-          message: `You Join to ${data.mySelect.name} successfully`,
-        })
-      );
-      dispatch(FetchChannels());
-      handleClose();
+      if (res.data === true) {
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: `You joined ${data.mySelect.name} successfully`,
+          })
+        );
+        dispatch(FetchChannels());
+        handleClose();
+      } else {
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: `Failed to join ${data.mySelect.name}`,
+          })
+        );
+        handleClose();
+      }
     } catch (error) {
       console.error("error", error);
       dispatch(
         showSnackbar({
-          severity: "failed",
+          severity: "error",
           message: `You Failed Join to ${data.mySelect.name}`,
         })
       );
@@ -105,7 +114,7 @@ const JoinPublicForm = ({ handleClose }: any) => {
 
   return (
     <form
-      onSubmit={handleSubmit(data => onSubmit({ mySelect: selectedOption }))}
+      onSubmit={handleSubmit((data) => onSubmit({ mySelect: selectedOption }))}
     >
       <Stack spacing={3}>
         <FormControl fullWidth>

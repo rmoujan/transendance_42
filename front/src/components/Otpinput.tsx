@@ -124,8 +124,8 @@ const Otpinput: FC<Props> = (props): JSX.Element => {
     const backendURL = "http://localhost:3000/auth/verify-qrcode";
     const data = { inputValue };
 
-    console.log("inputValue : ");
-    console.log(inputValue);
+    // console.log("inputValue : ");
+    // console.log(inputValue);
     axios
       .post(backendURL, data, { withCredentials: true })
       .then((response) => {

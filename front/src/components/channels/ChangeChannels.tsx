@@ -17,41 +17,55 @@ const Transition = React.forwardRef(function Transition(
 });
 
 const ChangePassword = ({ handleClose, el }: any) => {
+  // console.log('===>', el.el)
   return (
     <Tabs defaultValue={0}>
       <StyledTabsList>
-        <StyledTab value={0}>Set New Password</StyledTab>
-        <StyledTab value={1}>Remove Password</StyledTab>
-        <StyledTab value={2}>Change Password</StyledTab>
+        {el.el.visibility === "public" && (
+          <StyledTab value={0}>Set New Password</StyledTab>
+        )}
+        {el.el.visibility === "protected" && (
+          <StyledTab value={1}>Remove Password</StyledTab>
+        )}
+        {el.el.visibility === "protected" && (
+          <StyledTab value={2}>Change Password</StyledTab>
+        )}
       </StyledTabsList>
-      <StyledTabPanel value={0}>
-        <SetPassword
-          handleClose={handleClose}
-          el={el.el}
-          user_id={el.user_id}
-        />
-      </StyledTabPanel>
-      <StyledTabPanel value={1}>
-        <RemovePassword
-          handleClose={handleClose}
-          el={el.el}
-          user_id={el.user_id}
-        />
-      </StyledTabPanel>
-      <StyledTabPanel value={2}>
-        <UpdatePassword
-          handleClose={handleClose}
-          el={el.el}
-          user_id={el.user_id}
-        />
-      </StyledTabPanel>
+      {el.el.visibility === "public" && (
+        <StyledTabPanel value={0}>
+          <SetPassword
+            handleClose={handleClose}
+            el={el.el}
+            user_id={el.user_id}
+          />
+        </StyledTabPanel>
+      )}
+      {el.el.visibility === "protected" && (
+        <StyledTabPanel value={1}>
+          <RemovePassword
+            handleClose={handleClose}
+            el={el.el}
+            user_id={el.user_id}
+          />
+        </StyledTabPanel>
+      )}
+      {el.el.visibility === "protected" && (
+        <StyledTabPanel value={2}>
+          <UpdatePassword
+            handleClose={handleClose}
+            el={el.el}
+            user_id={el.user_id}
+          />
+        </StyledTabPanel>
+      )}
     </Tabs>
   );
 };
 
 const ChangeChannels = ({ open, handleClose, el }: any) => {
-  console.log(el.user_id);
-  console.log(el.el);
+  // console.log(el.user_id);
+  // console.log(el.el);
+  // console.log(el)
   return (
     <Dialog
       fullWidth
@@ -68,14 +82,24 @@ const ChangeChannels = ({ open, handleClose, el }: any) => {
       }}
       PaperProps={{
         style: {
-          backgroundColor: "#AE9BCD",
+          backgroundColor: "#696693",
           borderRadius: "28px",
           // padding: "32px 135px",
         },
       }}
     >
       {/* {console.log(handleClose)} */}
-      <DialogTitle sx={{ mb: 4 }}>Change Channels</DialogTitle>
+      <DialogTitle
+        sx={{
+          my: 2,
+        }}
+        variant="h4"
+        align="center"
+        fontWeight={600}
+        color={"#25213B"}
+      >
+        Modify Current Channel
+      </DialogTitle>
       <DialogContent sx={{ mb: 2 }}>
         <ChangePassword handleClose={handleClose} el={el} />
       </DialogContent>

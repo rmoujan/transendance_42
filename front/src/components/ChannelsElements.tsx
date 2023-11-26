@@ -1,5 +1,6 @@
-import { Avatar, Badge, Box, Stack, Typography } from "@mui/material";
+import { Avatar, Badge, Box, Stack, SvgIcon, Typography } from "@mui/material";
 import { styled } from "@mui/system";
+import { LockSimple } from "@phosphor-icons/react";
 import { useEffect } from "react";
 import {
   setCurrentChannel,
@@ -29,11 +30,20 @@ const StyledChatBox = styled(Box)(() => ({
   },
 }));
 
-const SmallAvatar = styled(Avatar)(() => ({
-  width: 22,
-  height: 22,
-  // border: `2px solid ${theme.palette.background.paper}`,
-}));
+const SmallAvatar = () => (
+  <SvgIcon>
+      {/* credit: plus icon from https://heroicons.com/ */}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        strokeWidth={1.5}
+        stroke="currentColor"
+      >
+       <LockSimple size={25} weight="fill" />
+      </svg>
+    </SvgIcon>
+);
 
 const ChannelElements = (id: IdType) => {
   // console.log(id);
@@ -50,11 +60,15 @@ const ChannelElements = (id: IdType) => {
 
   useEffect(() => {
     const handleHistoryChannel = (data: any) => {
+      // console.log("handleHistoryChannel");
       // console.log(data);
+      // console.log('***********************')
       if (data.length == 0) {
-        // console.log("new ones");
+        console.log("new ones");
         dispatch(setEmptyChannel());
       } else {
+        console.log("old ones")
+        console.log(profile._id);
         dispatch(setCurrentChannel({ messages: data, user_id: profile._id }));
       }
     };
@@ -66,8 +80,13 @@ const ChannelElements = (id: IdType) => {
       );
     };
 
+    // console.log("selected_id", selected_id, typeof selected_id);
+    // console.log("contact.room_id", contact.room_id, typeof contact.room_id);
+    // console.log("profile._id", profile._id, typeof profile._id);
     if (parseInt(selected_id) === contact.room_id) {
+      // console.log("emit allMessagesRoom");
       socket.emit("allMessagesRoom", { id: selected_id, user_id: profile._id });
+      // console.log("emit allMessagesRoom");
 
       // Subscribe to hostoryChannel only once when the component mounts
       socket.once("hostoryChannel", handleHistoryChannel);
@@ -86,7 +105,7 @@ const ChannelElements = (id: IdType) => {
   return (
     <StyledChatBox
       onClick={() => {
-        console.log(selected_id, id.name, id.channel_type, id.image);
+        // console.log(selected_id, id.name, id.channel_type, id.image);
         dispatch(updatedContactInfo("CHANNEL"));
         dispatch(
           selectConversation({
@@ -116,7 +135,7 @@ const ChannelElements = (id: IdType) => {
             <Badge
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              badgeContent={<SmallAvatar alt={id.name} src={id.image} />}
+              badgeContent={<SmallAvatar />}
             >
               <Avatar
                 sx={{ width: 52, height: 52 }}
@@ -151,16 +170,15 @@ const ChannelElements = (id: IdType) => {
             sx={{ fontWeight: 600, paddingBottom: "10px", paddingTop: 0 }}
             variant="caption"
           >
-            {/* {id.time} */}
-            10:45 PM
+            {id.time}
           </Typography>
-          {id.unread > 0 && (
+          {/* {id.unread > 0 && (
             <Badge
               color="primary"
               badgeContent={id.unread}
               sx={{ paddingBottom: "9px", paddingTop: 0 }}
             ></Badge>
-          )}
+          )} */}
         </Stack>
       </Stack>
     </StyledChatBox>

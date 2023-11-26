@@ -19,7 +19,9 @@ const Messages = () => {
     messages = current_messages;
   } else {
     const { current_messages } = useAppSelector(state => state.channels);
+    console.log('***************');
     console.log(current_messages);
+    console.log('***************');
     messages = current_messages;
   }
 

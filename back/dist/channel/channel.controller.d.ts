@@ -1,6 +1,6 @@
-import { ChannelsService } from './channel.service';
-import { UsersService } from '../users/users.service';
-import { JwtService } from '../auth/jwt/jwtservice.service';
+import { ChannelsService } from "./channel.service";
+import { UsersService } from "../users/users.service";
+import { JwtService } from "../auth/jwt/jwtservice.service";
 export declare class ChannelsController {
     private jwt;
     private readonly channelsService;
