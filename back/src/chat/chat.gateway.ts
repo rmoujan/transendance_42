@@ -544,7 +544,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
 
   @SubscribeMessage('muteUserFromChannel')
   async muteUser(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
-    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MUUTE USER @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+    console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MUUTE USER @@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
     // { to: 62669, from: 90652, channel_id: 19 }
     console.log(data);
     // matching the client with iduser :

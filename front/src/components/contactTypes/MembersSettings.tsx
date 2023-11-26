@@ -34,7 +34,8 @@ const MembersSettings = (el: any) => {
   const [owner, setOwner] = useState(false);
   const [admin, setAdmin] = useState(false);
   const [member, setMember] = useState(false);
-  const [muted, setMuted] = useState(false);
+  console.log(el.el.muted);
+  const [muted, setMuted] = useState(el.el.muted);
 
   useEffect(() => {
     setOwner(user.id_user === _id && el.isOwner);
