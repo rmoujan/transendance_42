@@ -45,7 +45,18 @@ const CreatePublicForm = ({ handleClose }: any) => {
   const onSubmit = async (data: any) => {
     try {
       console.log(file);
-      data.avatar = file?.preview;
+      const formData = new FormData();
+      formData.append("file", file);
+      const dataAvatar: any = await axios.patch(
+        "http://localhost:3000/users/upload/avatar",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      // console.log("avatarUrl: ", dataAvatar.dat);
+      data.avatar = dataAvatar.data;
       const res: any = await axios.post(
         "http://localhost:3000/channels/create",
         data,

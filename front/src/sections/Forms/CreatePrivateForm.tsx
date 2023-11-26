@@ -51,17 +51,17 @@ const CreatePrivateForm = ({ handleClose }: any) => {
         {
           withCredentials: true,
         }
-        )
+      );
 
-        // console.log("avatarUrl: ", dataAvatar.dat);
-        data.avatar = dataAvatar.data;
+      // console.log("avatarUrl: ", dataAvatar.dat);
+      data.avatar = dataAvatar.data;
       const res: any = await axios.post(
         "http://localhost:3000/channels/create",
         data,
         {
           withCredentials: true,
         }
-      )
+      );
 
       if (res.data === true) {
         dispatch(
