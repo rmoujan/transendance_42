@@ -17,6 +17,7 @@ import { PrismaService } from "src/prisma.service";
 import { authenticator } from "otplib";
 import * as qrcode from "qrcode";
 import { NumberDto } from "./utils/NumberDto";
+import { NumberDtoO } from "./utils/NumberDtoO";
 
 @Controller("auth")
 export class AuthController {
@@ -112,7 +113,7 @@ export class AuthController {
   /************************************** */
 
   @Post("add-friends")
-  async Insert_Friends(@Body() body: NumberDto, @Req() req) {
+  async Insert_Friends(@Body() body: NumberDtoO, @Req() req) {
     const decoded = this.jwt.verify(req.cookies["cookie"]);
     // console.log(body.id_user);
     try {
@@ -162,7 +163,7 @@ export class AuthController {
   /************************************** */
 
   @Post("remove-friends")
-  async Remove_friends(@Body() Body: NumberDto, @Req() req) {
+  async Remove_friends(@Body() Body: NumberDtoO, @Req() req) {
     const friendData = await this.prisma.user.findUnique({
       where: { id_user: Body.id_user },
     });
@@ -187,7 +188,7 @@ export class AuthController {
   /************************************** */
 
   @Post("Block-friends")
-  async Block_friends(@Body() Body: NumberDto, @Req() req) {
+  async Block_friends(@Body() Body: NumberDtoO, @Req() req) {
     const friendData = await this.prisma.user.findUnique({
       where: { id_user: Body.id_user },
     });
@@ -209,7 +210,7 @@ export class AuthController {
   }
 
   @Post("DeBlock-friends")
-  async DeBlock_friends(@Body() Body: NumberDto, @Req() req) {
+  async DeBlock_friends(@Body() Body: NumberDtoO, @Req() req) {
     const decoded = this.jwt.verify(req.cookies["cookie"]);
 
     await this.prisma.blockedUser.deleteMany({

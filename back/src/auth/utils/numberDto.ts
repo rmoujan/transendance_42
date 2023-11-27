@@ -2,6 +2,6 @@ import { IsNumber, IsNotEmpty } from "class-validator";
 
 export class NumberDto {
   @IsNotEmpty()
-  @IsNumber()
+  @IsString()
   readonly id_user: number;
 }

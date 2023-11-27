@@ -55,16 +55,16 @@ function AccountOwner({ user }: AccountOwnerProps) {
     // axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
     console.log("id_user", id_user);
-    Modal.confirm({
-      title: "Are you sure, you want to add this friend?",
-      okText: "Yes",
-      okType: "danger",
-      className: " flex justify-center items-center h-100vh",
-      onOk: () => {
-        const updatedUsers = friend.filter((user) => user.id_user !== id_user);
-        setFriend(updatedUsers);
-      },
-    });
+    // Modal.confirm({
+    //   title: "Are you sure, you want to add this friend?",
+    //   okText: "Yes",
+    //   okType: "danger",
+    //   className: " flex justify-center items-center h-100vh",
+    //   onOk: () => {
+    //   },
+    // });
+    const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+    setFriend(updatedUsers);
   }
   return (
     <div className="bg-[#3f3b5b91] min-w-screen lg-laptop:w-[70%]  lg-laptop:mt-16 rounded-3xl mb-11 shadow-2xl">

@@ -307,4 +307,31 @@ export class ProfileController {
     res.status(200).json({ msg: "cookie deleted" });
     console.log("cookie deleted");
   }
+
+  @Post("verifyOtp")
+  async verify_Otp(@Body() body:any, @Req() req){
+    console.log('veriyyy ',body);
+    try {
+      const decoded = this.jwt.verify(req.cookies["cookie"]);
+      await this.prisma.user.update({
+        where:{id_user: decoded.id},
+        data:{
+          ISVERIDIED: body.verify,
+        }
+      });
+    }
+    catch(error){}
+  }
+
+  @Get("verifyOtp")
+  async Get_Otp(@Req() req){
+    try {
+      const decoded = this.jwt.verify(req.cookies["cookie"]);
+      const user = await this.prisma.user.findUnique({
+        where:{id_user: decoded.id},
+      });
+      return ({verified: user.ISVERIDIED, TFA: user.TwoFactor});
+    }
+    catch(error){}
+  }
 }
