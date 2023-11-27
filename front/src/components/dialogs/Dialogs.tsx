@@ -12,6 +12,17 @@ import {
 import { TransitionProps } from "@mui/material/transitions";
 import { socket } from "../../socket";
 import axios from "axios";
+import { useAppDispatch } from "../../redux/store/store";
+import {
+  resetContact,
+  showSnackbar,
+  toggleDialog,
+} from "../../redux/slices/contact";
+import {
+  FetchChannels,
+  FetchProtectedChannels,
+  FetchPublicChannels,
+} from "../../redux/slices/channels";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -99,81 +110,113 @@ const MuteDialog = ({ open, handleClose }: any) => (
   </Dialog>
 );
 
-const LeaveDialog = ({ open, handleClose, el }: any) => (
-  <Dialog
-    fullWidth
-    maxWidth="sm"
-    open={open}
-    TransitionComponent={Transition}
-    keepMounted
-    onClose={handleClose}
-    aria-describedby="alert-dialog-slide-description"
-    PaperProps={{ style: { backgroundColor: "#AE9BCD", boxShadow: "none" } }}
-  >
-    <DialogTitle
-      style={{
-        margin: "0",
-        textAlign: "center",
-        fontSize: "38px",
-        padding: "24px",
-        fontWeight: 800,
+const LeaveDialog = ({ open, handleClose, el }: any) => {
+  const dispatch = useAppDispatch();
+  return (
+    <Dialog
+      fullWidth
+      maxWidth="sm"
+      open={open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={handleClose}
+      aria-describedby="alert-dialog-slide-description"
+      PaperProps={{
+        style: {
+          padding: "32px 0px",
+          backgroundColor: "#696693",
+          // boxShadow: "none",
+          borderRadius: "35px",
+        },
       }}
     >
-      Leave this Channel
-    </DialogTitle>
-    <DialogContent style={{ padding: 0 }}>
-      <DialogContentText
-        id="alert-dialog-slide-description"
+      <DialogTitle
         style={{
           margin: "0",
           textAlign: "center",
-          fontSize: "22px",
-          padding: "0px",
-          fontWeight: 600,
-          color: "#563F73",
+          fontSize: "38px",
+          padding: "24px",
+          fontWeight: 800,
+          color: "#25213B",
         }}
       >
-        Are you sure you want to Leave this Channel?
-      </DialogContentText>
-    </DialogContent>
-    <DialogActions style={{ margin: "0", justifyContent: "space-evenly" }}>
-      <Button
-        onClick={handleClose}
-        sx={{
-          borderRadius: "15px",
-          fontSize: "20px",
-          padding: "15px 0px",
-          color: "#EADDFF",
-          width: "130px",
-          backgroundColor: "#2A1F4D",
-          "&:hover": { backgroundColor: "#8A65A1" },
-        }}
-      >
-        Cancel
-      </Button>
-      <Button
-        onClick={() => {
-          handleClose();
-          socket.emit("leaveChannel", {
-            user_id: el.user_id,
-            channel_id: el.channel_id,
-          });
-        }}
-        sx={{
-          borderRadius: "15px",
-          fontSize: "20px",
-          padding: "15px 22px",
-          color: "#EADDFF",
-          width: "130px",
-          backgroundColor: "#DF1D1D",
-          "&:hover": { backgroundColor: "#ef8285" },
-        }}
-      >
-        Yes
-      </Button>
-    </DialogActions>
-  </Dialog>
-);
+        Leave this Channel
+      </DialogTitle>
+      <DialogContent style={{ padding: 0 }}>
+        <DialogContentText
+          id="alert-dialog-slide-description"
+          style={{
+            margin: "0",
+            textAlign: "center",
+            fontSize: "22px",
+            padding: "0px 0px 24px",
+            fontWeight: 600,
+            color: "#B7B7C9",
+          }}
+        >
+          Are you sure you want to Leave this Channel?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions style={{ margin: "0", justifyContent: "space-evenly" }}>
+        <Button
+          onClick={handleClose}
+          sx={{
+            borderRadius: "15px",
+            fontSize: "20px",
+            padding: "15px 0px",
+            color: "#EADDFF",
+            width: "130px",
+            fontWeight: 600,
+            backgroundColor: "#3D3954",
+            "&:hover": { backgroundColor: "#3D3C65" },
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={() => {
+            handleClose();
+            socket.emit("leaveChannel", {
+              user_id: el.user_id,
+              channel_id: el.channel_id,
+            });
+            dispatch(toggleDialog());
+            dispatch(FetchChannels());
+            dispatch(FetchProtectedChannels());
+            dispatch(FetchPublicChannels());
+            dispatch(resetContact());
+            dispatch(
+              showSnackbar({
+                severity: "success",
+                message: "You have removed channel successfully",
+              })
+            );
+            // if (res.success) {
+            //   // Handle success
+            //   console.log("Leave channel successful");
+            // } else {
+            // DC5833
+            //   // Handle failure
+            //   console.error("Failed to leave channel:", res.error);
+            // }
+          }}
+          sx={{
+            borderRadius: "15px",
+            fontSize: "20px",
+            padding: "15px 22px",
+            color: "#EADDFF",
+            width: "130px",
+            fontWeight: 600,
+            backgroundColor: "#DC5833",
+            "&:hover": { backgroundColor: "#FE754D" },
+          }}
+        >
+          Yes
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 const DeleteDialog = ({ open, handleClose }: any) => (
   <Dialog
@@ -315,81 +358,117 @@ const BlockDialog = ({ open, handleClose }: any) => (
   </Dialog>
 );
 
-const RemoveDialog = ({ open, handleClose, el }: any) => (
-  <Dialog
-    fullWidth
-    maxWidth="sm"
-    open={open}
-    TransitionComponent={Transition}
-    keepMounted
-    onClose={handleClose}
-    aria-describedby="alert-dialog-slide-description"
-    PaperProps={{ style: { backgroundColor: "#AE9BCD", boxShadow: "none" } }}
-  >
-    <DialogTitle
-      style={{
-        margin: "0",
-        textAlign: "center",
-        fontSize: "38px",
-        padding: "24px",
-        fontWeight: 800,
+const RemoveDialog = ({ open, handleClose, el }: any) => {
+  const dispatch = useAppDispatch();
+  return (
+    <Dialog
+      fullWidth
+      maxWidth="sm"
+      open={open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={handleClose}
+      aria-describedby="alert-dialog-slide-description"
+      PaperProps={{
+        style: {
+          padding: "32px 0px",
+          backgroundColor: "#696693",
+          borderRadius: "35px",
+        },
       }}
     >
-      Remove this Channels
-    </DialogTitle>
-    <DialogContent style={{ padding: 0 }}>
-      <DialogContentText
-        id="alert-dialog-slide-description"
+      <DialogTitle
         style={{
           margin: "0",
           textAlign: "center",
-          fontSize: "22px",
-          padding: "0px",
-          fontWeight: 600,
-          color: "#563F73",
+          fontSize: "38px",
+          padding: "24px",
+          fontWeight: 800,
+          color: "#25213B",
         }}
       >
-        Are you sure you want to Remove this Channel for good?
-      </DialogContentText>
-    </DialogContent>
-    <DialogActions style={{ margin: "0", justifyContent: "space-evenly" }}>
-      <Button
-        onClick={handleClose}
-        sx={{
-          borderRadius: "15px",
-          fontSize: "20px",
-          padding: "15px 0px",
-          color: "#EADDFF",
-          width: "130px",
-          backgroundColor: "#2A1F4D",
-          "&:hover": { backgroundColor: "#8A65A1" },
-        }}
-      >
-        Cancel
-      </Button>
-      <Button
-        onClick={() => {
-          handleClose();
-          axios.post("http://localhost:3000/channels/removeChannel", {
-            user_id: el.user_id,
-            channel_id: el.channel_id,
-          });
-        }}
-        sx={{
-          borderRadius: "15px",
-          fontSize: "20px",
-          padding: "15px 22px",
-          color: "#EADDFF",
-          width: "130px",
-          backgroundColor: "#DF1D1D",
-          "&:hover": { backgroundColor: "#ef8285" },
-        }}
-      >
-        Yes
-      </Button>
-    </DialogActions>
-  </Dialog>
-);
+        Remove this Channel
+      </DialogTitle>
+      <DialogContent style={{ padding: 0 }}>
+        <DialogContentText
+          id="alert-dialog-slide-description"
+          style={{
+            margin: "0",
+            textAlign: "center",
+            fontSize: "22px",
+            padding: "0px 0px 24px",
+            fontWeight: 600,
+            color: "#B7B7C9",
+          }}
+        >
+          Are you sure you want to Remove this Channel?
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions style={{ margin: "0", justifyContent: "space-evenly" }}>
+        <Button
+          onClick={handleClose}
+          sx={{
+            borderRadius: "15px",
+            fontSize: "20px",
+            padding: "15px 0px",
+            color: "#EADDFF",
+            width: "130px",
+            fontWeight: 600,
+            backgroundColor: "#3D3954",
+            "&:hover": { backgroundColor: "#3D3C65" },
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={async () => {
+            console.log(el);
+            const res = await axios.post(
+              "http://localhost:3000/channels/removeChannel",
+              {
+                user_id: el.user_id,
+                channel_id: el.channel_id,
+              }
+            );
+            if (res.data === true) {
+              dispatch(toggleDialog());
+              dispatch(FetchChannels());
+              dispatch(FetchProtectedChannels());
+              dispatch(FetchPublicChannels());
+              dispatch(resetContact());
+              dispatch(
+                showSnackbar({
+                  severity: "success",
+                  message: "You have removed channel successfully",
+                })
+              );
+            } else {
+              dispatch(
+                showSnackbar({
+                  severity: "error",
+                  message: "You have removed channel failed",
+                })
+              );
+            }
+            handleClose();
+          }}
+          sx={{
+            borderRadius: "15px",
+            fontSize: "20px",
+            padding: "15px 22px",
+            color: "#EADDFF",
+            width: "130px",
+            fontWeight: 600,
+            backgroundColor: "#DC5833",
+            "&:hover": { backgroundColor: "#FE754D" },
+          }}
+        >
+          Yes
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
 
 const InviteDialog = ({ open, handleClose }: any) => (
   <Dialog

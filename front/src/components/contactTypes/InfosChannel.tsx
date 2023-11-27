@@ -12,11 +12,16 @@ import {
 import { TransitionProps } from "@mui/material/transitions";
 import { Gear, Prohibit, SignOut, X } from "@phosphor-icons/react";
 import React, { useEffect, useRef, useState } from "react";
-import { toggleDialog } from "../../redux/slices/contact";
+import {
+  resetContact,
+  toggleDialog,
+  updatedContactInfo,
+} from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import ChangeChannels from "../channels/ChangeChannels";
 import { LeaveDialog, RemoveDialog } from "../dialogs/Dialogs";
 import MembersSettings from "./MembersSettings";
+import { FetchChannels } from "../../redux/slices/channels";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -35,7 +40,7 @@ const InfosChannel = () => {
   const dispatch = useAppDispatch();
   const { contact, channels, profile } = useAppSelector((store) => store);
   console.log(contact);
-
+  console.log(channels);
   useEffect(() => {
     let selectedChannel: any;
     if (contact.type_chat === "public") {
@@ -53,7 +58,7 @@ const InfosChannel = () => {
         (channel: any) => channel?.id_channel === contact.room_id
       );
     }
-    // console.log(selectedChannel);
+    console.log(selectedChannel);
     const isOwner = selectedChannel.users.some((user: any) => {
       return (
         user.userId === profile._id && user.status_UserInChannel === "owner"
@@ -270,9 +275,9 @@ const InfosChannel = () => {
               fontSize: "20px",
               padding: "10px 22px",
               color: "#EADDFF",
-              backgroundColor: "#322554",
+              backgroundColor: "#3D3C65",
               "&:hover": {
-                backgroundColor: "#806EA9",
+                backgroundColor: "#3D3954",
               },
             }}
           >
@@ -290,9 +295,9 @@ const InfosChannel = () => {
                 fontSize: "20px",
                 padding: "10px 22px",
                 color: "#EADDFF",
-                backgroundColor: "#DF1D1D",
+                backgroundColor: "#3D3C65",
                 "&:hover": {
-                  backgroundColor: "#ef8285",
+                  backgroundColor: "#3D3954",
                 },
               }}
             >

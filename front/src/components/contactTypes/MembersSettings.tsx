@@ -32,7 +32,7 @@ const MembersSettings = (el: any) => {
   // console.log(el.isOwner);
   // console.log(el.isAdmin);
   // console.log(el.isMember);
-  // console.log(el.el);
+  console.log(el.el);
 
   // console.log(_id, user);
   const [friend, setFriend] = useState(false);
@@ -72,7 +72,7 @@ const MembersSettings = (el: any) => {
   };
   const handleClickMuted = () => {
     // ! emit "mute_converstation" event
-
+    console.log(el.el.muted);
     if (el.el.muted === true) {
       console.log("unmute");
       socket.emit("unmuteUserFromChannel", {
@@ -91,7 +91,9 @@ const MembersSettings = (el: any) => {
     socket.on("ResponsekickUser", (data: any) => {
       console.log(data);
     });
-    setMuted(() => !muted);
+    dispatch(FetchChannels());
+
+    // setMuted(() => !muted);
   };
 
   return (
@@ -171,7 +173,7 @@ const MembersSettings = (el: any) => {
                       aria-label="mute contact"
                       onClick={handleClickMuted}
                     >
-                      {muted ? (
+                      {el.el.muted ? (
                         <SpeakerSimpleSlash color="#FE754D" />
                       ) : (
                         <SpeakerSimpleNone color="#FE754D" />
