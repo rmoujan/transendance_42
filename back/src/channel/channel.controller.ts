@@ -34,7 +34,7 @@ export class ChannelsController {
     console.log(
       "-------------------------- Starting Creating a Channel -------------------------- "
     );
-    // console.log(data);
+    console.log(data);
     try {
       const decode = this.jwt.verify(req.cookies["cookie"]);
       // console.log(decode);

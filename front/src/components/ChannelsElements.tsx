@@ -1,6 +1,6 @@
 import { Avatar, Badge, Box, Stack, SvgIcon, Typography } from "@mui/material";
 import { styled } from "@mui/system";
-import { LockSimple } from "@phosphor-icons/react";
+import { Keyhole, LockSimple } from "@phosphor-icons/react";
 import { useEffect } from "react";
 import {
   setCurrentChannel,
@@ -32,22 +32,24 @@ const StyledChatBox = styled(Box)(() => ({
 
 const SmallAvatar = () => (
   <SvgIcon>
-      {/* credit: plus icon from https://heroicons.com/ */}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        strokeWidth={1.5}
-        stroke="currentColor"
-      >
-       <LockSimple size={25} weight="fill" />
-      </svg>
-    </SvgIcon>
+    {/* credit: plus icon from https://heroicons.com/ */}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 26 26"
+      strokeWidth={1.5}
+      // stroke="currentColor"
+    >
+      <circle cx="12" cy="12" r="10" fill="#16132B" />
+      {/* <LockSimple size={25} weight="B7B7C9" /> */}
+      <Keyhole size={24} color="#FE754D" weight="fill" />
+    </svg>
+  </SvgIcon>
 );
 
 const ChannelElements = (id: IdType) => {
   // console.log(id);
-  const { contact, profile } = useAppSelector(state => state);
+  const { contact, profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const selected_id = id.channel_id;
   // console.log("selected_id", selected_id);
@@ -67,7 +69,7 @@ const ChannelElements = (id: IdType) => {
         console.log("new ones");
         dispatch(setEmptyChannel());
       } else {
-        console.log("old ones")
+        console.log("old ones");
         console.log(profile._id);
         dispatch(setCurrentChannel({ messages: data, user_id: profile._id }));
       }
@@ -161,7 +163,11 @@ const ChannelElements = (id: IdType) => {
               color={"white"}
               sx={{ fontWeight: 400 }}
             >
-              {id.last_messages ? id.last_messages : "there is no message yet"}
+              {id.last_messages
+                ? id.last_messages.length > 25
+                  ? id.last_messages.substring(0, 25) + "..."
+                  : id.last_messages
+                : "There is no message yet"}
             </Typography>
           </Stack>
         </Stack>

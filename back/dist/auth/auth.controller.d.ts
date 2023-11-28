@@ -1,7 +1,7 @@
 import { AuthService } from "./auth.service";
 import { JwtService } from "../auth/jwt/jwtservice.service";
 import { PrismaService } from "src/prisma.service";
-import { NumberDto } from "./utils/numberDto";
+import { NumberDto } from "./utils/NumberDto";
 import { NumberDtoO } from "./utils/NumberDtoO";
 export declare class AuthController {
     private service;

@@ -25,6 +25,7 @@ let ChannelsController = class ChannelsController {
     }
     async create(req, data) {
         console.log("-------------------------- Starting Creating a Channel -------------------------- ");
+        console.log(data);
         try {
             const decode = this.jwt.verify(req.cookies["cookie"]);
             const user = await this.UsersService.findById(decode.id);

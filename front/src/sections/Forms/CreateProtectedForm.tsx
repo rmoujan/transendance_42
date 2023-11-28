@@ -11,10 +11,12 @@ import { RHFUploadAvatar } from "../../components/hook-form/RHFUploadAvatar";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { FetchChannels } from "../../redux/slices/channels";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const CreateProtectedForm = ({ handleClose }: any) => {
   const [file, setFile] = React.useState<any>();
-  const { friends } = useAppSelector(state => state.app);
+  const [isLoading, setIsLoading] = React.useState(false);
+  const { friends } = useAppSelector((state) => state.app);
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = React.useState(false);
@@ -55,20 +57,36 @@ const CreateProtectedForm = ({ handleClose }: any) => {
 
   const onSubmit = async (data: any) => {
     try {
-      data.avatar = file?.preview;
-      const res: any = await axios.post("http://localhost:3000/channels/create", data, {
-        withCredentials: true,
-      });
-      if (res.data === true) {
-      dispatch(
-        showSnackbar({
-          severity: "success",
-          message: "New Protected Channel has Created",
-        })
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      const dataAvatar: any = await axios.patch(
+        "http://localhost:3000/users/upload/avatar",
+        formData,
+        {
+          withCredentials: true,
+        }
       );
-      dispatch(FetchChannels());
-      handleClose();
-      reset();
+
+      // console.log("avatarUrl: ", dataAvatar.dat);
+      data.avatar = dataAvatar.data;
+      const res: any = await axios.post(
+        "http://localhost:3000/channels/create",
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.data === true) {
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: "New Protected Channel has Created",
+          })
+        );
+        dispatch(FetchChannels());
+        handleClose();
+        reset();
       } else {
         dispatch(
           showSnackbar({
@@ -90,6 +108,8 @@ const CreateProtectedForm = ({ handleClose }: any) => {
         })
       );
       handleClose();
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -189,7 +209,8 @@ const CreateProtectedForm = ({ handleClose }: any) => {
           Cancel
         </Button>
 
-        <Button
+        <LoadingButton
+          loading={isLoading}
           sx={{
             backgroundColor: "#3D3C65", // Change the background color to purple 3D3C65
             color: "#f78562", // Change the text color to white
@@ -206,7 +227,7 @@ const CreateProtectedForm = ({ handleClose }: any) => {
           variant="contained"
         >
           Create Channel
-        </Button>
+        </LoadingButton>
       </Stack>
     </FormProvider>
   );

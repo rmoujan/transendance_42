@@ -310,7 +310,7 @@ let ChatGateway = class ChatGateway {
             console.log("error");
     }
     async muteUser(client, data) {
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MUUTE USER @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MUUTE USER @@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
         console.log(data);
         const user1 = await this.UsersService.findById(data.from);
         const user2 = await this.UsersService.findById(data.to);

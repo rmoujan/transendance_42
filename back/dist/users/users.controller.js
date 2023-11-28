@@ -8,15 +8,21 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
 const users_service_1 = require("./users.service");
 const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
+const platform_express_1 = require("@nestjs/platform-express");
+const cloudinary_service_1 = require("../cloudinary/cloudinary.service");
 let UsersController = class UsersController {
-    constructor(jwt, usersService) {
+    constructor(jwt, usersService, cloudinaryService) {
         this.jwt = jwt;
         this.usersService = usersService;
+        this.cloudinaryService = cloudinaryService;
     }
     findAllUsers() {
         return this.usersService.findAll();
@@ -28,6 +34,18 @@ let UsersController = class UsersController {
     async findByName(name) {
         const user = await this.usersService.findByName(name);
         return (user.id_user);
+    }
+    async updateUserDetails(file) {
+        try {
+            const rest = await this.cloudinaryService.uploadImage(file);
+            const avatarUrl = rest.secure_url;
+            console.log("avatarUrl: ", avatarUrl);
+            return avatarUrl;
+        }
+        catch (error) {
+            console.log("error in uploading: ", error);
+            return error;
+        }
     }
 };
 exports.UsersController = UsersController;
@@ -49,8 +67,16 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findByName", null);
+__decorate([
+    (0, common_1.Patch)('upload/avatar'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('file')),
+    __param(0, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "updateUserDetails", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
-    __metadata("design:paramtypes", [jwtservice_service_1.JwtService, users_service_1.UsersService])
+    __metadata("design:paramtypes", [jwtservice_service_1.JwtService, users_service_1.UsersService, cloudinary_service_1.CloudinaryService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map
