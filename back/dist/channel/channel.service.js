@@ -140,13 +140,17 @@ let ChannelsService = class ChannelsService {
                 throw new common_1.NotFoundException(`your not allowed to join this channel ${ch.name} cuz  you are banned`);
             }
             if (ch) {
+                console.log(ch);
+                console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤ 1");
                 if (ch.visibility === "protected") {
+                    console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤ 2");
                     let test = await this.verifyPassword(data.sendData.password, ch.password);
                     if (test) {
                         join = 1;
                     }
                 }
                 if (join == 1 || ch.visibility === "public") {
+                    console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤ 3");
                     const memberchannel = await this.prisma.memberChannel.create({
                         data: {
                             userId: usid,
@@ -155,12 +159,14 @@ let ChannelsService = class ChannelsService {
                             muted: false,
                         },
                     });
+                    console.log("############### AFTER JOINGING ");
                     return true;
                 }
             }
         }
         catch (error) {
-            console.error('Error occured when joining this channel', error);
+            console.log("ERRRRRRRRRRRRROR JOIN CHANNEL");
+            throw new common_1.NotFoundException(`Error occured when joining this channel`);
         }
     }
     async updatePass(data, usid) {
@@ -187,6 +193,7 @@ let ChannelsService = class ChannelsService {
                                     password: hashedPassword,
                                 },
                             });
+                            return updateChannel;
                         }
                     }
                     else {
@@ -202,7 +209,7 @@ let ChannelsService = class ChannelsService {
             }
         }
         catch (error) {
-            console.error('Error occured when updating password of this channel', error);
+            throw new common_1.NotFoundException('Error occured when updating password of this channel');
         }
     }
     async removePass(data, usid) {
@@ -229,6 +236,7 @@ let ChannelsService = class ChannelsService {
                                     password: null,
                                 },
                             });
+                            return updateChannel;
                         }
                     }
                     else {
@@ -244,7 +252,7 @@ let ChannelsService = class ChannelsService {
             }
         }
         catch (error) {
-            console.error('Error occured when Removing password of this channel', error);
+            throw new common_1.NotFoundException('Error occured when Removing password of this channel');
         }
     }
     async setPass(data, usid) {
@@ -272,6 +280,7 @@ let ChannelsService = class ChannelsService {
                                     password: hashedPassword,
                                 },
                             });
+                            return (updateChannel);
                         }
                     }
                     else {
@@ -287,7 +296,7 @@ let ChannelsService = class ChannelsService {
             }
         }
         catch (error) {
-            console.error('Error occured when setting password of this channel', error);
+            throw new common_1.NotFoundException('Error occured when setting password of this channel');
         }
     }
     async setAdmin(data) {
@@ -323,6 +332,7 @@ let ChannelsService = class ChannelsService {
                                 status_UserInChannel: "admin",
                             },
                         });
+                        return updateChannel;
                     }
                     else {
                         throw new common_1.NotFoundException(`your not  the  owner of ${ch.name}`);
@@ -337,7 +347,7 @@ let ChannelsService = class ChannelsService {
             }
         }
         catch (error) {
-            console.error('Error occured when setting admin in this channel', error);
+            throw new common_1.NotFoundException('Error occured when setting admin in this channel');
         }
     }
     async kickUser(data, idus, kickcus) {
@@ -384,6 +394,7 @@ let ChannelsService = class ChannelsService {
                                     status_User: 'kicked',
                                 },
                             });
+                            console.log(`AFTER KICKING THIS USER ${updateChannel}`);
                             return updateChannel;
                         }
                         else {
@@ -403,7 +414,7 @@ let ChannelsService = class ChannelsService {
             }
         }
         catch (error) {
-            console.error('Error occured when kickUser in this channel', error);
+            throw new common_1.NotFoundException(`Error occured when kickUser in this channel`);
         }
     }
     async getChannelById(nameVar) {
@@ -478,7 +489,7 @@ let ChannelsService = class ChannelsService {
             }
         }
         catch (error) {
-            console.error('Error occured when banUser in this channel', error);
+            throw new common_1.NotFoundException(`Error occured when banUser in this channel`);
         }
     }
     async muteUser(data, idus, user_muted) {
@@ -534,7 +545,7 @@ let ChannelsService = class ChannelsService {
             }
         }
         catch (error) {
-            console.error('Error occured when muteUser in this channel', error);
+            throw new common_1.NotFoundException(`Error occured when muteUser in this channel`);
         }
     }
     async getAllChannels(idUser) {
@@ -550,7 +561,7 @@ let ChannelsService = class ChannelsService {
             return channels;
         }
         catch (error) {
-            console.error('Error occured when getting all channels', error);
+            throw new common_1.NotFoundException(`Error occured when getting all channels`);
         }
     }
     async getAllAdmins(idch) {
@@ -572,7 +583,7 @@ let ChannelsService = class ChannelsService {
             return Names;
         }
         catch (error) {
-            console.error('Error occured when getting all admins in this channel', error);
+            throw new common_1.NotFoundException(`Error occured  when getting all admins in this channel`);
         }
     }
     async getAllMembers(idch) {
@@ -594,7 +605,7 @@ let ChannelsService = class ChannelsService {
             return Names;
         }
         catch (error) {
-            console.error('Error occured when getting all members in this channel', error);
+            throw new common_1.NotFoundException(`Error occured when getting all members in this channel`);
         }
     }
     async getAllOwners(idch) {
@@ -616,7 +627,7 @@ let ChannelsService = class ChannelsService {
             return Names;
         }
         catch (error) {
-            console.error('Error occured when getting all owners in this channel', error);
+            throw new common_1.NotFoundException(`Error occured when getting all owners in this channel`);
         }
     }
     async getTheLastMessageOfChannel(idch) {
@@ -632,7 +643,7 @@ let ChannelsService = class ChannelsService {
             return lastMessage;
         }
         catch (error) {
-            console.error('we have no messages on this channel', error);
+            throw new common_1.NotFoundException(`we have no messages on this channel`);
         }
     }
     async unmuteUser(data, idus, user_muted) {
@@ -688,7 +699,7 @@ let ChannelsService = class ChannelsService {
             }
         }
         catch (error) {
-            console.error('Error occured when unmute this user in this channel', error);
+            throw new common_1.NotFoundException(`Error occured when unmute this user in this channel`);
         }
     }
     async removeChannel(data, idus) {
@@ -735,7 +746,7 @@ let ChannelsService = class ChannelsService {
             }
         }
         catch (error) {
-            console.error('Error occured when remove this channel', error);
+            throw new common_1.NotFoundException(`Error occured when remove this channel`);
         }
     }
 };

@@ -39,7 +39,6 @@ let ChatGateway = class ChatGateway {
         cookieHeader = client.handshake.headers.cookie;
         if (cookieHeader == undefined)
             return null;
-        console.log(...oo_oo(`2955873931_47_4_47_29_4`, cookieHeader));
         const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
             const [name, value] = cookie.trim().split("=");
             acc[name] = value;
@@ -52,31 +51,31 @@ let ChatGateway = class ChatGateway {
     handleConnection(client) {
         const decoded = this.decodeCookie(client);
         this.logger.log(client.handshake.query.user_id);
-        console.log(...oo_oo(`2955873931_69_4_69_48_4`, client.handshake.query?.user_id));
+        console.log(...oo_oo(`984207520_69_4_69_48_4`, client.handshake.query?.user_id));
         this.logger.log(` ********  User  Connected : ${decoded.id} and its sockets is ${client.id}`);
         this.connectedClients.set(decoded.id, client);
-        console.log(...oo_oo(`2955873931_79_4_79_77_4`, "####### First connection :: OUTPUT MAP OF CONNECTE CLIENTS"));
+        console.log(...oo_oo(`984207520_80_4_80_77_4`, "####### First connection :: OUTPUT MAP OF CONNECTE CLIENTS"));
         for (const [key, value] of this.connectedClients) {
-            console.log(...oo_oo(`2955873931_81_6_81_49_4`, `Key: ${key}, Value: ${value}`));
+            console.log(...oo_oo(`984207520_82_6_82_49_4`, `Key: ${key}, Value: ${value}`));
         }
     }
     handleDisconnect(client) {
         const decoded = this.decodeCookie(client);
         this.logger.log(` ******   Client Disconnect : ${decoded.id}`);
         this.connectedClients.delete(decoded.id);
-        console.log(...oo_oo(`2955873931_93_4_93_79_4`, "***** Client Disconnection :: OUTPUT MAP OF CONNECTE CLIENTS"));
+        console.log(...oo_oo(`984207520_94_4_94_79_4`, "***** Client Disconnection :: OUTPUT MAP OF CONNECTE CLIENTS"));
         for (const [key, value] of this.connectedClients) {
-            console.log(...oo_oo(`2955873931_95_6_95_49_4`, `Key: ${key}, Value: ${value}`));
+            console.log(...oo_oo(`984207520_96_6_96_49_4`, `Key: ${key}, Value: ${value}`));
         }
     }
     createRoom(senderId, recieverId) {
-        console.log(...oo_oo(`2955873931_106_4_106_101_4`, `From Create Room Server Side : sender is ${senderId} and reciever is ${recieverId}`));
+        console.log(...oo_oo(`984207520_107_4_107_101_4`, `From Create Room Server Side : sender is ${senderId} and reciever is ${recieverId}`));
         const roomName1 = `room_${senderId}_${recieverId}`;
         const roomName2 = `room_${recieverId}_${senderId}`;
-        console.log(...oo_oo(`2955873931_110_4_110_74_4`, `roomName1 is ${roomName1} and roomName2 is ${roomName2}`));
+        console.log(...oo_oo(`984207520_111_4_111_74_4`, `roomName1 is ${roomName1} and roomName2 is ${roomName2}`));
         const check1 = this.roomsDm.indexOf(roomName1);
         const check2 = this.roomsDm.indexOf(roomName2);
-        console.log(...oo_oo(`2955873931_114_4_114_60_4`, `From create room server side after check `));
+        console.log(...oo_oo(`984207520_115_4_115_60_4`, `From create room server side after check `));
         if (check1 === -1 && check2 === -1) {
             this.roomsDm.push(roomName1);
             return roomName1;
@@ -96,20 +95,20 @@ let ChatGateway = class ChatGateway {
     async handling_joinRoom_dm(room, senderId, receiverId, message) {
         const senderClient = this.connectedClients.get(senderId);
         const receiverClient = this.connectedClients.get(receiverId);
-        console.log(...oo_oo(`2955873931_155_4_155_55_4`, "*************   handling_joinRoom_dm"));
+        console.log(...oo_oo(`984207520_156_4_156_55_4`, "*************   handling_joinRoom_dm"));
         const result = await this.ChatService.cheakBlockedUser(senderId, receiverId);
         if (result) {
-            console.log(...oo_oo(`2955873931_159_6_159_52_4`, "u are blocked from the reciever"));
+            console.log(...oo_oo(`984207520_160_6_160_52_4`, "u are blocked from the reciever"));
         }
         else {
             this.joinRoom(senderClient, room);
             this.joinRoom(receiverClient, room);
-            console.log(...oo_oo(`2955873931_166_6_166_37_4`, "starting sending"));
-            console.log(...oo_oo(`2955873931_168_6_168_27_4`, senderId));
-            console.log(...oo_oo(`2955873931_169_6_169_29_4`, receiverId));
+            console.log(...oo_oo(`984207520_167_6_167_37_4`, "starting sending"));
+            console.log(...oo_oo(`984207520_169_6_169_27_4`, senderId));
+            console.log(...oo_oo(`984207520_170_6_170_29_4`, receiverId));
             const dm = await this.ChatService.checkDm(senderId, receiverId);
-            console.log(...oo_oo(`2955873931_175_6_175_54_4`, `FROM gatways value of Dm is ${dm}`));
-            console.log(...oo_oo(`2955873931_177_6_177_72_4`, `^^^  SENDER IS ${senderId} REciver is ${receiverId}`));
+            console.log(...oo_oo(`984207520_176_6_176_54_4`, `FROM gatways value of Dm is ${dm}`));
+            console.log(...oo_oo(`984207520_178_6_178_72_4`, `^^^  SENDER IS ${senderId} REciver is ${receiverId}`));
             const insertDm = await this.ChatService.createMsg(senderId, receiverId, dm, message, "text");
             const data = {
                 id: dm.id_dm,
@@ -117,26 +116,26 @@ let ChatGateway = class ChatGateway {
                 send: senderId,
                 recieve: receiverId
             };
-            console.log(...oo_oo(`2955873931_192_6_192_71_4`, `¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤`));
+            console.log(...oo_oo(`984207520_193_6_193_71_4`, `¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤`));
             this.server.to(room).emit('chatToDm', data);
         }
     }
     process_dm(client, data) {
         let room;
-        console.log(...oo_oo(`2955873931_209_4_209_49_4`, "*************   direct_message"));
+        console.log(...oo_oo(`984207520_210_4_210_49_4`, "*************   direct_message"));
         room = this.createRoom(data.from, data.to);
         this.handling_joinRoom_dm(room, data.from, data.to, data.message);
         return 'Hello world!';
     }
     async handling_joinRoom_group(data, users) {
-        console.log(...oo_oo(`2955873931_232_4_232_58_4`, "*************   handling_joinRoom_group"));
+        console.log(...oo_oo(`984207520_233_4_233_58_4`, "*************   handling_joinRoom_group"));
         const room = `room_${data.id}`;
         for (const user of users) {
-            console.log(...oo_oo(`2955873931_239_6_239_45_4`, "Inside sockets of groups"));
+            console.log(...oo_oo(`984207520_240_6_240_45_4`, "Inside sockets of groups"));
             const client = this.connectedClients.get(user.userId);
-            console.log(...oo_oo(`2955873931_241_6_241_53_4`, "11111111111111111111111111111111"));
+            console.log(...oo_oo(`984207520_242_6_242_53_4`, "11111111111111111111111111111111"));
             this.joinRoom(client, room);
-            console.log(...oo_oo(`2955873931_243_6_243_59_4`, "22222222222222222222222222222222222222"));
+            console.log(...oo_oo(`984207520_244_6_244_59_4`, "22222222222222222222222222222222222222"));
         }
         const checkmutedUser = await this.ChatService.checkmuted(data.from, data.to);
         if (checkmutedUser) {
@@ -149,32 +148,32 @@ let ChatGateway = class ChatGateway {
                     subtype: "",
                     message: data.message,
                 };
-                console.log(...oo_oo(`2955873931_258_8_258_47_4`, "befoor emiting in groups"));
+                console.log(...oo_oo(`984207520_259_8_259_47_4`, "befoor emiting in groups"));
                 this.server.to(room).emit('chatToGroup', result);
-                console.log(...oo_oo(`2955873931_260_8_260_40_4`, "ENDING JOINGROUP "));
+                console.log(...oo_oo(`984207520_261_8_261_40_4`, "ENDING JOINGROUP "));
             }
         }
     }
     async sendInChannel(client, data) {
-        console.log(...oo_oo(`2955873931_283_4_283_64_4`, "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"));
-        console.log(...oo_oo(`2955873931_284_4_284_50_4`, "*************   channel_message"));
+        console.log(...oo_oo(`984207520_284_4_284_64_4`, "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"));
+        console.log(...oo_oo(`984207520_285_4_285_50_4`, "*************   channel_message"));
         const channel = await this.ChatService.findChannel(data.to);
         if (channel) {
             const users = await this.ChatService.getUsersInChannel(data.to);
-            console.log(...oo_oo(`2955873931_291_6_291_66_4`, "########################################## 00"));
-            console.log(...oo_oo(`2955873931_292_6_292_24_4`, users));
+            console.log(...oo_oo(`984207520_292_6_292_66_4`, "########################################## 00"));
+            console.log(...oo_oo(`984207520_293_6_293_24_4`, users));
             this.handling_joinRoom_group(data, users);
         }
         return "OK";
     }
     async allConversationsDm(client, data) {
-        console.log(...oo_oo(`2955873931_306_4_306_53_4`, "*************   allConversationsDm"));
-        console.log(...oo_oo(`2955873931_307_4_307_21_4`, data));
+        console.log(...oo_oo(`984207520_307_4_307_53_4`, "*************   allConversationsDm"));
+        console.log(...oo_oo(`984207520_308_4_308_21_4`, data));
         const decoded = this.decodeCookie(client);
         const user = await this.UsersService.findById(decoded.id);
         const dms = await this.ChatService.getAllConversations(user.id_user);
-        console.log(...oo_oo(`2955873931_318_4_318_79_4`, `##################################### DMS of ${user.id_user}`));
-        console.log(...oo_oo(`2955873931_319_4_319_20_4`, dms));
+        console.log(...oo_oo(`984207520_319_4_319_79_4`, `##################################### DMS of ${user.id_user}`));
+        console.log(...oo_oo(`984207520_320_4_320_20_4`, dms));
         let recv;
         let send;
         let namerecv;
@@ -235,7 +234,7 @@ let ChatGateway = class ChatGateway {
             }
         }
         else
-            console.log(...oo_oo(`2955873931_420_6_420_46_4`, "Error user does not exist"));
+            console.log(...oo_oo(`984207520_421_6_421_46_4`, "Error user does not exist"));
     }
     async getAllMessagesRoom(client, data) {
         const user = await this.UsersService.findById(data.user_id);
@@ -247,50 +246,50 @@ let ChatGateway = class ChatGateway {
             }
         }
         else
-            console.log(...oo_oo(`2955873931_446_6_446_46_4`, "Error user does not exist"));
+            console.log(...oo_oo(`984207520_447_6_447_46_4`, "Error user does not exist"));
     }
     async leavingRoom(client, data) {
-        console.log(...oo_oo(`2955873931_452_4_452_54_4`, "********************** leaveChannel"));
-        console.log(...oo_oo(`2955873931_455_4_455_21_4`, data));
+        console.log(...oo_oo(`984207520_453_4_453_54_4`, "********************** leaveChannel"));
+        console.log(...oo_oo(`984207520_456_4_456_21_4`, data));
         const user = await this.UsersService.findById(data.user_id);
         if (user) {
             const leave = await this.ChatService.getLeavingRoom(data.user_id, data.channel_id);
             if (leave) {
-                console.log(...oo_oo(`2955873931_461_8_461_83_4`, "User with ${data.user_id} is leaving room with id ${data.id}"));
+                console.log(...oo_oo(`984207520_462_8_462_83_4`, "User with ${data.user_id} is leaving room with id ${data.id}"));
                 return true;
             }
         }
         else
-            console.log(...oo_oo(`2955873931_466_6_466_46_4`, "Error user does not exist"));
+            console.log(...oo_oo(`984207520_467_6_467_46_4`, "Error user does not exist"));
     }
     async bannedUser(client, data) {
-        console.log(...oo_oo(`2955873931_472_4_472_29_4`, "bannedUser"));
-        console.log(...oo_oo(`2955873931_473_4_473_21_4`, data));
+        console.log(...oo_oo(`984207520_473_4_473_29_4`, "bannedUser"));
+        console.log(...oo_oo(`984207520_474_4_474_21_4`, data));
         const user1 = await this.UsersService.findById(data.from);
         const user2 = await this.UsersService.findById(data.to);
         if (client) {
             const id = Number(client.handshake.query.user_id);
-            console.log(...oo_oo(`2955873931_480_6_480_79_4`, `checking id of clients and user are ${id} --- ${data.from}`));
+            console.log(...oo_oo(`984207520_481_6_481_79_4`, `checking id of clients and user are ${id} --- ${data.from}`));
             if (user1) {
                 if (user1.id_user == data.from) {
                     if (user1 && user2) {
                         const bannedUser = await this.ChannelsService.banUser(data.channel_id, data.from, data.to);
                         if (bannedUser) {
                             const result = "User with ${data.bannedUs} is banned from room with id ${data.id} by the ${data.user_id}";
-                            console.log(...oo_oo(`2955873931_488_14_488_63_4`, `banned user is ================== `));
-                            console.log(...oo_oo(`2955873931_489_14_489_37_4`, bannedUser));
+                            console.log(...oo_oo(`984207520_489_14_489_63_4`, `banned user is ================== `));
+                            console.log(...oo_oo(`984207520_490_14_490_37_4`, bannedUser));
                         }
                     }
                 }
             }
         }
         else
-            console.log(...oo_oo(`2955873931_497_6_497_28_4`, "ERRROR "));
+            console.log(...oo_oo(`984207520_498_6_498_28_4`, "ERRROR "));
     }
     async kickUser(client, data) {
-        console.log(...oo_oo(`2955873931_517_4_517_51_4`, "kickUser ======================="));
-        console.log(...oo_oo(`2955873931_518_4_518_21_4`, data));
-        console.log(...oo_oo(`2955873931_519_4_519_66_4`, "###############################################"));
+        console.log(...oo_oo(`984207520_518_4_518_51_4`, "kickUser ======================="));
+        console.log(...oo_oo(`984207520_519_4_519_21_4`, data));
+        console.log(...oo_oo(`984207520_520_4_520_66_4`, "###############################################"));
         const user1 = await this.UsersService.findById(data.from);
         const user2 = await this.UsersService.findById(data.to);
         if (client) {
@@ -308,11 +307,11 @@ let ChatGateway = class ChatGateway {
             }
         }
         else
-            console.log(...oo_oo(`2955873931_542_6_542_26_4`, "error"));
+            console.log(...oo_oo(`984207520_543_6_543_26_4`, "error"));
     }
     async muteUser(client, data) {
-        console.log(...oo_oo(`2955873931_547_4_547_92_4`, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MUUTE USER @@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-        console.log(...oo_oo(`2955873931_549_4_549_21_4`, data));
+        console.log(...oo_oo(`984207520_548_4_548_92_4`, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MUUTE USER @@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+        console.log(...oo_oo(`984207520_550_4_550_21_4`, data));
         const user1 = await this.UsersService.findById(data.from);
         const user2 = await this.UsersService.findById(data.to);
         if (client) {
@@ -330,11 +329,11 @@ let ChatGateway = class ChatGateway {
             }
         }
         else
-            console.log(...oo_oo(`2955873931_570_6_570_26_4`, "error"));
+            console.log(...oo_oo(`984207520_571_6_571_26_4`, "error"));
     }
     async unmuteUser(client, data) {
-        console.log(...oo_oo(`2955873931_576_4_576_95_4`, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ UNMUUTE USER @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
-        console.log(...oo_oo(`2955873931_578_4_578_21_4`, data));
+        console.log(...oo_oo(`984207520_577_4_577_95_4`, "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ UNMUUTE USER @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@"));
+        console.log(...oo_oo(`984207520_579_4_579_21_4`, data));
         const user1 = await this.UsersService.findById(data.from);
         const user2 = await this.UsersService.findById(data.to);
         if (client) {
@@ -352,7 +351,7 @@ let ChatGateway = class ChatGateway {
             }
         }
         else
-            console.log(...oo_oo(`2955873931_599_6_599_26_4`, "error"));
+            console.log(...oo_oo(`984207520_600_6_600_26_4`, "error"));
     }
 };
 exports.ChatGateway = ChatGateway;
@@ -441,7 +440,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "unmuteUser", null);
 exports.ChatGateway = ChatGateway = __decorate([
-    (0, websockets_1.WebSocketGateway)({ cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } }),
+    (0, websockets_1.WebSocketGateway)({ namespace: "chat", cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } }),
     __metadata("design:paramtypes", [jwtservice_service_1.JwtService, chat_service_1.ChatService, users_service_1.UsersService, channel_service_1.ChannelsService])
 ], ChatGateway);
 ;

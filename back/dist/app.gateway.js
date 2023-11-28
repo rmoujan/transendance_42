@@ -343,7 +343,7 @@ let AppGateway = class AppGateway {
             progress = progress < 0 ? 0 : progress;
             winspercent = (gameW / gameP) * 100;
             lossespercent = (gameL / gameP) * 100;
-            console.log(...oo_oo(`3361686050_392_6_392_26_4`, "leave"));
+            console.log(...oo_oo(`1002279739_391_6_391_26_4`, "leave"));
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
@@ -512,8 +512,8 @@ let AppGateway = class AppGateway {
             if (!this.isPaused) {
                 room.roomBall.x += room.roomBall.velocityX;
                 room.roomBall.y += room.roomBall.velocityY;
-                if (room.roomBall.y + room.roomBall.r > 644 ||
-                    room.roomBall.y + room.roomBall.r < 10) {
+                if (room.roomBall.y + room.roomBall.r >= 644 ||
+                    room.roomBall.y - room.roomBall.r <= 0) {
                     room.roomBall.velocityY *= -1;
                 }
                 let player = room.roomBall.x < 1088 / 2

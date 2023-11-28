@@ -71,12 +71,13 @@ let AuthService = class AuthService {
                     invited: false,
                     homie_id: 0,
                     ISVERIDIED: false,
+                    GameFlag: 0,
                 },
             });
             return obj;
         }
         catch (error) {
-            console.log(...oo_oo(`1221279639_78_6_78_24_4`, error));
+            console.log(...oo_oo(`3564615693_79_6_79_24_4`, error));
         }
     }
     async GenerateQrCode(req) {
@@ -105,8 +106,9 @@ let AuthService = class AuthService {
         const user = await this.prisma.user.findUnique({
             where: { id_user: decoded.id },
         });
-        if (otplib_1.authenticator.verify({ token: body.inputValue, secret: user.secretKey }))
+        if (otplib_1.authenticator.verify({ token: body.inputValue, secret: user.secretKey })) {
             return { msg: "true" };
+        }
         else
             return { msg: "false" };
     }

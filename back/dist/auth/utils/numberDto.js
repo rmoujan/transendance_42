@@ -17,6 +17,6 @@ exports.NumberDto = NumberDto;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
-    __metadata("design:type", Number)
-], NumberDto.prototype, "id_user", void 0);
+    __metadata("design:type", String)
+], NumberDto.prototype, "inputValue", void 0);
 //# sourceMappingURL=numberDto.js.map

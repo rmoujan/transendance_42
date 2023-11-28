@@ -52,11 +52,11 @@ let ProfileController = class ProfileController {
     }
     async Get_About(req, res) {
         const user = await this.Profile.About_me(req, res);
-        console.log(...oo_oo(`2855565753_75_4_75_27_4`, user.About));
+        console.log(...oo_oo(`1476934099_75_4_75_27_4`, user.About));
         return user.About;
     }
     async VsBoot(req, body) {
-        console.log(...oo_oo(`2855565753_81_4_81_21_4`, body));
+        console.log(...oo_oo(`1476934099_81_4_81_21_4`, body));
         const decoded = this.jwt.verify(req.cookies["cookie"]);
         const user = await this.prisma.user.findUnique({
             where: { id_user: decoded.id },
@@ -66,7 +66,7 @@ let ProfileController = class ProfileController {
         let gameL = user.LoseBot;
         let avatar = user.avatar;
         let name = user.name;
-        console.log(...oo_oo(`2855565753_91_4_91_52_4`, "game_played: " + user.games_played));
+        console.log(...oo_oo(`1476934099_91_4_91_52_4`, "game_played: " + user.games_played));
         if (body.won) {
             gameW++;
             await this.prisma.user.update({
@@ -212,7 +212,7 @@ let ProfileController = class ProfileController {
         const decoded = this.jwt.verify(req.cookies["cookie"]);
         if (decoded == null)
             return;
-        console.log(...oo_oo(`2855565753_255_4_255_36_4`, "gameinfoos ", body));
+        console.log(...oo_oo(`1476934099_255_4_255_36_4`, "gameinfoos ", body));
         await this.prisma.user.update({
             where: { id_user: decoded.id },
             data: {
@@ -222,7 +222,7 @@ let ProfileController = class ProfileController {
             },
         });
         if (body.homies == true && body.invited == true) {
-            console.log(...oo_oo(`2855565753_266_6_266_30_4`, "hna 33333"));
+            console.log(...oo_oo(`1476934099_266_6_266_30_4`, "hna 33333"));
             await this.prisma.notification.deleteMany({
                 where: {
                     AND: [{ userId: decoded.id }, { GameInvitation: true }],
@@ -258,10 +258,10 @@ let ProfileController = class ProfileController {
     deletecookie(res) {
         res.clearCookie("cookie");
         res.status(200).json({ msg: "cookie deleted" });
-        console.log(...oo_oo(`2855565753_308_4_308_33_4`, "cookie deleted"));
+        console.log(...oo_oo(`1476934099_308_4_308_33_4`, "cookie deleted"));
     }
     async verify_Otp(body, req) {
-        console.log(...oo_oo(`2855565753_313_4_313_32_4`, 'veriyyy ', body));
+        console.log(...oo_oo(`1476934099_313_4_313_32_4`, 'veriyyy ', body));
         try {
             const decoded = this.jwt.verify(req.cookies["cookie"]);
             await this.prisma.user.update({
@@ -280,6 +280,26 @@ let ProfileController = class ProfileController {
                 where: { id_user: decoded.id },
             });
             return ({ verified: user.ISVERIDIED, TFA: user.TwoFactor });
+        }
+        catch (error) { }
+    }
+    async GameFlag(req, body) {
+        try {
+            const decoded = this.jwt.verify(req.cookies["cookie"]);
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    GameFlag: body.flag,
+                },
+            });
+        }
+        catch (error) { }
+    }
+    async GetFalg(req) {
+        try {
+            const decoded = this.jwt.verify(req.cookies["cookie"]);
+            const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
+            return ({ flag: user.GameFlag });
         }
         catch (error) { }
     }
@@ -424,6 +444,21 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "Get_Otp", null);
+__decorate([
+    (0, common_1.Post)('GameFlag'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "GameFlag", null);
+__decorate([
+    (0, common_1.Get)('GameFlag'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "GetFalg", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)("profile"),
     __metadata("design:paramtypes", [profile_service_1.ProfileService,

@@ -67,9 +67,25 @@ function GamePage() {
     myBotGameInstance.current = new MyBotGame(myCanvas.current!);
     myMultiplayerGameInstance.current = new MyMultiplayerGame(
       myCanvas.current!
-    );
-  }, []);
+      );
+    }, []);
+    
+    const handleGameFromHome = async () =>{
+      const outcome = await axios.get("http://localhost:3000/profile/GameFlag", {
+        withCredentials: true,});
+        if (outcome.data.flag === 1) {
+          axios.post("http://localhost:3000/profile/GameFlag", {flag:0}, {
+            withCredentials: true,});
+            setTimeout(() => {
+              handleBotGameClick()
+            }, 200);
+          } else if (outcome.data.flag === 2) {
+              handleMultiplayerGameClick();
+          }
+        }
 
+    handleGameFromHome();
+        
   return (
     <motion.div
       variants={fadeIn("down", 0.2)}

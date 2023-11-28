@@ -110,7 +110,6 @@ export class AppGateway
 
   @SubscribeMessage("join-friends-room")
   async handleJoinFriendsRoom(client: Socket, data: any) {
-    // console.log("Motherfuckers");
     const userId: number = this.decodeCookie(client).id;
     if (!this.users.has(userId)) {
       this.users.set(userId, client.id);
@@ -572,8 +571,8 @@ export class AppGateway
         room.roomBall.y += room.roomBall.velocityY;
 
         if (
-          room.roomBall.y + room.roomBall.r > 644 ||
-          room.roomBall.y + room.roomBall.r < 10
+          room.roomBall.y + room.roomBall.r >= 644 ||
+          room.roomBall.y - room.roomBall.r <= 0
         ) {
           room.roomBall.velocityY *= -1;
         }

@@ -10,6 +10,7 @@ export declare class ProfileService {
         id_user: number;
         name: string;
         avatar: string;
+        GameFlag: number;
         TwoFactor: boolean;
         ISVERIDIED: boolean;
         IsFirstTime: boolean;

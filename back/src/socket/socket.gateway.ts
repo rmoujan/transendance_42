@@ -33,7 +33,7 @@ export class SocketGateway
     cookieHeader = client.handshake.headers.cookie;
     if (cookieHeader == undefined) return null;
     //
-    console.log(cookieHeader);
+    // console.log(cookieHeader);
     const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
       const [name, value] = cookie.trim().split("=");
       acc[name] = value;
@@ -104,7 +104,7 @@ export class SocketGateway
 
   @SubscribeMessage("userOffline")
   async handleUserOffline(client: Socket) {
-    console.log("offliiiiine");
+    // console.log("offliiiiine");
     const decoded = this.decodeCookie(client);
     if (decoded == null) return;
     await this.prisma.user.update({
@@ -121,18 +121,18 @@ export class SocketGateway
 
   @SubscribeMessage("message")
   handleMessage(@MessageBody() body): string {
-    console.log(body);
+    // console.log(body);
     return "Hello world!";
   }
 
   @SubscribeMessage("invite-game")
   async invite_game(@ConnectedSocket() client: Socket, @MessageBody() body) {
     const decoded = this.decodeCookie(client);
-    console.log("inviiiiite to play");
+    // console.log("inviiiiite to play");
     const data = await this.prisma.user.findUnique({
       where: { id_user: decoded.id },
     });
-    console.log("in game ", data.InGame);
+    // console.log("in game ", data.InGame);
     const notify = await this.prisma.notification.findFirst({
       where: { userId: body.id_user, id_user: decoded.id },
     });
@@ -153,9 +153,9 @@ export class SocketGateway
             },
           },
         });
-        console.log("bodyyyyy ", body);
+        // console.log("bodyyyyy ", body);
         const sock = this.SocketContainer.get(body.id_user);
-        console.log("sooock ", sock);
+        // console.log("sooock ", sock);
         this.server.to(sock).emit("notification");
       }
     }
@@ -199,13 +199,13 @@ export class SocketGateway
 
   @SubscribeMessage("newfriend")
   async NewFriend(@ConnectedSocket() client: Socket, @MessageBody() body) {
-    console.log(body);
+    // console.log(body);
     const decoded = this.decodeCookie(client);
     const sockrecv = this.SocketContainer.get(decoded.id);
     // const user = await this.prisma.user.findUnique({where:{id_user: decoded.id},include:{freind:true}});
     // const usersend = await this.prisma.user.findUnique({where:{id_user: body.id_user},include:{freind:true}});
     // console.log('newfriend recv : ' , user.freind, "newfriend send : ", usersend.freind);
-    console.log("right bar gatway ", body);
+    // console.log("right bar gatway ", body);
     const socksend = this.SocketContainer.get(body);
     this.server.to(sockrecv).emit("RefreshFriends");
     this.server.to(socksend).emit("RefreshFriends");
@@ -214,7 +214,7 @@ export class SocketGateway
   @SubscribeMessage("friends-list")
   async friends_list(@ConnectedSocket() client: Socket, @MessageBody() body) {
     const decoded = this.decodeCookie(client);
-    console.log("friends list : ", body);
+    // console.log("friends list : ", body);
 
     const sockrecv = this.SocketContainer.get(decoded.id);
     const socksend = this.SocketContainer.get(body);

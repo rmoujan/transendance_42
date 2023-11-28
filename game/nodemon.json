@@ -1,5 +1,0 @@
-{
-	"watch": ["srcs"],
-	"ext": "ts tsx",
-	"exec": "bash start.sh"
-}

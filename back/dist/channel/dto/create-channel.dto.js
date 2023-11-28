@@ -9,27 +9,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CreateDmDto = exports.joinDto = exports.CreateMemberDto = exports.CreateChannelDto = void 0;
+exports.JoinChannelDto = exports.CreateChannelDto = exports.CreateMemberDto = void 0;
 const class_validator_1 = require("class-validator");
-class CreateChannelDto {
-}
-exports.CreateChannelDto = CreateChannelDto;
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: 'Property must not be empty' }),
-    (0, class_validator_1.Length)(5, 15),
-    __metadata("design:type", String)
-], CreateChannelDto.prototype, "name", void 0);
-__decorate([
-    (0, class_validator_1.IsNotEmpty)({ message: 'Property must not be empty' }),
-    (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsIn)(['public', 'private', 'protected']),
-    __metadata("design:type", String)
-], CreateChannelDto.prototype, "visibility", void 0);
-__decorate([
-    (0, class_validator_1.ValidateIf)((o) => o.password !== undefined),
-    (0, class_validator_1.Length)(5, 15),
-    __metadata("design:type", String)
-], CreateChannelDto.prototype, "password", void 0);
 class CreateMemberDto {
 }
 exports.CreateMemberDto = CreateMemberDto;
@@ -50,10 +31,56 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateMemberDto.prototype, "password", void 0);
-class joinDto {
+class CreateChannelDto {
 }
-exports.joinDto = joinDto;
-class CreateDmDto {
+exports.CreateChannelDto = CreateChannelDto;
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateChannelDto.prototype, "avatar", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateChannelDto.prototype, "passwordConfirm", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateChannelDto.prototype, "password", void 0);
+__decorate([
+    (0, class_validator_1.IsArray)(),
+    __metadata("design:type", Array)
+], CreateChannelDto.prototype, "members", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateChannelDto.prototype, "title", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], CreateChannelDto.prototype, "type", void 0);
+class JoinChannelDataDto {
 }
-exports.CreateDmDto = CreateDmDto;
+__decorate([
+    (0, class_validator_1.IsInt)(),
+    __metadata("design:type", Number)
+], JoinChannelDataDto.prototype, "id_channel", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], JoinChannelDataDto.prototype, "name", void 0);
+__decorate([
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], JoinChannelDataDto.prototype, "visibility", void 0);
+__decorate([
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", String)
+], JoinChannelDataDto.prototype, "password", void 0);
+class JoinChannelDto {
+}
+exports.JoinChannelDto = JoinChannelDto;
 //# sourceMappingURL=create-channel.dto.js.map

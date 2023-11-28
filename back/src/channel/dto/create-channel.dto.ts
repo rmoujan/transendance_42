@@ -1,39 +1,4 @@
-import { IsString, Length, IsNotEmpty, IsIn, ValidateIf, IsNumber, IsInt, IsOptional } from "class-validator";
-
-// that will be the data that Iam expect by the client when creating a new channel.
-export class CreateChannelDto {
-    @IsNotEmpty({ message: 'Property must not be empty' })
-    @Length(5, 15) 
-    readonly name: string;
-
-    @IsNotEmpty({ message: 'Property must not be empty' })
-    @IsString()
-    @IsIn(['public', 'private', 'protected'])
-    readonly visibility:string;
-
-    @ValidateIf((o) => o.password !== undefined) 
-    @Length(5, 15) 
-    readonly password?:string;
-  }
-
-// that will be the data that Iam expect by the client when creating a new channel.
-// export class CreateMemberDto {
-
-//   @IsNotEmpty({ message: 'Property must not be empty' })
-//   @IsNumber()
-//   readonly id_channel: number;
-
-//   @IsString()
-//   @IsNotEmpty({ message: 'Property must not be empty' })
-//   readonly name:string;
-
-//   @IsString()
-//   @IsNotEmpty({ message: 'Property must not be empty' })
-//   readonly visibility:string;
-
-//   @IsString()
-//   readonly password?:string | null;
-// }
+import { IsString, Length, IsNotEmpty, IsIn, ValidateIf, IsNumber, IsInt, IsOptional, IsArray } from "class-validator";
 
 export class CreateMemberDto {
   @IsInt()
@@ -50,15 +15,57 @@ export class CreateMemberDto {
   readonly password?: string | null;
 }
 
-export class joinDto {
-  readonly sendData: CreateMemberDto;
+// export class CreateDmDto {
+//   id_dm : number
+//   senderId : number      
+//   receiverId : number   
+//   unread : number 
+//   pinned :Boolean
+// }
+
+
+export class CreateChannelDto {
+  @IsOptional()
+  @IsString()
+  readonly avatar?: string;
+
+  @IsOptional()
+  @IsString()
+  readonly passwordConfirm?: string | null;
+
+  @IsOptional()
+  @IsString()
+  readonly password?: string | null;
+
+  @IsArray()
+  readonly members: string[];
+
+  @IsString()
+  readonly title: string;
+
+  @IsString()
+  readonly type: string;
+
 }
 
 
-export class CreateDmDto {
-  id_dm : number
-  senderId : number      
-  receiverId : number   
-  unread : number 
-  pinned :Boolean
+
+
+class JoinChannelDataDto {
+  @IsInt()
+  id_channel: number;
+
+  @IsString()
+  name: string;
+
+  @IsString()
+  visibility: string;
+
+  @IsOptional()
+  @IsString()
+  password: string | null;
+}
+
+export class JoinChannelDto {
+  sendData: JoinChannelDataDto;
 }

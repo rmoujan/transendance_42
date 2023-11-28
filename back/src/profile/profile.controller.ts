@@ -334,4 +334,29 @@ export class ProfileController {
     }
     catch(error){}
   }
+
+  @Post('GameFlag')
+  async GameFlag(@Req() req:any, @Body() body:any){
+    try{
+      const decoded = this.jwt.verify(req.cookies["cookie"]);
+      await this.prisma.user.update({
+        where:{id_user: decoded.id},
+        data:{
+          GameFlag: body.flag,
+        },
+      })
+    }
+    catch(error){}
+  }
+
+  @Get('GameFlag')
+  async GetFalg(@Req() req:any){
+    try{
+      const decoded = this.jwt.verify(req.cookies["cookie"]);
+      const user = await this.prisma.user.findUnique({where:{id_user: decoded.id}});
+      return ({flag: user.GameFlag});
+    }
+    catch(error){}
+  }
+
 }

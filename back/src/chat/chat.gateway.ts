@@ -17,7 +17,7 @@ import { ChannelsService } from 'src/channel/channel.service';
 //     origin: '*',
 //   },
 // })
-@WebSocketGateway({ cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } })
+@WebSocketGateway({namespace: "chat", cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } })
 export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   constructor(private jwt: JwtService, private readonly ChatService: ChatService, private readonly UsersService: UsersService, private readonly ChannelsService: ChannelsService) { }
 
@@ -44,7 +44,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     cookieHeader = client.handshake.headers.cookie;
     if (cookieHeader == undefined) return null;
     //
-    console.log(cookieHeader);
+    // console.log(cookieHeader);
     const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
       const [name, value] = cookie.trim().split("=");
       acc[name] = value;
@@ -72,6 +72,7 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     // const id: number = this.decodeCookie(client);
     this.logger.log(` ********  User  Connected : ${decoded.id} and its sockets is ${client.id}`);
     // this.logger.log(` ********  Client Connected : ${client.id}`);
+
 
     // console.log(typeof id);
     this.connectedClients.set(decoded.id, client);

@@ -14,6 +14,7 @@ model User{
   id_user Int @unique @id @default(autoincrement())
   name String  @unique
   avatar String?
+  GameFlag Int?
   TwoFactor Boolean?
   ISVERIDIED Boolean?
   IsFirstTime Boolean?

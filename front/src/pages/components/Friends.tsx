@@ -1,6 +1,6 @@
 import { Popover, Transition } from "@headlessui/react";
 import axios from "axios";
-import { ChangeEvent, Fragment, KeyboardEvent, useRef, useState ,useEffect  } from "react";
+import { ChangeEvent, Fragment, KeyboardEvent, useRef, useState ,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../redux/store/store";
 import { socket_user } from "../../socket";
@@ -39,7 +39,7 @@ function Friends({ user }: AccountOwnerProps) {
     fetchData();
   }
     , []);
-  const [friends, setFriend] = useState<User[]>([]);  console.log("friends");
+  const [friends, setFriend] = useState<User[]>([]);
   console.log(friends);
   // const [friends, setFriends] = useState<User[]>([]);
   const [selectedFriend, setSelectedFriend] = useState<User | null>(null);
