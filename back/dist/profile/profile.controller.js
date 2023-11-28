@@ -283,7 +283,6 @@ let ProfileController = class ProfileController {
         }
         catch (error) { }
     }
-<<<<<<< HEAD
     async GameFlag(req, body) {
         try {
             const decoded = this.jwt.verify(req.cookies["cookie"]);
@@ -304,8 +303,6 @@ let ProfileController = class ProfileController {
         }
         catch (error) { }
     }
-=======
->>>>>>> 9251ec04dcc743696f525d1456f3bf75408095f1
 };
 exports.ProfileController = ProfileController;
 __decorate([
@@ -447,7 +444,6 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "Get_Otp", null);
-<<<<<<< HEAD
 __decorate([
     (0, common_1.Post)('GameFlag'),
     __param(0, (0, common_1.Req)()),
@@ -463,8 +459,6 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "GetFalg", null);
-=======
->>>>>>> 9251ec04dcc743696f525d1456f3bf75408095f1
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)("profile"),
     __metadata("design:paramtypes", [profile_service_1.ProfileService,

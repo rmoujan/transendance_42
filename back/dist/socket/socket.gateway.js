@@ -99,13 +99,16 @@ let SocketGateway = class SocketGateway {
     }
     async invite_game(client, body) {
         const decoded = this.decodeCookie(client);
+        console.log("inviiiiite to play");
         const data = await this.prisma.user.findUnique({
             where: { id_user: decoded.id },
         });
         const notify = await this.prisma.notification.findFirst({
             where: { userId: body.id_user, id_user: decoded.id },
         });
+        console.log('notiiify : ', notify);
         if (notify == null) {
+            console.log('ingame : ', data.InGame);
             if (data.InGame == false) {
                 const user = await this.prisma.user.update({
                     where: { id_user: body.id_user },
@@ -121,7 +124,9 @@ let SocketGateway = class SocketGateway {
                         },
                     },
                 });
+                console.log("bodyyyyy ", body);
                 const sock = this.SocketContainer.get(body.id_user);
+                console.log("sooock ", sock);
                 this.server.to(sock).emit("notification");
             }
         }

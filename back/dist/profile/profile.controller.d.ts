@@ -112,11 +112,8 @@ export declare class ProfileController {
         verified: boolean;
         TFA: boolean;
     }>;
-<<<<<<< HEAD
     GameFlag(req: any, body: any): Promise<void>;
     GetFalg(req: any): Promise<{
         flag: number;
     }>;
-=======
->>>>>>> 9251ec04dcc743696f525d1456f3bf75408095f1
 }

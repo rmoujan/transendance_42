@@ -30,6 +30,8 @@ let AppGateway = class AppGateway {
     decodeCookie(client) {
         let cookieHeader;
         cookieHeader = client.handshake.headers.cookie;
+        if (cookieHeader == undefined)
+            return null;
         const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
             const [name, value] = cookie.trim().split("=");
             acc[name] = value;
@@ -46,6 +48,8 @@ let AppGateway = class AppGateway {
         this.logger.log(`Client connected: ${client.id}`);
         try {
             const decoded = this.decodeCookie(client);
+            if (decoded == null)
+                return;
             const user = await this.prisma.user.findUnique({
                 where: { id_user: decoded.id },
             });

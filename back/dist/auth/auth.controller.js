@@ -19,7 +19,7 @@ const passport_1 = require("@nestjs/passport");
 const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
 const JwtGuard_1 = require("../auth/jwt/JwtGuard");
 const prisma_service_1 = require("../prisma.service");
-const NumberDto_1 = require("./utils/NumberDto");
+const numberDto_1 = require("./utils/numberDto");
 const NumberDtoO_1 = require("./utils/NumberDtoO");
 let AuthController = class AuthController {
     constructor(service, jwt, prisma) {
