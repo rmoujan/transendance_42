@@ -11,11 +11,7 @@ import ChatGeneral from "../Chat/ChatGeneral";
 function Messages() {
   const { profile, converstation, contact } = useAppSelector(state => state);
   const dispatch = useAppDispatch();
-  // dispatch(resetContact());
 
-  // dispatch(FetchChannels());
-  // dispatch(FetchProtectedChannels());
-  // dispatch(FetchPublicChannels());
   useEffect(() => {
     if (!socket) {
       // console.log("socket not found");

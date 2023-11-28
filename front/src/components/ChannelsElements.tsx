@@ -164,8 +164,8 @@ const ChannelElements = (id: IdType) => {
               sx={{ fontWeight: 400 }}
             >
               {id.last_messages
-                ? id.last_messages.length > 25
-                  ? id.last_messages.substring(0, 25) + "..."
+                ? id.last_messages.length > 45
+                  ? id.last_messages.substring(0, 45) + "..."
                   : id.last_messages
                 : "There is no message yet"}
             </Typography>

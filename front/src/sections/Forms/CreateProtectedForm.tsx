@@ -10,7 +10,10 @@ import FormProvider from "../../components/hook-form/FormProvider";
 import { RHFUploadAvatar } from "../../components/hook-form/RHFUploadAvatar";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { FetchChannels } from "../../redux/slices/channels";
+import {
+  FetchChannels,
+  FetchProtectedChannels,
+} from "../../redux/slices/channels";
 import LoadingButton from "@mui/lab/LoadingButton";
 
 const CreateProtectedForm = ({ handleClose }: any) => {
@@ -85,6 +88,7 @@ const CreateProtectedForm = ({ handleClose }: any) => {
           })
         );
         dispatch(FetchChannels());
+        dispatch(FetchProtectedChannels());
         handleClose();
         reset();
       } else {

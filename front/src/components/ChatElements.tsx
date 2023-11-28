@@ -112,8 +112,8 @@ const ChatElements = (id: IdType) => {
               sx={{ fontWeight: 400 }}
             >
               {id.msg
-                ? id.msg.length > 25
-                  ? id.msg.substring(0, 25) + "..."
+                ? id.msg.length > 45
+                  ? id.msg.substring(0, 45) + "..."
                   : id.msg
                 : "There is no message yet"}
             </Typography>

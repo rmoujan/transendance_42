@@ -120,6 +120,50 @@ export declare class ChannelsController {
         message: string;
         error: any;
     }>;
+    getPrivateChannels(): Promise<({
+        users: ({
+            user: {
+                id_user: number;
+                name: string;
+                avatar: string;
+                GameFlag: number;
+                TwoFactor: boolean;
+                ISVERIDIED: boolean;
+                IsFirstTime: boolean;
+                InGame: boolean;
+                secretKey: string;
+                About: string;
+                status_user: string;
+                email: string;
+                WonBot: number;
+                LoseBot: number;
+                wins: number;
+                losses: number;
+                games_played: number;
+                Progress: number;
+                Wins_percent: number;
+                Losses_percent: number;
+                homies: boolean;
+                invited: boolean;
+                homie_id: number;
+            };
+        } & {
+            userId: number;
+            channelId: number;
+            status_UserInChannel: string;
+            muted: boolean;
+            period: Date;
+        })[];
+    } & {
+        id_channel: number;
+        name: string;
+        img: string;
+        visibility: string;
+        password: string;
+    })[] | {
+        message: string;
+        error: any;
+    }>;
     getAllChannels(req: any, data: any): Promise<any[] | {
         message: string;
         error: any;

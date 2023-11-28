@@ -161,7 +161,7 @@ const JoinPublicForm = ({ handleClose }: any) => {
                       justifyContent={"space-around"}
                     >
                       <Avatar
-                        src={faker.image.avatar()}
+                        src={option.img}
                         sx={{ width: 52, height: 52, marginRight: 2 }}
                       />
                       <Typography variant="subtitle2" color={"black"}>

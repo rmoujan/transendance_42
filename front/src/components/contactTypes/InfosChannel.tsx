@@ -41,6 +41,7 @@ const InfosChannel = () => {
   const { contact, channels, profile } = useAppSelector((store) => store);
   console.log(contact);
   console.log(channels);
+  let img: string;
   useEffect(() => {
     let selectedChannel: any;
     if (contact.type_chat === "public") {
@@ -56,7 +57,9 @@ const InfosChannel = () => {
       );
     }
     if (contact.type_chat === "private") {
+      console.log(channels);
       console.log("private");
+      console.log(contact.room_id);
       selectedChannel = channels.privateChannels.find(
         (channel: any) => channel?.id_channel === contact.room_id
       );
@@ -94,10 +97,11 @@ const InfosChannel = () => {
   }, [contact, profile, channels]);
   console.log(channels.publicChannels);
   if (contact.type_chat === "public") {
-    // console.log("public");
+    console.log("public");
     const channel = channels.publicChannels.find((channel: any) => {
       return channel?.id_channel === contact.room_id;
     });
+    console.log(channel)
 
     currentInfos.current = channel;
     // contact.name = channel?.name;
@@ -106,15 +110,20 @@ const InfosChannel = () => {
     const channel = channels.protectedChannels.find(
       (channel: any) => channel?.id_channel === contact.room_id
     );
+    console.log(channel)
     currentInfos.current = channel;
 
     // contact.name = channel?.name;
   } else if (contact.type_chat === "private") {
-    // console.log("private");
-    const channel = channels.privateChannels.find(
+    console.log("private");
+    const channel: any = channels.privateChannels.find(
       (channel: any) => channel?.id_channel === contact.room_id
     );
+    console.log(channel);
+
     currentInfos.current = channel;
+    console.log(currentInfos.current);
+    img = channel.img;
   }
 
   const [openBlock, setOpenBlock] = useState(false);
@@ -198,7 +207,7 @@ const InfosChannel = () => {
           <Stack>
             <Avatar
               alt={contact.name}
-              src={currentInfos.current?.image}
+              src={currentInfos.current.img}
               sx={{ width: 200, height: 200 }}
             />
           </Stack>

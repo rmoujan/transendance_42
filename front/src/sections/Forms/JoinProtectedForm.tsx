@@ -38,7 +38,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
   const { protectedChannels, channels } = useAppSelector(
     (state) => state.channels
   );
-
+    console.log(protectedChannels)
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
 

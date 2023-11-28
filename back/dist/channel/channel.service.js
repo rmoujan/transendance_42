@@ -67,6 +67,26 @@ let ChannelsService = class ChannelsService {
             throw new common_1.NotFoundException(`we have no protected channels`);
         }
     }
+    async getPrivateChannels() {
+        try {
+            const publicChannelsWithUsers = await this.prisma.channel.findMany({
+                where: {
+                    visibility: 'private',
+                },
+                include: {
+                    users: {
+                        include: {
+                            user: true,
+                        },
+                    },
+                },
+            });
+            return publicChannelsWithUsers;
+        }
+        catch (error) {
+            throw new common_1.NotFoundException(`we have no private channels`);
+        }
+    }
     async createChannel(data, userId) {
         try {
             if (data.password) {

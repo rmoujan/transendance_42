@@ -25,8 +25,8 @@ let ChannelsController = class ChannelsController {
         this.UsersService = UsersService;
     }
     async create(req, data) {
-        console.log(...oo_oo(`481838796_17_4_17_101_4`, "-------------------------- Starting Creating a Channel -------------------------- "));
-        console.log(...oo_oo(`481838796_18_4_18_21_4`, data));
+        console.log(...oo_oo(`909864837_17_4_17_101_4`, "-------------------------- Starting Creating a Channel -------------------------- "));
+        console.log(...oo_oo(`909864837_18_4_18_21_4`, data));
         if (data) {
             if (!data.title || !data.members || !data.type) {
                 return (false);
@@ -44,7 +44,7 @@ let ChannelsController = class ChannelsController {
             const user = await this.UsersService.findById(decode.id);
             if (user) {
                 const channel = await this.channelsService.createChannel(data, user.id_user);
-                console.log(...oo_oo(`481838796_42_8_42_28_4`, channel));
+                console.log(...oo_oo(`909864837_42_8_42_28_4`, channel));
                 if (channel)
                     return (true);
                 else
@@ -56,8 +56,8 @@ let ChannelsController = class ChannelsController {
         }
     }
     async join(req, data) {
-        console.log(...oo_oo(`481838796_55_4_55_101_4`, "-------------------------- Starting Joining a Channel  -------------------------- "));
-        console.log(...oo_oo(`481838796_56_4_56_21_4`, data));
+        console.log(...oo_oo(`909864837_55_4_55_101_4`, "-------------------------- Starting Joining a Channel  -------------------------- "));
+        console.log(...oo_oo(`909864837_56_4_56_21_4`, data));
         if (data) {
             if (!data.sendData.id_channel || !data.sendData.name || !data.sendData.visibility) {
                 return (false);
@@ -76,11 +76,11 @@ let ChannelsController = class ChannelsController {
             if (user) {
                 const memberChannel = await this.channelsService.joinChannel(data, user.id_user);
                 if (memberChannel) {
-                    console.log(...oo_oo(`481838796_88_10_88_60_4`, "operation accomplished successfully"));
+                    console.log(...oo_oo(`909864837_88_10_88_60_4`, "operation accomplished successfully"));
                     return (true);
                 }
                 else {
-                    console.log(...oo_oo(`481838796_93_10_93_69_4`, "operation does not accomplished successfully"));
+                    console.log(...oo_oo(`909864837_93_10_93_69_4`, "operation does not accomplished successfully"));
                     return (false);
                 }
             }
@@ -92,8 +92,8 @@ let ChannelsController = class ChannelsController {
         }
     }
     async updatePass(req, data) {
-        console.log(...oo_oo(`481838796_110_4_110_90_4`, "-------------------------- UPDATE PASSWORD  -------------------------- "));
-        console.log(...oo_oo(`481838796_111_4_111_21_4`, data));
+        console.log(...oo_oo(`909864837_110_4_110_90_4`, "-------------------------- UPDATE PASSWORD  -------------------------- "));
+        console.log(...oo_oo(`909864837_111_4_111_21_4`, data));
         if (data) {
             if (!data.password || !data.channel_id || !data.user_id) {
                 return (false);
@@ -115,13 +115,13 @@ let ChannelsController = class ChannelsController {
                 return false;
         }
         catch (error) {
-            console.log(...oo_oo(`481838796_135_6_135_32_4`, error.message));
+            console.log(...oo_oo(`909864837_135_6_135_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
     async removePass(req, data) {
-        console.log(...oo_oo(`481838796_142_4_142_90_4`, "-------------------------- REMOVE PASSWORD  -------------------------- "));
-        console.log(...oo_oo(`481838796_143_4_143_21_4`, data));
+        console.log(...oo_oo(`909864837_142_4_142_90_4`, "-------------------------- REMOVE PASSWORD  -------------------------- "));
+        console.log(...oo_oo(`909864837_143_4_143_21_4`, data));
         if (data) {
             if (!data.id_channel || !data.user_id)
                 return (false);
@@ -146,11 +146,11 @@ let ChannelsController = class ChannelsController {
         }
     }
     async setPass(req, data) {
-        console.log(...oo_oo(`481838796_174_4_174_87_4`, "-------------------------- SET PASSWORD  -------------------------- "));
-        console.log(...oo_oo(`481838796_175_4_175_21_4`, data));
+        console.log(...oo_oo(`909864837_174_4_174_87_4`, "-------------------------- SET PASSWORD  -------------------------- "));
+        console.log(...oo_oo(`909864837_175_4_175_21_4`, data));
         if (data) {
             if (!data.password || !data.user_id || !data.channel_id) {
-                console.log(...oo_oo(`481838796_180_8_180_35_4`, "inside false"));
+                console.log(...oo_oo(`909864837_180_8_180_35_4`, "inside false"));
                 return (false);
             }
         }
@@ -162,7 +162,7 @@ let ChannelsController = class ChannelsController {
             if (user) {
                 const setch = await this.channelsService.setPass(data, user.id_user);
                 if (setch) {
-                    console.log(...oo_oo(`481838796_194_10_194_43_4`, "set ch true", setch));
+                    console.log(...oo_oo(`909864837_194_10_194_43_4`, "set ch true", setch));
                     return (true);
                 }
                 else
@@ -176,11 +176,11 @@ let ChannelsController = class ChannelsController {
         }
     }
     async setAdmin(req, data) {
-        console.log(...oo_oo(`481838796_210_4_210_84_4`, "-------------------------- SET ADMIN  -------------------------- "));
-        console.log(...oo_oo(`481838796_211_4_211_21_4`, data));
+        console.log(...oo_oo(`909864837_210_4_210_84_4`, "-------------------------- SET ADMIN  -------------------------- "));
+        console.log(...oo_oo(`909864837_211_4_211_21_4`, data));
         if (data) {
             if (!data.to || !data.channel_id || !data.from) {
-                console.log(...oo_oo(`481838796_216_8_216_35_4`, "inside false"));
+                console.log(...oo_oo(`909864837_216_8_216_35_4`, "inside false"));
                 return (false);
             }
         }
@@ -194,16 +194,16 @@ let ChannelsController = class ChannelsController {
                 return (false);
         }
         catch (error) {
-            console.log(...oo_oo(`481838796_230_6_230_32_4`, error.message));
+            console.log(...oo_oo(`909864837_230_6_230_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
     async removeChannel(req, data) {
-        console.log(...oo_oo(`481838796_238_4_238_89_4`, "-------------------------- Remove Channel  -------------------------- "));
-        console.log(...oo_oo(`481838796_239_4_239_21_4`, data));
+        console.log(...oo_oo(`909864837_238_4_238_89_4`, "-------------------------- Remove Channel  -------------------------- "));
+        console.log(...oo_oo(`909864837_239_4_239_21_4`, data));
         if (data) {
             if (!data.user_id || !data.channel_id) {
-                console.log(...oo_oo(`481838796_245_8_245_35_4`, "inside false"));
+                console.log(...oo_oo(`909864837_245_8_245_35_4`, "inside false"));
                 return (false);
             }
         }
@@ -220,7 +220,7 @@ let ChannelsController = class ChannelsController {
             }
         }
         catch (error) {
-            console.log(...oo_oo(`481838796_261_6_261_32_4`, error.message));
+            console.log(...oo_oo(`909864837_261_6_261_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
@@ -229,7 +229,7 @@ let ChannelsController = class ChannelsController {
             return this.channelsService.getPublicChannels();
         }
         catch (error) {
-            console.log(...oo_oo(`481838796_271_6_271_32_4`, error.message));
+            console.log(...oo_oo(`909864837_271_6_271_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
@@ -238,12 +238,21 @@ let ChannelsController = class ChannelsController {
             return this.channelsService.getProtectedChannels();
         }
         catch (error) {
-            console.log(...oo_oo(`481838796_281_6_281_32_4`, error.message));
+            console.log(...oo_oo(`909864837_281_6_281_32_4`, error.message));
+            return { message: 'An error occurred', error: error.message };
+        }
+    }
+    async getPrivateChannels() {
+        try {
+            return this.channelsService.getPrivateChannels();
+        }
+        catch (error) {
+            console.log(...oo_oo(`909864837_291_6_291_32_4`, error.message));
             return { message: 'An error occurred', error: error.message };
         }
     }
     async getAllChannels(req, data) {
-        console.log(...oo_oo(`481838796_289_4_289_110_4`, "-------------------------- all channels that a user inside them -------------------------- "));
+        console.log(...oo_oo(`909864837_299_4_299_110_4`, "-------------------------- all channels that a user inside them -------------------------- "));
         try {
             const decode = this.jwt.verify(req.cookies['cookie']);
             const user = await this.UsersService.findById(decode.id);
@@ -354,6 +363,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], ChannelsController.prototype, "getProtectedChannels", null);
+__decorate([
+    (0, common_1.Get)('allprivate'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], ChannelsController.prototype, "getPrivateChannels", null);
 __decorate([
     (0, common_1.Get)('allChannels'),
     __param(0, (0, common_1.Req)()),

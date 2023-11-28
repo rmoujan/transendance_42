@@ -5,6 +5,7 @@ import InfosContact from "../../components/contactTypes/InfosContact";
 import { FetchFriends } from "../../redux/slices/app";
 import {
   FetchChannels,
+  FetchPrivatesChannels,
   FetchProtectedChannels,
   FetchPublicChannels,
 } from "../../redux/slices/channels";
@@ -14,7 +15,7 @@ import NoChat from "../../sections/NoChat";
 import ChatTabs from "./ChatTabs";
 
 const ChatGeneral: React.FC = () => {
-  const { contact, profile, app } = useAppSelector((state) => state);
+  const { contact, profile, app, channels } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const ChatGeneral: React.FC = () => {
     console.log("fetching channels");
     dispatch(FetchProtectedChannels());
     dispatch(FetchPublicChannels());
+    dispatch(FetchPrivatesChannels())
     dispatch(FetchChannels());
     dispatch(FetchFriends());
   }, [profile._id]);

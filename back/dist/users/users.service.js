@@ -21,7 +21,7 @@ let UsersService = class UsersService {
             where: { id_user: userId },
         });
         if (!user) {
-            console.log(...oo_oo(`1432946394_15_6_15_37_4`, "user not found\n"));
+            console.log(...oo_oo(`1086805341_15_6_15_37_4`, "user not found\n"));
             throw new common_1.NotFoundException(`User with ID ${userId} not found`);
         }
         return user;

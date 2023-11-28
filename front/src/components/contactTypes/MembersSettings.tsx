@@ -18,8 +18,17 @@ import {
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { socket } from "../../socket";
 import axios from "axios";
-import { FetchChannels } from "../../redux/slices/channels";
-import { toggleDialog } from "../../redux/slices/contact";
+import {
+  FetchChannels,
+  FetchPrivatesChannels,
+  FetchProtectedChannels,
+  FetchPublicChannels,
+} from "../../redux/slices/channels";
+import {
+  resetContact,
+  showSnackbar,
+  toggleDialog,
+} from "../../redux/slices/contact";
 
 const MembersSettings = (el: any) => {
   const { _id } = useAppSelector((state) => state.profile);
@@ -57,18 +66,71 @@ const MembersSettings = (el: any) => {
     // socket.emit("friend_request", { to: _id, from: user_id });
     // dispatch(updatedContactInfo({ friend_request: true }));
   };
-  const makeAdmin = () => {
+  const makeAdmin = async () => {
     // console.log("make admin");
     // console.log(user.id_user, _id, el.el.channelId)
     // ! emit "make_admin" event
-    axios.post("http://localhost:3000/channels/setAdmin", {
+    const res = await axios.post("http://localhost:3000/channels/setAdmin", {
       to: user.id_user,
       from: _id,
       channel_id: el.el.channelId,
     });
-    dispatch(FetchChannels());
-    dispatch(toggleDialog());
+    if (res.data === true) {
+      dispatch(toggleDialog());
+      dispatch(FetchChannels());
+      dispatch(FetchProtectedChannels());
+      dispatch(FetchPublicChannels());
+      dispatch(FetchPrivatesChannels());
+      dispatch(resetContact());
+      dispatch(
+        showSnackbar({
+          severity: "success",
+          message: `You have make ${el.name} admin successfully`,
+        })
+      );
+    } else {
+      dispatch(
+        showSnackbar({
+          severity: "error",
+          message: `You haven't make ${el.name} admin of this channel`,
+        })
+      );
+    }
+    
     // ! dispatch "updatedChannels" action
+  };
+
+  const handleBan = () => {
+    console.log("Ban User");
+    socket.emit("banUserFRomChannel", {
+      to: el.el.userId,
+      from: _id,
+      channel_id: el.el.channelId,
+    });
+    socket.on("ResponseBannedUser", (data: any) => {
+      console.log(data)
+      if (data == true) {
+        dispatch(toggleDialog());
+        dispatch(FetchChannels());
+        dispatch(FetchProtectedChannels());
+        dispatch(FetchPublicChannels());
+        dispatch(FetchPrivatesChannels());
+        dispatch(resetContact());
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: `You have Ban ${el.name} successfully`,
+          })
+        );
+      } else {
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: `You haven't Ban ${el.name}`,
+          })
+        );
+      }
+    });
   };
   const handleClickMuted = () => {
     // ! emit "mute_converstation" event
@@ -88,10 +150,54 @@ const MembersSettings = (el: any) => {
         channel_id: el.el.channelId,
       });
     }
-    socket.on("ResponsekickUser", (data: any) => {
+    socket.on("ResponsunmutekUser", (data: any) => {
       console.log(data);
+      if (data == true) {
+        dispatch(toggleDialog());
+        dispatch(FetchChannels());
+        dispatch(FetchProtectedChannels());
+        dispatch(FetchPublicChannels());
+        dispatch(FetchPrivatesChannels());
+        dispatch(resetContact());
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: `You have muted ${el.name} successfully`,
+          })
+        );
+      } else {
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: `You haven't muted ${el.name}`,
+          })
+        );
+      }
     });
-    dispatch(FetchChannels());
+    socket.on("ResponsemuteUser", (data: any) => {
+      console.log(data);
+      if (data == true) {
+        dispatch(toggleDialog());
+        dispatch(FetchChannels());
+        dispatch(FetchProtectedChannels());
+        dispatch(FetchPublicChannels());
+        dispatch(FetchPrivatesChannels());
+        dispatch(resetContact());
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: `You have muted ${el.name} successfully`,
+          })
+        );
+      } else {
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: `You haven't muted ${el.name}`,
+          })
+        );
+      }
+    });
 
     // setMuted(() => !muted);
   };
@@ -223,18 +329,7 @@ const MembersSettings = (el: any) => {
                   }}
                 >
                   <Tooltip title="Ban">
-                    <IconButton
-                      onClick={() => {
-                        console.log("Ban User");
-                        socket.emit("banUserFRomChannel", {
-                          to: el.el.userId,
-                          from: _id,
-                          channel_id: el.el.channelId,
-                        });
-                        dispatch(FetchChannels());
-                        dispatch(toggleDialog());
-                      }}
-                    >
+                    <IconButton onClick={handleBan}>
                       <Gavel color="#FE754D" />
                     </IconButton>
                   </Tooltip>

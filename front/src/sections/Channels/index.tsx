@@ -11,11 +11,13 @@ import {
 } from "../../components/search";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { FetchChannels } from "../../redux/slices/channels";
+import { profile } from "console";
 
 const Channels = () => {
   const [openCreateChannel, setOpenCreateChannel] = useState(false);
   const [openJoinChannel, setOpenJoinChannel] = useState(false);
-  const { channels } = useAppSelector((state) => state);
+  const { channels, current_messages } = useAppSelector((state) => state.channels);
+  const {profile} = useAppSelector((state) => state)
   const dispatch = useAppDispatch();
   // console.log(channels);
 
@@ -28,10 +30,10 @@ const Channels = () => {
     setOpenCreateChannel(false);
   };
 
-  // useEffect(() => {
-  //   // dispatch(FetchChannels());
-  //   console.log("channels", channels);
-  // }, [channels]);
+  useEffect(() => {
+    console.log("channels", channels);
+    dispatch(FetchChannels());
+  }, [profile._id, current_messages]);
   return (
     <>
       <Box
@@ -123,7 +125,7 @@ const Channels = () => {
           >
             {/* <SimpleBarStyle> */}
             {/* <Stack sx={{ backgroundColor: "#F3A162", borderRadius: "25px" }}> */}
-            {channels.channels.map((el: any, index) => {
+            {channels.map((el: any, index) => {
               return <ChannelElements key={index} {...el} />;
             })}
             {/* </Stack> */}

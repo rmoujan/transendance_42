@@ -283,6 +283,16 @@ export class ChannelsController {
     }
   }
 
+  @Get('allprivate')
+  async getPrivateChannels() {
+    try {
+      return this.channelsService.getPrivateChannels();
+    } catch (error) {
+      console.log(error.message);
+      return { message: 'An error occurred', error: error.message };
+    }
+  }
+
   // all channels , that a user inside them .
   @Get('allChannels')
   async getAllChannels(@Req() req, @Body() data: any) {

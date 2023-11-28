@@ -8,6 +8,7 @@ const Messages = () => {
   const { room_id, type_chat } = contact;
   console.log(type_chat);
   var messages: any = [];
+
   if (type_chat === "individual") {
     // console.log("individual");
     const { current_messages } = useAppSelector(
@@ -26,14 +27,14 @@ const Messages = () => {
       {/* <ScrollBar> */}
       <Stack spacing={2}>
         {messages.map((el: any, index: number) => {
-          // console.log(el)
+          console.log(el)
           switch (el.type) {
             case "divider":
               return <Timeline key={index} el={el} />;
             case "msg":
               switch (el.subtype) {
                 default:
-                  return <TextMsg key={index} el={el} />;
+                  return <TextMsg key={index} el={el} type={type_chat}/>;
               }
               break;
             default:

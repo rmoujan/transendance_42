@@ -3,10 +3,10 @@ import { Button, Stack } from "@mui/material";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { showSnackbar, toggleDialog } from "../../../redux/slices/contact";
+import { resetContact, showSnackbar, toggleDialog } from "../../../redux/slices/contact";
 import { useAppDispatch } from "../../../redux/store/store";
 import FormProvider from "../../hook-form/FormProvider";
-import { FetchChannels } from "../../../redux/slices/channels";
+import { FetchChannels, FetchPrivatesChannels, FetchProtectedChannels, FetchPublicChannels } from "../../../redux/slices/channels";
 
 const RemovePassword = ({ handleClose, el, user_id }: any) => {
   const dispatch = useAppDispatch();
@@ -24,7 +24,6 @@ const RemovePassword = ({ handleClose, el, user_id }: any) => {
     //   console.log(user_id);
       data.id_channel = el.id_channel;
       data.user_id = user_id;
-      console.log(data);
       await axios.post("http://localhost:3000/channels/removePass", data, {
         withCredentials: true,
       });
@@ -34,9 +33,12 @@ const RemovePassword = ({ handleClose, el, user_id }: any) => {
           message: "You upgrated to Protected channel",
         })
       );
-      handleClose();
-      dispatch(toggleDialog())
-      dispatch(FetchChannels())
+      dispatch(toggleDialog());
+      dispatch(FetchChannels());
+      dispatch(FetchProtectedChannels());
+      dispatch(FetchPublicChannels());
+      dispatch(FetchPrivatesChannels());
+      dispatch(resetContact());
     } catch (err) {
       console.error(err);
       reset();

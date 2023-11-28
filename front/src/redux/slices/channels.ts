@@ -187,14 +187,14 @@ export function FetchPublicChannels() {
 export function FetchPrivatesChannels() {
   return async (dispatch: any) => {
     await axios
-      .get("http://localhost:3000/channels/allPrivate", {
+      .get("http://localhost:3000/channels/allprivate", {
         withCredentials: true, headers: {
           "Content-Type": "application/json",
         },
       })
       .then((res) => {
         console.log(res.data);
-        dispatch(ChannelsSlice.actions.fetchPublicChannels(res.data));
+        dispatch(ChannelsSlice.actions.fetchPrivateChannels(res.data));
       })
       .catch((err) => console.log(err));
   };
