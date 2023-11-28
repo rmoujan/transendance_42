@@ -36,7 +36,7 @@ interface JoinProtectedFormData {
 
 const JoinProtectedForm = ({ handleClose }: any) => {
   const { protectedChannels, channels } = useAppSelector(
-    state => state.channels
+    (state) => state.channels
   );
 
   const dispatch = useAppDispatch();
@@ -132,7 +132,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
 
   return (
     <form
-      onSubmit={handleSubmit(data =>
+      onSubmit={handleSubmit((data) =>
         onSubmit({ ...data, mySelect: selectedOption })
       )}
     >
@@ -176,7 +176,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
                       justifyContent={"space-around"}
                     >
                       <Avatar
-                        src={faker.image.avatar()}
+                        src={option.image}
                         sx={{ width: 52, height: 52, marginRight: 2 }}
                       />
                       <Typography variant="subtitle2" color={"black"}>

@@ -44,16 +44,19 @@ const InfosChannel = () => {
   useEffect(() => {
     let selectedChannel: any;
     if (contact.type_chat === "public") {
+      console.log("public");
       selectedChannel = channels.publicChannels.find((channel: any) => {
         return channel?.id_channel === contact.room_id;
       });
     }
     if (contact.type_chat === "protected") {
+      console.log("protected");
       selectedChannel = channels.protectedChannels.find(
         (channel: any) => channel?.id_channel === contact.room_id
       );
     }
     if (contact.type_chat === "private") {
+      console.log("private");
       selectedChannel = channels.privateChannels.find(
         (channel: any) => channel?.id_channel === contact.room_id
       );

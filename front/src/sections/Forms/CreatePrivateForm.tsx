@@ -10,9 +10,11 @@ import { RHFUploadAvatar } from "../../components/hook-form/RHFUploadAvatar";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { FetchChannels } from "../../redux/slices/channels";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const CreatePrivateForm = ({ handleClose }: any) => {
   const { friends } = useAppSelector((state) => state.app);
+  const [isLoading, setIsLoading] = React.useState(false);
   const [file, setFile] = React.useState<any>();
   const dispatch = useAppDispatch();
   const PrivateSchema = Yup.object().shape({
@@ -43,6 +45,7 @@ const CreatePrivateForm = ({ handleClose }: any) => {
 
   const onSubmit = async (data: any) => {
     try {
+      setIsLoading(true);
       const formData = new FormData();
       formData.append("file", file);
       const dataAvatar: any = await axios.patch(
@@ -92,6 +95,8 @@ const CreatePrivateForm = ({ handleClose }: any) => {
       );
       reset();
       handleClose();
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -151,7 +156,8 @@ const CreatePrivateForm = ({ handleClose }: any) => {
             Cancel
           </Button>
 
-          <Button
+          <LoadingButton
+            loading={isLoading}
             sx={{
               backgroundColor: "#3D3C65", // Change the background color to purple 3D3C65
               color: "#f78562", // Change the text color to white
@@ -168,7 +174,7 @@ const CreatePrivateForm = ({ handleClose }: any) => {
             variant="contained"
           >
             Create Channel
-          </Button>
+          </LoadingButton>
         </Stack>
       </Stack>
     </FormProvider>
