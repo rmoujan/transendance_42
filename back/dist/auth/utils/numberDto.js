@@ -19,4 +19,4 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", Number)
 ], NumberDto.prototype, "id_user", void 0);
-//# sourceMappingURL=NumberDto.js.map
+//# sourceMappingURL=numberDto.js.map

@@ -19,7 +19,7 @@ const passport_1 = require("@nestjs/passport");
 const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
 const JwtGuard_1 = require("../auth/jwt/JwtGuard");
 const prisma_service_1 = require("../prisma.service");
-const NumberDto_1 = require("./utils/NumberDto");
+const numberDto_1 = require("./utils/numberDto");
 const NumberDtoO_1 = require("./utils/NumberDtoO");
 let AuthController = class AuthController {
     constructor(service, jwt, prisma) {
@@ -264,7 +264,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [NumberDto_1.NumberDto, Object]),
+    __metadata("design:paramtypes", [numberDto_1.NumberDto, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "Verify_QrCode", null);
 __decorate([

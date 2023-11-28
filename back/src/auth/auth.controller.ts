@@ -16,7 +16,7 @@ import { JwtAuthGuard } from "../auth/jwt/JwtGuard";
 import { PrismaService } from "src/prisma.service";
 import { authenticator } from "otplib";
 import * as qrcode from "qrcode";
-import { NumberDto } from "./utils/NumberDto";
+import { NumberDto } from "./utils/numberDto";
 import { NumberDtoO } from "./utils/NumberDtoO";
 
 @Controller("auth")
