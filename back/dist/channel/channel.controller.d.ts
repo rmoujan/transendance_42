@@ -1,6 +1,6 @@
-import { ChannelsService } from './channel.service';
-import { UsersService } from '../users/users.service';
-import { JwtService } from '../auth/jwt/jwtservice.service';
+import { ChannelsService } from "./channel.service";
+import { UsersService } from "../users/users.service";
+import { JwtService } from "../auth/jwt/jwtservice.service";
 export declare class ChannelsController {
     private jwt;
     private readonly channelsService;
@@ -40,6 +40,7 @@ export declare class ChannelsController {
                 id_user: number;
                 name: string;
                 avatar: string;
+                GameFlag: number;
                 TwoFactor: boolean;
                 ISVERIDIED: boolean;
                 IsFirstTime: boolean;
@@ -83,6 +84,7 @@ export declare class ChannelsController {
                 id_user: number;
                 name: string;
                 avatar: string;
+                GameFlag: number;
                 TwoFactor: boolean;
                 ISVERIDIED: boolean;
                 IsFirstTime: boolean;

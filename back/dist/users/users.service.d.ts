@@ -6,6 +6,7 @@ export declare class UsersService {
         id_user: number;
         name: string;
         avatar: string;
+        GameFlag: number;
         TwoFactor: boolean;
         ISVERIDIED: boolean;
         IsFirstTime: boolean;
@@ -30,6 +31,7 @@ export declare class UsersService {
         id_user: number;
         name: string;
         avatar: string;
+        GameFlag: number;
         TwoFactor: boolean;
         ISVERIDIED: boolean;
         IsFirstTime: boolean;
@@ -54,6 +56,7 @@ export declare class UsersService {
         id_user: number;
         name: string;
         avatar: string;
+        GameFlag: number;
         TwoFactor: boolean;
         ISVERIDIED: boolean;
         IsFirstTime: boolean;

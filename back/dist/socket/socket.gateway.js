@@ -30,7 +30,6 @@ let SocketGateway = class SocketGateway {
         cookieHeader = client.handshake.headers.cookie;
         if (cookieHeader == undefined)
             return null;
-        console.log(cookieHeader);
         const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
             const [name, value] = cookie.trim().split("=");
             acc[name] = value;
@@ -82,7 +81,6 @@ let SocketGateway = class SocketGateway {
         this.server.emit("online", { id_user: decoded.id });
     }
     async handleUserOffline(client) {
-        console.log("offliiiiine");
         const decoded = this.decodeCookie(client);
         if (decoded == null)
             return;
@@ -97,16 +95,13 @@ let SocketGateway = class SocketGateway {
         this.server.emit("list-friends");
     }
     handleMessage(body) {
-        console.log(body);
         return "Hello world!";
     }
     async invite_game(client, body) {
         const decoded = this.decodeCookie(client);
-        console.log("inviiiiite to play");
         const data = await this.prisma.user.findUnique({
             where: { id_user: decoded.id },
         });
-        console.log("in game ", data.InGame);
         const notify = await this.prisma.notification.findFirst({
             where: { userId: body.id_user, id_user: decoded.id },
         });
@@ -126,9 +121,7 @@ let SocketGateway = class SocketGateway {
                         },
                     },
                 });
-                console.log("bodyyyyy ", body);
                 const sock = this.SocketContainer.get(body.id_user);
-                console.log("sooock ", sock);
                 this.server.to(sock).emit("notification");
             }
         }
@@ -161,17 +154,14 @@ let SocketGateway = class SocketGateway {
         this.server.to(sock).emit("notification");
     }
     async NewFriend(client, body) {
-        console.log(body);
         const decoded = this.decodeCookie(client);
         const sockrecv = this.SocketContainer.get(decoded.id);
-        console.log("right bar gatway ", body);
         const socksend = this.SocketContainer.get(body);
         this.server.to(sockrecv).emit("RefreshFriends");
         this.server.to(socksend).emit("RefreshFriends");
     }
     async friends_list(client, body) {
         const decoded = this.decodeCookie(client);
-        console.log("friends list : ", body);
         const sockrecv = this.SocketContainer.get(decoded.id);
         const socksend = this.SocketContainer.get(body);
         this.server.to(sockrecv).emit("list-friends");

@@ -156,6 +156,7 @@ const Otpinput: FC<Props> = (props): JSX.Element => {
         console.error("Error:", error);
         setLoding(false);
       });
+      axios.post("http://localhost:3000/profile/verifyOtp", {verify: true}, {withCredentials: true});
     // setLoding(true);
     // setTimeout(()=>{
     //   setLoding(false);

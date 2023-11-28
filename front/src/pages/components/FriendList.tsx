@@ -227,16 +227,16 @@ function FriendList() {
     if (socket_user) socket_user.emit("add-friend", { id_user });
     // axios.post("http://localhost:3000/auth/add-friends", { id_user }, { withCredentials: true });
     // setFriend(friend.filter((user) => user.id_user !== id_user));
-    Modal.confirm({
-      title: "Are you sure, you want to add this friend?",
-      okText: "Yes",
-      okType: "danger",
-      className: " flex justify-center items-center h-100vh",
-      onOk: () => {
-        const updatedUsers = friend.filter(user => user.id_user !== id_user);
-        setFriend(updatedUsers);
-      },
-    });
+    // Modal.confirm({
+    //   title: "Are you sure, you want to add this friend?",
+    //   okText: "Yes",
+    //   okType: "danger",
+    //   className: " flex justify-center items-center h-100vh",
+    //   onOk: () => {
+    //   },
+    // });
+    const updatedUsers = friend.filter(user => user.id_user !== id_user);
+    setFriend(updatedUsers);
   }
   // const handleProfileClick = (friend: number) => {
   //   // Update selectedFriend with the clicked friend's information

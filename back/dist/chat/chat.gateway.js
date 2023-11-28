@@ -39,7 +39,6 @@ let ChatGateway = class ChatGateway {
         cookieHeader = client.handshake.headers.cookie;
         if (cookieHeader == undefined)
             return null;
-        console.log(cookieHeader);
         const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
             const [name, value] = cookie.trim().split("=");
             acc[name] = value;
@@ -441,7 +440,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "unmuteUser", null);
 exports.ChatGateway = ChatGateway = __decorate([
-    (0, websockets_1.WebSocketGateway)({ cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } }),
+    (0, websockets_1.WebSocketGateway)({ namespace: "chat", cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } }),
     __metadata("design:paramtypes", [jwtservice_service_1.JwtService, chat_service_1.ChatService, users_service_1.UsersService, channel_service_1.ChannelsService])
 ], ChatGateway);
 //# sourceMappingURL=chat.gateway.js.map

@@ -71,6 +71,7 @@ let AuthService = class AuthService {
                     invited: false,
                     homie_id: 0,
                     ISVERIDIED: false,
+                    GameFlag: 0,
                 },
             });
             return obj;
@@ -105,8 +106,9 @@ let AuthService = class AuthService {
         const user = await this.prisma.user.findUnique({
             where: { id_user: decoded.id },
         });
-        if (otplib_1.authenticator.verify({ token: body.inputValue, secret: user.secretKey }))
+        if (otplib_1.authenticator.verify({ token: body.inputValue, secret: user.secretKey })) {
             return { msg: "true" };
+        }
         else
             return { msg: "false" };
     }

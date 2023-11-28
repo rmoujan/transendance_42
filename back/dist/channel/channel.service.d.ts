@@ -12,6 +12,7 @@ export declare class ChannelsService {
                 id_user: number;
                 name: string;
                 avatar: string;
+                GameFlag: number;
                 TwoFactor: boolean;
                 ISVERIDIED: boolean;
                 IsFirstTime: boolean;
@@ -52,6 +53,7 @@ export declare class ChannelsService {
                 id_user: number;
                 name: string;
                 avatar: string;
+                GameFlag: number;
                 TwoFactor: boolean;
                 ISVERIDIED: boolean;
                 IsFirstTime: boolean;

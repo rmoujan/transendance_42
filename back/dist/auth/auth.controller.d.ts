@@ -1,7 +1,8 @@
 import { AuthService } from "./auth.service";
 import { JwtService } from "../auth/jwt/jwtservice.service";
 import { PrismaService } from "src/prisma.service";
-import { NumberDto } from "./utils/NumberDto";
+import { NumberDto } from "./utils/numberDto";
+import { NumberDtoO } from "./utils/NumberDtoO";
 export declare class AuthController {
     private service;
     private jwt;
@@ -12,10 +13,10 @@ export declare class AuthController {
     getSessionToken(req: any): string;
     GenerateQrCode(req: any): Promise<any>;
     Verify_QrCode(body: NumberDto, req: any): Promise<string>;
-    Insert_Friends(body: NumberDto, req: any): Promise<void>;
-    Remove_friends(Body: NumberDto, req: any): Promise<void>;
-    Block_friends(Body: NumberDto, req: any): Promise<void>;
-    DeBlock_friends(Body: NumberDto, req: any): Promise<void>;
+    Insert_Friends(body: NumberDtoO, req: any): Promise<void>;
+    Remove_friends(Body: NumberDtoO, req: any): Promise<void>;
+    Block_friends(Body: NumberDtoO, req: any): Promise<void>;
+    DeBlock_friends(Body: NumberDtoO, req: any): Promise<void>;
     Get_FriendsList(req: any): Promise<{
         FriendList: {};
     }>;
@@ -25,6 +26,7 @@ export declare class AuthController {
         id_user: number;
         name: string;
         avatar: string;
+        GameFlag: number;
         TwoFactor: boolean;
         ISVERIDIED: boolean;
         IsFirstTime: boolean;

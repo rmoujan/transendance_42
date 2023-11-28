@@ -127,6 +127,10 @@ const TwoFactor = () => {
           axios.post(backURL, twoFactor, {
             withCredentials: true,
           });
+          // window.location.href = "/Authentication";
+          setTimeout(() => {
+            window.location.href = "/Authentication";
+          }, 1000);
         } else {
           // message error with html code
           console.log("error");

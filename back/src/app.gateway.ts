@@ -57,21 +57,16 @@ export class AppGateway
 
   async handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
-    // const userId: number = this.decodeCookie(client).id;
-    // const decoded = this.decodeCookie(client);
-    // const user = await this.prisma.user.findUnique({
-    // 	where:{id_user: decoded.id},
-    // });
-    // if (this.users.has(userId)) {
-    // 	client.disconnect();
-    // }
-    const decoded = this.decodeCookie(client);
-    const user = await this.prisma.user.findUnique({
-      where: { id_user: decoded.id },
-    });
-    if (user.InGame === true) {
-      client.disconnect();
+    try {
+      const decoded = this.decodeCookie(client);
+      const user = await this.prisma.user.findUnique({
+        where: { id_user: decoded.id },
+      });
+      if (user.InGame === true) {
+        client.disconnect();
+      }
     }
+    catch(error){}
   }
 
   async handleDisconnect(client: Socket) {
@@ -107,7 +102,6 @@ export class AppGateway
 
   @SubscribeMessage("join-friends-room")
   async handleJoinFriendsRoom(client: Socket, data: any) {
-    // console.log("Motherfuckers");
     const userId: number = this.decodeCookie(client).id;
     if (!this.users.has(userId)) {
       this.users.set(userId, client.id);
@@ -569,8 +563,8 @@ export class AppGateway
         room.roomBall.y += room.roomBall.velocityY;
 
         if (
-          room.roomBall.y + room.roomBall.r > 644 ||
-          room.roomBall.y + room.roomBall.r < 10
+          room.roomBall.y + room.roomBall.r >= 644 ||
+          room.roomBall.y - room.roomBall.r <= 0
         ) {
           room.roomBall.velocityY *= -1;
         }

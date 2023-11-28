@@ -22,6 +22,7 @@ export declare class ProfileController {
         id_user: number;
         name: string;
         avatar: string;
+        GameFlag: number;
         TwoFactor: boolean;
         ISVERIDIED: boolean;
         IsFirstTime: boolean;
@@ -57,6 +58,7 @@ export declare class ProfileController {
         id_user: number;
         name: string;
         avatar: string;
+        GameFlag: number;
         TwoFactor: boolean;
         ISVERIDIED: boolean;
         IsFirstTime: boolean;
@@ -105,4 +107,13 @@ export declare class ProfileController {
     }>;
     Logout(req: any, res: any): Promise<void>;
     deletecookie(res: any): void;
+    verify_Otp(body: any, req: any): Promise<void>;
+    Get_Otp(req: any): Promise<{
+        verified: boolean;
+        TFA: boolean;
+    }>;
+    GameFlag(req: any, body: any): Promise<void>;
+    GetFalg(req: any): Promise<{
+        flag: number;
+    }>;
 }

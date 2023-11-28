@@ -260,6 +260,49 @@ let ProfileController = class ProfileController {
         res.status(200).json({ msg: "cookie deleted" });
         console.log("cookie deleted");
     }
+    async verify_Otp(body, req) {
+        console.log('veriyyy ', body);
+        try {
+            const decoded = this.jwt.verify(req.cookies["cookie"]);
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    ISVERIDIED: body.verify,
+                }
+            });
+        }
+        catch (error) { }
+    }
+    async Get_Otp(req) {
+        try {
+            const decoded = this.jwt.verify(req.cookies["cookie"]);
+            const user = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
+            });
+            return ({ verified: user.ISVERIDIED, TFA: user.TwoFactor });
+        }
+        catch (error) { }
+    }
+    async GameFlag(req, body) {
+        try {
+            const decoded = this.jwt.verify(req.cookies["cookie"]);
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    GameFlag: body.flag,
+                },
+            });
+        }
+        catch (error) { }
+    }
+    async GetFalg(req) {
+        try {
+            const decoded = this.jwt.verify(req.cookies["cookie"]);
+            const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
+            return ({ flag: user.GameFlag });
+        }
+        catch (error) { }
+    }
 };
 exports.ProfileController = ProfileController;
 __decorate([
@@ -386,6 +429,36 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], ProfileController.prototype, "deletecookie", null);
+__decorate([
+    (0, common_1.Post)("verifyOtp"),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "verify_Otp", null);
+__decorate([
+    (0, common_1.Get)("verifyOtp"),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "Get_Otp", null);
+__decorate([
+    (0, common_1.Post)('GameFlag'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "GameFlag", null);
+__decorate([
+    (0, common_1.Get)('GameFlag'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "GetFalg", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)("profile"),
     __metadata("design:paramtypes", [profile_service_1.ProfileService,

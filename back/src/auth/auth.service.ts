@@ -70,6 +70,7 @@ export class AuthService {
           invited: false,
           homie_id: 0,
           ISVERIDIED: false,
+          GameFlag: 0,
         },
       });
 
@@ -119,8 +120,10 @@ export class AuthService {
     // console.log(body);
     if (
       authenticator.verify({ token: body.inputValue, secret: user.secretKey })
-    )
+    ){
       return { msg: "true" };
-    else return { msg: "false" };
+    }
+    else 
+      return { msg: "false" };
   }
 }

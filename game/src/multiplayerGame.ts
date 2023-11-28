@@ -67,6 +67,21 @@ class MyMultiplayerGame {
 	};
 
 	async startMultiplayerGame(): Promise<void> {
+		const outcome = await axios.get("http://localhost:3000/profile/GameFlag", {
+			withCredentials: true,});
+		if (outcome.data.flag === 2) {
+			this.socket = io("http://localhost:3000", {
+				transports: ["websocket"],
+				withCredentials: true,
+			});
+
+			this.socket.on("connect", () => {
+				console.log(`You connected to the server with id : ${this.socket.id}`);
+			});
+			this.initSocketListeners();
+			axios.post("http://localhost:3000/profile/GameFlag", {flag:0}, {
+				withCredentials: true,});
+		}
 		let flag = false;
 		const data = await axios.get('http://localhost:3000/profile/returngameinfos',  { withCredentials: true });
 		for (const button of this.buttons) {

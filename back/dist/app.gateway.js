@@ -44,13 +44,16 @@ let AppGateway = class AppGateway {
     }
     async handleConnection(client, ...args) {
         this.logger.log(`Client connected: ${client.id}`);
-        const decoded = this.decodeCookie(client);
-        const user = await this.prisma.user.findUnique({
-            where: { id_user: decoded.id },
-        });
-        if (user.InGame === true) {
-            client.disconnect();
+        try {
+            const decoded = this.decodeCookie(client);
+            const user = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
+            });
+            if (user.InGame === true) {
+                client.disconnect();
+            }
         }
+        catch (error) { }
     }
     async handleDisconnect(client) {
         const room = this.findRoomBySocketId(client.id);
@@ -509,8 +512,8 @@ let AppGateway = class AppGateway {
             if (!this.isPaused) {
                 room.roomBall.x += room.roomBall.velocityX;
                 room.roomBall.y += room.roomBall.velocityY;
-                if (room.roomBall.y + room.roomBall.r > 644 ||
-                    room.roomBall.y + room.roomBall.r < 10) {
+                if (room.roomBall.y + room.roomBall.r >= 644 ||
+                    room.roomBall.y - room.roomBall.r <= 0) {
                     room.roomBall.velocityY *= -1;
                 }
                 let player = room.roomBall.x < 1088 / 2
