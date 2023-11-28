@@ -13,7 +13,7 @@ const StyledChatBox = styled(Box)(() => ({
 }));
 
 const AllElements = (el: any) => {
-  const { contact, profile } = useAppSelector(state => state);
+  const { contact, profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const selected_id = el.room_id;
   const selectedChatId = contact.room_id;
@@ -86,7 +86,11 @@ const AllElements = (el: any) => {
               color={"white"}
               sx={{ fontWeight: 400 }}
             >
-              {el.msg}
+              {el.msg
+                ? el.msg.length > 25
+                  ? el.msg.substring(0, 25) + "..."
+                  : el.msg
+                : "There is no message yet"}
             </Typography>
           </Stack>
         </Stack>

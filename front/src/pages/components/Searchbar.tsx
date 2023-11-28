@@ -78,6 +78,13 @@ function Searchbar() {
       window.location.href = "/login";
       console.log("false");
     }
+    const obj = await axios.get("http://localhost:3000/profile/verifyOtp", {
+      withCredentials: true,
+    })
+    if (obj.data.TFA == true && obj.data.verified == false){
+      window.location.href = "/Authentication";
+    }
+    console.log('oooobjjjj  >> ', obj);
     //protection of notificaton
     const notif = await axios.get(
       "http://localhost:3000/profile/Notifications",

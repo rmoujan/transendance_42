@@ -65,13 +65,16 @@ export class AppGateway
     // if (this.users.has(userId)) {
     // 	client.disconnect();
     // }
-    const decoded = this.decodeCookie(client);
-    const user = await this.prisma.user.findUnique({
-      where: { id_user: decoded.id },
-    });
-    if (user.InGame === true) {
-      client.disconnect();
+    try {
+      const decoded = this.decodeCookie(client);
+      const user = await this.prisma.user.findUnique({
+        where: { id_user: decoded.id },
+      });
+      if (user.InGame === true) {
+        client.disconnect();
+      }
     }
+    catch(error){}
   }
 
   async handleDisconnect(client: Socket) {

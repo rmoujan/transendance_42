@@ -1,6 +1,6 @@
 import { Popover, Transition } from "@headlessui/react";
 import axios from "axios";
-import { ChangeEvent, Fragment, KeyboardEvent, useRef, useState } from "react";
+import { ChangeEvent, Fragment, KeyboardEvent, useRef, useState ,useEffect  } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../redux/store/store";
 import { socket_user } from "../../socket";
@@ -26,8 +26,20 @@ type AccountOwnerProps = {
   user: User[];
 };
 function Friends({ user }: AccountOwnerProps) {
-  const { friends } = useAppSelector(state => state.app);
-  console.log("friends");
+  // const { friends } = useAppSelector(state => state.app);
+  // const friends = await axios.get("http://localhost:3000/auth/friends", {
+  //   withCredentials: true,
+  // });
+  useEffect(() => {
+    const fetchData = async () => {
+      const {data}  = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true });
+      setFriend(data);
+      console.log('daaaata : ', data);
+    };
+    fetchData();
+  }
+    , []);
+  const [friends, setFriend] = useState<User[]>([]);  console.log("friends");
   console.log(friends);
   // const [friends, setFriends] = useState<User[]>([]);
   const [selectedFriend, setSelectedFriend] = useState<User | null>(null);

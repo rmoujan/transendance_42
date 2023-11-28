@@ -14,7 +14,7 @@ import NoChat from "../../sections/NoChat";
 import ChatTabs from "./ChatTabs";
 
 const ChatGeneral: React.FC = () => {
-  const { contact, profile } = useAppSelector(state => state);
+  const { contact, profile, app } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

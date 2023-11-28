@@ -1,7 +1,7 @@
 import { IsNumber, IsNotEmpty, IsString } from "class-validator";
 
-export class NumberDto {
+export class NumberDtoO {
   @IsNotEmpty()
-  @IsString()
+  @IsNumber()
   readonly id_user: number;
 }

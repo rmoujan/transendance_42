@@ -9,14 +9,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.NumberDto = void 0;
+exports.NumberDtoO = void 0;
 const class_validator_1 = require("class-validator");
-class NumberDto {
+class NumberDtoO {
 }
-exports.NumberDto = NumberDto;
+exports.NumberDtoO = NumberDtoO;
 __decorate([
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
-], NumberDto.prototype, "id_user", void 0);
-//# sourceMappingURL=NumberDto.js.map
+], NumberDtoO.prototype, "id_user", void 0);
+//# sourceMappingURL=NumberDtoO.js.map

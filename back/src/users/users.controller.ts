@@ -47,6 +47,7 @@ export class UsersController {
       try {
           const rest = await this.cloudinaryService.uploadImage(file);
             const avatarUrl = rest.secure_url;
+            console.log("avatarUrl: ", avatarUrl)
           return avatarUrl;
         } catch (error) {
             console.log("error in uploading: ", error)

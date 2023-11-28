@@ -31,7 +31,7 @@ const StyledChatBox = styled(Box)(() => ({
 }));
 
 const ChatElements = (id: IdType) => {
-  const { contact, profile } = useAppSelector(state => state);
+  const { contact, profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   let selected_id: number = 0;
   const selectedChatId = contact.room_id;
@@ -111,7 +111,11 @@ const ChatElements = (id: IdType) => {
               color={"white"}
               sx={{ fontWeight: 400 }}
             >
-              {id.msg}
+              {id.msg
+                ? id.msg.length > 25
+                  ? id.msg.substring(0, 25) + "..."
+                  : id.msg
+                : "There is no message yet"}
             </Typography>
           </Stack>
         </Stack>

@@ -20,6 +20,7 @@ const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
 const JwtGuard_1 = require("../auth/jwt/JwtGuard");
 const prisma_service_1 = require("../prisma.service");
 const NumberDto_1 = require("./utils/NumberDto");
+const NumberDtoO_1 = require("./utils/NumberDtoO");
 let AuthController = class AuthController {
     constructor(service, jwt, prisma) {
         this.service = service;
@@ -271,7 +272,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [NumberDto_1.NumberDto, Object]),
+    __metadata("design:paramtypes", [NumberDtoO_1.NumberDtoO, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "Insert_Friends", null);
 __decorate([
@@ -279,7 +280,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [NumberDto_1.NumberDto, Object]),
+    __metadata("design:paramtypes", [NumberDtoO_1.NumberDtoO, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "Remove_friends", null);
 __decorate([
@@ -287,7 +288,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [NumberDto_1.NumberDto, Object]),
+    __metadata("design:paramtypes", [NumberDtoO_1.NumberDtoO, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "Block_friends", null);
 __decorate([
@@ -295,7 +296,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [NumberDto_1.NumberDto, Object]),
+    __metadata("design:paramtypes", [NumberDtoO_1.NumberDtoO, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "DeBlock_friends", null);
 __decorate([
