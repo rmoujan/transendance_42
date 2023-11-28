@@ -3,6 +3,7 @@ import { styled } from "@mui/system";
 import { Keyhole, LockSimple } from "@phosphor-icons/react";
 import { useEffect } from "react";
 import {
+  FetchChannels,
   setCurrentChannel,
   setEmptyChannel,
   updateChannelsMessages,
@@ -76,10 +77,11 @@ const ChannelElements = (id: IdType) => {
     };
 
     const handleChatToGroup = (data: any) => {
-      // console.log("chat data", data);
+      console.log("chat data", data);
       dispatch(
         updateChannelsMessages({ messages: data, user_id: profile._id })
       );
+      dispatch(FetchChannels())
     };
 
     // console.log("selected_id", selected_id, typeof selected_id);

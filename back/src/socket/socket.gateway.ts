@@ -208,7 +208,9 @@ export class SocketGateway
     // console.log("right bar gatway ", body);
     const socksend = this.SocketContainer.get(body);
     this.server.to(sockrecv).emit("RefreshFriends");
+    this.server.to(sockrecv).emit("friendsUpdateChat");
     this.server.to(socksend).emit("RefreshFriends");
+    this.server.to(socksend).emit("friendsUpdateChat");
   }
 
   @SubscribeMessage("friends-list")
@@ -219,6 +221,10 @@ export class SocketGateway
     const sockrecv = this.SocketContainer.get(decoded.id);
     const socksend = this.SocketContainer.get(body);
     this.server.to(sockrecv).emit("list-friends");
+    this.server.to(sockrecv).emit("friendsUpdateChat");
+
     this.server.to(socksend).emit("list-friends");
+    this.server.to(socksend).emit("friendsUpdateChat");
+
   }
 }

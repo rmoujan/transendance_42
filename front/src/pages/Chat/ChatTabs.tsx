@@ -6,15 +6,15 @@ import { useTheme } from "@mui/system";
 import { User } from "@phosphor-icons/react";
 import clsx from "clsx";
 import * as React from "react";
+import { FetchFriends } from "../../redux/slices/app";
 import { fetchConverstations } from "../../redux/slices/converstation";
+import { FetchProfile } from "../../redux/slices/profile";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import All from "../../sections/All";
 import Channels from "../../sections/Channels";
 import Friends from "../../sections/Friends";
 import Privates from "../../sections/Private";
-import { socket } from "../../socket";
-import { FetchFriends } from "../../redux/slices/app";
-import { FetchProfile } from "../../redux/slices/profile";
+import { socket, socket_user } from "../../socket";
 
 const resolveSlotProps = (fn: unknown, args: unknown) =>
   typeof fn === "function" ? fn(args) : fn;
@@ -61,12 +61,13 @@ const ChatTabs = () => {
   const dispatch = useAppDispatch();
 
   // !!! fetch all conversations with user_is
-  const { profile, contact } = useAppSelector(state => state);
-  const { friends } = useAppSelector(state => state.app);
+  const { profile, contact } = useAppSelector((state) => state);
+  const { friends } = useAppSelector((state) => state.app);
   React.useEffect(() => {
-    if (!friends) {
-      console.log("hey");
-      dispatch(FetchFriends());
+    if (socket_user) {
+      socket_user.on("friendsUpdateChat", (data: any) => {
+        dispatch(FetchFriends());
+      });
     }
     if (!profile._id) {
       dispatch(FetchProfile());
@@ -121,7 +122,7 @@ const Tab = React.forwardRef<HTMLButtonElement, TabProps>((props, ref) => {
       {...props}
       slotProps={{
         ...props.slotProps,
-        root: ownerState => {
+        root: (ownerState) => {
           const resolvedSlotProps = resolveSlotProps(
             props.slotProps?.root,
             ownerState

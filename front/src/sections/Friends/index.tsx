@@ -32,16 +32,16 @@ const Friends = () => {
     setSearchQuery(event.target.value);
   };
 
-  if (socket_user)
-  
-  useEffect(() => {
 
-    console.log('hekk');
-    dispatch(resetFriends());
-    dispatch(FetchFriends());
-    // const listFriends = useAppSelector((state) => state.app.friends)
-    // console.log(listFriends)
-  }, [socket_user]);
+  // useEffect(() => {
+
+  //   console.log('hekk');
+  //   dispatch(resetFriends());
+  //   dispatch(FetchFriends());
+  //   // const listFriends = useAppSelector((state) => state.app.friends)
+  //   // console.log(listFriends)
+  // }, [socket_user]);
+  
 
   const friendsToDisplay = searchQuery ? filteredFriends : friends;
 
