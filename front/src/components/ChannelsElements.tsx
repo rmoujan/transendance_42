@@ -63,44 +63,28 @@ const ChannelElements = (id: IdType) => {
 
   useEffect(() => {
     const handleHistoryChannel = (data: any) => {
-      // console.log("handleHistoryChannel");
-      // console.log(data);
-      // console.log('***********************')
       if (data.length == 0) {
-        console.log("new ones");
         dispatch(setEmptyChannel());
       } else {
-        console.log("old ones");
         console.log(profile._id);
         dispatch(setCurrentChannel({ messages: data, user_id: profile._id }));
       }
     };
 
     const handleChatToGroup = (data: any) => {
-      console.log("chat data", data);
       dispatch(
         updateChannelsMessages({ messages: data, user_id: profile._id })
       );
       dispatch(FetchChannels())
     };
 
-    // console.log("selected_id", selected_id, typeof selected_id);
-    // console.log("contact.room_id", contact.room_id, typeof contact.room_id);
-    // console.log("profile._id", profile._id, typeof profile._id);
     if (parseInt(selected_id) === contact.room_id) {
-      // console.log("emit allMessagesRoom");
       socket.emit("allMessagesRoom", { id: selected_id, user_id: profile._id });
-      // console.log("emit allMessagesRoom");
-
-      // Subscribe to hostoryChannel only once when the component mounts
       socket.once("hostoryChannel", handleHistoryChannel);
-
-      // Subscribe to chatToGroup every time a new message is added
       socket.on("chatToGroup", handleChatToGroup);
     }
 
     return () => {
-      // Unsubscribe from the events when the component unmounts
       socket.off("hostoryChannel", handleHistoryChannel);
       socket.off("chatToGroup", handleChatToGroup);
     };
