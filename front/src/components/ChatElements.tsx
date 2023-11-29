@@ -10,7 +10,13 @@ import { useAppDispatch, useAppSelector } from "../redux/store/store";
 import { socket } from "../socket";
 import StyledBadge from "./StyledBadge";
 
-interface IdType {
+
+/**
+ * 
+ * 
+ * Type '{ room_id: string | null; id: string | null; user_id: string | null; name: string | null; online: boolean; img: string | null; msg: string | null; time: string | null; unread: number | null; pinned: boolean; key: number; }'
+ */
+export interface IdType {
   id: number;
   user_id?: number | undefined;
   room_id: number;

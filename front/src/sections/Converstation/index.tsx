@@ -6,8 +6,7 @@ import Messages from "../../components/converstation/Messages";
 import {
   addNewConversation,
   fetchCurrentMessages,
-  updateUnread,
-  updatedConverstation,
+  updatedConverstation
 } from "../../redux/slices/converstation";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { socket } from "../../socket";
@@ -25,14 +24,7 @@ const Converstation = () => {
     messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
 
     const handleChatToDm = (data: any) => {
-      // console.log(data);
-
-      // console.log(conversations);
-      // console.log(current_messages);
-
       const now = new Date();
-      // console.log(conversations);
-
       const newDataConversation = {
         room_id: data.id,
         id: data.recieve,
@@ -47,17 +39,10 @@ const Converstation = () => {
       const existingConversation = conversations.find(
         el => el.room_id === data.id
       );
-      // console.log(existingConversation);
       if (!existingConversation) {
-        // console.log(data);
-        // console.log(newDataConversation);
-        // newDataConversation.unread = 1;
         dispatch(addNewConversation(newDataConversation));
-        // dispatch(updateUnread(data));
       } else {
-        // console.log(data);
         dispatch(updatedConverstation(newDataConversation));
-        // dispatch(updateUnread(data));
       }
       dispatch(
         fetchCurrentMessages({

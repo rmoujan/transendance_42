@@ -16,7 +16,7 @@ import {
   UserPlus,
 } from "@phosphor-icons/react";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { socket } from "../../socket";
+import { socket, socket_user } from "../../socket";
 import axios from "axios";
 import {
   FetchChannels,
@@ -29,6 +29,7 @@ import {
   showSnackbar,
   toggleDialog,
 } from "../../redux/slices/contact";
+import { FetchFriends } from "../../redux/slices/app";
 
 const MembersSettings = (el: any) => {
   const { _id } = useAppSelector((state) => state.profile);
@@ -62,7 +63,17 @@ const MembersSettings = (el: any) => {
   const friendRequest = () => {
     console.log("friend request");
     // ! emit "friend_request" event
-
+    const id_user = el.el.userId; 
+    socket_user.emit("add-friend", { id_user });
+    dispatch(FetchFriends());
+    dispatch(toggleDialog());
+    dispatch(resetContact());
+    dispatch(
+      showSnackbar({
+        severity: "success",
+        message: `${el.el.user.name} has been deleted`,
+      })
+    );
     // socket.emit("friend_request", { to: _id, from: user_id });
     // dispatch(updatedContactInfo({ friend_request: true }));
   };
@@ -85,14 +96,14 @@ const MembersSettings = (el: any) => {
       dispatch(
         showSnackbar({
           severity: "success",
-          message: `You have make ${el.name} admin successfully`,
+          message: `You have make ${el.el.user.name} admin successfully`,
         })
       );
     } else {
       dispatch(
         showSnackbar({
           severity: "error",
-          message: `You haven't make ${el.name} admin of this channel`,
+          message: `You haven't make ${el.el.user.name} admin of this channel`,
         })
       );
     }
@@ -119,14 +130,14 @@ const MembersSettings = (el: any) => {
         dispatch(
           showSnackbar({
             severity: "success",
-            message: `You have Ban ${el.name} successfully`,
+            message: `You have Ban ${el.el.user.name} successfully`,
           })
         );
       } else {
         dispatch(
           showSnackbar({
             severity: "error",
-            message: `You haven't Ban ${el.name}`,
+            message: `You haven't Ban ${el.el.user.name}`,
           })
         );
       }
@@ -162,14 +173,14 @@ const MembersSettings = (el: any) => {
         dispatch(
           showSnackbar({
             severity: "success",
-            message: `You have muted ${el.name} successfully`,
+            message: `You have muted ${el.el.user.name} successfully`,
           })
         );
       } else {
         dispatch(
           showSnackbar({
             severity: "error",
-            message: `You haven't muted ${el.name}`,
+            message: `You haven't muted ${el.el.user.name}`,
           })
         );
       }
@@ -186,14 +197,14 @@ const MembersSettings = (el: any) => {
         dispatch(
           showSnackbar({
             severity: "success",
-            message: `You have muted ${el.name} successfully`,
+            message: `You have muted ${el.el.user.name} successfully`,
           })
         );
       } else {
         dispatch(
           showSnackbar({
             severity: "error",
-            message: `You haven't muted ${el.name}`,
+            message: `You haven't muted ${el.el.user.name}`,
           })
         );
       }
