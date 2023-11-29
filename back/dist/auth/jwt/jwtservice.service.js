@@ -14,13 +14,15 @@ const common_1 = require("@nestjs/common");
 const passport_jwt_1 = require("passport-jwt");
 const passport_1 = require("@nestjs/passport");
 const jwt = require("jsonwebtoken");
+const config_1 = require("@nestjs/config");
 let JwtService = class JwtService extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy, 'jwt') {
-    constructor() {
+    constructor(config) {
         super({
             jwtFromRequest: passport_jwt_1.ExtractJwt.fromAuthHeaderAsBearerToken(),
-            secretOrKey: 'asddfsdf5456dsf45ds',
+            secretOrKey: config.get('secretOrKey'),
         });
-        this.secretKey = 'asddfsdf5456dsf45ds';
+        this.config = config;
+        this.secretKey = this.config.get('cookiesecretKey');
     }
     async validate(payload) {
         return {
@@ -46,6 +48,6 @@ let JwtService = class JwtService extends (0, passport_1.PassportStrategy)(passp
 exports.JwtService = JwtService;
 exports.JwtService = JwtService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [])
+    __metadata("design:paramtypes", [config_1.ConfigService])
 ], JwtService);
 //# sourceMappingURL=jwtservice.service.js.map

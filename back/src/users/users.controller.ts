@@ -29,7 +29,7 @@ export class UsersController {
     // @Get('myFriend')
     // async getFreinds(@Req() req, @Body() data:any)
     // {
-    //     const decode = this.jwt.verify(req.cookies['cookie']);
+    //     const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
     //     const user = await this.findById(decode.id);
     //      const id = data;
     //       console.log(`Freinds  ${data}`);

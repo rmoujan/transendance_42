@@ -18,13 +18,15 @@ import { authenticator } from "otplib";
 import * as qrcode from "qrcode";
 import { NumberDto } from "./utils/numberDto";
 import { NumberDtoO } from "./utils/NumberDtoO";
+import { ConfigService } from '@nestjs/config';
 
 @Controller("auth")
 export class AuthController {
   constructor(
     private service: AuthService,
     private jwt: JwtService,
-    private readonly prisma: PrismaService
+    private readonly prisma: PrismaService,
+    private config: ConfigService
   ) {}
 
   @Get("login/42")
@@ -40,7 +42,7 @@ export class AuthController {
     const accessToken = this.jwt.sign(req.user);
     // console.log(req.user);
     res
-      .cookie("cookie", accessToken /*, { maxage: 99999 , secure: false}*/, {
+      .cookie(this.config.get('cookie'), accessToken /*, { maxage: 99999 , secure: false}*/, {
         httponly: true,
       })
       .status(200);
@@ -48,7 +50,7 @@ export class AuthController {
       where: { id_user: req.user.id },
     });
     if (user.TwoFactor) {
-      res.redirect("http://localhost:5173/Authentication");
+      res.redirect(this.config.get('AuthenticationPath'));
       return req;
     }
     if (user.IsFirstTime) {
@@ -57,10 +59,10 @@ export class AuthController {
         where: { id_user: req.user.id },
         data: { IsFirstTime: false },
       });
-      res.redirect("http://localhost:5173/setting");
+      res.redirect(this.config.get('settingsPath'));
     } else {
       // console.log('not first time');
-      res.redirect("http://localhost:5173/home");
+      res.redirect(this.config.get('homepath'));
     }
     // res.send('cookie well setted');
     return req;
@@ -70,7 +72,7 @@ export class AuthController {
   @Get("get-session-token")
   // @UseGuards(JwtAuthGuard)
   getSessionToken(@Req() req) {
-    const sessionToken = this.jwt.verify(req.cookies["cookie"]);
+    const sessionToken = this.jwt.verify(req.cookies[this.config.get('cookie')]);
     return `Session Token: ${sessionToken}`;
   }
 
@@ -102,7 +104,7 @@ export class AuthController {
 
   // @Post("verify-2fa")
   // async Verify_2fa(@Body() body, @Req() req) {
-  //   const decoded = this.jwt.verify(req.cookies["cookie"]);
+  //   const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
   //   await this.prisma.user.update({
   //     where: { id_user: decoded.id },
   //     data: {
@@ -115,7 +117,7 @@ export class AuthController {
 
   @Post("add-friends")
   async Insert_Friends(@Body() body: NumberDtoO, @Req() req) {
-    const decoded = this.jwt.verify(req.cookies["cookie"]);
+    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
     // console.log(body.id_user);
     try {
       await this.prisma.user.update({
@@ -168,7 +170,7 @@ export class AuthController {
     const friendData = await this.prisma.user.findUnique({
       where: { id_user: Body.id_user },
     });
-    const decoded = this.jwt.verify(req.cookies["cookie"]);
+    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
     // console.log(decoded);
     // console.log(friendData);
     const user = await this.prisma.freind.deleteMany({
@@ -193,7 +195,7 @@ export class AuthController {
     const friendData = await this.prisma.user.findUnique({
       where: { id_user: Body.id_user },
     });
-    const decoded = this.jwt.verify(req.cookies["cookie"]);
+    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
     // console.log(decoded);
     // console.log(friendData);
     const user = await this.prisma.user.update({
@@ -212,7 +214,7 @@ export class AuthController {
 
   @Post("DeBlock-friends")
   async DeBlock_friends(@Body() Body: NumberDtoO, @Req() req) {
-    const decoded = this.jwt.verify(req.cookies["cookie"]);
+    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
 
     await this.prisma.blockedUser.deleteMany({
       where: {
@@ -225,7 +227,7 @@ export class AuthController {
 
   @Get("get-friendsList")
   async Get_FriendsList(@Req() req) {
-    const decoded = this.jwt.verify(req.cookies["cookie"]);
+    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
     const user = await this.prisma.user.findUnique({
       where: { id_user: decoded.id },
     });
@@ -263,7 +265,7 @@ export class AuthController {
   @Get("friends")
   @UseGuards(JwtAuthGuard)
   async only_friends(@Req() req) {
-    const decoded = this.jwt.verify(req.cookies["cookie"]);
+    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
     // const user = await this.prisma.user.findUnique({where:{id_user : decoded.id},});
 
     const friends = await this.prisma.user.findUnique({
@@ -305,8 +307,8 @@ export class AuthController {
   @Get("get-user")
   @UseGuards(JwtAuthGuard)
   async Get_User(@Req() req): Promise<any> {
-    const decoded = this.jwt.verify(req.cookies["cookie"]);
-    // console.log(req.cookies['cookie']);
+    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+    // console.log(req.cookies[this.config.get('cookie')]);
 
     //   console.log(decoded);
     // console.log('hnaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
@@ -322,8 +324,8 @@ export class AuthController {
   @Get("get-all-users")
   @UseGuards(JwtAuthGuard)
   async Get_All_Users(@Req() req) {
-    // const decoded = this.jwt.verify(req.cookies['cookie']);
-    // console.log(req.cookies['cookie']);
+    // const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+    // console.log(req.cookies[this.config.get('cookie')]);
     const users = await this.prisma.user.findMany({});
     // console.log('useeeeeeeeers');
     // console.log(users);
@@ -333,7 +335,7 @@ export class AuthController {
 
   @Post("TwoFactorAuth")
   async TwofactorAuth(@Body() body, @Req() req) {
-    const decoded = this.jwt.verify(req.cookies["cookie"]);
+    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
     const user = await this.prisma.user.update({
       where: { id_user: decoded.id },
       data: {

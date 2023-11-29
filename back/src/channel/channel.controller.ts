@@ -6,10 +6,15 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '../auth/jwt/jwtservice.service';
 import * as cookieParser from 'cookie-parser';
 import * as cookie from 'cookie';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('channels')
 export class ChannelsController {
-  constructor(private jwt: JwtService, private readonly channelsService: ChannelsService, private readonly UsersService: UsersService) { }
+  constructor(private jwt: JwtService,
+    private readonly channelsService: ChannelsService,
+    private readonly UsersService: UsersService,
+    private config: ConfigService
+    ) { }
 
   @Post('create')
   async create(@Req() req, @Body() data: CreateChannelDto) {
@@ -34,7 +39,7 @@ export class ChannelsController {
     else
       return (false);
     try {
-      const decode = this.jwt.verify(req.cookies['cookie']);
+      const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
       // console.log(decode);
       const user = await this.UsersService.findById(decode.id);
       if (user) {
@@ -71,7 +76,7 @@ export class ChannelsController {
     else
       return (false);
     try {
-      const decode = this.jwt.verify(req.cookies['cookie']);
+      const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
       // console.log(decode);
       // console.log("----------------");
       const user = await this.UsersService.findById(decode.id);
@@ -119,7 +124,7 @@ export class ChannelsController {
     else
       return (false);
     try {
-      const decode = this.jwt.verify(req.cookies['cookie']);
+      const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
       const user = await this.UsersService.findById(decode.id);
 
       if (user) {
@@ -150,7 +155,7 @@ export class ChannelsController {
     else
       return (false);
     try {
-      const decode = this.jwt.verify(req.cookies['cookie']);
+      const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
       const user = await this.UsersService.findById(decode.id);
 
       if (user) {
@@ -184,7 +189,7 @@ export class ChannelsController {
     else
       return (false);
     try {
-      const decode = this.jwt.verify(req.cookies['cookie']);
+      const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
       const user = await this.UsersService.findById(decode.id);
 
       if (user) {
@@ -299,7 +304,7 @@ export class ChannelsController {
     console.log("-------------------------- all channels that a user inside them -------------------------- ");
     try {
 
-      const decode = this.jwt.verify(req.cookies['cookie']);
+      const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
       const user = await this.UsersService.findById(decode.id);
       const myAllChannels = await this.channelsService.getAllChannels(user.id_user);
       // console.log(myAllChannels);

@@ -3,11 +3,13 @@ import { JwtService } from "../auth/jwt/jwtservice.service";
 import { PrismaService } from "src/prisma.service";
 import { NumberDto } from "./utils/numberDto";
 import { NumberDtoO } from "./utils/NumberDtoO";
+import { ConfigService } from '@nestjs/config';
 export declare class AuthController {
     private service;
     private jwt;
     private readonly prisma;
-    constructor(service: AuthService, jwt: JwtService, prisma: PrismaService);
+    private config;
+    constructor(service: AuthService, jwt: JwtService, prisma: PrismaService, config: ConfigService);
     Login(): void;
     redirect(req: any, res: any): Promise<any>;
     getSessionToken(req: any): string;

@@ -1,11 +1,13 @@
 import { ChatService } from './chat.service';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '../auth/jwt/jwtservice.service';
+import { ConfigService } from '@nestjs/config';
 export declare class ChatController {
     private jwt;
     private readonly chatService;
     private readonly UsersService;
-    constructor(jwt: JwtService, chatService: ChatService, UsersService: UsersService);
+    private config;
+    constructor(jwt: JwtService, chatService: ChatService, UsersService: UsersService, config: ConfigService);
     getAllConversations(req: any): Promise<{
         id_dm: number;
         senderId: number;

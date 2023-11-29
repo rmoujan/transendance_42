@@ -6,11 +6,13 @@ import { ProfileDto } from "./AboutDto";
 import { MixedDto } from "./BotDto";
 import { BooleanDto } from "./ingameDto";
 import { Infos } from "./infosDto";
+import { ConfigService } from '@nestjs/config';
 export declare class ProfileController {
     private Profile;
     private prisma;
     private jwt;
-    constructor(Profile: ProfileService, prisma: PrismaService, jwt: JwtService);
+    private config;
+    constructor(Profile: ProfileService, prisma: PrismaService, jwt: JwtService, config: ConfigService);
     Name_Modification(data: CreateUserDto, req: any, res: any): Promise<{
         msg: string;
     }>;

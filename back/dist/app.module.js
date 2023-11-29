@@ -30,14 +30,14 @@ const channel_service_1 = require("./channel/channel.service");
 const users_service_1 = require("./users/users.service");
 const prisma_service_1 = require("./prisma.service");
 const cloudinary_module_1 = require("./cloudinary/cloudinary.module");
+const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [auth_module_1.AuthModule,
-            profile_module_1.ProfileModule, jwt_1.JwtModule, socket_module_1.SocketModule, channel_module_1.ChannelModule, users_module_1.UsersModule, chat_module_1.ChatModule, channel_module_1.ChannelModule, cloudinary_module_1.CloudinaryModule
-        ],
+        imports: [config_1.ConfigModule.forRoot({ isGlobal: true, }), auth_module_1.AuthModule,
+            profile_module_1.ProfileModule, jwt_1.JwtModule, socket_module_1.SocketModule, channel_module_1.ChannelModule, users_module_1.UsersModule, chat_module_1.ChatModule, channel_module_1.ChannelModule, cloudinary_module_1.CloudinaryModule],
         controllers: [app_controller_1.AppController, auth_controller_1.AuthController,
             profile_controller_1.ProfileController, channel_controller_1.ChannelsController, users_controller_1.UsersController],
         providers: [app_service_1.AppService, auth_service_1.AuthService,

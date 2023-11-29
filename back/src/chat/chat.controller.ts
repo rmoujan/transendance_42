@@ -4,15 +4,20 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '../auth/jwt/jwtservice.service';
 import * as cookieParser from 'cookie-parser';
 import * as cookie from 'cookie';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('chatData')
 export class ChatController {
-    constructor(private jwt:JwtService ,private readonly chatService: ChatService, private readonly UsersService: UsersService) {}
+    constructor(private jwt:JwtService ,
+        private readonly chatService: ChatService,
+        private readonly UsersService: UsersService,
+        private config: ConfigService
+        ) {}
 
     @Get('allConversationsDm')
     async getAllConversations(@Req() req)
     {
-        const decode = this.jwt.verify(req.cookies['cookie']);
+        const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
         const user = await this.UsersService.findById(decode.id);
         return this.chatService.getAllConversations(user.id_user);
     }
@@ -20,7 +25,7 @@ export class ChatController {
     @Get('allMessagesDm')
     async getAllMessages(@Req() req, @Body() data: any)
     {
-        // const decode = this.jwt.verify(req.cookies['cookie']);
+        // const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
         // const user = await this.UsersService.findById(decode.id);
         return this.chatService.getAllMessages(data.idDm);
         
@@ -28,7 +33,7 @@ export class ChatController {
     @Get('allMessagesRoom')
     async getAllMessagesRoom(@Req() req, @Body() data: any)
     {
-        // const decode = this.jwt.verify(req.cookies['cookie']);
+        // const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
         // const user = await this.UsersService.findById(decode.id);
         return this.chatService.getAllMessagesRoom(data.idRoom); 
     }

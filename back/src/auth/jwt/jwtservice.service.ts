@@ -3,15 +3,16 @@ import { ExtractJwt , Strategy } from "passport-jwt";
 import { PassportStrategy } from "@nestjs/passport";
 import * as jwt from 'jsonwebtoken';
 import { User } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class JwtService extends PassportStrategy(Strategy, 'jwt') {
 
-    constructor() {
+    constructor(private config: ConfigService) {
         super({
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
         //   ignoreExpiration: false,
-          secretOrKey: 'asddfsdf5456dsf45ds',
+          secretOrKey: config.get('secretOrKey'),
         });
       }
 
@@ -25,7 +26,7 @@ export class JwtService extends PassportStrategy(Strategy, 'jwt') {
         };
     }
 
-    private readonly secretKey = 'asddfsdf5456dsf45ds';
+    private readonly secretKey = this.config.get('cookiesecretKey');
 
     sign(payload: User) {
         return jwt.sign(payload, this.secretKey, { expiresIn: '6h'}); // Adjust expiration as needed

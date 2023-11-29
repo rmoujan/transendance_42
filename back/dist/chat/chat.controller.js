@@ -17,14 +17,16 @@ const common_1 = require("@nestjs/common");
 const chat_service_1 = require("./chat.service");
 const users_service_1 = require("../users/users.service");
 const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
+const config_1 = require("@nestjs/config");
 let ChatController = class ChatController {
-    constructor(jwt, chatService, UsersService) {
+    constructor(jwt, chatService, UsersService, config) {
         this.jwt = jwt;
         this.chatService = chatService;
         this.UsersService = UsersService;
+        this.config = config;
     }
     async getAllConversations(req) {
-        const decode = this.jwt.verify(req.cookies['cookie']);
+        const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
         const user = await this.UsersService.findById(decode.id);
         return this.chatService.getAllConversations(user.id_user);
     }
@@ -61,6 +63,9 @@ __decorate([
 ], ChatController.prototype, "getAllMessagesRoom", null);
 exports.ChatController = ChatController = __decorate([
     (0, common_1.Controller)('chatData'),
-    __metadata("design:paramtypes", [jwtservice_service_1.JwtService, chat_service_1.ChatService, users_service_1.UsersService])
+    __metadata("design:paramtypes", [jwtservice_service_1.JwtService,
+        chat_service_1.ChatService,
+        users_service_1.UsersService,
+        config_1.ConfigService])
 ], ChatController);
 //# sourceMappingURL=chat.controller.js.map

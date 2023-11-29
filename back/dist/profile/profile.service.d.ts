@@ -1,9 +1,11 @@
 import { PrismaService } from 'src/prisma.service';
 import { JwtService } from '../auth/jwt/jwtservice.service';
+import { ConfigService } from '@nestjs/config';
 export declare class ProfileService {
     private prisma;
     private jwt;
-    constructor(prisma: PrismaService, jwt: JwtService);
+    private config;
+    constructor(prisma: PrismaService, jwt: JwtService, config: ConfigService);
     ModifyName(dat: any, req: any, res: any): Promise<any>;
     ModifyPhoto(photo: any, req: any, res: any): Promise<void>;
     About_me(req: any, res: any): Promise<{

@@ -1,9 +1,11 @@
 import { JwtService } from "../auth/jwt/jwtservice.service";
 import { PrismaService } from "src/prisma.service";
+import { ConfigService } from '@nestjs/config';
 export declare class AuthService {
     private prisma;
     private jwt;
-    constructor(prisma: PrismaService, jwt: JwtService);
+    private config;
+    constructor(prisma: PrismaService, jwt: JwtService, config: ConfigService);
     LoginToFortyTwo(): {
         msg: string;
     };

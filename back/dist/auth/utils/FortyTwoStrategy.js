@@ -19,16 +19,18 @@ const passport_42_1 = require("passport-42");
 const auth_service_1 = require("../auth.service");
 const jwtservice_service_1 = require("../jwt/jwtservice.service");
 const prisma_service_1 = require("../../prisma.service");
+const config_1 = require("@nestjs/config");
 let FortyTwoStrategy = class FortyTwoStrategy extends (0, passport_1.PassportStrategy)(passport_42_1.Strategy, '42') {
-    constructor(authservice, jwt, prisma) {
+    constructor(authservice, jwt, prisma, config) {
         super({
-            clientID: 'u-s4t2ud-592754280246551fcbde949b332abd3ee64e9c5dbc55c42c3fa4ed54f79051ca',
-            clientSecret: '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',
-            callbackURL: 'http://localhost:3000/auth/login/42/redirect',
+            clientID: config.get('clientID'),
+            clientSecret: config.get('clientSecret'),
+            callbackURL: config.get('callbackURL'),
         });
         this.authservice = authservice;
         this.jwt = jwt;
         this.prisma = prisma;
+        this.config = config;
     }
     async validate(accessToken, refreshToken, profile, req, res) {
         const payload = await this.authservice.ValidateUsers(profile._json, req, res);
@@ -46,6 +48,6 @@ __decorate([
 exports.FortyTwoStrategy = FortyTwoStrategy = __decorate([
     (0, common_1.Injectable)(),
     __metadata("design:paramtypes", [auth_service_1.AuthService, jwtservice_service_1.JwtService,
-        prisma_service_1.PrismaService])
+        prisma_service_1.PrismaService, config_1.ConfigService])
 ], FortyTwoStrategy);
 //# sourceMappingURL=FortyTwoStrategy.js.map

@@ -3,14 +3,19 @@ import { PrismaService } from 'src/prisma.service';
 import { JwtService } from '../auth/jwt/jwtservice.service';
 import { CreateUserDto } from './nameDto';
 import * as fs from 'fs';
+import { ConfigService } from '@nestjs/config';
+
 //import from vite.config.ts
 @Injectable()
 export class ProfileService {
-    constructor(private prisma: PrismaService, private jwt:JwtService){}
+    constructor(private prisma: PrismaService,
+        private jwt:JwtService,
+        private config: ConfigService
+        ){}
 
     async ModifyName(dat :any, req :any, res :any): Promise<any>{
         // console.log('name : ' + dat.name);
-        const Token = req.cookies['cookie'];
+        const Token = req.cookies[this.config.get('cookie')];
         const verifyToekn = this.jwt.verify(Token);
         // console.log(verifyToekn);
         try{
@@ -34,7 +39,7 @@ export class ProfileService {
 
     async ModifyPhoto(photo:any, req:any, res:any) {
 
-        const verifyToken = this.jwt.verify(req.cookies['cookie']);
+        const verifyToken = this.jwt.verify(req.cookies[this.config.get('cookie')]);
         console.log('orginal name : ', photo.originalname);
 
         const filePath = '/goinfre/lelbakna/freez/last_transendance/front/public/uploads/' + photo.originalname; // Use the original name or generate a unique name
@@ -60,7 +65,7 @@ export class ProfileService {
         }
     }
     async About_me(req, res) {
-        const payload = this.jwt.verify(req.cookies['cookie']);
+        const payload = this.jwt.verify(req.cookies[this.config.get('cookie')]);
         const user = await this.prisma.user.findUnique({
             where: { id_user: payload.id },
         });

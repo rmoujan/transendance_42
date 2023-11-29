@@ -18,11 +18,13 @@ const channel_service_1 = require("./channel.service");
 const create_channel_dto_1 = require("./dto/create-channel.dto");
 const users_service_1 = require("../users/users.service");
 const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
+const config_1 = require("@nestjs/config");
 let ChannelsController = class ChannelsController {
-    constructor(jwt, channelsService, UsersService) {
+    constructor(jwt, channelsService, UsersService, config) {
         this.jwt = jwt;
         this.channelsService = channelsService;
         this.UsersService = UsersService;
+        this.config = config;
     }
     async create(req, data) {
         console.log("-------------------------- Starting Creating a Channel -------------------------- ");
@@ -40,7 +42,7 @@ let ChannelsController = class ChannelsController {
         else
             return (false);
         try {
-            const decode = this.jwt.verify(req.cookies['cookie']);
+            const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
             const user = await this.UsersService.findById(decode.id);
             if (user) {
                 const channel = await this.channelsService.createChannel(data, user.id_user);
@@ -71,7 +73,7 @@ let ChannelsController = class ChannelsController {
         else
             return (false);
         try {
-            const decode = this.jwt.verify(req.cookies['cookie']);
+            const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
             const user = await this.UsersService.findById(decode.id);
             if (user) {
                 const memberChannel = await this.channelsService.joinChannel(data, user.id_user);
@@ -102,7 +104,7 @@ let ChannelsController = class ChannelsController {
         else
             return (false);
         try {
-            const decode = this.jwt.verify(req.cookies['cookie']);
+            const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
             const user = await this.UsersService.findById(decode.id);
             if (user) {
                 const updated = await this.channelsService.updatePass(data, user.id_user);
@@ -129,7 +131,7 @@ let ChannelsController = class ChannelsController {
         else
             return (false);
         try {
-            const decode = this.jwt.verify(req.cookies['cookie']);
+            const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
             const user = await this.UsersService.findById(decode.id);
             if (user) {
                 const remove = await this.channelsService.removePass(data, user.id_user);
@@ -157,7 +159,7 @@ let ChannelsController = class ChannelsController {
         else
             return (false);
         try {
-            const decode = this.jwt.verify(req.cookies['cookie']);
+            const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
             const user = await this.UsersService.findById(decode.id);
             if (user) {
                 const setch = await this.channelsService.setPass(data, user.id_user);
@@ -254,7 +256,7 @@ let ChannelsController = class ChannelsController {
     async getAllChannels(req, data) {
         console.log("-------------------------- all channels that a user inside them -------------------------- ");
         try {
-            const decode = this.jwt.verify(req.cookies['cookie']);
+            const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
             const user = await this.UsersService.findById(decode.id);
             const myAllChannels = await this.channelsService.getAllChannels(user.id_user);
             let message = "";
@@ -379,6 +381,9 @@ __decorate([
 ], ChannelsController.prototype, "getAllChannels", null);
 exports.ChannelsController = ChannelsController = __decorate([
     (0, common_1.Controller)('channels'),
-    __metadata("design:paramtypes", [jwtservice_service_1.JwtService, channel_service_1.ChannelsService, users_service_1.UsersService])
+    __metadata("design:paramtypes", [jwtservice_service_1.JwtService,
+        channel_service_1.ChannelsService,
+        users_service_1.UsersService,
+        config_1.ConfigService])
 ], ChannelsController);
 //# sourceMappingURL=channel.controller.js.map

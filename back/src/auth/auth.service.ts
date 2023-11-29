@@ -3,12 +3,14 @@ import { JwtService } from "../auth/jwt/jwtservice.service";
 import { PrismaService } from "src/prisma.service";
 import { authenticator } from "otplib";
 import * as qrcode from "qrcode";
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
-    private jwt: JwtService
+    private jwt: JwtService,
+    private config: ConfigService
   ) {}
 
   LoginToFortyTwo() {
@@ -32,10 +34,6 @@ export class AuthService {
         where: { id_user },
       });
       if (find) {
-        // if (find.TwoFactor)
-        //     res.redirect('http://localhost:3000/auth/get-qrcode');
-        // console.log('when we found the user in the data base');
-        // console.log(find);
         const obj = {
           id: id,
           login: login,
@@ -75,21 +73,19 @@ export class AuthService {
       });
 
       return obj;
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   async GenerateQrCode(req: any) {
     const sKey = authenticator.generateSecret();
 
-    const decoded = this.jwt.verify(req.cookies["cookie"]);
+    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
     const user = await this.prisma.user.update({
       where: { id_user: decoded.id },
       data: { secretKey: sKey },
     });
     // console.log(user);
-    const otpAuthURL = authenticator.keyuri(decoded.email, "YourAppName", sKey);
+    const otpAuthURL = authenticator.keyuri(decoded.email, this.config.get('QrCodeAppName'), sKey);
 
     const qrCodeOptions = {
       errorCorrectionLevel: "L", // You can customize this option as needed
@@ -111,7 +107,7 @@ export class AuthService {
     /* 98853 mmanouze */
     // console.log(body);
     //   const { code } = body;
-    const decoded = this.jwt.verify(req.cookies["cookie"]);
+    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
     const user = await this.prisma.user.findUnique({
       where: { id_user: decoded.id },
     });
