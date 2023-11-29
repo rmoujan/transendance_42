@@ -242,60 +242,54 @@ class MyBotGame {
             button.style.display = "none";
         }
         console.log("Starting Bot Game");
-        const ingame = await axios.get('http://localhost:3000/profile/ingame', {withCredentials:true});
-        if (ingame.data.ingame === false) {
-            await axios.post('http://localhost:3000/profile/Gamestatus', {status:true}, {withCredentials:true});
-            this.message.innerHTML = `The game will start in ${this.countdown} seconds...`;
-            const countdownInterval = setInterval(() => {
+        await axios.post('http://localhost:3000/profile/Gamestatus', {status:true}, {withCredentials:true});
+        this.message.innerHTML = `The game will start in ${this.countdown} seconds...`;
+        const countdownInterval = setInterval(() => {
+            this.checkLocation();
+            if (this.gameOver) {
+                clearInterval(countdownInterval);
+                this.render();
+            }
+            this.countdown--;
+            if (this.countdown) {
+                this.message.innerHTML = `The game will start in ${this.countdown} seconds...`;
+            } else {
+                clearInterval(countdownInterval);
+                this.message.innerHTML = "";
+            }
+        }, 1000);
+
+        setTimeout(() => {
+            this.canvas.addEventListener(
+                "mousemove",
+                (event: MouseEvent) => {
+                    const pos: DOMRect = this.canvas.getBoundingClientRect();
+                    player_1.y = event.clientY - pos.top - player_1.h / 2;
+                }
+            );
+            window.addEventListener("keydown", (event: KeyboardEvent) => {
+                if (event.key == "ArrowDown") {
+                    player_1.y += 30;
+                    if (player_1.y >= this.canvasHeight - player_1.h) {
+                        player_1.y = this.canvasHeight - player_1.h / 2;
+                    }
+                } else if (event.key == "ArrowUp") {
+                    player_1.y -= 30;
+                    if (player_1.y <= -player_1.h / 2) {
+                        player_1.y = -player_1.h / 2;
+                    }
+                }
+            });
+
+            this.pauseGame(500);
+            const interval = setInterval(() => {
+                if (this.renderingStopped) {
+                    clearInterval(interval);
+                }
                 this.checkLocation();
-                if (this.gameOver) {
-                    clearInterval(countdownInterval);
-                    this.render();
-                }
-                this.countdown--;
-                if (this.countdown) {
-                    this.message.innerHTML = `The game will start in ${this.countdown} seconds...`;
-                } else {
-                    clearInterval(countdownInterval);
-                    this.message.innerHTML = "";
-                }
-            }, 1000);
-    
-            setTimeout(() => {
-                this.canvas.addEventListener(
-                    "mousemove",
-                    (event: MouseEvent) => {
-                        const pos: DOMRect = this.canvas.getBoundingClientRect();
-                        player_1.y = event.clientY - pos.top - player_1.h / 2;
-                    }
-                );
-                window.addEventListener("keydown", (event: KeyboardEvent) => {
-                    if (event.key == "ArrowDown") {
-                        player_1.y += 30;
-                        if (player_1.y >= this.canvasHeight - player_1.h) {
-                            player_1.y = this.canvasHeight - player_1.h / 2;
-                        }
-                    } else if (event.key == "ArrowUp") {
-                        player_1.y -= 30;
-                        if (player_1.y <= -player_1.h / 2) {
-                            player_1.y = -player_1.h / 2;
-                        }
-                    }
-                });
-    
-                this.pauseGame(500);
-                const interval = setInterval(() => {
-                    if (this.renderingStopped) {
-                        clearInterval(interval);
-                    }
-                    this.checkLocation();
-                    this.game();
-                }, 1000 / this.framePerSec);
-            }, 3100);
-        } else {
-            this.message.innerHTML = `You are already in a game`;
-            this.exitBtn.style.display = "block";
-        }
+                this.game();
+            }, 1000 / this.framePerSec);
+        }, 3100);
     }
 }
 
