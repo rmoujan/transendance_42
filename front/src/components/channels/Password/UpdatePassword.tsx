@@ -73,18 +73,18 @@ const UpdatePassword = ({ handleClose, el, user_id }: any) => {
       console.log(res.data)
 
       if (res.data == true) {
-        dispatch(
-          showSnackbar({
-            severity: "success",
-            message: "You upgrated to Protected channel",
-          })
-        );
         dispatch(toggleDialog());
         dispatch(FetchChannels());
         dispatch(FetchProtectedChannels());
         dispatch(FetchPublicChannels());
         dispatch(FetchPrivatesChannels());
         dispatch(resetContact());
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: "You upgrated to Protected channel",
+          })
+        );
       } else {
         dispatch(
           showSnackbar({
@@ -97,13 +97,13 @@ const UpdatePassword = ({ handleClose, el, user_id }: any) => {
     } catch (err) {
       console.error(err);
       reset();
+      handleClose();
       dispatch(
         showSnackbar({
           severity: "error",
           message: "update into Protected Channel Failed",
         })
       );
-      handleClose();
     } finally {
       setIsLoading(false);
     }
