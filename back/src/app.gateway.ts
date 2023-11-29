@@ -57,6 +57,7 @@ export class AppGateway
   }
 
   async handleConnection(client: Socket, ...args: any[]) {
+
     this.logger.log(`Client connected: ${client.id}`);
   }
 
@@ -75,6 +76,7 @@ export class AppGateway
         homie_id: 0,
       },
     });
+
     if (room) {
       room.gameAbondoned = true;
       this.logger.log(`User disconnected : ${client.id}`);
@@ -91,6 +93,7 @@ export class AppGateway
       this.logger.log(`User disconnected : ${client.id}`);
     }
     this.users.delete(this.decodeCookie(client).id);
+	console.log(this.users);
   }
 
   @SubscribeMessage("join-friends-room")

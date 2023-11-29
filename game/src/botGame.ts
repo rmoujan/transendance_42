@@ -141,6 +141,7 @@ class MyBotGame {
         player_2.y += (ball.y - (player_2.y + player_2.h / 2)) * computerLevel;
 
         if (ball.y + ball.r >= this.canvasHeight || ball.y - ball.r <= 0) {
+			ball.y = ball.y + ball.r >= this.canvasHeight ? ball.y - ball.r : ball.y + ball.r;
             ball.velocityY *= -1;
         }
 
