@@ -63,7 +63,7 @@ const MembersSettings = (el: any) => {
   const friendRequest = () => {
     console.log("friend request");
     // ! emit "friend_request" event
-    const id_user = el.el.userId; 
+    const id_user = el.el.userId;
     socket_user.emit("add-friend", { id_user });
     dispatch(FetchFriends());
     dispatch(toggleDialog());
@@ -107,10 +107,44 @@ const MembersSettings = (el: any) => {
         })
       );
     }
-    
+
     // ! dispatch "updatedChannels" action
   };
 
+  const handlekick = () => {
+    console.log("kick Contact");
+    // ! emit "kick_contact" event
+    socket.emit("kickUserFromChannel", {
+      to: user.id_user,
+      from: _id,
+      channel_id: el.el.channelId,
+    });
+
+    socket.on("ResponsekickUser", (data: any) => {
+      console.log(data);
+      if (data == true) {
+        dispatch(toggleDialog());
+        dispatch(FetchChannels());
+        dispatch(FetchProtectedChannels());
+        dispatch(FetchPublicChannels());
+        dispatch(FetchPrivatesChannels());
+        dispatch(resetContact());
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: `You have kick ${el.el.user.name} successfully`,
+          })
+        );
+      } else {
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: `You haven't kick ${el.el.user.name}`,
+          })
+        );
+      }
+    });
+  };
   const handleBan = () => {
     console.log("Ban User");
     socket.emit("banUserFRomChannel", {
@@ -119,7 +153,7 @@ const MembersSettings = (el: any) => {
       channel_id: el.el.channelId,
     });
     socket.on("ResponseBannedUser", (data: any) => {
-      console.log(data)
+      console.log(data);
       if (data == true) {
         dispatch(toggleDialog());
         dispatch(FetchChannels());
@@ -311,18 +345,7 @@ const MembersSettings = (el: any) => {
                   }}
                 >
                   <Tooltip title="Kick">
-                    <IconButton
-                      onClick={() => {
-                        console.log("kick Contact");
-                        // ! emit "kick_contact" event
-                        socket.emit("kickUserFromChannel", {
-                          to: user.id_user,
-                          from: _id,
-                          channel_id: el.el.channelId,
-                        });
-                        // socket.emit("delete_contact", { to: el.el.userId, from: _id });
-                      }}
-                    >
+                    <IconButton onClick={handlekick}>
                       <UserMinus color="#FE754D" />
                     </IconButton>
                   </Tooltip>

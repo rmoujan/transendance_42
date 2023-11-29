@@ -23,18 +23,6 @@ const Contact_menu = [
   {
     title: "Info",
   },
-  {
-    title: "Mute notifications",
-  },
-  {
-    title: "Clear messages",
-  },
-  {
-    title: "Delete Chat",
-  },
-  {
-    title: "Block",
-  },
 ];
 
 interface MenuPropsState extends MenuProps {
