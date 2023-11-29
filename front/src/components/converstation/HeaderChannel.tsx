@@ -8,11 +8,23 @@ import { MenuOptions } from "./MsgTypes";
 const HeaderChannels = () => {
   const dispatch = useAppDispatch();
   const [openInvite, setOpenInvite] = React.useState(false);
-  const { contact } = useAppSelector(state => state);
-  const { channels } = useAppSelector(state => state.channels);
+  const { contact, profile } = useAppSelector((state) => state);
+  const { channels } = useAppSelector((state) => state.channels);
   const member = channels.find(
-    channel => parseInt(channel.channel_id) === contact.room_id
+    (channel) => parseInt(channel.channel_id) === contact.room_id
   );
+  console.log(profile);
+  console.log(member);
+  const currentUser: any = profile.name;
+  // const admins = member?.admin
+  const membersList = [
+    member?.owner.join(", "),
+    member?.admin.join(", "),
+    member?.members.join(", ")
+  ].filter(Boolean).join(", ");
+  // console.log(membersList)
+  // check if name is the same as profile.name replace it with 'me'
+  const updatedString = membersList.replace(profile.name, 'me');
 
   const handleCloseInvite = () => {
     setOpenInvite(false);
@@ -63,7 +75,7 @@ const HeaderChannels = () => {
                 color={"#322554"}
                 sx={{ padding: 0, fontWeight: 600, fontSize: "14px" }}
               >
-                {member?.members.join(", ")}
+                {updatedString}
               </Typography>
             </Stack>
           </Stack>
