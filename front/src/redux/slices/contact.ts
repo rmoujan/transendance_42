@@ -99,6 +99,7 @@ export const ContactSlice = createSlice({
 export const showSnackbar =
   ({ severity, message }: any) =>
     async (dispatch: any) => {
+      console.log(message, severity)
       dispatch(
         ContactSlice.actions.openSnackBar({
           message,

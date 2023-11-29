@@ -82,8 +82,13 @@ export const ChannelsSlice = createSlice({
           return inputDate.toLocaleDateString(undefined, options);
         }
       };
-      console.log(action.payload);
       // state.channels = action.payload;
+      const firstTime = () => {
+        const current = new Date();
+        const hours = current.getHours();
+        const minutes = current.getMinutes();
+        return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+      }
       state.channels = action.payload.map((el: any) => ({
         channel_id: el.channel_id,
         image: el.image,
@@ -92,7 +97,7 @@ export const ChannelsSlice = createSlice({
         admin: el.admin,
         members: el.members,
         last_messages: el.last_messages,
-        time: formatDateTime(el.time),
+        time: (el.time !== null) ? formatDateTime(el.time) : firstTime(),
         unread: el.unread,
         channel_type: el.channel_type,
       }));
