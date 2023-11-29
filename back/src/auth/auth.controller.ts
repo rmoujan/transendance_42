@@ -335,6 +335,7 @@ export class AuthController {
 
   @Post("TwoFactorAuth")
   async TwofactorAuth(@Body() body, @Req() req) {
+	// if not cookie redirect
     const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
     const user = await this.prisma.user.update({
       where: { id_user: decoded.id },
