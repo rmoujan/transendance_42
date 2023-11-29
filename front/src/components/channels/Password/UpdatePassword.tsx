@@ -3,16 +3,27 @@ import axios from "axios";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { resetContact, showSnackbar, toggleDialog } from "../../../redux/slices/contact";
+import {
+  resetContact,
+  showSnackbar,
+  toggleDialog,
+} from "../../../redux/slices/contact";
 import { useAppDispatch } from "../../../redux/store/store";
 import FormProvider from "../../hook-form/FormProvider";
 import { Button, IconButton, InputAdornment, Stack } from "@mui/material";
 import { RHFTextField } from "../../../components/hook-form";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
-import { FetchChannels, FetchPrivatesChannels, FetchProtectedChannels, FetchPublicChannels } from "../../../redux/slices/channels";
+import {
+  FetchChannels,
+  FetchPrivatesChannels,
+  FetchProtectedChannels,
+  FetchPublicChannels,
+} from "../../../redux/slices/channels";
+import LoadingButton from "@mui/lab/LoadingButton";
 
 const UpdatePassword = ({ handleClose, el, user_id }: any) => {
   const dispatch = useAppDispatch();
+  const [isLoading, setIsLoading] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = React.useState(false);
 
@@ -22,7 +33,7 @@ const UpdatePassword = ({ handleClose, el, user_id }: any) => {
       .required("Password is required"),
     passwordConfirm: Yup.string()
       .required("Confirm password is required")
-      .oneOf([Yup.ref("password"), 'null'], "Passwords must match"),
+      .oneOf([Yup.ref("password"), "null"], "Passwords must match"),
   });
 
   const defaultValues = {
@@ -39,15 +50,29 @@ const UpdatePassword = ({ handleClose, el, user_id }: any) => {
 
   const onSubmit = async (data: any) => {
     try {
-    //   console.log(el);
-    //   console.log(user_id);
+      //   console.log(el);
+      //   console.log(user_id);
+      setIsLoading(true);
       data.channel_id = el.id_channel;
       data.user_id = user_id;
-      // console.log(data);
-        await axios.post("http://localhost:3000/channels/updatePass", data, {
+      console.log(data);
+      const res = await axios.post(
+        "http://localhost:3000/channels/updatePass",
+        data,
+        {
           withCredentials: true,
-        });
-        handleClose();
+        }
+      );
+      console.log(res.data)
+      dispatch(
+        showSnackbar({
+          severity: "success",
+          message: "You upgrated to Protected channel",
+        })
+      );
+      console.log(res.data)
+
+      if (res.data == true) {
         dispatch(
           showSnackbar({
             severity: "success",
@@ -60,6 +85,15 @@ const UpdatePassword = ({ handleClose, el, user_id }: any) => {
         dispatch(FetchPublicChannels());
         dispatch(FetchPrivatesChannels());
         dispatch(resetContact());
+      } else {
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: "Updated to Protected channel has been failed",
+          })
+        );
+      }
+      handleClose();
     } catch (err) {
       console.error(err);
       reset();
@@ -70,6 +104,8 @@ const UpdatePassword = ({ handleClose, el, user_id }: any) => {
         })
       );
       handleClose();
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -118,43 +154,44 @@ const UpdatePassword = ({ handleClose, el, user_id }: any) => {
         alignContent={"center"}
         justifyContent={"space-evenly"}
       >
-       <Button
-            sx={{
-              // backgroundColor: "#806EA9", // Change the background color to purple
-              color: "#3D3C65", // Change the text color to white
-              borderRadius: "12px",
-              width: "150px",
-              height: "50px",
-              fontSize: "18px",
-              fontWeight: 600,
-              "&:hover": {
-                backgroundColor: "#3D3C65", // Change the background color on hover
-                color: "#b7b7c9",
-              },
-            }}
-            variant="outlined"
-            onClick={handleClose}
-          >
+        <Button
+          sx={{
+            // backgroundColor: "#806EA9", // Change the background color to purple
+            color: "#3D3C65", // Change the text color to white
+            borderRadius: "12px",
+            width: "150px",
+            height: "50px",
+            fontSize: "18px",
+            fontWeight: 600,
+            "&:hover": {
+              backgroundColor: "#3D3C65", // Change the background color on hover
+              color: "#b7b7c9",
+            },
+          }}
+          variant="outlined"
+          onClick={handleClose}
+        >
           Cancel
         </Button>
-        <Button
-            sx={{
-              backgroundColor: "#3D3C65", // Change the background color to purple 3D3C65
-              color: "#f78562", // Change the text color to white
-              borderRadius: "12px",
-              height: "50px",
-              fontSize: "18px",
-              fontWeight: 600,
-              "&:hover": {
-                backgroundColor: "#3D3C65", // Change the background color on hover
-                color: "#b7b7c9",
-              },
-            }}
-            type="submit"
-            variant="contained"
-          >
+        <LoadingButton
+          loading={isLoading}
+          sx={{
+            backgroundColor: "#3D3C65", // Change the background color to purple 3D3C65
+            color: "#f78562", // Change the text color to white
+            borderRadius: "12px",
+            height: "50px",
+            fontSize: "18px",
+            fontWeight: 600,
+            "&:hover": {
+              backgroundColor: "#3D3C65", // Change the background color on hover
+              color: "#b7b7c9",
+            },
+          }}
+          type="submit"
+          variant="contained"
+        >
           Update Password
-        </Button>
+        </LoadingButton>
       </Stack>
     </FormProvider>
   );

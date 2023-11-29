@@ -215,7 +215,7 @@ const JoinPublicForm = ({ handleClose }: any) => {
             type="submit"
             variant="contained"
           >
-            Create Channel
+            Join Channel
           </Button>
         </Stack>
       </Stack>

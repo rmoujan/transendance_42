@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Avatar,
@@ -38,7 +37,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
   const { protectedChannels, channels } = useAppSelector(
     (state) => state.channels
   );
-    console.log(protectedChannels)
+  console.log(protectedChannels);
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -248,7 +247,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
             type="submit"
             variant="contained"
           >
-            Create Channel
+            Join Channel
           </Button>
         </Stack>
       </Stack>

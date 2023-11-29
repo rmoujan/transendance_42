@@ -9,6 +9,7 @@ import {
 } from "../../components/search";
 import {
   emptyConverstation,
+  fetchConverstations,
   setCurrentConverstation,
 } from "../../redux/slices/converstation";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
@@ -18,9 +19,9 @@ const Privates = () => {
   const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { profile, contact } = useAppSelector(state => state);
+  const { profile, contact } = useAppSelector((state) => state);
   const { conversations } = useAppSelector(
-    state => state.converstation.direct_chat
+    (state) => state.converstation.direct_chat
   );
   const filteredConversations = conversations.filter((conversation: any) =>
     conversation.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -28,9 +29,10 @@ const Privates = () => {
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
+  console.log("im here");
   useEffect(() => {
     const handleHistoryDms = (data: any) => {
-      // console.log("history data", data);
+      console.log("history data", data);
       if (data === null) {
         // console.log("null");
         dispatch(emptyConverstation());
@@ -44,6 +46,13 @@ const Privates = () => {
       user_id: profile._id, // current user
     });
     socket.once("historyDms", handleHistoryDms);
+    socket.emit("allConversationsDm", { _id: profile._id });
+    socket.on("response", (data: any) => {
+      console.log(data);
+      dispatch(
+        fetchConverstations({ conversations: data, user_id: profile._id })
+      );
+    });
 
     return () => {
       socket.off("historyDms", handleHistoryDms);

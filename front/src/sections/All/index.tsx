@@ -18,8 +18,8 @@ const All = () => {
 
   // add channels and conversations together
   // const ChatList = [...conversations, ...channels];
-  // console.log(conversations);
-  // console.log(channels);
+  console.log(conversations);
+  console.log(channels);
   
 
   const combinedObject = {

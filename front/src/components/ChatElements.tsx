@@ -66,7 +66,7 @@ const ChatElements = (id: IdType) => {
     <StyledChatBox
       onClick={() => {
         dispatch(updatedContactInfo("CONTACT"));
-        // console.log(selected_id, id.name, id.img);
+        console.log(selected_id, id.name, id.img);
         dispatch(
           selectConversation({
             room_id: selected_id,
