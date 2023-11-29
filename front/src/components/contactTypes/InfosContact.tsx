@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import {
   Avatar,
   Box,
@@ -12,28 +11,17 @@ import {
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import {
-  CaretRight,
   Prohibit,
-  SpeakerSimpleX,
-  Star,
   Trash,
-  X,
+  X
 } from "@phosphor-icons/react";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
-  showSnackbar,
-  toggleDialog,
-  updatedContactInfo,
+  toggleDialog
 } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
-import { BlockDialog, DeleteDialog, MuteDialog } from "../dialogs/Dialogs";
-import {
-  BlockFriend,
-  DeleteFriend,
-  FetchFriends,
-} from "../../redux/slices/app";
-import { socket_user } from "../../socket";
+import { BlockDialog, DeleteDialog } from "../dialogs/Dialogs";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -51,7 +39,6 @@ const InfosContact = () => {
 
   const [openBlock, setOpenBlock] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [openMute, setOpenMute] = useState(false);
 
   const handleCloseBlock = () => {
     setOpenBlock(false);

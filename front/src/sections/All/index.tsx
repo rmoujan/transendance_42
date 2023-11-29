@@ -1,26 +1,61 @@
 import { Box, Stack } from "@mui/material";
 import { MagnifyingGlass } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AllElements from "../../components/AllElements";
 import {
   Search,
   SearchIconWrapper,
   StyledInputBase,
 } from "../../components/search";
-import { useAppSelector } from "../../redux/store/store";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import {
+  emptyConverstation,
+  fetchConverstations,
+  setCurrentConverstation,
+} from "../../redux/slices/converstation";
+import { socket } from "../../socket";
 
 const All = () => {
+  const dispatch = useAppDispatch();
   const [searchQuery, setSearchQuery] = useState("");
   const { conversations } = useAppSelector(
-    state => state.converstation.direct_chat
+    (state) => state.converstation.direct_chat
   );
-  const { channels } = useAppSelector(state => state.channels);
+  const { channels } = useAppSelector((state) => state.channels);
+  const { contact, profile } = useAppSelector((state) => state);
 
   // add channels and conversations together
   // const ChatList = [...conversations, ...channels];
+  useEffect(() => {
+    const handleHistoryDms = (data: any) => {
+      console.log("history data", data);
+      if (data === null) {
+        // console.log("null");
+        dispatch(emptyConverstation());
+      } else {
+        dispatch(setCurrentConverstation(data));
+      }
+    };
+    if (!contact.room_id) return;
+    socket.emit("allMessagesDm", {
+      room_id: contact.room_id, // selected conversation
+      user_id: profile._id, // current user
+    });
+    socket.once("historyDms", handleHistoryDms);
+    socket.emit("allConversationsDm", { _id: profile._id });
+    socket.on("response", (data: any) => {
+      console.log(data);
+      dispatch(
+        fetchConverstations({ conversations: data, user_id: profile._id })
+      );
+    });
+
+    return () => {
+      socket.off("historyDms", handleHistoryDms);
+    };
+  }, [contact.room_id, profile._id, dispatch]);
   console.log(conversations);
   console.log(channels);
-  
 
   const combinedObject = {
     channels: channels.map(
