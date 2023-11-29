@@ -66,17 +66,8 @@ const AllElements = (el: any) => {
         sx={{ padding: "0 8px 0 4px" }}
       >
         <Stack direction={"row"} alignItems={"center"} spacing={2}>
-          {el.online ? (
-            <StyledBadge
-              overlap="circular"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              variant="dot"
-            >
-              <Avatar src={el.img} sx={{ width: 52, height: 52 }} />
-            </StyledBadge>
-          ) : (
             <Avatar src={el.img} sx={{ width: 52, height: 52 }} />
-          )}
+
           <Stack spacing={1.3}>
             <Typography variant="subtitle2" color={"white"}>
               {el.name}
@@ -87,8 +78,8 @@ const AllElements = (el: any) => {
               sx={{ fontWeight: 400 }}
             >
               {el.msg
-                ? el.msg.length > 25
-                  ? el.msg.substring(0, 25) + "..."
+                ? el.msg.length > 45
+                  ? el.msg.substring(0, 45) + "..."
                   : el.msg
                 : "There is no message yet"}
             </Typography>

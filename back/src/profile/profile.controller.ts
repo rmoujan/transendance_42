@@ -359,4 +359,12 @@ export class ProfileController {
     catch(error){}
   }
 
+  @Get('ingame')
+  async ingame(@Req() req){
+    try {
+      const decoded = this.jwt.verify(req.cookies["cookie"]);
+      const user = await this.prisma.user.findUnique({where:{id_user: decoded.id}});
+      return ({ingame: user.InGame});
+    }catch(error){}
+  }
 }

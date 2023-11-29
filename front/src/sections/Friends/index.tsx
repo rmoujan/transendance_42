@@ -10,11 +10,13 @@ import {
   StyledInputBase,
 } from "../../components/search";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { FetchFriends } from "../../redux/slices/app";
+import { FetchFriends, resetFriends } from "../../redux/slices/app";
+import { socket_user } from "../../socket";
 // import CreateChannel from "./CreateChannel";
 
 const Friends = () => {
-  const { friends } = useAppSelector(state => state.app);
+  const { friends } = useAppSelector((state) => state.app);
+  console.log(friends)
   const dispatch = useAppDispatch();
   const [openCreateChannel, setOpenCreateChannel] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -30,12 +32,16 @@ const Friends = () => {
     setSearchQuery(event.target.value);
   };
 
+
   // useEffect(() => {
-  //   console.log("hey");
-  //   if (friends.length == 0) {
-  //     dispatch(FetchFriends());
-  //   }
-  // }, [friends]);
+
+  //   console.log('hekk');
+  //   dispatch(resetFriends());
+  //   dispatch(FetchFriends());
+  //   // const listFriends = useAppSelector((state) => state.app.friends)
+  //   // console.log(listFriends)
+  // }, [socket_user]);
+  
 
   const friendsToDisplay = searchQuery ? filteredFriends : friends;
 
@@ -110,7 +116,7 @@ const Friends = () => {
               {
                 // ~ ==>  here's where i will do contact <==
               }
-              {friendsToDisplay.map((el: any, index) => {
+              {friendsToDisplay.map((el: any, index: any) => {
                 return <ContactElements key={index} {...el} />;
               })}
             </ScrollBar>

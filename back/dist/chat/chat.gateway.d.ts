@@ -5,6 +5,7 @@ import { JwtService } from '../auth/jwt/jwtservice.service';
 import { ChatService } from './chat.service';
 import { UsersService } from 'src/users/users.service';
 import { ChannelsService } from 'src/channel/channel.service';
+import { ChatDto } from './dtoChat/chat.dto';
 export declare class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     private jwt;
     private readonly ChatService;
@@ -23,15 +24,15 @@ export declare class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     leaveRoom(client: Socket, roomName: string): void;
     joinRoom(client: Socket, roomName: any): void;
     handling_joinRoom_dm(room: string, senderId: number, receiverId: number, message: string): Promise<void>;
-    process_dm(client: Socket, data: any): string;
+    process_dm(client: Socket, data: any): boolean;
     handling_joinRoom_group(data: any, users: any): Promise<void>;
-    sendInChannel(client: Socket, data: any): Promise<string>;
+    sendInChannel(client: Socket, data: any): Promise<boolean>;
     allConversationsDm(client: Socket, data: any): Promise<void>;
-    getAllMessages(client: Socket, data: any): Promise<void>;
-    getAllMessagesRoom(client: Socket, data: any): Promise<void>;
+    getAllMessages(client: Socket, data: any): Promise<boolean>;
+    getAllMessagesRoom(client: Socket, data: any): Promise<boolean>;
     leavingRoom(client: Socket, data: any): Promise<boolean>;
-    bannedUser(client: Socket, data: any): Promise<void>;
-    kickUser(client: Socket, data: any): Promise<void>;
-    muteUser(client: Socket, data: any): Promise<void>;
-    unmuteUser(client: Socket, data: any): Promise<void>;
+    bannedUser(client: Socket, data: any): Promise<boolean>;
+    kickUser(client: Socket, data: any): Promise<boolean>;
+    muteUser(client: Socket, data: ChatDto): Promise<boolean>;
+    unmuteUser(client: Socket, data: any): Promise<boolean>;
 }

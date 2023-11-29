@@ -3,6 +3,7 @@ import { styled } from "@mui/system";
 import { Keyhole, LockSimple } from "@phosphor-icons/react";
 import { useEffect } from "react";
 import {
+  FetchChannels,
   setCurrentChannel,
   setEmptyChannel,
   updateChannelsMessages,
@@ -76,10 +77,11 @@ const ChannelElements = (id: IdType) => {
     };
 
     const handleChatToGroup = (data: any) => {
-      // console.log("chat data", data);
+      console.log("chat data", data);
       dispatch(
         updateChannelsMessages({ messages: data, user_id: profile._id })
       );
+      dispatch(FetchChannels())
     };
 
     // console.log("selected_id", selected_id, typeof selected_id);
@@ -164,8 +166,8 @@ const ChannelElements = (id: IdType) => {
               sx={{ fontWeight: 400 }}
             >
               {id.last_messages
-                ? id.last_messages.length > 25
-                  ? id.last_messages.substring(0, 25) + "..."
+                ? id.last_messages.length > 45
+                  ? id.last_messages.substring(0, 45) + "..."
                   : id.last_messages
                 : "There is no message yet"}
             </Typography>

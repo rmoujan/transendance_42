@@ -17,70 +17,86 @@ let ChatService = class ChatService {
         this.prisma = prisma;
     }
     async findChannel(idch) {
-        const channel = await this.prisma.channel.findUnique({
-            where: {
-                id_channel: idch,
-            },
-        });
-        return (channel);
+        try {
+            const channel = await this.prisma.channel.findUnique({
+                where: {
+                    id_channel: idch,
+                },
+            });
+            return (channel);
+        }
+        catch (error) {
+            throw new common_1.NotFoundException(`no channel`);
+        }
     }
     async getUsersInChannel(idch) {
-        const users = await this.prisma.memberChannel.findMany({
-            where: {
-                channelId: idch,
-                muted: false
-            },
-        });
-        return (users);
+        try {
+            const users = await this.prisma.memberChannel.findMany({
+                where: {
+                    channelId: idch,
+                    muted: false
+                },
+            });
+            return (users);
+        }
+        catch (error) {
+            throw new common_1.NotFoundException(`no users`);
+        }
     }
     async checkDm(idSend, idRecv) {
-        const dm1 = await this.prisma.dm.findUnique({
-            where: {
-                senderId_receiverId: {
+        try {
+            const dm1 = await this.prisma.dm.findUnique({
+                where: {
+                    senderId_receiverId: {
+                        senderId: idSend,
+                        receiverId: idRecv,
+                    },
+                },
+            });
+            if (dm1) {
+                return dm1;
+            }
+            const dm2 = await this.prisma.dm.findUnique({
+                where: {
+                    senderId_receiverId: {
+                        senderId: idRecv,
+                        receiverId: idSend,
+                    },
+                },
+            });
+            if (dm2) {
+                return dm2;
+            }
+            const result = await this.prisma.dm.create({
+                data: {
                     senderId: idSend,
                     receiverId: idRecv,
+                    unread: 0,
+                    pinned: false,
                 },
-            },
-        });
-        if (dm1) {
-            console.log(`FRom dm1 |${dm1}|`);
-            return dm1;
+            });
+            return (result);
         }
-        const dm2 = await this.prisma.dm.findUnique({
-            where: {
-                senderId_receiverId: {
-                    senderId: idRecv,
-                    receiverId: idSend,
-                },
-            },
-        });
-        if (dm2) {
-            console.log(`FRom dm2 |${dm2}|`);
-            return dm2;
+        catch (error) {
+            throw new common_1.NotFoundException(`Error occured when checking dm`);
         }
-        const result = await this.prisma.dm.create({
-            data: {
-                senderId: idSend,
-                receiverId: idRecv,
-                unread: 0,
-                pinned: false,
-            },
-        });
-        console.log("CHECK DM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%");
-        console.log(`Result is ${result}`);
-        return (result);
     }
     async createMsg(idSend, idRecv, dmVar, msg, typeMsg) {
-        const result = await this.prisma.conversation.create({
-            data: {
-                text: msg,
-                outgoing: idSend,
-                incoming: idRecv,
-                type: typeMsg,
-                idDm: dmVar.id_dm,
-            },
-        });
-        return (result);
+        try {
+            const result = await this.prisma.conversation.create({
+                data: {
+                    text: msg,
+                    outgoing: idSend,
+                    incoming: idRecv,
+                    type: typeMsg,
+                    idDm: dmVar.id_dm,
+                },
+            });
+            return (result);
+        }
+        catch (error) {
+            throw new common_1.NotFoundException(`Error occured when creating a message`);
+        }
     }
     async getAllConversations(id) {
         try {
@@ -96,7 +112,7 @@ let ChatService = class ChatService {
             return dms;
         }
         catch (error) {
-            console.error('there is no dms , error');
+            throw new common_1.NotFoundException(`there is no dms , error`);
         }
     }
     async getDm(idSend, idRecv) {
@@ -127,7 +143,7 @@ let ChatService = class ChatService {
             }
         }
         catch (error) {
-            console.error('we have no dm for those users', error);
+            throw new common_1.NotFoundException(`we have no dm for those users`);
         }
     }
     async getAllMessages(id) {
@@ -143,18 +159,23 @@ let ChatService = class ChatService {
             return messages;
         }
         catch (error) {
-            console.error('we have no public channels', error);
+            throw new common_1.NotFoundException(`we have no messages`);
         }
     }
     async createDiscussion(idSend, msg, idCh) {
-        const result = await this.prisma.discussion.create({
-            data: {
-                message: msg,
-                userId: idSend,
-                channelId: idCh,
-            },
-        });
-        return (result);
+        try {
+            const result = await this.prisma.discussion.create({
+                data: {
+                    message: msg,
+                    userId: idSend,
+                    channelId: idCh,
+                },
+            });
+            return (result);
+        }
+        catch (error) {
+            throw new common_1.NotFoundException(`Error occured when creating a discussion`);
+        }
     }
     async getAllMessagesRoom(id) {
         try {
@@ -169,7 +190,7 @@ let ChatService = class ChatService {
             return messages;
         }
         catch (error) {
-            console.error('we have no messages in this  channel', error);
+            throw new common_1.NotFoundException(`Error getting messages in this Channel`);
         }
     }
     async getTheLastMessage(id) {
@@ -185,7 +206,7 @@ let ChatService = class ChatService {
             return lastMessage;
         }
         catch (error) {
-            console.error('we have no public channels', error);
+            throw new common_1.NotFoundException(`There is no last message`);
         }
     }
     async getLeavingRoom(idUs, idch) {
@@ -218,31 +239,47 @@ let ChatService = class ChatService {
             }
         }
         catch (error) {
-            console.error('you are not in this channel', error);
+            throw new common_1.NotFoundException(`Error occured when leave user in this channel`);
         }
     }
     async cheakBlockedUser(idSend, idRecv) {
-        const block = await this.prisma.blockedUser.findMany({
-            where: {
-                userId: idRecv,
-                id_blocked_user: idSend,
-            },
-        });
-        if (block.length > 0) {
-            return true;
+        try {
+            const block = await this.prisma.blockedUser.findMany({
+                where: {
+                    userId: idRecv,
+                    id_blocked_user: idSend,
+                },
+            });
+            const block2 = await this.prisma.blockedUser.findMany({
+                where: {
+                    userId: idSend,
+                    id_blocked_user: idRecv,
+                },
+            });
+            if (block.length > 0 || block2.length > 0) {
+                return true;
+            }
+            return false;
         }
-        return false;
+        catch (error) {
+            throw new common_1.NotFoundException(`Error occured when check blocked user`);
+        }
     }
     async checkmuted(idSend, idch) {
-        const record = await this.prisma.memberChannel.findUnique({
-            where: {
-                userId_channelId: {
-                    userId: idSend,
-                    channelId: idch,
-                },
-            }
-        });
-        return record;
+        try {
+            const record = await this.prisma.memberChannel.findUnique({
+                where: {
+                    userId_channelId: {
+                        userId: idSend,
+                        channelId: idch,
+                    },
+                }
+            });
+            return (record);
+        }
+        catch (error) {
+            throw new common_1.NotFoundException(`Error occured when checking muted user`);
+        }
     }
 };
 exports.ChatService = ChatService;

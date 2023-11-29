@@ -157,8 +157,20 @@ const MediaMsg = ({ el }: any) => {
   );
 };
 
-const TextMsg = ({ el }: any) => {
-  // console.log(el);
+const TextMsg = ({ el, type }: any) => {
+  console.log(type);
+  function splitMessageIntoLines(message: any, maxLength: any) {
+    const lines = [];
+    while (message.length > maxLength) {
+      lines.push(message.substring(0, maxLength));
+      message = message.substring(maxLength);
+    }
+    lines.push(message);
+    return lines;
+  }
+
+  const messageLines = splitMessageIntoLines(el.message, 95);
+
   return (
     // <>{console.log(el)}</>
     <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
@@ -170,14 +182,16 @@ const TextMsg = ({ el }: any) => {
           width: "max-content",
         }}
       >
-        <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
+        {/* <Stack direction={"row"} justifyContent={el.incoming ? "start" : "end"}>
           <MsgOptions el={el} />
-        </Stack>
+        </Stack> */}
         <Typography
           variant="subtitle1"
           sx={{ color: el.incoming ? "#16132B" : "#16132B" }}
         >
-          {el.message}
+          {messageLines.map((line, index) => (
+            <div key={index}>{line}</div>
+          ))}
         </Typography>
       </Box>
     </Stack>
@@ -269,7 +283,7 @@ const MsgOptions = (el: any) => {
 
 const MenuOptions = () => {
   const dispatch = useAppDispatch();
-  const { contact } = useAppSelector(state => state);
+  const { contact } = useAppSelector((state) => state);
 
   const [conversationMenuanchorEl, setConversationMenuAnchorEl] =
     React.useState<null | HTMLElement>(null);
@@ -353,7 +367,7 @@ const MenuOptions = () => {
           {Contact_menu.map((e, index) => (
             <MenuItem
               key={index}
-              onClick={event => handleCloseClick(event, index)}
+              onClick={(event) => handleCloseClick(event, index)}
             >
               {e.title}
             </MenuItem>

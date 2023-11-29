@@ -22,10 +22,6 @@ function App() {
     state => state.contact.snackbar
   );
   const dispatch = useAppDispatch();
-  // dispatch(FetchFriends());
-  // dispatch(FetchChannels());
-  // dispatch(FetchProtectedChannels());
-  // dispatch(FetchPublicChannels());
 
   return (
     <div>

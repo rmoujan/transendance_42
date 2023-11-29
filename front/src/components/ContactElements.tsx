@@ -17,6 +17,7 @@ import {
 import {
   mutedContact,
   selectConversation,
+  showSnackbar,
   updatedContactInfo,
 } from "../redux/slices/contact";
 import {
@@ -24,8 +25,9 @@ import {
   setCurrentConverstation,
 } from "../redux/slices/converstation";
 import { useAppDispatch, useAppSelector } from "../redux/store/store";
-import { socket } from "../socket";
+import { socket, socket_user } from "../socket";
 import StyledBadge from "./StyledBadge";
+import { BlockFriend, DeleteFriend, FetchFriends } from "../redux/slices/app";
 
 interface State {
   amount: string;
@@ -159,14 +161,25 @@ const ContactElements = (cont: any) => {
           >
             <Chat />
           </IconButton>
-          <IconButton aria-label="mute contact" onClick={handleClickMuted}>
+          {/* <IconButton aria-label="mute contact" onClick={handleClickMuted}>
             {values.muted ? <SpeakerSimpleSlash /> : <SpeakerSimpleNone />}
-          </IconButton>
+          </IconButton> */}
 
           <IconButton
             onClick={() => {
               console.log("Delete Contact");
               // !  "delete_contact"
+              // * id_user
+              const id_user: number = id;
+              socket_user.emit("friends-list", id_user);
+              socket_user.emit("newfriend", id_user);
+              dispatch(DeleteFriend(id_user))
+              dispatch(FetchFriends());
+              dispatch(showSnackbar({
+                severity: "success",
+                message: `${contact.name} has been deleted`
+              }))
+              
             }}
           >
             <UserMinus />
@@ -175,6 +188,16 @@ const ContactElements = (cont: any) => {
             onClick={() => {
               console.log("Block Contact");
               // !  "block_contact"
+              // * id_user
+              const id_user: number = id;
+              dispatch(BlockFriend(id_user))
+              dispatch(FetchFriends());
+              dispatch(
+                showSnackbar({
+                  severity: "success",
+                  message: `${contact.name} has been blocked`,
+                })
+              );
             }}
           >
             <Prohibit />

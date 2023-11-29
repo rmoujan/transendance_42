@@ -10,7 +10,10 @@ import FormProvider from "../../components/hook-form/FormProvider";
 import { RHFUploadAvatar } from "../../components/hook-form/RHFUploadAvatar";
 import { showSnackbar } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { FetchChannels } from "../../redux/slices/channels";
+import {
+  FetchChannels,
+  FetchPublicChannels,
+} from "../../redux/slices/channels";
 
 const CreatePublicForm = ({ handleClose }: any) => {
   const [file, setFile] = useState<any>();
@@ -77,6 +80,7 @@ const CreatePublicForm = ({ handleClose }: any) => {
           })
         );
         dispatch(FetchChannels());
+        dispatch(FetchPublicChannels());
         reset();
         handleClose();
       } else {

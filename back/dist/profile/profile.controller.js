@@ -303,6 +303,14 @@ let ProfileController = class ProfileController {
         }
         catch (error) { }
     }
+    async ingame(req) {
+        try {
+            const decoded = this.jwt.verify(req.cookies["cookie"]);
+            const user = await this.prisma.user.findUnique({ where: { id_user: decoded.id } });
+            return ({ ingame: user.InGame });
+        }
+        catch (error) { }
+    }
 };
 exports.ProfileController = ProfileController;
 __decorate([
@@ -459,6 +467,13 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "GetFalg", null);
+__decorate([
+    (0, common_1.Get)('ingame'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], ProfileController.prototype, "ingame", null);
 exports.ProfileController = ProfileController = __decorate([
     (0, common_1.Controller)("profile"),
     __metadata("design:paramtypes", [profile_service_1.ProfileService,

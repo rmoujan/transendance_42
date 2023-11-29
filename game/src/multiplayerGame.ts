@@ -88,9 +88,9 @@ class MyMultiplayerGame {
 			button.style.display = "none";
 		}
 		this.exitBtn.style.display = "block";
-
+		const ingame = await axios.get('http://localhost:3000/profile/ingame',  { withCredentials: true })
 		const interval = setInterval(() => {
-			if (this.socket.connected) {
+			if (ingame.data.ingame === false && this.socket.connected) {
 				if (this.gameStarted) {
 					clearInterval(interval);
 				}

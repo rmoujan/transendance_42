@@ -20,6 +20,7 @@ import {
 } from "../../redux/slices/contact";
 import {
   FetchChannels,
+  FetchPrivatesChannels,
   FetchProtectedChannels,
   FetchPublicChannels,
 } from "../../redux/slices/channels";
@@ -180,25 +181,29 @@ const LeaveDialog = ({ open, handleClose, el }: any) => {
               user_id: el.user_id,
               channel_id: el.channel_id,
             });
-            dispatch(toggleDialog());
-            dispatch(FetchChannels());
-            dispatch(FetchProtectedChannels());
-            dispatch(FetchPublicChannels());
-            dispatch(resetContact());
-            dispatch(
-              showSnackbar({
-                severity: "success",
-                message: "You have removed channel successfully",
-              })
-            );
-            // if (res.success) {
-            //   // Handle success
-            //   console.log("Leave channel successful");
-            // } else {
-            // DC5833
-            //   // Handle failure
-            //   console.error("Failed to leave channel:", res.error);
-            // }
+            socket.on("ResponseLeaveUser", (data: any) => {
+              if (data == true) {
+                dispatch(toggleDialog());
+                dispatch(FetchChannels());
+                dispatch(FetchProtectedChannels());
+                dispatch(FetchPublicChannels());
+                dispatch(FetchPrivatesChannels());
+                dispatch(resetContact());
+                dispatch(
+                  showSnackbar({
+                    severity: "success",
+                    message: "You have removed channel successfully",
+                  })
+                );
+              } else {
+                dispatch(
+                  showSnackbar({
+                    severity: "error",
+                    message: "Leave from this channel is unsuccessful",
+                  })
+                );
+              }
+            });
           }}
           sx={{
             borderRadius: "15px",
@@ -435,6 +440,7 @@ const RemoveDialog = ({ open, handleClose, el }: any) => {
               dispatch(FetchChannels());
               dispatch(FetchProtectedChannels());
               dispatch(FetchPublicChannels());
+              dispatch(FetchPrivatesChannels());
               dispatch(resetContact());
               dispatch(
                 showSnackbar({

@@ -21,6 +21,7 @@ const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
 const chat_service_1 = require("./chat.service");
 const users_service_1 = require("../users/users.service");
 const channel_service_1 = require("../channel/channel.service");
+const chat_dto_1 = require("./dtoChat/chat.dto");
 let ChatGateway = class ChatGateway {
     constructor(jwt, ChatService, UsersService, ChannelsService) {
         this.jwt = jwt;
@@ -49,33 +50,43 @@ let ChatGateway = class ChatGateway {
         return decoded;
     }
     handleConnection(client) {
-        const decoded = this.decodeCookie(client);
-        this.logger.log(client.handshake.query.user_id);
-        console.log(client.handshake.query?.user_id);
-        this.logger.log(` ********  User  Connected : ${decoded.id} and its sockets is ${client.id}`);
-        this.connectedClients.set(decoded.id, client);
-        console.log("####### First connection :: OUTPUT MAP OF CONNECTE CLIENTS");
-        for (const [key, value] of this.connectedClients) {
-            console.log(`Key: ${key}, Value: ${value}`);
+        if (client) {
+            const decoded = this.decodeCookie(client);
+            console.log(`decoded is ===========  ${decoded}`);
+            if (decoded) {
+                if (decoded.id) {
+                    this.logger.log(` ********  User  Connected : ${decoded.id} and its sockets is ${client.id}`);
+                    this.connectedClients.set(decoded.id, client);
+                    console.log("------------------------------- OUTPUT MAP OF CONNECTE CLIENTS ----------------------------------");
+                    for (const [key, value] of this.connectedClients) {
+                        console.log(`Key: ${key}, Value: ${value}`);
+                    }
+                }
+            }
         }
     }
     handleDisconnect(client) {
-        const decoded = this.decodeCookie(client);
-        this.logger.log(` ******   Client Disconnect : ${decoded.id}`);
-        this.connectedClients.delete(decoded.id);
-        console.log("***** Client Disconnection :: OUTPUT MAP OF CONNECTE CLIENTS");
-        for (const [key, value] of this.connectedClients) {
-            console.log(`Key: ${key}, Value: ${value}`);
+        if (client) {
+            const decoded = this.decodeCookie(client);
+            console.log(`decoded is ===========  ${decoded}`);
+            if (decoded) {
+                if (decoded.id) {
+                    this.logger.log(` ******   Client Disconnect : ${decoded.id}`);
+                    this.connectedClients.delete(decoded.id);
+                    console.log("------------------ Client Disconnection :: OUTPUT MAP OF CONNECTE CLIENTS");
+                    for (const [key, value] of this.connectedClients) {
+                        console.log(`Key: ${key}, Value: ${value}`);
+                    }
+                }
+            }
         }
     }
     createRoom(senderId, recieverId) {
         console.log(`From Create Room Server Side : sender is ${senderId} and reciever is ${recieverId}`);
         const roomName1 = `room_${senderId}_${recieverId}`;
         const roomName2 = `room_${recieverId}_${senderId}`;
-        console.log(`roomName1 is ${roomName1} and roomName2 is ${roomName2}`);
         const check1 = this.roomsDm.indexOf(roomName1);
         const check2 = this.roomsDm.indexOf(roomName2);
-        console.log(`From create room server side after check `);
         if (check1 === -1 && check2 === -1) {
             this.roomsDm.push(roomName1);
             return roomName1;
@@ -103,39 +114,48 @@ let ChatGateway = class ChatGateway {
         else {
             this.joinRoom(senderClient, room);
             this.joinRoom(receiverClient, room);
-            console.log("starting sending");
-            console.log(senderId);
-            console.log(receiverId);
             const dm = await this.ChatService.checkDm(senderId, receiverId);
-            console.log(`FROM gatways value of Dm is ${dm}`);
-            console.log(`^^^  SENDER IS ${senderId} REciver is ${receiverId}`);
-            const insertDm = await this.ChatService.createMsg(senderId, receiverId, dm, message, "text");
-            const data = {
-                id: dm.id_dm,
-                message: message,
-                send: senderId,
-                recieve: receiverId
-            };
-            console.log(`¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤`);
-            this.server.to(room).emit('chatToDm', data);
+            if (dm) {
+                const insertDm = await this.ChatService.createMsg(senderId, receiverId, dm, message, "text");
+                const data = {
+                    id: dm.id_dm,
+                    message: message,
+                    send: senderId,
+                    recieve: receiverId
+                };
+                console.log(`¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤`);
+                this.server.to(room).emit('chatToDm', data);
+            }
         }
     }
     process_dm(client, data) {
         let room;
-        console.log("*************   direct_message");
-        room = this.createRoom(data.from, data.to);
-        this.handling_joinRoom_dm(room, data.from, data.to, data.message);
-        return 'Hello world!';
+        try {
+            if (data) {
+                if (!data.message || !data.from || !data.to) {
+                    console.log("channel false 11");
+                    return (false);
+                }
+            }
+            else {
+                console.log("channel fals1e   22");
+                return (false);
+            }
+            console.log("*************   direct_message");
+            console.log(data);
+            room = this.createRoom(data.from, data.to);
+            this.handling_joinRoom_dm(room, data.from, data.to, data.message);
+        }
+        catch (error) {
+            console.log("error");
+        }
     }
     async handling_joinRoom_group(data, users) {
         console.log("*************   handling_joinRoom_group");
         const room = `room_${data.id}`;
         for (const user of users) {
-            console.log("Inside sockets of groups");
             const client = this.connectedClients.get(user.userId);
-            console.log("11111111111111111111111111111111");
             this.joinRoom(client, room);
-            console.log("22222222222222222222222222222222222222");
         }
         const checkmutedUser = await this.ChatService.checkmuted(data.from, data.to);
         if (checkmutedUser) {
@@ -148,210 +168,328 @@ let ChatGateway = class ChatGateway {
                     subtype: "",
                     message: data.message,
                 };
-                console.log("befoor emiting in groups");
                 this.server.to(room).emit('chatToGroup', result);
-                console.log("ENDING JOINGROUP ");
             }
         }
     }
     async sendInChannel(client, data) {
-        console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
-        console.log("*************   channel_message");
-        const channel = await this.ChatService.findChannel(data.to);
-        if (channel) {
-            const users = await this.ChatService.getUsersInChannel(data.to);
-            console.log("########################################## 00");
-            console.log(users);
-            this.handling_joinRoom_group(data, users);
+        console.log("-------------------------------------- channel_message -----------------------------");
+        console.log(data);
+        try {
+            if (data) {
+                if (!data.message || !data.from || !data.to) {
+                    console.log("channel false 11");
+                    return (false);
+                }
+            }
+            else {
+                console.log("channel fals1e   22");
+                return (false);
+            }
+            const channel = await this.ChatService.findChannel(data.to);
+            if (channel) {
+                const users = await this.ChatService.getUsersInChannel(data.to);
+                this.handling_joinRoom_group(data, users);
+            }
         }
-        return "OK";
+        catch (error) {
+            console.error("Error");
+        }
     }
     async allConversationsDm(client, data) {
         console.log("*************   allConversationsDm");
         console.log(data);
-        const decoded = this.decodeCookie(client);
-        const user = await this.UsersService.findById(decoded.id);
-        const dms = await this.ChatService.getAllConversations(user.id_user);
-        console.log(`##################################### DMS of ${user.id_user}`);
-        console.log(dms);
-        let recv;
-        let send;
-        let namerecv;
-        let avatarrecv;
-        let statusrecv;
-        let msg = "";
-        let sent = null;
-        if (dms) {
-            const arrayOfDms = [];
-            for (const dmm of dms) {
-                const getRecvUser = await this.UsersService.findById(dmm.receiverId);
-                const getSendUser = await this.UsersService.findById(dmm.senderId);
-                const lastMsg = await this.ChatService.getTheLastMessage(dmm.id_dm);
-                recv = dmm.receiverId;
-                send = dmm.senderId;
-                namerecv = getRecvUser.name;
-                statusrecv = getRecvUser.status_user;
-                avatarrecv = getRecvUser.avatar;
-                if (user.id_user === dmm.receiverId) {
-                    recv = dmm.senderId;
-                    send = dmm.receiverId;
-                    namerecv = getSendUser.name;
-                    avatarrecv = getSendUser.avatar;
-                    statusrecv = getSendUser.status_user;
+        try {
+            const decoded = this.decodeCookie(client);
+            const user = await this.UsersService.findById(decoded.id);
+            const dms = await this.ChatService.getAllConversations(user.id_user);
+            console.log(`##################################### DMS of ${user.id_user}`);
+            console.log(dms);
+            let recv;
+            let send;
+            let namerecv;
+            let avatarrecv;
+            let statusrecv;
+            let msg = "";
+            let sent = null;
+            if (dms) {
+                const arrayOfDms = [];
+                for (const dmm of dms) {
+                    const getRecvUser = await this.UsersService.findById(dmm.receiverId);
+                    const getSendUser = await this.UsersService.findById(dmm.senderId);
+                    const lastMsg = await this.ChatService.getTheLastMessage(dmm.id_dm);
+                    recv = dmm.receiverId;
+                    send = dmm.senderId;
+                    namerecv = getRecvUser.name;
+                    statusrecv = getRecvUser.status_user;
+                    avatarrecv = getRecvUser.avatar;
+                    if (user.id_user === dmm.receiverId) {
+                        recv = dmm.senderId;
+                        send = dmm.receiverId;
+                        namerecv = getSendUser.name;
+                        avatarrecv = getSendUser.avatar;
+                        statusrecv = getSendUser.status_user;
+                    }
+                    if (lastMsg) {
+                        msg = lastMsg.text;
+                        sent = lastMsg.dateSent;
+                    }
+                    const newDm = {
+                        id_room: dmm.id_dm,
+                        id: recv,
+                        user_id: send,
+                        name: namerecv,
+                        online: statusrecv,
+                        img: avatarrecv,
+                        msg: msg,
+                        time: sent,
+                        unread: dmm.unread,
+                        pinned: dmm.pinned,
+                    };
+                    arrayOfDms.push(newDm);
                 }
-                if (lastMsg) {
-                    msg = lastMsg.text;
-                    sent = lastMsg.dateSent;
-                }
-                const newDm = {
-                    id_room: dmm.id_dm,
-                    id: recv,
-                    user_id: send,
-                    name: namerecv,
-                    online: statusrecv,
-                    img: avatarrecv,
-                    msg: msg,
-                    time: sent,
-                    unread: dmm.unread,
-                    pinned: dmm.pinned,
-                };
-                arrayOfDms.push(newDm);
+                client.emit('response', arrayOfDms);
             }
-            client.emit('response', arrayOfDms);
+        }
+        catch (error) {
+            console.log("error");
+            client.emit('response', false);
         }
     }
     async getAllMessages(client, data) {
-        const decoded = this.decodeCookie(client);
-        const user = await this.UsersService.findById(decoded.id);
-        if (user) {
-            const existDm = await this.ChatService.getDm(data.user_id, data.room_id);
-            if (existDm) {
-                const messages = await this.ChatService.getAllMessages(existDm.id_dm);
-                client.emit('historyDms', messages);
+        console.log("---------------------- allMessagesDm -----------------------------");
+        console.log(data);
+        try {
+            if (data) {
+                if (!data.room_id || !data.user_id) {
+                    return (false);
+                }
             }
-            else {
-                client.emit('historyDms', []);
+            else
+                return (false);
+            if (client) {
+                const decoded = this.decodeCookie(client);
+                const user = await this.UsersService.findById(decoded.id);
+                if (user) {
+                    const existDm = await this.ChatService.getDm(data.user_id, data.room_id);
+                    if (existDm) {
+                        const messages = await this.ChatService.getAllMessages(existDm.id_dm);
+                        client.emit('historyDms', messages);
+                    }
+                    else {
+                        client.emit('historyDms', []);
+                    }
+                }
             }
         }
-        else
-            console.log("Error user does not exist");
+        catch (error) {
+            console.log("error");
+            client.emit('historyDms', false);
+        }
     }
     async getAllMessagesRoom(client, data) {
-        const user = await this.UsersService.findById(data.user_id);
-        if (user) {
-            const messages = await this.ChatService.getAllMessagesRoom(data.id);
-            const room = `room_${data.id}`;
-            if (client) {
-                client.emit('hostoryChannel', messages);
+        console.log("********************** allMessagesRoom");
+        console.log(data);
+        try {
+            if (data) {
+                if (!data.user_id || !data.id) {
+                    return (false);
+                }
+            }
+            else
+                return (false);
+            const user = await this.UsersService.findById(data.user_id);
+            if (user) {
+                const messages = await this.ChatService.getAllMessagesRoom(data.id);
+                if (client) {
+                    client.emit('hostoryChannel', messages);
+                }
             }
         }
-        else
-            console.log("Error user does not exist");
+        catch (error) {
+            console.log("error");
+            client.emit('hostoryChannel', false);
+        }
     }
     async leavingRoom(client, data) {
-        console.log("********************** leaveChannel");
+        console.log("-------------------------- leave from this Channel -------------------------- ");
         console.log(data);
-        const user = await this.UsersService.findById(data.user_id);
-        if (user) {
-            const leave = await this.ChatService.getLeavingRoom(data.user_id, data.channel_id);
-            if (leave) {
-                console.log("User with ${data.user_id} is leaving room with id ${data.id}");
-                return true;
+        try {
+            if (data) {
+                if (!data.user_id || !data.channel_id) {
+                    return (false);
+                }
+            }
+            else
+                return (false);
+            const user = await this.UsersService.findById(data.user_id);
+            if (user) {
+                const leave = await this.ChatService.getLeavingRoom(data.user_id, data.channel_id);
+                if (leave) {
+                    console.log(`User with ${data.user_id} is leaving room with id ${data.channel_id}`);
+                    client.emit('ResponseLeaveUser', true);
+                }
+                else {
+                    client.emit('ResponseLeaveUser', false);
+                }
             }
         }
-        else
-            console.log("Error user does not exist");
+        catch (error) {
+            console.log("error");
+            client.emit('ResponseLeaveUser', false);
+        }
     }
     async bannedUser(client, data) {
-        console.log("bannedUser");
+        console.log("-------------------------- banUser from this Channel -------------------------- ");
         console.log(data);
-        const user1 = await this.UsersService.findById(data.from);
-        const user2 = await this.UsersService.findById(data.to);
-        if (client) {
-            const id = Number(client.handshake.query.user_id);
-            console.log(`checking id of clients and user are ${id} --- ${data.from}`);
-            if (user1) {
-                if (user1.id_user == data.from) {
-                    if (user1 && user2) {
-                        const bannedUser = await this.ChannelsService.banUser(data.channel_id, data.from, data.to);
-                        if (bannedUser) {
-                            const result = "User with ${data.bannedUs} is banned from room with id ${data.id} by the ${data.user_id}";
-                            console.log(`banned user is ================== `);
-                            console.log(bannedUser);
+        try {
+            if (data) {
+                if (!data.to || !data.from || !data.channel_id) {
+                    return (false);
+                }
+            }
+            else
+                return (false);
+            const user1 = await this.UsersService.findById(data.from);
+            const user2 = await this.UsersService.findById(data.to);
+            if (client) {
+                const decoded = this.decodeCookie(client);
+                console.log(`checking id of clients and user are ${decoded.id} --- ${data.from}`);
+                if (user1) {
+                    if (user1.id_user == data.from) {
+                        if (user1 && user2) {
+                            const bannedUser = await this.ChannelsService.banUser(data.channel_id, data.from, data.to);
+                            if (bannedUser) {
+                                const result = "operation accomplished successfully";
+                                console.log(result);
+                                console.log(bannedUser);
+                                client.emit('ResponseBannedUser', true);
+                            }
+                            else {
+                                const result = "operation does not accomplished successfully";
+                                console.log(result);
+                                client.emit('ResponseBannedUser', false);
+                            }
                         }
                     }
                 }
             }
         }
-        else
-            console.log("ERRROR ");
+        catch (error) {
+            console.log("error");
+            client.emit('ResponseBannedUser', false);
+        }
     }
     async kickUser(client, data) {
-        console.log("kickUser =======================");
+        console.log("-------------------------- kickUser from this Channel -------------------------- ");
         console.log(data);
-        console.log("###############################################");
-        const user1 = await this.UsersService.findById(data.from);
-        const user2 = await this.UsersService.findById(data.to);
-        if (client) {
-            const id = Number(client.handshake.query.user_id);
-            if (user1) {
-                if (user1.id_user == id) {
-                    if (user1 && user2) {
-                        const kickUser = await this.ChannelsService.kickUser(data, data.from, data.to);
-                        if (kickUser) {
-                            const result = "User with ${data.kickUser} is kickUser from room with id ${data.id} by the ${data.user_id}";
-                            client.emit('ResponsekickUser', result);
+        try {
+            if (data) {
+                if (!data.to || !data.from || !data.channel_id) {
+                    return (false);
+                }
+            }
+            else
+                return (false);
+            const user1 = await this.UsersService.findById(data.from);
+            const user2 = await this.UsersService.findById(data.to);
+            if (client) {
+                const decoded = this.decodeCookie(client);
+                if (user1) {
+                    if (user1.id_user == decoded.id) {
+                        if (user1 && user2) {
+                            const kickUser = await this.ChannelsService.kickUser(data, data.from, data.to);
+                            if (kickUser) {
+                                console.log("kick user 1");
+                                client.emit('ResponsekickUser', true);
+                            }
+                            else {
+                                console.log("kick user 2");
+                                client.emit('ResponsekickUser', false);
+                            }
                         }
                     }
                 }
             }
         }
-        else
+        catch (error) {
             console.log("error");
+            client.emit('ResponsekickUser', false);
+        }
     }
     async muteUser(client, data) {
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ MUUTE USER @@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        console.log(data);
-        const user1 = await this.UsersService.findById(data.from);
-        const user2 = await this.UsersService.findById(data.to);
-        if (client) {
-            const id = Number(client.handshake.query.user_id);
-            if (user1) {
-                if (user1.id_user == id) {
-                    if (user1 && user2) {
-                        const muteUser = await this.ChannelsService.muteUser(data, user1.id_user, data.to);
-                        if (muteUser) {
-                            const result = "User with ${data.to} is muted from room with id ${data.channel_id} by the ${data.from}";
-                            client.emit('ResponsekickUser', result);
+        console.log("-------------------------- MUTEUSER from this Channel -------------------------- ");
+        try {
+            if (data) {
+                if (!data.to || !data.from || !data.channel_id) {
+                    return (false);
+                }
+            }
+            else
+                return (false);
+            console.log(data);
+            const user1 = await this.UsersService.findById(data.from);
+            const user2 = await this.UsersService.findById(data.to);
+            if (client) {
+                const decoded = this.decodeCookie(client);
+                if (user1) {
+                    if (user1.id_user == decoded.id) {
+                        if (user1 && user2) {
+                            const muteUser = await this.ChannelsService.muteUser(data, user1.id_user, data.to);
+                            if (muteUser) {
+                                console.log("mute user 1");
+                                client.emit('ResponsemuteUser', true);
+                            }
+                            else {
+                                console.log("mute user 2");
+                                client.emit('ResponsemuteUser', false);
+                            }
                         }
                     }
                 }
             }
         }
-        else
+        catch (error) {
             console.log("error");
+            client.emit('ResponsemuteUser', false);
+        }
     }
     async unmuteUser(client, data) {
-        console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ UNMUUTE USER @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-        console.log(data);
-        const user1 = await this.UsersService.findById(data.from);
-        const user2 = await this.UsersService.findById(data.to);
-        if (client) {
-            const id = Number(client.handshake.query.user_id);
-            if (user1) {
-                if (user1.id_user == id) {
-                    if (user1 && user2) {
-                        const unmuteUser = await this.ChannelsService.unmuteUser(data, user1.id_user, data.to);
-                        if (unmuteUser) {
-                            const result = "User with ${data.to} is muted from room with id ${data.channel_id} by the ${data.from}";
-                            client.emit('ResponsekickUser', result);
+        console.log("-------------------------- UNMUTEUSER from this Channel -------------------------- ");
+        try {
+            if (data) {
+                if (!data.to || !data.from || !data.channel_id) {
+                    return (false);
+                }
+            }
+            else
+                return (false);
+            console.log(data);
+            const user1 = await this.UsersService.findById(data.from);
+            const user2 = await this.UsersService.findById(data.to);
+            if (client) {
+                const decoded = this.decodeCookie(client);
+                if (user1) {
+                    if (user1.id_user == decoded.id) {
+                        if (user1 && user2) {
+                            const unmuteUser = await this.ChannelsService.unmuteUser(data, user1.id_user, data.to);
+                            if (unmuteUser) {
+                                console.log("mute user 1");
+                                client.emit('ResponsunmutekUser', true);
+                            }
+                            else {
+                                console.log("mute user 2");
+                                client.emit('ResponsunmutekUser', false);
+                            }
                         }
                     }
                 }
             }
         }
-        else
+        catch (error) {
             console.log("error");
+            client.emit('ResponsunmutekUser', false);
+        }
     }
 };
 exports.ChatGateway = ChatGateway;
@@ -365,7 +503,7 @@ __decorate([
     __param(1, (0, websockets_1.MessageBody)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
-    __metadata("design:returntype", String)
+    __metadata("design:returntype", void 0)
 ], ChatGateway.prototype, "process_dm", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)('channel_message'),
@@ -428,7 +566,7 @@ __decorate([
     __param(0, (0, websockets_2.ConnectedSocket)()),
     __param(1, (0, websockets_1.MessageBody)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
+    __metadata("design:paramtypes", [socket_io_1.Socket, chat_dto_1.ChatDto]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "muteUser", null);
 __decorate([
@@ -440,7 +578,10 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "unmuteUser", null);
 exports.ChatGateway = ChatGateway = __decorate([
-    (0, websockets_1.WebSocketGateway)({ namespace: "chat", cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] } }),
+    (0, websockets_1.WebSocketGateway)({
+        namespace: "chat",
+        cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] },
+    }),
     __metadata("design:paramtypes", [jwtservice_service_1.JwtService, chat_service_1.ChatService, users_service_1.UsersService, channel_service_1.ChannelsService])
 ], ChatGateway);
 //# sourceMappingURL=chat.gateway.js.map

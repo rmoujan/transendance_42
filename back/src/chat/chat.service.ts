@@ -1,7 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-// import { CreateDmDto } from '../channel/dto/create-channel.dto';
-// import { dm } from '../prisma.service';
+
 import { Dm } from '@prisma/client';
 import { receiveMessageOnPort } from 'worker_threads';
 
@@ -12,28 +11,39 @@ export class ChatService {
   constructor(private prisma: PrismaService) { }
   // Find a CHANNEL By ID
   async findChannel(idch: number) {
-    const channel = await this.prisma.channel.findUnique({
-      where: {
-        id_channel: idch,
-      },
-    })
-    return (channel);
+    try {
+      const channel = await this.prisma.channel.findUnique({
+        where: {
+          id_channel: idch,
+        },
+      })
+      return (channel);
+    }
+    catch (error) {
+      throw new NotFoundException(`no channel`);
+    }
   }
   // get all users in a specific channel :
   async getUsersInChannel(idch: number) {
-    const users = await this.prisma.memberChannel.findMany({
-      where: {
-        channelId: idch,
-        muted: false
-      },
-    })
-
-    return (users);
+    try
+    {
+      const users = await this.prisma.memberChannel.findMany({
+        where: {
+          channelId: idch,
+          muted: false
+        },
+      })
+      return (users);
+    }
+    catch (error) {
+      throw new NotFoundException(`no users`);
+    }
   }
 
   // gcheck is this dm is already exist in database, otherwise create one and return it.
   async checkDm(idSend: number, idRecv: number) {
     // let result: Dm;
+    try {
     const dm1 = await this.prisma.dm.findUnique({
       where: {
         senderId_receiverId: {
@@ -44,7 +54,6 @@ export class ChatService {
     });
 
     if (dm1) {
-      console.log(`FRom dm1 |${dm1}|`);
       return dm1;
     }
 
@@ -57,10 +66,8 @@ export class ChatService {
       },
     });
     if (dm2) {
-      console.log(`FRom dm2 |${dm2}|`);
       return dm2;
     }
-
     const result = await this.prisma.dm.create({
       data: {
         senderId: idSend,
@@ -69,40 +76,29 @@ export class ChatService {
         pinned: false,
       },
     })
-    console.log("CHECK DM %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%   %%%%%%%%%%%%");
-    console.log(`Result is ${result}`);
     return (result);
+  }
+  catch (error) {
+    throw new NotFoundException(`Error occured when checking dm`);
+  }
   }
   // get all users in a specific channel :
   async createMsg(idSend: number, idRecv: number, dmVar: Dm, msg: string, typeMsg: string) {
-
-    //  let var1 = idSend;
-    //  let var2 = idSend;
-    //   console.log(`FRom create msg , ${dmVar}, ${dmVar.senderId}`)
-    //     if (dmVar.senderId === idSend)
-    //     {
-    //       console.log("9999999999999999999999999");
-    //       var1 = idSend;
-    //       // var2 = idRecv;
-    //     }
-    //     // else
-    //     // {
-    //     //   // console.log("ELLLLLLLLLLLLLLLLLLLLLLLLLLLSE");
-    //     //   var1 = idSend;
-    //     //   var2 = idRecv;
-    //     // }
-    // console.log(`OUTPUT VARS VAR1 IS ${var1} and var2 is ${var2}`);
-    // console.log(`OUTPUT VARS send IS ${idSend} and reciev is ${idRecv}`);
-    const result = await this.prisma.conversation.create({
-      data: {
-        text: msg,
-        outgoing: idSend,
-        incoming: idRecv,
-        type: typeMsg,
-        idDm: dmVar.id_dm,
-      },
-    })
-    return (result);
+    try {
+      const result = await this.prisma.conversation.create({
+        data: {
+          text: msg,
+          outgoing: idSend,
+          incoming: idRecv,
+          type: typeMsg,
+          idDm: dmVar.id_dm,
+        },
+      })
+      return (result);
+    }
+    catch (error) {
+      throw new NotFoundException(`Error occured when creating a message`);
+    }
   }
   // get All Conversations of currently User :
   async getAllConversations(id: number) {
@@ -120,7 +116,7 @@ export class ChatService {
       return dms;
     }
     catch (error) {
-      console.error('there is no dms , error');
+      throw new NotFoundException(`there is no dms , error`);
     }
   }
 
@@ -156,7 +152,7 @@ export class ChatService {
       }
     }
     catch (error) {
-      console.error('we have no dm for those users', error);
+      throw new NotFoundException(`we have no dm for those users`);
     }
   }
 
@@ -176,24 +172,27 @@ export class ChatService {
       return messages;
     }
     catch (error) {
-      console.error('we have no public channels', error);
+      throw new NotFoundException(`we have no messages`);
+      // console.error('we have no public channels', error);
     }
   }
 
   async createDiscussion(idSend: number, msg: string, idCh: number) {
-    const result = await this.prisma.discussion.create({
-      data: {
-        message: msg,
-        userId: idSend,
-        channelId: idCh,
-      },
-    })
-    return (result);
+    try {
+      const result = await this.prisma.discussion.create({
+        data: {
+          message: msg,
+          userId: idSend,
+          channelId: idCh,
+        },
+      })
+      return (result);
+    }
+    catch (error) {
+      throw new NotFoundException(`Error occured when creating a discussion`);
+    }
   }
 
-  // get All message within a room of currently User :
-  // ma3rftsh wash ghadi y7tak semiyat d users wela ghi id ??
-  // ila kan ta semiyat f rah I think khasni shi qwery b7al li diha include : true.
   async getAllMessagesRoom(id: number) {
     try {
 
@@ -208,7 +207,7 @@ export class ChatService {
       return messages;
     }
     catch (error) {
-      console.error('we have no messages in this  channel', error);
+      throw new NotFoundException(`Error getting messages in this Channel`);
     }
   }
 
@@ -226,7 +225,7 @@ export class ChatService {
       return lastMessage;
     }
     catch (error) {
-      console.error('we have no public channels', error);
+      throw new NotFoundException(`There is no last message`);
     }
   }
 
@@ -265,37 +264,54 @@ export class ChatService {
       }
     }
     catch (error) {
-      console.error('you are not in this channel', error);
+      throw new NotFoundException(`Error occured when leave user in this channel`);
     }
 
   }
 
   async cheakBlockedUser(idSend: number, idRecv: number) {
 
-    const block = await this.prisma.blockedUser.findMany({
-      where: {
-        userId: idRecv,
-        id_blocked_user: idSend,
-      },
-    });
-    if (block.length > 0) {
-      return true;
+    try {
+      const block = await this.prisma.blockedUser.findMany({
+        where: {
+          userId: idRecv,
+          id_blocked_user: idSend,
+        },
+      });
+      const block2 = await this.prisma.blockedUser.findMany({
+        where: {
+          userId: idSend,
+          id_blocked_user: idRecv,
+        },
+      });
+      if (block.length > 0 || block2.length > 0) {
+        return true;
+      }
+      return false;
     }
-    return false;
+    catch (error) {
+      throw new NotFoundException(`Error occured when check blocked user`);
+    }
   }
 
   async checkmuted(idSend: number, idch: number) {
 
-    const record = await this.prisma.memberChannel.findUnique({
-      where: {
-        userId_channelId: {
-          userId: idSend,
-          channelId: idch,
-        },
-      }
-    });
-
-    return record;
+    try{
+      
+      const record = await this.prisma.memberChannel.findUnique({
+        where: {
+          userId_channelId: {
+            userId: idSend,
+            channelId: idch,
+          },
+        }
+      });
+  
+      return (record);
+    }
+    catch (error) {
+      throw new NotFoundException(`Error occured when checking muted user`);
+    }
   }
 }
 

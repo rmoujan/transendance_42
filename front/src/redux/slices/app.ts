@@ -27,10 +27,10 @@ export const AppSlice = createSlice({
       // ~ get all users
       state.users = action.payload;
     },
-    fetchFriends(state, action) {
+    resetFriends(state) {
       // console.log(action);
       // ~ get all friends
-      state.friends = action.payload;
+      state.friends = [];
     },
     fetchRequestFriends(state, action) {
       // ~ get all request friends
@@ -62,6 +62,7 @@ export const AppSlice = createSlice({
 });
 
 export function FetchFriends() {
+  console.log('hey from friends')
   // const user_id = localStorage.getItem("user_id");
   return async (dispatch: any) => {
     try {
@@ -78,30 +79,55 @@ export function FetchFriends() {
     } catch (err) {
       console.log("unfortuanally you didn't catch a thing");
     }
-
-    // await axios.get("http://localhost:3000/auth/friends", {
-    //     withCredentials: true,
-    //     headers: {
-    //         "Content-Type": "application/json",
-    //         // Authorization: `Bearer ${getState().auth.token}`,
-    //     },
-    // })
-    //     .then((response) => {
-    //         // console.log(response.data);
-    //         dispatch(AppSlice.actions.updateFriends(response.data));
-    //         // AppSlice.actions.updateFriends({ friends: response.data.data });
-    //     })
-    //     .catch((err) => {
-    //         console.log(err);
-    // );
   };
+}
+
+export function BlockFriend(id_user: number)
+{
+  return async (dispatch: any) => {
+    try {
+      const res = await axios.post("http://localhost:3000/auth/Block-friends", { id_user }, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.data) {
+        dispatch(AppSlice.actions.updateFriends(res.data));
+        console.log("block friend succefully!!");
+      }
+    } catch (err) {
+      console.log("unfortuanally you didn't block a thing");
+    }
+  };
+}
+
+export function DeleteFriend(id_user: number)
+{
+  console.log(id_user)
+  return async (dispatch: any) => {
+    try {
+      const res = await axios.post("http://localhost:3000/auth/remove-friends", { id_user }, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.data) {
+        dispatch(AppSlice.actions.updateFriends(res.data));
+        console.log("block friend succefully!!");
+      }
+    } catch (err) {
+      console.log("unfortuanally you didn't block a thing");
+    }
+  }
 }
 
 export default AppSlice.reducer;
 
 export const {
   fetchUsers,
-  fetchFriends,
+  resetFriends,
   fetchRequestFriends,
   updateFriends,
   addFriend,

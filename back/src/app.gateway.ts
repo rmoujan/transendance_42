@@ -58,30 +58,13 @@ export class AppGateway
 
   async handleConnection(client: Socket, ...args: any[]) {
     this.logger.log(`Client connected: ${client.id}`);
-    // const userId: number = this.decodeCookie(client).id;
-    // const decoded = this.decodeCookie(client);
-    // const user = await this.prisma.user.findUnique({
-    // 	where:{id_user: decoded.id},
-    // });
-    // if (this.users.has(userId)) {
-    // 	client.disconnect();
-    // }
-    try {
-      const decoded = this.decodeCookie(client);
-      if (decoded == null) return ;
-      const user = await this.prisma.user.findUnique({
-        where: { id_user: decoded.id },
-      });
-      if (user.InGame === true) {
-        client.disconnect();
-      }
-    }
-    catch(error){}
   }
+
 
   async handleDisconnect(client: Socket) {
     const room: Room | null = this.findRoomBySocketId(client.id);
     const decoded = this.decodeCookie(client);
+    if (decoded == null) return;
     await this.prisma.user.update({
       where: { id_user: decoded.id },
       data: {

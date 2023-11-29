@@ -163,14 +163,18 @@ let SocketGateway = class SocketGateway {
         const sockrecv = this.SocketContainer.get(decoded.id);
         const socksend = this.SocketContainer.get(body);
         this.server.to(sockrecv).emit("RefreshFriends");
+        this.server.to(sockrecv).emit("friendsUpdateChat");
         this.server.to(socksend).emit("RefreshFriends");
+        this.server.to(socksend).emit("friendsUpdateChat");
     }
     async friends_list(client, body) {
         const decoded = this.decodeCookie(client);
         const sockrecv = this.SocketContainer.get(decoded.id);
         const socksend = this.SocketContainer.get(body);
         this.server.to(sockrecv).emit("list-friends");
+        this.server.to(sockrecv).emit("friendsUpdateChat");
         this.server.to(socksend).emit("list-friends");
+        this.server.to(socksend).emit("friendsUpdateChat");
     }
 };
 exports.SocketGateway = SocketGateway;

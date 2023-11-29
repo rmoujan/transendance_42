@@ -116,4 +116,7 @@ export declare class ProfileController {
     GetFalg(req: any): Promise<{
         flag: number;
     }>;
+    ingame(req: any): Promise<{
+        ingame: boolean;
+    }>;
 }

@@ -46,22 +46,12 @@ let AppGateway = class AppGateway {
     }
     async handleConnection(client, ...args) {
         this.logger.log(`Client connected: ${client.id}`);
-        try {
-            const decoded = this.decodeCookie(client);
-            if (decoded == null)
-                return;
-            const user = await this.prisma.user.findUnique({
-                where: { id_user: decoded.id },
-            });
-            if (user.InGame === true) {
-                client.disconnect();
-            }
-        }
-        catch (error) { }
     }
     async handleDisconnect(client) {
         const room = this.findRoomBySocketId(client.id);
         const decoded = this.decodeCookie(client);
+        if (decoded == null)
+            return;
         await this.prisma.user.update({
             where: { id_user: decoded.id },
             data: {
