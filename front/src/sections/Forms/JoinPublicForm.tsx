@@ -135,7 +135,6 @@ const JoinPublicForm = ({ handleClose }: any) => {
             fullWidth
             required
           >
-            {/* {console.log()} */}
             {publicChannels.length === 0 ? (
               // Render a message when publicChannels is empty
               <Typography variant="subtitle1" alignItems={"center"} padding={2}>
@@ -151,7 +150,6 @@ const JoinPublicForm = ({ handleClose }: any) => {
                     )
                 )
                 .map((option: any) => {
-                  console.log(option);
                   return (
                     <MenuItem key={option.id_channel} value={option.name}>
                       <Stack
@@ -163,7 +161,11 @@ const JoinPublicForm = ({ handleClose }: any) => {
                           src={option.img}
                           sx={{ width: 52, height: 52, marginRight: 2 }}
                         />
-                        <Typography variant="subtitle2" color={"black"}>
+                        <Typography
+                          variant="h6"
+                          fontWeight={600}
+                          color={"#3D3C65"}
+                        >
                           {option.name}
                         </Typography>
                       </Stack>

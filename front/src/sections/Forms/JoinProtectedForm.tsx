@@ -37,7 +37,6 @@ const JoinProtectedForm = ({ handleClose }: any) => {
   const { protectedChannels, channels } = useAppSelector(
     (state) => state.channels
   );
-  console.log(protectedChannels);
   const dispatch = useAppDispatch();
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -66,7 +65,6 @@ const JoinProtectedForm = ({ handleClose }: any) => {
 
   const onSubmit = async (data: JoinProtectedFormData) => {
     try {
-      console.log("DATA", data);
       const sendData = {
         id_channel: data.mySelect.id_channel,
         name: data.mySelect.name,
@@ -78,7 +76,6 @@ const JoinProtectedForm = ({ handleClose }: any) => {
         { sendData },
         { withCredentials: true }
       );
-      console.log("res", res.data);
       if (res.data === true) {
         dispatch(
           showSnackbar({
@@ -144,7 +141,6 @@ const JoinProtectedForm = ({ handleClose }: any) => {
             required
           >
             {protectedChannels.length === 0 ? (
-              // Render a message when publicChannels is empty
               <Typography variant="subtitle1" alignItems={"center"} padding={2}>
                 There are no channels at the moment.
               </Typography>
@@ -158,7 +154,6 @@ const JoinProtectedForm = ({ handleClose }: any) => {
                     )
                 )
                 .map((option: any) => {
-                  console.log(option);
                   return (
                     <MenuItem key={option.id_channel} value={option.name}>
                       <Stack
@@ -173,7 +168,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
                         <Typography
                           variant="h6"
                           fontWeight={600}
-                          color={"black"}
+                          color={"#3D3C65"}
                         >
                           {option.name}
                         </Typography>

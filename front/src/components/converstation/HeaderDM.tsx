@@ -16,7 +16,7 @@ import { MenuOptions } from "./MsgTypes";
 const HeaderDM = () => {
   const dispatch = useAppDispatch();
   const [openInvite, setOpenInvite] = React.useState(false);
-  const { contact } = useAppSelector(state => state);
+  const { contact } = useAppSelector((state) => state);
 
   const handleCloseInvite = () => {
     setOpenInvite(false);
@@ -92,7 +92,11 @@ const HeaderDM = () => {
         </Stack>
       </Stack>
       {openInvite && (
-        <InviteDialog open={openInvite} handleClose={handleCloseInvite} />
+        <InviteDialog
+          open={openInvite}
+          handleClose={handleCloseInvite}
+          id={contact.room_id}
+        />
       )}
     </Box>
   );

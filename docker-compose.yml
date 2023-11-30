@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    environment:
+      NODE_ENV: production
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+    environment:
+      NODE_ENV: production
+
+  game:
+    build:
+      context: ./game
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./game:/app
+    environment:
+      NODE_ENV: production
+
+  database:
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: your_database_user
+      POSTGRES_PASSWORD: your_database_password
+      POSTGRES_DB: your_database_name
+    volumes:
+      - ./database:/docker-entrypoint-initdb.d  # Mount SQL scripts or initialization files
+
+networks:
+  default:
+    driver: bridge

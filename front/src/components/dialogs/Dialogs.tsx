@@ -535,76 +535,107 @@ const RemoveDialog = ({ open, handleClose, el }: any) => {
   );
 };
 
-const InviteDialog = ({ open, handleClose }: any) => (
-  <Dialog
-    open={open}
-    TransitionComponent={Transition}
-    keepMounted
-    onClose={handleClose}
-    aria-describedby="alert-dialog-slide-description"
-    PaperProps={{
-      style: {
-        backgroundColor: "#AE9BCD",
-        boxShadow: "none",
-        borderRadius: "45px",
-        width: "100%",
-        maxWidth: "680px",
+const InviteDialog = ({ open, handleClose, id }: any) => {
+  const handleInvite = () => {
+    if (socket_user) socket_user.emit("invite-game", { id_user: id });
+    axios.post(
+      "http://localhost:3000/profile/gameinfos",
+      {
+        homies: true,
+        invited: false,
+        homie_id: id,
       },
-    }}
-  >
-    <Stack justifyContent={"center"} p={"43px"}>
-      <DialogTitle
-        style={{
-          margin: "0",
-          textAlign: "center",
-          fontSize: "32px",
-          fontWeight: 800,
-          color: "#322554",
-        }}
-      >
-        Are you sure you want to Play ?
-      </DialogTitle>
-      <DialogActions
-        style={{ margin: "0", justifyContent: "space-evenly", height: "150px" }}
-      >
-        <Stack direction={"row"} spacing={5} p={0}>
-          <Button
-            onClick={handleClose}
-            sx={{
-              borderRadius: "15px",
-              fontSize: "20px",
-              padding: "18px 22px",
-              color: "#EADDFF",
-              width: "150px",
-              backgroundColor: "#563F73",
-              "&:hover": { backgroundColor: "#563F73" },
-            }}
-          >
-            Yes
-          </Button>
-          <Button
-            onClick={handleClose}
-            sx={{
-              borderRadius: "15px",
-              fontSize: "20px",
-              padding: "18px 22px",
-              color: "#EADDFF",
-              width: "150px",
-              backgroundColor: "#2A1F4D",
-              "&:hover": { backgroundColor: "#2A1F4D" },
-            }}
-          >
-            No
-          </Button>
-        </Stack>
-      </DialogActions>
-    </Stack>
-  </Dialog>
-);
+      {
+        withCredentials: true,
+      }
+    );
+
+    axios.post(
+      "http://localhost:3000/profile/GameFlag",
+      { flag: 2 },
+      { withCredentials: true }
+    );
+    setTimeout(() => {
+      window.location.href = "http://localhost:5173/game";
+    }, 1000);
+  };
+  return (
+    <Dialog
+      open={open}
+      TransitionComponent={Transition}
+      keepMounted
+      onClose={handleClose}
+      aria-describedby="alert-dialog-slide-description"
+      PaperProps={{
+        style: {
+          backgroundColor: "#AE9BCD",
+          boxShadow: "none",
+          borderRadius: "45px",
+          width: "100%",
+          maxWidth: "680px",
+        },
+      }}
+    >
+      <Stack justifyContent={"center"} p={"43px"}>
+        <DialogTitle
+          style={{
+            margin: "0",
+            textAlign: "center",
+            fontSize: "32px",
+            fontWeight: 800,
+            color: "#322554",
+          }}
+        >
+          Are you sure you want to Play ?
+        </DialogTitle>
+        <DialogActions
+          style={{
+            margin: "0",
+            justifyContent: "space-evenly",
+            height: "150px",
+          }}
+        >
+          <Stack direction={"row"} spacing={5} p={0}>
+            <Button
+              onClick={handleInvite}
+              sx={{
+                borderRadius: "15px",
+                fontSize: "20px",
+                padding: "18px 22px",
+                color: "#EADDFF",
+                width: "150px",
+                backgroundColor: "#563F73",
+                "&:hover": { backgroundColor: "#563F73" },
+              }}
+            >
+              Yes
+            </Button>
+            <Button
+              onClick={handleClose}
+              sx={{
+                borderRadius: "15px",
+                fontSize: "20px",
+                padding: "18px 22px",
+                color: "#EADDFF",
+                width: "150px",
+                backgroundColor: "#2A1F4D",
+                "&:hover": { backgroundColor: "#2A1F4D" },
+              }}
+            >
+              No
+            </Button>
+          </Stack>
+        </DialogActions>
+      </Stack>
+    </Dialog>
+  );
+};
 
 export {
   BlockDialog,
-  DeleteDialog, InviteDialog,
-  LeaveDialog, MuteDialog, RemoveDialog
+  DeleteDialog,
+  InviteDialog,
+  LeaveDialog,
+  MuteDialog,
+  RemoveDialog,
 };
-

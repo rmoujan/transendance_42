@@ -10,15 +10,9 @@ import {
   Typography,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
-import {
-  Prohibit,
-  Trash,
-  X
-} from "@phosphor-icons/react";
+import { Prohibit, Trash, X } from "@phosphor-icons/react";
 import React, { useState } from "react";
-import {
-  toggleDialog
-} from "../../redux/slices/contact";
+import { toggleDialog } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
 import { BlockDialog, DeleteDialog } from "../dialogs/Dialogs";
@@ -35,7 +29,10 @@ const Transition = React.forwardRef(function Transition(
 const InfosContact = () => {
   const dispatch = useAppDispatch();
   const { contact } = useAppSelector((store) => store);
-  console.log(contact);
+  const { friends } = useAppSelector((state) => state.app);
+  const currentFriend: any = friends.filter(
+    (el: any) => el.id_user == contact.room_id
+  );
 
   const [openBlock, setOpenBlock] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
@@ -58,7 +55,6 @@ const InfosContact = () => {
       PaperProps={{
         style: { backgroundColor: "#696693", borderRadius: "35px" },
       }}
-      // aria-describedby="alert-dialog-slide-description"
     >
       <Typography
         sx={{
@@ -71,7 +67,6 @@ const InfosContact = () => {
       >
         Contact info
       </Typography>
-      {/* <DialogTitle sx={{ m: "0 8px", p: 2 }} >Contact info</DialogTitle> */}
       <IconButton
         aria-label="close"
         onClick={() => {
@@ -86,7 +81,6 @@ const InfosContact = () => {
       >
         <X />
       </IconButton>
-      {/* <DialogContent> */}
       <Stack
         sx={{
           height: "100%",
@@ -138,7 +132,7 @@ const InfosContact = () => {
                 Games
               </Typography>
               <Typography variant="h3" color={"#3D3954"}>
-                150
+                {currentFriend[0].games_played}
               </Typography>
             </Stack>
             <Divider orientation="vertical" variant="middle" flexItem />
@@ -147,7 +141,7 @@ const InfosContact = () => {
                 Wins
               </Typography>
               <Typography variant="h3" color={"#3D3954"}>
-                150
+                {currentFriend[0].wins}
               </Typography>
             </Stack>
             <Divider orientation="vertical" variant="middle" flexItem />
@@ -156,7 +150,7 @@ const InfosContact = () => {
                 Loses
               </Typography>
               <Typography variant="h3" color={"#3D3954"}>
-                150
+                {currentFriend[0].losses}
               </Typography>
             </Stack>
           </Box>

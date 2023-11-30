@@ -12,6 +12,7 @@ import { useAppSelector } from "../../redux/store/store";
 
 const Friends = () => {
   const { friends } = useAppSelector((state) => state.app);
+  // console.log(friends)
   const [openCreateChannel, setOpenCreateChannel] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const handleCloseCreateChannel = () => {

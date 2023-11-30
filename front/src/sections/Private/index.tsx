@@ -29,12 +29,9 @@ const Privates = () => {
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
-  console.log("im here");
   useEffect(() => {
     const handleHistoryDms = (data: any) => {
-      console.log("history data", data);
       if (data === null) {
-        // console.log("null");
         dispatch(emptyConverstation());
       } else {
         dispatch(setCurrentConverstation(data));
@@ -48,7 +45,6 @@ const Privates = () => {
     socket.once("historyDms", handleHistoryDms);
     socket.emit("allConversationsDm", { _id: profile._id });
     socket.on("response", (data: any) => {
-      console.log(data);
       dispatch(
         fetchConverstations({ conversations: data, user_id: profile._id })
       );
