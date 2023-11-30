@@ -1,4 +1,3 @@
-import React from "react";
 import avatar from "../../img/download.png";
 const DefaultCard = () => {
 return  (

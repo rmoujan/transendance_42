@@ -1,18 +1,11 @@
 "use client";
-import React, { useState, Fragment, useEffect } from "react";
-import { AiOutlineSearch } from "react-icons/ai";
-import { IoNotifications } from "react-icons/io5";
-import { name } from "../Data/Dataname";
 import { Popover, Transition } from "@headlessui/react";
-import { topData } from "../Data/TopStreamerData";
-import SearchbarData from "./SearchbarData";
-import { da } from "@faker-js/faker";
-import Arcane from "../../img/Arcane.png";
-import ProfileCard from "./ProfileCard";
 import axios from "axios";
+import { Fragment, useEffect, useState } from "react";
+import { IoNotifications } from "react-icons/io5";
 import { socket_user } from "../../socket";
-import { set } from "react-hook-form";
-import { notification } from "antd";
+import ProfileCard from "./ProfileCard";
+import SearchbarData from "./SearchbarData";
 
 type User = {
   id_user: number;
@@ -24,15 +17,8 @@ type User = {
 };
 
 function Searchbar() {
-  // const [activeSearch, setActiveSearch] = useState([]);
-  // const handleSearch = (e) =>{
-  //     if(e)
-  // }
-  //function accepte friend
-  const [AcceptFrienf, setAcceptFrienf] = useState<boolean>();
 
   const accepteFriend = (friend: any) => {
-    // console.log(friend);
     axios
       .post(
         "http://localhost:3000/auth/add-friends",
@@ -43,9 +29,7 @@ function Searchbar() {
           withCredentials: true,
         }
       )
-      .then(async (res) => {
-        // console.log("add friends fetch result ", res);
-        // window.location.reload();
+      .then(async () => {
         const notif = await axios.get(
           "http://localhost:3000/profile/Notifications",
           {
@@ -55,16 +39,12 @@ function Searchbar() {
         setNotification(notif.data);
 
         if (socket_user) {
-          // console.log("id_user ", friend.id_user);
           socket_user.emit("friends-list", friend.id_user);
           socket_user.emit("newfriend", friend.id_user);
         }
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
       });
-    // console.log(friend);
-    // navigate(`/profileFriend/${friend.id}`);
   };
 
   const [user, setUser] = useState<User[]>([]);
@@ -74,9 +54,7 @@ function Searchbar() {
       withCredentials: true,
     });
     if (data == false) {
-      console.log("faaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaalse");
       window.location.href = "/login";
-      console.log("false");
     }
     const obj = await axios.get("http://localhost:3000/profile/verifyOtp", {
       withCredentials: true,
@@ -84,8 +62,6 @@ function Searchbar() {
     if (obj.data.TFA == true && obj.data.verified == false){
       window.location.href = "/Authentication";
     }
-    console.log('oooobjjjj  >> ', obj);
-    //protection of notificaton
     const notif = await axios.get(
       "http://localhost:3000/profile/Notifications",
       {
@@ -93,35 +69,9 @@ function Searchbar() {
       }
     );
     setNotification(notif.data);
-    // console.log("notif");
-    // console.log(notif.data);
-    // console.log('data : ', data);
-
     setUser(data);
-    // if (socket) {
-    //   socket.on("notification", async () => {
-    //     // console.log("socket**************");
-    //     const { data } = await axios.get(
-    //       "http://localhost:3000/profile/Notifications",
-    //       {
-    //         withCredentials: true,
-    //       }
-    //       );
-    //       setNotification(data);
-    //     });
-    //     // console.log("socket**********");
-    //     // socket.on("notification", async () => {
-    //       //   const { data } = await axios.get("http://localhost:3000/profile/Notifications",{
-    //         //       withCredentials: true,
-    //         //   });
-    //         //     setNotification(data);
-    //         //     // console.log(data.obj);
-    //         //     // setNotification(data.obj);
-    //         //   });
-    //       }
   };
   const accepteGame = (friend: any) => {
-    console.log("accepteGame00000000");
     axios.post(
       "http://localhost:3000/profile/gameinfos",
       {
@@ -137,43 +87,33 @@ function Searchbar() {
     setTimeout(() => {
       window.location.href = "http://localhost:5173/game";
     }, 1000);
-    // console.log(getgame);
-    fetchData();
+   fetchData();
   };
   useEffect(() => {
     if (socket_user) {
-      //get notification
-      socket_user.emit("userOnline");
+     socket_user.emit("userOnline");
 
       socket_user.on("notification", async () => {
-        console.log("event notification");
         const { data } = await axios.get(
           "http://localhost:3000/profile/Notifications",
           {
             withCredentials: true,
           }
         );
-        // console.log("event notification111111")
-        // console.log(data);
         setNotification(data);
-        // fetch();
-        // console.log(data.obj);
-        // setNotification(data.obj);
       });
-      // const fetch = async () => {
-      // }
     }
     fetchData();
   }, []);
   const calculateTimeElapsed = (createdAt: string) => {
-    const currentTime = new Date(); // Current time
-    const messageTime = new Date(createdAt); // Time the message was created
+    const currentTime = new Date(); 
+    const messageTime = new Date(createdAt); 
 
-    const timeDifference = currentTime.getTime() - messageTime.getTime(); // Difference in milliseconds
-    const seconds = Math.floor(timeDifference / 1000); // Convert milliseconds to seconds
-    const minutes = Math.floor(seconds / 60); // Convert seconds to minutes
-    const hours = Math.floor(minutes / 60); // Convert minutes to hours
-    const days = Math.floor(hours / 24); // Convert hours to days
+    const timeDifference = currentTime.getTime() - messageTime.getTime(); 
+    const seconds = Math.floor(timeDifference / 1000); 
+    const minutes = Math.floor(seconds / 60); 
+    const hours = Math.floor(minutes / 60); 
+    const days = Math.floor(hours / 24);
 
     if (days > 0 && days == 1) {
       return `${days} day ago`;
@@ -196,28 +136,11 @@ function Searchbar() {
       <h1 className=" text-white text-3xl 2xl:text-4xl lg:ml-32 font-PalanquinDark font-bold">
         Ping Pong{" "}
       </h1>
-      {/* <div className="hidden sm:block">
-        <input
-          type="search"
-          name="Serch"
-          placeholder="Search for Game..."
-          className="w-[25rem] p-2 pl-11 rounded-full bg-[#322f49da] focus:outline-none text-white"
-        />
-        <button type="submit" className="flex ml-4 -mt-7 text-white "> */}
       <SearchbarData />
-      {/* <AiOutlineSearch /> */}
-
-      {/* </button>
-      </div> */}
       <div className="relative w-fit mt-3 hidden sm:block">
         <Popover className="relative flex justify-center items-center">
-          {({ open }) => (
+          {() => (
             <>
-              {/* <div className={`${open ? "": ""}absolute mr-32 bottom-auto left-auto right-2 top-1 z-10 inline-block -translate-y-1/2 translate-x-2/4 rotate-0 skew-x-0 skew-y-0 scale-x-100 scale-y-100 rounded-full bg-[#C85151] p-1.5 text-xs`}></div> */}
-              {/* <div
-                className={`absolute mr-32 bottom-auto left-auto right-2 top-1 z-10 inline-block -translate-y-1/2 translate-x-2/4 rotate-0 skew-x-0 skew-y-0 scale-x-100 scale-y-100 rounded-full ${open ? "" : "bg-[#C85151]"
-                  } p-1.5 text-xs`}
-              ></div> */}
 
               <Popover.Button className="focus:outline-none custom-button">
                 <div className="flex w-10 h-10 mr-10 items-center justify-center rounded-full bg-[#322f49da] active:bg-[#3f3c5cda] p-3 text-center text-white shadow-lg dark:text-gray-200">
@@ -238,8 +161,7 @@ function Searchbar() {
                     Notification
                   </strong>
                   <div className="flex absolute bg-[#35324b] rounded-3xl w-full  shadow-2xl max-h-72 overflow-scroll resultContainer">
-                    {/* this is the panel */}
-                    {/* if notification is empty */}
+                    
                     {Notification.length == 0 && (
                       <div className="flex justify-center items-center w-full h-full">
                         <p className="mt-4 text-lg text-gray-400 ">
@@ -265,13 +187,10 @@ function Searchbar() {
                                 <p className="text-sm font-medium text-white">
                                   {data?.name}{" "}
                                 </p>
-                                {/* <p className="text-sm text-slate-500 truncate">{data.email}</p> */}
                                 <div className="text-xs text-blue-200 dark:text-blue-200">
-                                  {/* a few moments ago */}
                                   {calculateTimeElapsed(data.createdAt)}
                                 </div>
                               </div>
-                              {/* Accepte button */}
                               {data.AcceptFriend == true ? (
                                 <button
                                   className="ml-3 bg-[#FE754D] hover:bg-[#ce502a] text-white font-bold  px-4 rounded-[20px]"
@@ -296,10 +215,6 @@ function Searchbar() {
                 </Popover.Panel>
               </Transition>
 
-              {/* <div className="flex text-white items-center justify-center mt-8 text-[1.7rem]">
-              <TiGroup />
-            </div> */}
-              {/* </div> */}
               <span className="absolute top-0 right-0 -mt-1 -mr-2">
                 <div className="flex items-center justify-center w-5 h-5 bg-[#FE754D] rounded-full text-xs text-white">
                   {Notification.length}
@@ -329,11 +244,6 @@ function Searchbar() {
                     />
                   );
                 })}
-                {/* // <img
-              //   className="w-14 h-14 p-1 rounded-full ring-2 ring-[#FE754D] dark:ring-[#FE754D] "
-              //   src={Arcane}
-              //   alt="Bordered avatar"
-              // /> */}
                 <span className="profile-card group-hover:scale-100 ml-8 mt-5">
                   <ProfileCard />
                 </span>
@@ -343,17 +253,7 @@ function Searchbar() {
         </Popover>
       </div>
     </header>
-    // <form className="left-[807px] top-[20px] absolute text-slate-500 text-[21px] font-medium leading-loose col-span-5 p-10 bg-amber-200">
-    //     <div className="relative">
-    //         <input type="search" placeholder="Search for Game..." className="w-full p-2 pl-11 rounded-full bg-[#25184288]"/>
-    //         <button className="absolute right-1 top-1/2 -translate-y-1/2 p-4 rounded-full">
-    //             <AiOutlineSearch />
-    //         </button>
-    //     </div>
-    //     {/* <div className="absolute top-20 p-4 bg-slate-800 text-white w-full rounded-xl left-1/2 -translate-x-1/2 flex flex-col gap-2">
-
-    //     </div> */}
-    // </form>
+    
   );
 }
 export default Searchbar;

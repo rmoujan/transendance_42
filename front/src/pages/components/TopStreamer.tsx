@@ -1,65 +1,33 @@
-import React, { useState, useEffect } from "react";
-import { topData } from "../Data/TopStreamerData";
-import badge from "../../img/badge.png";
-import Maskgroup from "../../img/Maskgroupp.png";
-import { handelProfile } from "./RightbarData";
-import { useNavigate } from "react-router-dom";
-import Path from "./Path";
-import CircularProgressbar from "react-circular-progressbar";
-import { Progress } from "@material-tailwind/react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { topData } from "../Data/TopStreamerData";
 interface TopStreamerDataProps {
   toggle: boolean;
 }
-type User = {
-  id_user: number;
-  name: string;
-  avatar: string;
-  TwoFactor: boolean;
-  secretKey: string | null;
-  About:string;
-  status_user: string;
-  wins:number;
-  losses:number;
-  games_played:number;
-  Progress:number;
-};
+
 const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
-  const navigate = useNavigate();
   const [showDivs, setShowDivs] = useState(false);
-  const [users, setUsers] = useState<User[]>([]);
   const [TopStreamer, setTopStreamer] = useState<any[]>([]);
   useEffect(() => {
     const fetchUsers = async () => {
-      const { data } = await axios.get("http://localhost:3000/auth/get-all-users", {
+      await axios.get("http://localhost:3000/auth/get-all-users", {
         withCredentials: true,
       });
-      //get top three streamer
       const topThreeStreamer = await axios.get("http://localhost:3000/profile/TopThree", {
         withCredentials: true,
       });
       setTopStreamer(topThreeStreamer.data);
-      setUsers(data);
-      console.log("============================================???");
-      console.log(topThreeStreamer.data);
     }
     fetchUsers();
-    // Use a delay (e.g., setTimeout) to gradually show the divs after component mounts.
     const showDelay = setTimeout(() => {
       setShowDivs(true);
-    }, 500); // Adjust the delay as needed
+    }, 500); 
 
-    // Clear the timeout when the component unmounts to avoid memory leaks.
     return () => {
       clearTimeout(showDelay);
     };
   }, []);
-  const handleProfileClick = (friend: any) => {
-    // Update selectedFriend with the clicked friend's information
-    // navigate(`/profileFriend/${friend.id}`);
-    console.log("friend");
-    console.log(users);
-  };
+  
   return (
     <div className=" flex flex-row ">
       <div>
@@ -88,13 +56,11 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
                     className="w-14 h-14  rounded-full"
                     src={data.avatar}
                     alt=""
-                    // onClick={() => handleProfileClick(data)}
                   />
                 </div>
                 <div className=" flex flex-row justify-center items-center">
                   <span
                     className="ml-5 font-PalanquinDark"
-                    // onClick={() => handleProfileClick(data)}
                   >
                     {data.name}
                   </span>
@@ -110,21 +76,14 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
                     <div className="w-full bg-gradient-to-br from-[#c1c0bf] to-[#90908f] dark:bg-neutral-600 rounded-full ">
                       <div
                         className=" flex items-center justify-center bg-gradient-to-br h-3 from-[#FE754D] to-[#ce502a] p-0.5 text-center text-xs font-PalanquinDark leading-none text-primary-100 rounded-full"
-                        style={{ width: `${data.Progress}%` }}//data.progress
+                        style={{ width: `${data.Progress}%` }}
                       >
                         <span className="-mt-0.5">{data.Progress}%{" "}</span>
                       </div>
                     </div>
                   </span>
-                  {/* <span className="text-[#A3AED0] text-sm font-normal w-24 ">
-                    Win
-                  </span> */}
-                  {/* <p className="flex ml-3 text-sm text-[#7B7987]">
-                    xxxxxxxxxxx
-                  </p> */}
                 </div>
               </div>
-              {/* <hr className="text-white w-[100%] mt-16"/> */}
             </div>
           );
         })}

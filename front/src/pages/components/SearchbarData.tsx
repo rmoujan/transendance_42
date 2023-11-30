@@ -1,23 +1,14 @@
-import React, {
+import axios from "axios";
+import {
   ChangeEvent,
-  useEffect,
   KeyboardEvent,
-  useState,
+  useEffect,
   useRef,
+  useState,
 } from "react";
 import { AiOutlineSearch } from "react-icons/ai";
-import axios from "axios";
-import { json } from "stream/consumers";
 import { useNavigate } from "react-router-dom";
-// type User = {
-//   id: number;
-//   email: string;
-//   username: string;
-//   name: {
-//     firstname: string;
-//     lastname: string;
-//   };
-// };
+
 type User = {
     id_user: number;
     name: string;
@@ -35,16 +26,10 @@ function SearchbarData() {
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
-      // const { data } = await axios.get("https://fakestoreapi.com/users");
       const { data } = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true });
-      console.log("data");
-      // console.log(data);
       setUsers(data);
     };
     fetchData();
-    // fetch('https://fakestoreapi.com/users')
-    //   .then((res) => res.json())
-    //   .then((data) => setUsers(data))
   }, []);
   
   function handelQuerychange(event: ChangeEvent<HTMLInputElement>) {
@@ -52,13 +37,11 @@ function SearchbarData() {
     setQuery(searchTerm);
 
     const filteredUsers = users.filter((user) =>
-      // user.name.firstname.toLowerCase().includes(searchTerm)
       user.name.toLowerCase().includes(searchTerm)
     );
 
     setSearchResults(filteredUsers);
-    console.log(searchResults);
-  }
+   }
 
   function handelkeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "ArrowUp") {
@@ -72,7 +55,6 @@ function SearchbarData() {
     } else if (event.key === "Enter") {
       if (selectedUserIndex !== -1) {
         const selectedUser = searchResults[selectedUserIndex];
-        // alert(`You selected ${selectedUser.name.firstname}`);
         setQuery("");
         setSelectedUserIndex(-1);
         setSearchResults([]);
@@ -81,7 +63,6 @@ function SearchbarData() {
     }
   }
   function handelUserClick(user: User) {
-    // alert(`you selected ${user.name.firstname}`);
     navigate(`/profileFriend/${user.id_user}`);
     setQuery("");
     setSelectedUserIndex(-1);
@@ -92,7 +73,6 @@ function SearchbarData() {
     if (activeUser) {
       activeUser.scrollIntoView({
         block: "nearest",
-        // inline: "start",
         behavior: "smooth",
       });
     }
@@ -133,7 +113,6 @@ function SearchbarData() {
                       key={user.id_user}
                       onClick={() => handelUserClick(user)}
                     >
-                      {/* {user.name.firstname} */}
                       {user.name}
                     </div>
                   </div>

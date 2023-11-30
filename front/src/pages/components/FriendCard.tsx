@@ -1,8 +1,5 @@
-import React from "react";
 
 const ProfileCard = (friend :any) => {
-    console.log("friend card");
-    console.log(friend.friend);
     return (
         <>
              <div className="bg-[#8b98e452] h-[20vh] w-[15vw] rounded-[30px] mr-7">

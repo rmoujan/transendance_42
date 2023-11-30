@@ -1,13 +1,11 @@
+import { motion } from "framer-motion";
 import React from "react";
-import Sidebar from "./Sidebar";
-import logo from "../../img/logo.png";
-import {motion} from "framer-motion";
-import { fadeIn } from "./variants";
 import { Link } from "react-router-dom";
+import logo from "../../img/logo.png";
 interface LogoProps {
     toggle: boolean;
   }
-const Logo: React.FC<LogoProps> = ({ toggle }) => {
+const Logo: React.FC<LogoProps> = ({  }) => {
     return(
         <div className=" mb-5 ">
             <motion.div 

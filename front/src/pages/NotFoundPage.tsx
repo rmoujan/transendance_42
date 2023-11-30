@@ -1,5 +1,4 @@
 
-import React from "react";
 function NotFoundPage() {
     const text = "404: Not Found";
     return (

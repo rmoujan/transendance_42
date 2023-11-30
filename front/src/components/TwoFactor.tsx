@@ -1,15 +1,10 @@
-import { type } from "os";
-import React, { FC, useState, useMemo, useRef, useEffect } from "react";
-import OtpInput from "react-otp-input";
-import { constants } from "buffer";
-import { CgSpinner } from "react-icons/cg";
-import axios from "axios";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import { CgSpinner } from "react-icons/cg";
 
 type User = {
   id_user: number;
@@ -54,7 +49,7 @@ const TwoFactor = () => {
     inputRef.current?.focus();
   }, [activeOTPIndex]);
 
-  const toggleTwoFactor = async (user: User) => {
+  const toggleTwoFactor = async () => {
     fetchData();
     setOpen(true);
   };
@@ -109,7 +104,6 @@ const TwoFactor = () => {
       .post(backendURL, data, { withCredentials: true })
       .then((response) => {
         if (response.data == true) {
-          console.log("redirect to login page");
           setTwoFactor((prevUsers) =>
             prevUsers.map((u) =>
               u.id_user === user.id_user
@@ -124,8 +118,6 @@ const TwoFactor = () => {
             window.location.href = "/Authentication";
           }, 1000);
         } else {
-          // message error with html code
-          console.log("error");
           setTwoFactor((prevUsers) =>
             prevUsers.map((u) =>
               u.id_user === user.id_user
@@ -158,7 +150,7 @@ const TwoFactor = () => {
           ) : (
             <button
               className="text-lg bg-[#7ca732] rounded-2xl p-3 select-none"
-              onClick={() => toggleTwoFactor(user)}
+              onClick={() => toggleTwoFactor()}
             >
               Enable Two-Factor(2FA)
             </button>

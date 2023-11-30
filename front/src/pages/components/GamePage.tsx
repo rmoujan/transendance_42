@@ -1,42 +1,19 @@
-import { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { motion } from "framer-motion";
+import { useEffect, useRef } from "react";
 import MyBotGame from "../../../../game/src/botGame.ts";
 import MyMultiplayerGame from "../../../../game/src/multiplayerGame.ts";
-import { motion } from "framer-motion";
-import { fadeIn } from "./variants";
-import Arcan from "../../img/Arcane.png";
-import axios from "axios";
 import { socket_user, socketuser } from "../../socket";
+import { fadeIn } from "./variants";
 
 if (socket_user == undefined) {
   socketuser();
 }
 
-type User = {
-  id_user: number;
-  name: string;
-  avatar: string;
-  TwoFactor: boolean;
-  secretKey: string | null;
-  status_user: string;
-};
 function GamePage() {
   const myCanvas = useRef<HTMLCanvasElement>(null);
   const myBotGameInstance = useRef<MyBotGame | null>(null);
   const myMultiplayerGameInstance = useRef<MyMultiplayerGame | null>(null);
-  const [Friends, setFriends] = useState<User[]>([]);
-  const [UserLeft, setUserLeft] = useState<User[]>([]);
-  const [UserRight, setUserRight] = useState<User[]>([]);
-  const [player, setPlayer] = useState<boolean>();
-  const [Avatar, setAvatar] = useState<boolean>();
-  const fetchData = async () => {
-    const { data } = await axios.get(
-      "http://localhost:3000/auth/get-all-users",
-      {
-        withCredentials: true,
-      }
-    );
-    setFriends(data);
-  };
 
   const handleExitButton = () => {
     if (myMultiplayerGameInstance.current) {
@@ -48,18 +25,14 @@ function GamePage() {
     if (myBotGameInstance.current) {
       myBotGameInstance.current.startBotGame();
     }
-    setPlayer(false);
   };
 
   const handleMultiplayerGameClick = async () => {
     if (myMultiplayerGameInstance.current) {
       myMultiplayerGameInstance.current.startMultiplayerGame();
-
-      const { data } = await axios.get("http://localhost:3000/profile/avatar", {
+      await axios.get("http://localhost:3000/profile/avatar", {
         withCredentials: true,
       });
-      setAvatar(data);
-      console.log(data);
     }
   };
 
@@ -67,25 +40,31 @@ function GamePage() {
     myBotGameInstance.current = new MyBotGame(myCanvas.current!);
     myMultiplayerGameInstance.current = new MyMultiplayerGame(
       myCanvas.current!
-      );
-    }, []);
-    
-    const handleGameFromHome = async () =>{
-      const outcome = await axios.get("http://localhost:3000/profile/GameFlag", {
-        withCredentials: true,});
-        if (outcome.data.flag === 1) {
-          axios.post("http://localhost:3000/profile/GameFlag", {flag:0}, {
-            withCredentials: true,});
-            setTimeout(() => {
-              handleBotGameClick()
-            }, 200);
-          } else if (outcome.data.flag === 2) {
-              handleMultiplayerGameClick();
-          }
-        }
+    );
+  }, []);
 
-    handleGameFromHome();
-        
+  const handleGameFromHome = async () => {
+    const outcome = await axios.get("http://localhost:3000/profile/GameFlag", {
+      withCredentials: true,
+    });
+    if (outcome.data.flag === 1) {
+      axios.post(
+        "http://localhost:3000/profile/GameFlag",
+        { flag: 0 },
+        {
+          withCredentials: true,
+        }
+      );
+      setTimeout(() => {
+        handleBotGameClick();
+      }, 200);
+    } else if (outcome.data.flag === 2) {
+      handleMultiplayerGameClick();
+    }
+  };
+
+  handleGameFromHome();
+
   return (
     <motion.div
       variants={fadeIn("down", 0.2)}

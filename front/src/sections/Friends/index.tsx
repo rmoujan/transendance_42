@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
 import { Box, Button, Divider, Stack } from "@mui/material";
 import { MagnifyingGlass, PlusCircle } from "@phosphor-icons/react";
+import { useState } from "react";
 import ContactElements from "../../components/ContactElements";
 import ScrollBar from "../../components/ScrollBar";
 import CreateChannel from "../../components/channels/CreateChannel";
@@ -9,15 +9,10 @@ import {
   SearchIconWrapper,
   StyledInputBase,
 } from "../../components/search";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { FetchFriends, resetFriends } from "../../redux/slices/app";
-import { socket_user } from "../../socket";
-// import CreateChannel from "./CreateChannel";
+import { useAppSelector } from "../../redux/store/store";
 
 const Friends = () => {
   const { friends } = useAppSelector((state) => state.app);
-  console.log(friends)
-  const dispatch = useAppDispatch();
   const [openCreateChannel, setOpenCreateChannel] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const handleCloseCreateChannel = () => {
@@ -33,15 +28,6 @@ const Friends = () => {
   };
 
 
-  // useEffect(() => {
-
-  //   console.log('hekk');
-  //   dispatch(resetFriends());
-  //   dispatch(FetchFriends());
-  //   // const listFriends = useAppSelector((state) => state.app.friends)
-  //   // console.log(listFriends)
-  // }, [socket_user]);
-  
 
   const friendsToDisplay = searchQuery ? filteredFriends : friends;
 

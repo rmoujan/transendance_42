@@ -45,8 +45,7 @@ export function FetchCharacters() {
             .then((res) => {
                 dispatch(fetchCharacters(res.data));
             })
-            .catch((err) => {
-                console.log(err);
+            .catch(() => {
             });
     };
 }
