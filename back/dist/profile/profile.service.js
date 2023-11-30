@@ -38,13 +38,6 @@ let ProfileService = class ProfileService {
         }
     }
     async ModifyPhoto(photo, req, res) {
-        const verifyToken = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        console.log('orginal name : ', photo.originalname);
-        const filePath = '/home/haff/Desktop/last_transendance/front/public/uploads/' + photo.originalname;
-        const rightPath = '/public/uploads/' + photo.originalname;
-        console.log(photo.originalname);
-        fs.writeFileSync(filePath, photo.buffer);
-        console.log('tswiraaaaaaa');
         try {
             const verifyToken = this.jwt.verify(req.cookies[this.config.get('cookie')]);
             const filePath = '/home/mmanouze/Desktop/last/front/public/uploads/' + photo.originalname;

@@ -28,19 +28,6 @@ export class ProfileService {
     }
 
     async ModifyPhoto(photo:any, req:any, res:any) {
-<<<<<<< HEAD
-
-        const verifyToken = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        console.log('orginal name : ', photo.originalname);
-
-        const filePath = '/home/haff/Desktop/last_transendance/front/public/uploads/' + photo.originalname; // Use the original name or generate a unique name
-        const rightPath = '/public/uploads/' + photo.originalname;//path to store in db
-        // console.log("filePath");
-        console.log(photo.originalname);
-        fs.writeFileSync(filePath, photo.buffer);
-        console.log('tswiraaaaaaa');
-=======
->>>>>>> 61fda3a39da1c4def5f809f40591f1750bb69469
         try{
             const verifyToken = this.jwt.verify(req.cookies[this.config.get('cookie')]);
             const filePath = '/home/mmanouze/Desktop/last/front/public/uploads/' + photo.originalname; // Use the original name or generate a unique name
@@ -54,7 +41,7 @@ export class ProfileService {
             });
         }catch(error){}
     }
-    
+
     async About_me(req) {
         try{
             const payload = this.jwt.verify(req.cookies[this.config.get('cookie')]);

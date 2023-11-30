@@ -327,7 +327,7 @@ export class ProfileController {
         });
       }catch(error){}
     }
-
+ 
   @Get("deletecookie")
   deletecookie(@Res() res) {
     res.clearCookie("cookie");
