@@ -31,35 +31,33 @@ let AuthController = class AuthController {
     }
     Login() { }
     async redirect(req, res) {
-        console.log('alright');
-        const accessToken = this.jwt.sign(req.user);
-        res
-            .cookie(this.config.get('cookie'), accessToken, {
-            httponly: true,
-        })
-            .status(200);
-        const user = await this.prisma.user.findUnique({
-            where: { id_user: req.user.id },
-        });
-        if (user.TwoFactor) {
-            res.redirect(this.config.get('AuthenticationPath'));
+        try {
+            const accessToken = this.jwt.sign(req.user);
+            res
+                .cookie(this.config.get('cookie'), accessToken, {
+                httponly: true,
+            })
+                .status(200);
+            const user = await this.prisma.user.findUnique({
+                where: { id_user: req.user.id },
+            });
+            if (user.TwoFactor) {
+                res.redirect(this.config.get('AuthenticationPath'));
+                return req;
+            }
+            if (user.IsFirstTime) {
+                await this.prisma.user.update({
+                    where: { id_user: req.user.id },
+                    data: { IsFirstTime: false },
+                });
+                res.redirect(this.config.get('settingsPath'));
+            }
+            else {
+                res.redirect(this.config.get('homepath'));
+            }
             return req;
         }
-        if (user.IsFirstTime) {
-            await this.prisma.user.update({
-                where: { id_user: req.user.id },
-                data: { IsFirstTime: false },
-            });
-            res.redirect(this.config.get('settingsPath'));
-        }
-        else {
-            res.redirect(this.config.get('homepath'));
-        }
-        return req;
-    }
-    getSessionToken(req) {
-        const sessionToken = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        return `Session Token: ${sessionToken}`;
+        catch (error) { }
     }
     async GenerateQrCode(req) {
         const qrCodeDataURL = await this.service.GenerateQrCode(req);
@@ -72,8 +70,8 @@ let AuthController = class AuthController {
         return msg.msg;
     }
     async Insert_Friends(body, req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
         try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
@@ -108,129 +106,152 @@ let AuthController = class AuthController {
                 include: { freind: true },
             });
         }
-        catch (err) {
-        }
+        catch (err) { }
     }
     async Remove_friends(Body, req) {
-        const friendData = await this.prisma.user.findUnique({
-            where: { id_user: Body.id_user },
-        });
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        const user = await this.prisma.freind.deleteMany({
-            where: {
-                AND: [{ userId: decoded.id }, { id_freind: Body.id_user }],
-            },
-        });
-        await this.prisma.freind.deleteMany({
-            where: {
-                AND: [{ userId: Body.id_user }, { id_freind: decoded.id }],
-            },
-        });
+        try {
+            const friendData = await this.prisma.user.findUnique({
+                where: { id_user: Body.id_user },
+            });
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const user = await this.prisma.freind.deleteMany({
+                where: {
+                    AND: [{ userId: decoded.id }, { id_freind: Body.id_user }],
+                },
+            });
+            await this.prisma.freind.deleteMany({
+                where: {
+                    AND: [{ userId: Body.id_user }, { id_freind: decoded.id }],
+                },
+            });
+        }
+        catch (error) { }
     }
     async Block_friends(Body, req) {
-        const friendData = await this.prisma.user.findUnique({
-            where: { id_user: Body.id_user },
-        });
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        const user = await this.prisma.user.update({
-            where: { id_user: decoded.id },
-            data: {
-                blockedUser: {
-                    create: {
-                        id_blocked_user: Body.id_user,
+        try {
+            const friendData = await this.prisma.user.findUnique({
+                where: { id_user: Body.id_user },
+            });
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const user = await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    blockedUser: {
+                        create: {
+                            id_blocked_user: Body.id_user,
+                        },
                     },
                 },
-            },
-        });
-        this.Remove_friends(Body, req);
+            });
+            this.Remove_friends(Body, req);
+        }
+        catch (error) { }
     }
     async DeBlock_friends(Body, req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        await this.prisma.blockedUser.deleteMany({
-            where: {
-                AND: [{ id_blocked_user: Body.id_user }, { userId: decoded.id }],
-            },
-        });
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            await this.prisma.blockedUser.deleteMany({
+                where: {
+                    AND: [{ id_blocked_user: Body.id_user }, { userId: decoded.id }],
+                },
+            });
+        }
+        catch (error) { }
     }
     async Get_FriendsList(req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        const user = await this.prisma.user.findUnique({
-            where: { id_user: decoded.id },
-        });
-        const friends = await this.prisma.user.findUnique({
-            where: { id_user: decoded.id },
-            include: {
-                freind: {
-                    select: { id_freind: true },
-                },
-            },
-        });
-        const obj = friends.freind;
-        let FriendList = {};
-        const idFriends = obj.map((scope) => scope.id_freind);
-        for (const num of idFriends) {
-            const OneFriend = await this.prisma.user.findUnique({
-                where: { id_user: num },
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const user = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
             });
-            const name = OneFriend.name;
-            FriendList = { name: OneFriend };
+            const friends = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
+                include: {
+                    freind: {
+                        select: { id_freind: true },
+                    },
+                },
+            });
+            const obj = friends.freind;
+            let FriendList = {};
+            const idFriends = obj.map((scope) => scope.id_freind);
+            for (const num of idFriends) {
+                const OneFriend = await this.prisma.user.findUnique({
+                    where: { id_user: num },
+                });
+                const name = OneFriend.name;
+                FriendList = { name: OneFriend };
+            }
+            const WantedObj = { AccountOwner: user, FriendList };
+            const scoop = { FriendList };
+            return scoop;
         }
-        const WantedObj = { AccountOwner: user, FriendList };
-        const scoop = { FriendList };
-        return scoop;
+        catch (error) { }
     }
     async only_friends(req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        const friends = await this.prisma.user.findUnique({
-            where: { id_user: decoded.id },
-            include: {
-                freind: {
-                    select: { id_freind: true },
-                },
-            },
-        });
-        if (friends == null)
-            return null;
-        const obj = friends.freind;
-        if (obj == null)
-            return [];
-        const idFriends = obj.map((scope) => scope.id_freind);
-        if (idFriends.length == 0)
-            return [];
-        let array = [];
-        for (const num of idFriends) {
-            const OneFriend = await this.prisma.user.findUnique({
-                where: { id_user: num },
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const friends = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
                 include: {
-                    history: true,
-                    achievments: true,
+                    freind: {
+                        select: { id_freind: true },
+                    },
                 },
             });
-            array.push(OneFriend);
+            if (friends == null)
+                return null;
+            const obj = friends.freind;
+            if (obj == null)
+                return [];
+            const idFriends = obj.map((scope) => scope.id_freind);
+            if (idFriends.length == 0)
+                return [];
+            let array = [];
+            for (const num of idFriends) {
+                const OneFriend = await this.prisma.user.findUnique({
+                    where: { id_user: num },
+                    include: {
+                        history: true,
+                        achievments: true,
+                    },
+                });
+                array.push(OneFriend);
+            }
+            return array;
         }
-        return array;
+        catch (error) { }
     }
     async Get_User(req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        let obj = [];
-        const user = await this.prisma.user.findUnique({
-            where: { id_user: decoded.id },
-        });
-        obj.push(user);
-        return obj;
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            let obj = [];
+            const user = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
+            });
+            obj.push(user);
+            return obj;
+        }
+        catch (error) { }
     }
     async Get_All_Users(req) {
-        const users = await this.prisma.user.findMany({});
-        return users;
+        try {
+            const users = await this.prisma.user.findMany({});
+            return users;
+        }
+        catch (error) { }
     }
     async TwofactorAuth(body, req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        const user = await this.prisma.user.update({
-            where: { id_user: decoded.id },
-            data: {
-                TwoFactor: body.enable,
-            },
-        });
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const user = await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    TwoFactor: body.enable,
+                },
+            });
+        }
+        catch (error) { }
     }
 };
 exports.AuthController = AuthController;
@@ -250,13 +271,6 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "redirect", null);
-__decorate([
-    (0, common_1.Get)("get-session-token"),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "getSessionToken", null);
 __decorate([
     (0, common_1.Get)("get-qrcode"),
     __param(0, (0, common_1.Req)()),

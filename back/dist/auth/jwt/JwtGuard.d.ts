@@ -6,5 +6,4 @@ export declare class JwtAuthGuard implements CanActivate {
     private readonly JwtService;
     constructor(prisma: PrismaService, JwtService: JwtService);
     canActivate(context: ExecutionContext): Promise<boolean>;
-    isTokenNotExpired(expirationTimestamp: number): boolean;
 }

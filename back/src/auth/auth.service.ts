@@ -77,44 +77,40 @@ export class AuthService {
   }
 
   async GenerateQrCode(req: any) {
-    const sKey = authenticator.generateSecret();
-
-    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-    const user = await this.prisma.user.update({
-      where: { id_user: decoded.id },
-      data: { secretKey: sKey },
-    });
-    // console.log(user);
-    const otpAuthURL = authenticator.keyuri(decoded.email, this.config.get('QrCodeAppName'), sKey);
-
-    const qrCodeOptions = {
-      errorCorrectionLevel: "L", // You can customize this option as needed
-      width: 250, // Specify the desired width
-      height: 250, // Specify the desired height
-      margin: 1,
-      color: {
-        dark: "#3D3C65",
-        light: "#B7B7C9",
-      },
-    };
-
-    const qrCodeDataURL = qrcode.toDataURL(otpAuthURL, qrCodeOptions);
-
-    return qrCodeDataURL;
+    try {
+      const sKey = authenticator.generateSecret();
+  
+      const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+      const user = await this.prisma.user.update({
+        where: { id_user: decoded.id },
+        data: { secretKey: sKey },
+      });
+      // console.log(user);
+      const otpAuthURL = authenticator.keyuri(decoded.email, this.config.get('QrCodeAppName'), sKey);
+  
+      const qrCodeOptions = {
+        errorCorrectionLevel: "L", // You can customize this option as needed
+        width: 250, // Specify the desired width
+        height: 250, // Specify the desired height
+        margin: 1,
+        color: {
+          dark: "#3D3C65",
+          light: "#B7B7C9",
+        },
+      };
+  
+      const qrCodeDataURL = qrcode.toDataURL(otpAuthURL, qrCodeOptions);
+  
+      return qrCodeDataURL;
+    }catch(error){return null;}
   }
 
   async Verify_QrCode(body: any, req: any) {
-    /* 98853 mmanouze */
-    // console.log(body);
-    //   const { code } = body;
     try{
       const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
       const user = await this.prisma.user.findUnique({
         where: { id_user: decoded.id },
       });
-      //   const user = await this.prisma.user.findUnique({where: {id_user: decoded.id}});
-      // console.log(user);
-      // console.log(body);
       if (
         authenticator.verify({ token: body.inputValue, secret: user.secretKey })
       ){

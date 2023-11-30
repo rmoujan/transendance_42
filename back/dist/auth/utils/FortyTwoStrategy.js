@@ -37,9 +37,7 @@ let FortyTwoStrategy = class FortyTwoStrategy extends (0, passport_1.PassportStr
             const payload = await this.authservice.ValidateUsers(profile._json, req, res);
             return payload;
         }
-        catch (error) {
-            console.log('heeeeeeeeey');
-        }
+        catch (error) { }
     }
 };
 exports.FortyTwoStrategy = FortyTwoStrategy;

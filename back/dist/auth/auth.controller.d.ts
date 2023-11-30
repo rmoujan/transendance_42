@@ -12,7 +12,6 @@ export declare class AuthController {
     constructor(service: AuthService, jwt: JwtService, prisma: PrismaService, config: ConfigService);
     Login(): void;
     redirect(req: any, res: any): Promise<any>;
-    getSessionToken(req: any): string;
     GenerateQrCode(req: any): Promise<any>;
     Verify_QrCode(body: NumberDto, req: any): Promise<string>;
     Insert_Friends(body: NumberDtoO, req: any): Promise<void>;

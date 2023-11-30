@@ -32,26 +32,33 @@ let ProfileController = class ProfileController {
         this.config = config;
     }
     async Name_Modification(data, req, res) {
-        const value = await this.Profile.ModifyName(data, req, res);
-        if (value == "P2002")
-            res.status(400).json({ error: "name already exists" });
-        else
-            res.status(200).json({ msg: "name well setted" });
-        return { msg: "i am in the pofile controller now" };
+        try {
+            const value = await this.Profile.ModifyName(data, req, res);
+            if (value == "P2002")
+                res.status(400).json({ error: "name already exists" });
+            else
+                res.status(200).json({ msg: "name well setted" });
+            return { msg: "i am in the pofile controller now" };
+        }
+        catch (error) { }
     }
     Photo__Modification(photo, req, res) {
         this.Profile.ModifyPhoto(photo, req, res);
     }
     async About_me(data, req, res) {
-        const payload = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        const ab = data.About;
-        await this.prisma.user.update({
-            where: { id_user: payload.id },
-            data: {
-                About: ab,
-            },
-        });
+        try {
+            const payload = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const ab = data.About;
+            await this.prisma.user.update({
+                where: { id_user: payload.id },
+                data: {
+                    About: ab,
+                },
+            });
+        }
+        catch (error) { }
     }
+<<<<<<< HEAD
     async Get_About(req, res) {
         const user = await this.Profile.About_me(req, res);
         console.log(user.About);
@@ -79,146 +86,197 @@ let ProfileController = class ProfileController {
             winspercent = (gameW / gameP) * 100;
             lossespercent = (gameL / gameP) * 100;
             await this.prisma.user.update({
+=======
+    async Get_About(req) {
+        try {
+            const user = await this.Profile.About_me(req);
+            return user.About;
+        }
+        catch (error) { }
+    }
+    async VsBoot(req, body) {
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const user = await this.prisma.user.findUnique({
+>>>>>>> d5b795dc08e4bec0b461ece852858e142c1a77ca
                 where: { id_user: decoded.id },
-                data: {
-                    WonBot: gameW,
-                    wins: gameW,
-                    games_played: gameP,
-                    Progress: progress,
-                    Wins_percent: winspercent,
-                    Losses_percent: lossespercent,
-                    history: {
-                        create: {
-                            winner: true,
-                            username: name,
-                            userscore: body.userScore,
-                            useravatar: avatar,
-                            enemyId: 9,
-                            enemyscore: body.botScore,
+            });
+            let winspercent;
+            let lossespercent;
+            let progress;
+            let gameP = user.games_played + 1;
+            let gameW = user.WonBot;
+            let gameL = user.LoseBot;
+            let avatar = user.avatar;
+            let name = user.name;
+            if (body.won) {
+                gameW++;
+                progress = ((gameW - gameL) / gameP) * 100;
+                progress = progress < 0 ? 0 : progress;
+                winspercent = (gameW / gameP) * 100;
+                lossespercent = (gameL / gameP) * 100;
+                await this.prisma.user.update({
+                    where: { id_user: decoded.id },
+                    data: {
+                        WonBot: gameW,
+                        wins: gameW,
+                        games_played: gameP,
+                        Progress: progress,
+                        Wins_percent: winspercent,
+                        Losses_percent: lossespercent,
+                        history: {
+                            create: {
+                                winner: true,
+                                username: name,
+                                userscore: body.userScore,
+                                useravatar: avatar,
+                                enemyId: 9,
+                                enemyscore: body.botScore,
+                            },
                         },
                     },
-                },
-            });
-        }
-        else {
-            gameL++;
-            progress = ((gameW - gameL) / gameP) * 100;
-            progress = progress < 0 ? 0 : progress;
-            winspercent = (gameW / gameP) * 100;
-            lossespercent = (gameL / gameP) * 100;
-            await this.prisma.user.update({
-                where: { id_user: decoded.id },
-                data: {
-                    LoseBot: gameL,
-                    losses: gameL,
-                    games_played: gameP,
-                    Progress: progress,
-                    Wins_percent: winspercent,
-                    Losses_percent: lossespercent,
-                    history: {
-                        create: {
-                            winner: false,
-                            username: name,
-                            userscore: body.userScore,
-                            useravatar: avatar,
-                            enemyId: 9,
-                            enemyscore: body.botScore,
+                });
+            }
+            else {
+                gameL++;
+                progress = ((gameW - gameL) / gameP) * 100;
+                progress = progress < 0 ? 0 : progress;
+                winspercent = (gameW / gameP) * 100;
+                lossespercent = (gameL / gameP) * 100;
+                await this.prisma.user.update({
+                    where: { id_user: decoded.id },
+                    data: {
+                        LoseBot: gameL,
+                        losses: gameL,
+                        games_played: gameP,
+                        Progress: progress,
+                        Wins_percent: winspercent,
+                        Losses_percent: lossespercent,
+                        history: {
+                            create: {
+                                winner: false,
+                                username: name,
+                                userscore: body.userScore,
+                                useravatar: avatar,
+                                enemyId: 9,
+                                enemyscore: body.botScore,
+                            },
                         },
                     },
-                },
-            });
-        }
-        if (gameW == 1) {
-            await this.prisma.user.update({
-                where: { id_user: decoded.id },
-                data: {
-                    achievments: {
-                        create: {
-                            achieve: "won Bot",
-                            msg: "Wliti Bot",
+                });
+            }
+            if (gameW == 1) {
+                await this.prisma.user.update({
+                    where: { id_user: decoded.id },
+                    data: {
+                        achievments: {
+                            create: {
+                                achieve: "won Bot",
+                                msg: "Wliti Bot",
+                            },
                         },
                     },
-                },
-            });
+                });
+            }
         }
+        catch (error) { }
     }
     async NotFriendsUsers(req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        if (decoded == null)
-            return;
-        const users = this.prisma.user.findMany({
-            where: {
-                NOT: {
-                    freind: {
-                        some: {
-                            id_freind: decoded.id,
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            if (decoded == null)
+                return;
+            const users = this.prisma.user.findMany({
+                where: {
+                    NOT: {
+                        freind: {
+                            some: {
+                                id_freind: decoded.id,
+                            },
                         },
                     },
                 },
-            },
-        });
-        const FinalUsers = (await users).filter((scope) => {
-            if (scope.id_user != decoded.id) {
-                return scope;
-            }
-        });
-        return FinalUsers;
+            });
+            const FinalUsers = (await users).filter((scope) => {
+                if (scope.id_user != decoded.id) {
+                    return scope;
+                }
+            });
+            return FinalUsers;
+        }
+        catch (error) { }
     }
     async GetNotifications(req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        if (decoded == null)
-            return;
-        const user = await this.prisma.user.findUnique({
-            where: { id_user: decoded.id },
-            include: {
-                notification: true,
-            },
-        });
-        if (user.notification == null)
-            return [];
-        return user.notification;
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            if (decoded == null)
+                return;
+            const user = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
+                include: {
+                    notification: true,
+                },
+            });
+            if (user.notification == null)
+                return [];
+            return user.notification;
+        }
+        catch (error) { }
     }
     async TopThree(req) {
-        const topUsers = await this.prisma.user.findMany({
-            orderBy: [
-                {
-                    Wins_percent: "desc",
-                },
-            ],
-            take: 3,
-        });
-        return topUsers;
+        try {
+            const topUsers = await this.prisma.user.findMany({
+                orderBy: [
+                    {
+                        Wins_percent: "desc",
+                    },
+                ],
+                take: 3,
+            });
+            return topUsers;
+        }
+        catch (error) { }
     }
     async Achievments(req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        if (decoded == null)
-            return;
-        const userAchievements = await this.prisma.achievments.findMany({
-            where: {
-                userId: decoded.id,
-            },
-        });
-        return userAchievements;
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            if (decoded == null)
+                return;
+            const userAchievements = await this.prisma.achievments.findMany({
+                where: {
+                    userId: decoded.id,
+                },
+            });
+            return userAchievements;
+        }
+        catch (error) { }
     }
     async History(req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        if (decoded == null)
-            return;
-        const user = await this.prisma.history.findMany({
-            where: { userId: decoded.id },
-        });
-        return user;
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            if (decoded == null)
+                return;
+            const user = await this.prisma.history.findMany({
+                where: { userId: decoded.id },
+            });
+            return user;
+        }
+        catch (error) { }
     }
     async GetAvatar(req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        if (decoded == null)
-            return;
-        const user = await this.prisma.user.findUnique({
-            where: { id_user: decoded.id },
-        });
-        return user.avatar;
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            if (decoded == null)
+                return;
+            const user = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
+            });
+            return user.avatar;
+        }
+        catch (error) { }
     }
     async Gamestatus(req, body) {
+<<<<<<< HEAD
         const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
         if (decoded == null)
             return;
@@ -247,42 +305,87 @@ let ProfileController = class ProfileController {
             await this.prisma.notification.deleteMany({
                 where: {
                     AND: [{ userId: decoded.id }, { GameInvitation: true }],
+=======
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            if (decoded == null)
+                return;
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    InGame: body.status,
+>>>>>>> d5b795dc08e4bec0b461ece852858e142c1a77ca
                 },
             });
         }
+        catch (error) { }
+    }
+    async gameinfos(req, body) {
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            if (decoded == null)
+                return;
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    homies: body.homies,
+                    invited: body.invited,
+                    homie_id: body.homie_id,
+                },
+            });
+            if (body.homies == true && body.invited == true) {
+                await this.prisma.notification.deleteMany({
+                    where: {
+                        AND: [{ userId: decoded.id }, { GameInvitation: true }],
+                    },
+                });
+            }
+        }
+        catch (error) { }
     }
     async Returngameinfos(req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        if (decoded == null)
-            return;
-        const user = await this.prisma.user.findUnique({
-            where: { id_user: decoded.id },
-        });
-        const obj = {
-            homies: user.homies,
-            invited: user.invited,
-            homie_id: user.homie_id,
-        };
-        return obj;
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            if (decoded == null)
+                return;
+            const user = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
+            });
+            const obj = {
+                homies: user.homies,
+                invited: user.invited,
+                homie_id: user.homie_id,
+            };
+            return obj;
+        }
+        catch (error) { }
     }
     async Logout(req, res) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        if (decoded == null)
-            return;
-        await this.prisma.user.update({
-            where: { id_user: decoded.id },
-            data: {
-                status_user: "offline",
-            },
-        });
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            if (decoded == null)
+                return;
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    status_user: "offline",
+                },
+            });
+        }
+        catch (error) { }
     }
     deletecookie(res) {
         res.clearCookie("cookie");
         res.status(200).json({ msg: "cookie deleted" });
+<<<<<<< HEAD
         console.log("cookie deleted");
     }
     async verify_Otp(body, req) {
         console.log('veriyyy ', body);
+=======
+    }
+    async verify_Otp(body, req) {
+>>>>>>> d5b795dc08e4bec0b461ece852858e142c1a77ca
         try {
             const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
             await this.prisma.user.update({
@@ -365,9 +468,8 @@ __decorate([
 __decorate([
     (0, common_1.Get)("About"),
     __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "Get_About", null);
 __decorate([

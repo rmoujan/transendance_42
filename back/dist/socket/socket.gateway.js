@@ -26,37 +26,39 @@ let SocketGateway = class SocketGateway {
         this.SocketContainer = new Map();
     }
     decodeCookie(client) {
-        let cookieHeader;
-        cookieHeader = client.handshake.headers.cookie;
-        if (cookieHeader == undefined)
-            return null;
-        const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
-            const [name, value] = cookie.trim().split("=");
-            acc[name] = value;
-            return acc;
-        }, {});
-        const specificCookie = cookies["cookie"];
-        const decoded = this.jwt.verify(specificCookie);
-        return decoded;
+        try {
+            let cookieHeader;
+            cookieHeader = client.handshake.headers.cookie;
+            if (cookieHeader == undefined)
+                return null;
+            const cookies = cookieHeader.split(";").reduce((acc, cookie) => {
+                const [name, value] = cookie.trim().split("=");
+                acc[name] = value;
+                return acc;
+            }, {});
+            const specificCookie = cookies["cookie"];
+            const decoded = this.jwt.verify(specificCookie);
+            return decoded;
+        }
+        catch (error) { }
     }
     afterInit(server) { }
     async handleConnection(client) {
-        const decoded = this.decodeCookie(client);
-        if (decoded == null)
-            return;
-        let user_id = decoded.id;
-        this.SocketContainer.set(user_id, client.id);
         try {
+            const decoded = this.decodeCookie(client);
+            if (decoded == null)
+                return;
+            let user_id = decoded.id;
+            this.SocketContainer.set(user_id, client.id);
         }
-        catch (e) {
-        }
+        catch (e) { }
     }
     async handleDisconnect(client) {
-        const decoded = this.decodeCookie(client);
-        if (decoded == null)
-            return;
-        this.SocketContainer.delete(decoded.id);
         try {
+            const decoded = this.decodeCookie(client);
+            if (decoded == null)
+                return;
+            this.SocketContainer.delete(decoded.id);
             const user = await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
@@ -65,8 +67,7 @@ let SocketGateway = class SocketGateway {
             });
             this.server.emit("offline", { id_user: decoded.id });
         }
-        catch (e) {
-        }
+        catch (e) { }
     }
     async handleUserOnline(client) {
         try {
@@ -84,23 +85,24 @@ let SocketGateway = class SocketGateway {
         catch (error) { }
     }
     async handleUserOffline(client) {
-        const decoded = this.decodeCookie(client);
-        if (decoded == null)
-            return;
-        await this.prisma.user.update({
-            where: { id_user: decoded.id },
-            data: {
-                status_user: "offline",
-            },
-        });
-        const sockid = this.SocketContainer.get(decoded.id);
-        this.server.emit("RefreshFriends");
-        this.server.emit("list-friends");
-    }
-    handleMessage(body) {
-        return "Hello world!";
+        try {
+            const decoded = this.decodeCookie(client);
+            if (decoded == null)
+                return;
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    status_user: "offline",
+                },
+            });
+            const sockid = this.SocketContainer.get(decoded.id);
+            this.server.emit("RefreshFriends");
+            this.server.emit("list-friends");
+        }
+        catch (error) { }
     }
     async invite_game(client, body) {
+<<<<<<< HEAD
         const decoded = this.decodeCookie(client);
         console.log("inviiiiite to play");
         const data = await this.prisma.user.findUnique({
@@ -113,13 +115,56 @@ let SocketGateway = class SocketGateway {
         if (notify == null) {
             console.log('ingame : ', data.InGame);
             if (data.InGame == false) {
+=======
+        try {
+            const decoded = this.decodeCookie(client);
+            const data = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
+            });
+            const notify = await this.prisma.notification.findFirst({
+                where: { userId: body.id_user, id_user: decoded.id },
+            });
+            if (notify == null) {
+                if (data.InGame == false) {
+                    const user = await this.prisma.user.update({
+                        where: { id_user: body.id_user },
+                        data: {
+                            notification: {
+                                create: {
+                                    AcceptFriend: false,
+                                    GameInvitation: true,
+                                    id_user: decoded.id,
+                                    avatar: data.avatar,
+                                    name: data.name,
+                                },
+                            },
+                        },
+                    });
+                    const sock = this.SocketContainer.get(body.id_user);
+                    this.server.to(sock).emit("notification");
+                }
+            }
+        }
+        catch (error) { }
+    }
+    async add_friend(client, body) {
+        try {
+            const decoded = this.decodeCookie(client);
+            const data = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
+            });
+            const notify = await this.prisma.notification.findFirst({
+                where: { userId: body.id_user, id_user: decoded.id },
+            });
+            if (notify == null) {
+>>>>>>> d5b795dc08e4bec0b461ece852858e142c1a77ca
                 const user = await this.prisma.user.update({
                     where: { id_user: body.id_user },
                     data: {
                         notification: {
                             create: {
-                                AcceptFriend: false,
-                                GameInvitation: true,
+                                AcceptFriend: true,
+                                GameInvitation: false,
                                 id_user: decoded.id,
                                 avatar: data.avatar,
                                 name: data.name,
@@ -127,57 +172,42 @@ let SocketGateway = class SocketGateway {
                         },
                     },
                 });
+<<<<<<< HEAD
                 console.log("bodyyyyy ", body);
                 const sock = this.SocketContainer.get(body.id_user);
                 console.log("sooock ", sock);
                 this.server.to(sock).emit("notification");
+=======
+>>>>>>> d5b795dc08e4bec0b461ece852858e142c1a77ca
             }
+            const sock = this.SocketContainer.get(body.id_user);
+            this.server.to(sock).emit("notification");
         }
-    }
-    async add_friend(client, body) {
-        const decoded = this.decodeCookie(client);
-        const data = await this.prisma.user.findUnique({
-            where: { id_user: decoded.id },
-        });
-        const notify = await this.prisma.notification.findFirst({
-            where: { userId: body.id_user, id_user: decoded.id },
-        });
-        if (notify == null) {
-            const user = await this.prisma.user.update({
-                where: { id_user: body.id_user },
-                data: {
-                    notification: {
-                        create: {
-                            AcceptFriend: true,
-                            GameInvitation: false,
-                            id_user: decoded.id,
-                            avatar: data.avatar,
-                            name: data.name,
-                        },
-                    },
-                },
-            });
-        }
-        const sock = this.SocketContainer.get(body.id_user);
-        this.server.to(sock).emit("notification");
+        catch (error) { }
     }
     async NewFriend(client, body) {
-        const decoded = this.decodeCookie(client);
-        const sockrecv = this.SocketContainer.get(decoded.id);
-        const socksend = this.SocketContainer.get(body);
-        this.server.to(sockrecv).emit("RefreshFriends");
-        this.server.to(sockrecv).emit("friendsUpdateChat");
-        this.server.to(socksend).emit("RefreshFriends");
-        this.server.to(socksend).emit("friendsUpdateChat");
+        try {
+            const decoded = this.decodeCookie(client);
+            const sockrecv = this.SocketContainer.get(decoded.id);
+            const socksend = this.SocketContainer.get(body);
+            this.server.to(sockrecv).emit("RefreshFriends");
+            this.server.to(sockrecv).emit("friendsUpdateChat");
+            this.server.to(socksend).emit("RefreshFriends");
+            this.server.to(socksend).emit("friendsUpdateChat");
+        }
+        catch (error) { }
     }
     async friends_list(client, body) {
-        const decoded = this.decodeCookie(client);
-        const sockrecv = this.SocketContainer.get(decoded.id);
-        const socksend = this.SocketContainer.get(body);
-        this.server.to(sockrecv).emit("list-friends");
-        this.server.to(sockrecv).emit("friendsUpdateChat");
-        this.server.to(socksend).emit("list-friends");
-        this.server.to(socksend).emit("friendsUpdateChat");
+        try {
+            const decoded = this.decodeCookie(client);
+            const sockrecv = this.SocketContainer.get(decoded.id);
+            const socksend = this.SocketContainer.get(body);
+            this.server.to(sockrecv).emit("list-friends");
+            this.server.to(sockrecv).emit("friendsUpdateChat");
+            this.server.to(socksend).emit("list-friends");
+            this.server.to(socksend).emit("friendsUpdateChat");
+        }
+        catch (error) { }
     }
 };
 exports.SocketGateway = SocketGateway;
@@ -203,13 +233,6 @@ __decorate([
     __metadata("design:paramtypes", [socket_io_1.Socket]),
     __metadata("design:returntype", Promise)
 ], SocketGateway.prototype, "handleUserOffline", null);
-__decorate([
-    (0, websockets_1.SubscribeMessage)("message"),
-    __param(0, (0, websockets_1.MessageBody)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", String)
-], SocketGateway.prototype, "handleMessage", null);
 __decorate([
     (0, websockets_1.SubscribeMessage)("invite-game"),
     __param(0, (0, websockets_1.ConnectedSocket)()),

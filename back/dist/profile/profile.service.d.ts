@@ -8,7 +8,7 @@ export declare class ProfileService {
     constructor(prisma: PrismaService, jwt: JwtService, config: ConfigService);
     ModifyName(dat: any, req: any, res: any): Promise<any>;
     ModifyPhoto(photo: any, req: any, res: any): Promise<void>;
-    About_me(req: any, res: any): Promise<{
+    About_me(req: any): Promise<{
         id_user: number;
         name: string;
         avatar: string;

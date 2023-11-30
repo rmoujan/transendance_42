@@ -41,11 +41,14 @@ let JwtAuthGuard = class JwtAuthGuard {
             return false;
         }
     }
+<<<<<<< HEAD
     isTokenNotExpired(expirationTimestamp) {
         console.log(expirationTimestamp);
         const currentTimestamp = Math.floor(Date.now() / 1000);
         return expirationTimestamp > currentTimestamp;
     }
+=======
+>>>>>>> d5b795dc08e4bec0b461ece852858e142c1a77ca
 };
 exports.JwtAuthGuard = JwtAuthGuard;
 exports.JwtAuthGuard = JwtAuthGuard = __decorate([

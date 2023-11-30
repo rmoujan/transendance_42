@@ -22,9 +22,9 @@ let ProfileService = class ProfileService {
         this.config = config;
     }
     async ModifyName(dat, req, res) {
-        const Token = req.cookies[this.config.get('cookie')];
-        const verifyToekn = this.jwt.verify(Token);
         try {
+            const Token = req.cookies[this.config.get('cookie')];
+            const verifyToekn = this.jwt.verify(Token);
             const user = await this.prisma.user.update({
                 where: { id_user: verifyToekn.id },
                 data: {
@@ -38,14 +38,11 @@ let ProfileService = class ProfileService {
         }
     }
     async ModifyPhoto(photo, req, res) {
-        const verifyToken = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        console.log('orginal name : ', photo.originalname);
-        const filePath = '/home/mmanouze/Desktop/last/front/public/uploads/' + photo.originalname;
-        const rightPath = '/public/uploads/' + photo.originalname;
-        console.log(photo.originalname);
-        fs.writeFileSync(filePath, photo.buffer);
-        console.log('tswiraaaaaaa');
         try {
+            const verifyToken = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const filePath = '/home/mmanouze/Desktop/last/front/public/uploads/' + photo.originalname;
+            const rightPath = '/public/uploads/' + photo.originalname;
+            fs.writeFileSync(filePath, photo.buffer);
             await this.prisma.user.update({
                 where: { id_user: verifyToken.id },
                 data: {
@@ -53,16 +50,23 @@ let ProfileService = class ProfileService {
                 },
             });
         }
+<<<<<<< HEAD
         catch (error) {
             console.log(error);
         }
+=======
+        catch (error) { }
+>>>>>>> d5b795dc08e4bec0b461ece852858e142c1a77ca
     }
-    async About_me(req, res) {
-        const payload = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        const user = await this.prisma.user.findUnique({
-            where: { id_user: payload.id },
-        });
-        return (user);
+    async About_me(req) {
+        try {
+            const payload = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const user = await this.prisma.user.findUnique({
+                where: { id_user: payload.id },
+            });
+            return (user);
+        }
+        catch (error) { }
     }
 };
 exports.ProfileService = ProfileService;
