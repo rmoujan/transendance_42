@@ -1,17 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
-// import { Picker } from 'emoji-mart';
-// import 'emoji-mart/css/emoji-mart.css';
-import { FaLaughBeam } from 'react-icons/fa';
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
-import { useAppSelector } from '../../redux/store/store';
+import React, { useEffect, useRef, useState } from 'react';
+import { FaLaughBeam } from 'react-icons/fa';
 function AboutMe() {
   const [inputText, setInputText] = useState('');
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const emojiPickerRef = useRef<HTMLElement | null>(null);
   const [selectedEmoji, setSelectedEmoji] = useState('');
-  const { friends } = useAppSelector((state) => state.app)
   const handleEmojiClick = (emoji: any) => {
+    selectedEmoji
     setSelectedEmoji(emoji.native);
     setShowEmojiPicker(false);
   };
@@ -22,8 +19,6 @@ function AboutMe() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const textWithEmoji = inputText + selectedEmoji;
-    console.log('Data saved on the backend:', textWithEmoji);
   };
 
   useEffect(() => {

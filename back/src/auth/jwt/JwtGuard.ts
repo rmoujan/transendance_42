@@ -22,10 +22,8 @@ export class JwtAuthGuard implements CanActivate {
       response.send("false").status(401);
       return false;
     }
-
     try {
       const decoded = this.JwtService.verify(token);
-      // console.log(decoded);
       if (!decoded) {
         response.send("false").status(401);
         return false;
@@ -33,28 +31,9 @@ export class JwtAuthGuard implements CanActivate {
       const user = await this.prisma.user.findUnique({
         where: { id_user: decoded.id },
       });
-      //   console.log("papapapapa");
-      //   if (user.TwoFactor && !user.ISVERIDIED && user.status_user == "offline") {
-      //     response.send("false").status(401);
-      //     return false;
-      //   }
-      // const user = await this.prisma.user.findUnique({where : {id_user: decoded.id}});
-      // if (user.TwoFactor){
-      //     response.send("redirect to 2fa");
-      //     return false;
-      //  }
       return true;
     } catch (error) {
-      // console.log("falsyyyyyy");
       return false;
     }
-  }
-
-  isTokenNotExpired(expirationTimestamp: number): boolean {
-    console.log(expirationTimestamp);
-    const currentTimestamp = Math.floor(Date.now() / 1000); // Current time in seconds
-
-    // Check if the expiration timestamp is in the future
-    return expirationTimestamp > currentTimestamp;
   }
 }

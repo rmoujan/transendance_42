@@ -1,4 +1,3 @@
-import React from 'react'
 import MaincontentSetting from './MaincontentSetting'
 function Setting() {
   return (

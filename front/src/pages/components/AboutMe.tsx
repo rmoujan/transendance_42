@@ -1,41 +1,23 @@
-import React, { useState, useEffect, useRef } from "react";
-import Path from "./Path";
-import axios from 'axios';
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
+import axios from 'axios';
+import React, { useEffect, useRef, useState } from "react";
 import { FaLaughBeam } from 'react-icons/fa';
-import { func } from "prop-types";
-import { set } from "react-hook-form";
-// import { IoIosMoon } from 'react-icons/io';
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { showSnackbar } from "../../redux/slices/contact";
+import { useAppDispatch } from "../../redux/store/store";
 
-type User = {
-    id_user: number;
-    name: string;
-    avatar: string;
-    TwoFactor: boolean;
-    secretKey: string | null;
-    About:string;
-    status_user: string;
-  };
 function AboutMe() {
     const [inputText, setInputText] = useState('');
     const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-    const [selectedEmoji, setSelectedEmoji] = useState('');
     const emojiPickerRef = useRef<HTMLElement | null>(null);
     const dispatch = useAppDispatch();
     const handleSubmit = async (e: React.FormEvent) => {
-        axios.post("http://localhost:3000/profile/About", { About: inputText }, { withCredentials: true }).then((res) => {
-            console.log("res", res.data);
-            // setUser(res.data);
+        axios.post("http://localhost:3000/profile/About", { About: inputText }, { withCredentials: true }).then(() => {
         }
         );
         e.preventDefault();
         try {
             dispatch(showSnackbar({ message: "Your post has been published", type: "success" }));
-            console.log('Data saved on the backend:', inputText);
-            //cleaning the input
             setInputText('');
         }
         catch (error) {
@@ -43,37 +25,13 @@ function AboutMe() {
             console.error('Error saving data:', error);
         }
     };
-    const [user, setUser] = useState<User[]>([]);
-    const [About, setAbout] = useState<HTMLTextAreaElement | null>(null);
-    const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setInputText(e.target.value);
-    };
 
-    const inputRef = useRef<HTMLTextAreaElement | null>(null);
-    const [value, setValue] = useState<string>('');
+
     
     function handleEmojiClick(emoji: any) {
-        const input = inputRef.current;
-        console.log("emoji", emoji);
         setInputText(inputText + emoji.native);
-        console.log("input", input);
        
-        setAbout(input);
-        // console.log("emoji", emoji);
-        // setSelectedEmoji(emoji.native);
-        // setShowEmojiPicker(false);
     }
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //       const backURL = "http://localhost:3000/profile/About";
-    //       console.log("About", About);
-    //       axios.post(backURL, About,{ withCredentials: true }).then((res) => {
-    //         console.log("res", res.data);
-    //         setUser(res.data);
-    //       }
-    //         );
-    //     }
-    //   }, []);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
@@ -84,11 +42,9 @@ function AboutMe() {
         if (showEmojiPicker) {
             document.addEventListener('mousedown', handleClickOutside);
         } else {
-            // Remove the event listener when the emoji picker is hidden
             document.removeEventListener('mousedown', handleClickOutside);
         }
 
-        // Cleanup the event listener when the component unmounts
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
@@ -99,11 +55,7 @@ function AboutMe() {
                 <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
                     <div className="flex flex-wrap items-center divide-gray-200 sm:divide-x dark:divide-gray-600">
                         <div className="flex items-center space-x-1 sm:pr-4" ref={emojiPickerRef as any}>
-                            {/* <div className={showEmojiPicker ? "inline  fixed mt-[100rem] left-auto" : "hidden"}>
-                            <Picker data={data} onEmojiSelect={(emoji: any) => {
-                                handleEmojiClick(emoji.native)
-                            }}/>
-                            </div> */}
+                   
                             {showEmojiPicker && (
                                 <div className="absolute top-auto mt-96  z-10 left-auto ml-80">
                                     <Picker data={data} onEmojiSelect={(emoji: any) => handleEmojiClick(emoji)} />
@@ -112,17 +64,6 @@ function AboutMe() {
                             <FaLaughBeam onClick={() =>
                                 setShowEmojiPicker((show) => !show)} />
 
-                                
-                            {/* <button 
-                            type="button"
-                            `${}`
-                            // onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                            className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-                                <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM13.5 6a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm-7 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm3.5 9.5A5.5 5.5 0 0 1 4.6 11h10.81A5.5 5.5 0 0 1 10 15.5Z" />
-                                </svg>
-                                <span className="sr-only">Add emoji</span>
-                            </button> */}
                         </div>
                         <div className="flex flex-wrap items-center space-x-1 sm:pl-4">
                         </div>
@@ -134,7 +75,6 @@ function AboutMe() {
                 </div>
                 <div className="px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
                     <label htmlFor="editor" className="sr-only">Publish post</label>
-                    {/* I love playing pong game! Always up for a challenging match. */}
                     <textarea
                         id="editor"
                         rows={8}

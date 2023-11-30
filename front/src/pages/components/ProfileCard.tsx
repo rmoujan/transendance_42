@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Data } from "../Data/AccountOwnerData";
-import { fadeIn } from "./variants";
-import { Link, useLocation } from "react-router-dom";
 import axios from "axios";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import Cover from "../../img/bg33.png";
 import { socket_user } from "../../socket";
 type User = {
@@ -22,12 +20,8 @@ type User = {
 };
 const ProfileCard = () => {
   const [user, setUser] = useState<User[]>([]);
-  const location = useLocation();
-  // console.log(location.pathname);
-  const [activeSection, setActiveSection] = useState(location.pathname);
 
   const handleLogout = (path: string) => {
-    console.log("path", activeSection);
     if (path === "/login" || path === "/") {
       if (socket_user) {
         socket_user.emit("userOffline");
@@ -44,7 +38,6 @@ const ProfileCard = () => {
       });
       setUser(data);
     } catch (err) {
-      console.log(err);
     }
   };
   useEffect(() => {

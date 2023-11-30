@@ -11,7 +11,6 @@ export class JwtService extends PassportStrategy(Strategy, 'jwt') {
     constructor(private config: ConfigService) {
         super({
           jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-        //   ignoreExpiration: false,
           secretOrKey: config.get('secretOrKey'),
         });
       }
@@ -33,12 +32,10 @@ export class JwtService extends PassportStrategy(Strategy, 'jwt') {
     }
 
     verify(token: string): any {
-        // console.log('nooot here');
         try {
             return jwt.verify(token, this.secretKey);
         } catch (err) {
             return null;
         }
-
     }
 }

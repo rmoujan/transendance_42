@@ -53,7 +53,7 @@ const JoinPublicForm = ({ handleClose }: any) => {
     resolver: yupResolver(schema),
   });
 
-  const { errors } = formState;
+  const {} = formState;
 
   const onSubmit = async (data: JoinPublicFormData) => {
     try {
@@ -110,7 +110,7 @@ const JoinPublicForm = ({ handleClose }: any) => {
 
   return (
     <form
-      onSubmit={handleSubmit((data) => onSubmit({ mySelect: selectedOption }))}
+      onSubmit={handleSubmit(() => onSubmit({ mySelect: selectedOption }))}
     >
       <Stack spacing={3}>
         <FormControl fullWidth>

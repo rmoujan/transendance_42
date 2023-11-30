@@ -31,7 +31,7 @@ const StyledChatBox = styled(Box)(() => ({
   },
 }));
 
-const ChatElements = (id: IdType) => {
+const ChatElements = (id: any) => {
   const { contact, profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   let selected_id: number = 0;

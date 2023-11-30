@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
 
 type User = {
