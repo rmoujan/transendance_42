@@ -177,7 +177,7 @@ const MembersSettings = (el: any) => {
         dispatch(
           showSnackbar({
             severity: "success",
-            message: `You have muted ${el.el.user.name} successfully`,
+            message: `You have unmuted ${el.el.user.name} successfully`,
           })
         );
       } else {

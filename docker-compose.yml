@@ -7,7 +7,7 @@ services:
       - backend
       - database
     build:
-      context: ./frontend
+      context: ./front
       dockerfile: Dockerfile
     ports:
       - "5173:5173"
@@ -19,7 +19,7 @@ services:
   backend:
     container_name: backend
     build:
-      context: ./backend
+      context: ./back
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
