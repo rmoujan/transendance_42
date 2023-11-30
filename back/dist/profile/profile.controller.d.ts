@@ -18,7 +18,7 @@ export declare class ProfileController {
     }>;
     Photo__Modification(photo: any, req: any, res: any): void;
     About_me(data: ProfileDto, req: any, res: any): Promise<void>;
-    Get_About(req: any, res: any): Promise<string>;
+    Get_About(req: any): Promise<string>;
     VsBoot(req: any, body: MixedDto): Promise<void>;
     NotFriendsUsers(req: any): Promise<{
         id_user: number;

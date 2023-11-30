@@ -13,7 +13,6 @@ const auth_service_1 = require("./auth.service");
 const FortyTwoStrategy_1 = require("./utils/FortyTwoStrategy");
 const prisma_service_1 = require("../prisma.service");
 const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
-const Serializer_1 = require("./utils/Serializer");
 const jwt_1 = require("@nestjs/jwt");
 let AuthModule = class AuthModule {
 };
@@ -23,8 +22,7 @@ exports.AuthModule = AuthModule = __decorate([
         imports: [jwt_1.JwtModule],
         controllers: [auth_controller_1.AuthController],
         providers: [auth_service_1.AuthService, FortyTwoStrategy_1.FortyTwoStrategy,
-            prisma_service_1.PrismaService, jwtservice_service_1.JwtService,
-            Serializer_1.SessionSerializer],
+            prisma_service_1.PrismaService, jwtservice_service_1.JwtService,],
     })
 ], AuthModule);
 //# sourceMappingURL=auth.module.js.map

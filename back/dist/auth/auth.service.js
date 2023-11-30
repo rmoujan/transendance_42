@@ -81,25 +81,30 @@ let AuthService = class AuthService {
         catch (error) { }
     }
     async GenerateQrCode(req) {
-        const sKey = otplib_1.authenticator.generateSecret();
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        const user = await this.prisma.user.update({
-            where: { id_user: decoded.id },
-            data: { secretKey: sKey },
-        });
-        const otpAuthURL = otplib_1.authenticator.keyuri(decoded.email, this.config.get('QrCodeAppName'), sKey);
-        const qrCodeOptions = {
-            errorCorrectionLevel: "L",
-            width: 250,
-            height: 250,
-            margin: 1,
-            color: {
-                dark: "#3D3C65",
-                light: "#B7B7C9",
-            },
-        };
-        const qrCodeDataURL = qrcode.toDataURL(otpAuthURL, qrCodeOptions);
-        return qrCodeDataURL;
+        try {
+            const sKey = otplib_1.authenticator.generateSecret();
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const user = await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: { secretKey: sKey },
+            });
+            const otpAuthURL = otplib_1.authenticator.keyuri(decoded.email, this.config.get('QrCodeAppName'), sKey);
+            const qrCodeOptions = {
+                errorCorrectionLevel: "L",
+                width: 250,
+                height: 250,
+                margin: 1,
+                color: {
+                    dark: "#3D3C65",
+                    light: "#B7B7C9",
+                },
+            };
+            const qrCodeDataURL = qrcode.toDataURL(otpAuthURL, qrCodeOptions);
+            return qrCodeDataURL;
+        }
+        catch (error) {
+            return null;
+        }
     }
     async Verify_QrCode(body, req) {
         try {
