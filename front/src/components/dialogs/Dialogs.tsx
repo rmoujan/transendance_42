@@ -487,7 +487,6 @@ const RemoveDialog = ({ open, handleClose, el }: any) => {
         </Button>
         <Button
           onClick={async () => {
-            console.log(el);
             const res = await axios.post(
               "http://localhost:3000/channels/removeChannel",
               {
@@ -538,15 +537,11 @@ const RemoveDialog = ({ open, handleClose, el }: any) => {
 
 const InviteDialog = ({ open, handleClose }: any) => (
   <Dialog
-    // fullWidth
-    // maxWidth="md"
     open={open}
     TransitionComponent={Transition}
     keepMounted
     onClose={handleClose}
     aria-describedby="alert-dialog-slide-description"
-    // padding={15}
-    // borderRadius={"55px"}
     PaperProps={{
       style: {
         backgroundColor: "#AE9BCD",
@@ -554,7 +549,6 @@ const InviteDialog = ({ open, handleClose }: any) => (
         borderRadius: "45px",
         width: "100%",
         maxWidth: "680px",
-        // padding: "32px 135px",
       },
     }}
   >
@@ -573,7 +567,6 @@ const InviteDialog = ({ open, handleClose }: any) => (
       <DialogActions
         style={{ margin: "0", justifyContent: "space-evenly", height: "150px" }}
       >
-        {/* `make this create in the same level of figma */}
         <Stack direction={"row"} spacing={5} p={0}>
           <Button
             onClick={handleClose}

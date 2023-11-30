@@ -1,5 +1,5 @@
-import { Box, Stack } from "@mui/material";
 import { useEffect } from "react";
+import { Box, Stack } from "@mui/material";
 import InfosChannel from "../../components/contactTypes/InfosChannel";
 import InfosContact from "../../components/contactTypes/InfosContact";
 import { FetchFriends } from "../../redux/slices/app";
@@ -15,18 +15,13 @@ import NoChat from "../../sections/NoChat";
 import ChatTabs from "./ChatTabs";
 
 const ChatGeneral: React.FC = () => {
-  const { contact, profile, app, channels } = useAppSelector((state) => state);
+  const { contact, profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    // console.log(profile._id);
-    // if (!profile._id) {
-    //   dispatch(FetchProfile());
-    // }
-    console.log("fetching channels");
     dispatch(FetchProtectedChannels());
     dispatch(FetchPublicChannels());
-    dispatch(FetchPrivatesChannels())
+    dispatch(FetchPrivatesChannels());
     dispatch(FetchChannels());
     dispatch(FetchFriends());
   }, [profile._id]);

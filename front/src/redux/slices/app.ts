@@ -1,9 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-// import { useAppDispatch } from "../store/store";
-
-// const dispatch = useAppDispatch();
 
 export interface App {
   users: []; // all users of app who are not friends and not requested yet
@@ -28,7 +24,6 @@ export const AppSlice = createSlice({
       state.users = action.payload;
     },
     resetFriends(state) {
-      // console.log(action);
       // ~ get all friends
       state.friends = [];
     },
@@ -62,8 +57,6 @@ export const AppSlice = createSlice({
 });
 
 export function FetchFriends() {
-  console.log('hey from friends')
-  // const user_id = localStorage.getItem("user_id");
   return async (dispatch: any) => {
     try {
       const res = await axios.get("http://localhost:3000/auth/friends", {
@@ -74,7 +67,6 @@ export function FetchFriends() {
       });
       if (res.data) {
         dispatch(AppSlice.actions.updateFriends(res.data));
-        console.log("fetch friends succefully!!");
       }
     } catch (err) {
       console.log("unfortuanally you didn't catch a thing");
@@ -94,7 +86,6 @@ export function BlockFriend(id_user: number)
       });
       if (res.data) {
         dispatch(AppSlice.actions.updateFriends(res.data));
-        console.log("block friend succefully!!");
       }
     } catch (err) {
       console.log("unfortuanally you didn't block a thing");
@@ -104,7 +95,6 @@ export function BlockFriend(id_user: number)
 
 export function DeleteFriend(id_user: number)
 {
-  console.log(id_user)
   return async (dispatch: any) => {
     try {
       const res = await axios.post("http://localhost:3000/auth/remove-friends", { id_user }, {
@@ -115,7 +105,6 @@ export function DeleteFriend(id_user: number)
       });
       if (res.data) {
         dispatch(AppSlice.actions.updateFriends(res.data));
-        console.log("block friend succefully!!");
       }
     } catch (err) {
       console.log("unfortuanally you didn't block a thing");

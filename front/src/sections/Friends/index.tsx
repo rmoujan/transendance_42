@@ -1,23 +1,17 @@
-import { useEffect, useState } from "react";
 import { Box, Button, Divider, Stack } from "@mui/material";
 import { MagnifyingGlass, PlusCircle } from "@phosphor-icons/react";
+import { useState } from "react";
 import ContactElements from "../../components/ContactElements";
-import ScrollBar from "../../components/ScrollBar";
 import CreateChannel from "../../components/channels/CreateChannel";
 import {
   Search,
   SearchIconWrapper,
   StyledInputBase,
 } from "../../components/search";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { FetchFriends, resetFriends } from "../../redux/slices/app";
-import { socket_user } from "../../socket";
-// import CreateChannel from "./CreateChannel";
+import { useAppSelector } from "../../redux/store/store";
 
 const Friends = () => {
   const { friends } = useAppSelector((state) => state.app);
-  console.log(friends)
-  const dispatch = useAppDispatch();
   const [openCreateChannel, setOpenCreateChannel] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const handleCloseCreateChannel = () => {
@@ -31,17 +25,6 @@ const Friends = () => {
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
-
-
-  // useEffect(() => {
-
-  //   console.log('hekk');
-  //   dispatch(resetFriends());
-  //   dispatch(FetchFriends());
-  //   // const listFriends = useAppSelector((state) => state.app.friends)
-  //   // console.log(listFriends)
-  // }, [socket_user]);
-  
 
   const friendsToDisplay = searchQuery ? filteredFriends : friends;
 
@@ -76,7 +59,6 @@ const Friends = () => {
               margin={"auto "}
               display={"block"}
             >
-              {/* <ArchiveBox size={35} /> */}
               <Button
                 onClick={() => {
                   setOpenCreateChannel(true);
@@ -86,7 +68,6 @@ const Friends = () => {
                   width: "100%",
                   fontSize: "18px", // Adjust the font size as needed
                   padding: "10px 38px", // Adjust the padding as needed
-                  // neeed to make it center
                   backgroundColor: "#3D3C65", // Change the background color to purple
                   color: "#B7B7C9", // Change the text color to white
                   borderRadius: "18px",
@@ -112,14 +93,9 @@ const Friends = () => {
               height: "100%",
             }}
           >
-            <ScrollBar>
-              {
-                // ~ ==>  here's where i will do contact <==
-              }
-              {friendsToDisplay.map((el: any, index: any) => {
-                return <ContactElements key={index} {...el} />;
-              })}
-            </ScrollBar>
+            {friendsToDisplay.map((el: any, index: any) => {
+              return <ContactElements key={index} {...el} />;
+            })}
           </Stack>
         </Stack>
       </Box>

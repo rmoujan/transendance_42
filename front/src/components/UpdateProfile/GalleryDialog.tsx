@@ -15,8 +15,6 @@ import {
 import { showSnackbar } from "../../redux/slices/contact";
 import { toggleProfile, updateAvatar } from "../../redux/slices/profile";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import ScrollBar from "../ScrollBar";
-// import { GET_TOP_CHARACTERS } from "../../graphql/Query";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -82,11 +80,9 @@ const GalleryDialog = ({ open, handleClose }: any) => {
         <ColorButton
           startIcon={<Shuffle size={26} weight="bold" color="#3D2E5F" />}
           sx={{
-            // margin: " 0 20px",
             width: "100%",
             fontSize: "18px", // Adjust the font size as needed
             padding: "8px 53px", // Adjust the padding as needed
-            // neeed to make it center
             backgroundColor: "#DC5833",
             color: "#3D2E5F", // Change the text color to white
             borderRadius: "15px",
@@ -102,26 +98,24 @@ const GalleryDialog = ({ open, handleClose }: any) => {
       </Stack>
       <Stack>
         <Grid sx={{ flexGrow: 1 }} container spacing={2}>
-          <ScrollBar>
-            <Grid item xs={12}>
-              <Grid container justifyContent="center" spacing={2}>
-                {characters.map((el) => (
-                  <Grid key={el.id} item>
-                    <Paper
-                      sx={{
-                        height: 140,
-                        width: 100,
-                        backgroundImage: `url(${el.image})`,
-                        backgroundSize: "cover",
-                        cursor: "pointer", // Add a pointer cursor
-                      }}
-                      onClick={() => handleImageClick(el.image)}
-                    ></Paper>
-                  </Grid>
-                ))}
-              </Grid>
+          <Grid item xs={12}>
+            <Grid container justifyContent="center" spacing={2}>
+              {characters.map((el) => (
+                <Grid key={el.id} item>
+                  <Paper
+                    sx={{
+                      height: 140,
+                      width: 100,
+                      backgroundImage: `url(${el.image})`,
+                      backgroundSize: "cover",
+                      cursor: "pointer", // Add a pointer cursor
+                    }}
+                    onClick={() => handleImageClick(el.image)}
+                  ></Paper>
+                </Grid>
+              ))}
             </Grid>
-          </ScrollBar>
+          </Grid>
         </Grid>
       </Stack>
     </Dialog>

@@ -1,6 +1,6 @@
 import { Avatar, Badge, Box, Stack, SvgIcon, Typography } from "@mui/material";
 import { styled } from "@mui/system";
-import { Keyhole, LockSimple } from "@phosphor-icons/react";
+import { Keyhole } from "@phosphor-icons/react";
 import { useEffect } from "react";
 import {
   FetchChannels,
@@ -33,27 +33,22 @@ const StyledChatBox = styled(Box)(() => ({
 
 const SmallAvatar = () => (
   <SvgIcon>
-    {/* credit: plus icon from https://heroicons.com/ */}
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 26 26"
       strokeWidth={1.5}
-      // stroke="currentColor"
     >
       <circle cx="12" cy="12" r="10" fill="#16132B" />
-      {/* <LockSimple size={25} weight="B7B7C9" /> */}
       <Keyhole size={24} color="#FE754D" weight="fill" />
     </svg>
   </SvgIcon>
 );
 
 const ChannelElements = (id: IdType) => {
-  // console.log(id);
   const { contact, profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const selected_id = id.channel_id;
-  // console.log("selected_id", selected_id);
   const selectedChatId = contact.room_id;
   let isSelected = +selectedChatId === parseInt(selected_id);
 
@@ -66,7 +61,6 @@ const ChannelElements = (id: IdType) => {
       if (data.length == 0) {
         dispatch(setEmptyChannel());
       } else {
-        console.log(profile._id);
         dispatch(setCurrentChannel({ messages: data, user_id: profile._id }));
       }
     };
@@ -93,7 +87,6 @@ const ChannelElements = (id: IdType) => {
   return (
     <StyledChatBox
       onClick={() => {
-        // console.log(selected_id, id.name, id.channel_type, id.image);
         dispatch(updatedContactInfo("CHANNEL"));
         dispatch(
           selectConversation({
@@ -164,13 +157,6 @@ const ChannelElements = (id: IdType) => {
           >
             {id.time}
           </Typography>
-          {/* {id.unread > 0 && (
-            <Badge
-              color="primary"
-              badgeContent={id.unread}
-              sx={{ paddingBottom: "9px", paddingTop: 0 }}
-            ></Badge>
-          )} */}
         </Stack>
       </Stack>
     </StyledChatBox>

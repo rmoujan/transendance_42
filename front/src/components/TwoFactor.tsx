@@ -1,15 +1,10 @@
-import { type } from "os";
-import React, { FC, useState, useMemo, useRef, useEffect } from "react";
-import OtpInput from "react-otp-input";
-import { constants } from "buffer";
-import { CgSpinner } from "react-icons/cg";
-import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
 import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import axios from "axios";
+import { CgSpinner } from "react-icons/cg";
 
 type User = {
   id_user: number;
@@ -54,7 +49,7 @@ const TwoFactor = () => {
     inputRef.current?.focus();
   }, [activeOTPIndex]);
 
-  const toggleTwoFactor = async (user: User) => {
+  const toggleTwoFactor = async () => {
     fetchData();
     setOpen(true);
   };
@@ -109,7 +104,6 @@ const TwoFactor = () => {
       .post(backendURL, data, { withCredentials: true })
       .then((response) => {
         if (response.data == true) {
-          console.log("redirect to login page");
           setTwoFactor((prevUsers) =>
             prevUsers.map((u) =>
               u.id_user === user.id_user
@@ -124,8 +118,6 @@ const TwoFactor = () => {
             window.location.href = "/Authentication";
           }, 1000);
         } else {
-          // message error with html code
-          console.log("error");
           setTwoFactor((prevUsers) =>
             prevUsers.map((u) =>
               u.id_user === user.id_user
@@ -137,8 +129,7 @@ const TwoFactor = () => {
         }
         setLoding(false);
       })
-      .catch((error) => {
-        console.error("Error:", error);
+      .catch(() => {
         setLoding(false);
       });
     setOpen(false);
@@ -158,7 +149,7 @@ const TwoFactor = () => {
           ) : (
             <button
               className="text-lg bg-[#7ca732] rounded-2xl p-3 select-none"
-              onClick={() => toggleTwoFactor(user)}
+              onClick={() => toggleTwoFactor()}
             >
               Enable Two-Factor(2FA)
             </button>
@@ -177,11 +168,9 @@ const TwoFactor = () => {
             }}
             PaperProps={{
               style: {
-                //backgroundColor transparent
                 backgroundColor: "transparent",
 
                 borderRadius: "28px",
-                // padding: "32px 135px",
               },
             }}
             className="duration-500 backdrop-blur-lg  group-hover:blur-sm hover:!blur-none group-hover:scale-[0.85] hover:!scale-100 cursor-pointer p-8 group-hover:mix-blend-luminosity hover:!mix-blend-normal shadow-2xl"

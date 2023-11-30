@@ -51,16 +51,6 @@ const JoinProtectedForm = ({ handleClose }: any) => {
     password: Yup.string().required("Password is required"),
   });
 
-  const defaultValues = {
-    mySelect: {
-      name: "",
-      visibility: "",
-      password: "",
-      id_channel: 0,
-    },
-    password: "",
-  };
-
   const { register, handleSubmit, formState } = useForm({
     defaultValues: {
       mySelect: {
@@ -146,7 +136,7 @@ const JoinProtectedForm = ({ handleClose }: any) => {
                 (option: any) => option.name === selectedValue
               );
               setSelectedOption(
-                selectedOption || protectedChannels[0] || undefined
+                selectedOption || protectedChannels || undefined
               );
             }}
             label="Choose a Channel"
@@ -167,23 +157,30 @@ const JoinProtectedForm = ({ handleClose }: any) => {
                         channel.channel_id === protectedChannel?.id_channel
                     )
                 )
-                .map((option: any) => (
-                  <MenuItem key={option.id_channel} value={option.name}>
-                    <Stack
-                      direction={"row"}
-                      alignItems={"center"}
-                      justifyContent={"space-around"}
-                    >
-                      <Avatar
-                        src={option.image}
-                        sx={{ width: 52, height: 52, marginRight: 2 }}
-                      />
-                      <Typography variant="subtitle2" color={"black"}>
-                        {option.name}
-                      </Typography>
-                    </Stack>
-                  </MenuItem>
-                ))
+                .map((option: any) => {
+                  console.log(option);
+                  return (
+                    <MenuItem key={option.id_channel} value={option.name}>
+                      <Stack
+                        direction={"row"}
+                        alignItems={"center"}
+                        justifyContent={"space-around"}
+                      >
+                        <Avatar
+                          src={option.img}
+                          sx={{ width: 52, height: 52, marginRight: 2 }}
+                        />
+                        <Typography
+                          variant="h6"
+                          fontWeight={600}
+                          color={"black"}
+                        >
+                          {option.name}
+                        </Typography>
+                      </Stack>
+                    </MenuItem>
+                  );
+                })
             )}
           </Select>
         </FormControl>

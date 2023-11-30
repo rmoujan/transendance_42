@@ -20,8 +20,6 @@ const RemovePassword = ({ handleClose, el, user_id }: any) => {
 
   const onSubmit = async (data: any) => {
     try {
-    //   console.log(el);
-    //   console.log(user_id);
       data.id_channel = el.id_channel;
       data.user_id = user_id;
       await axios.post("http://localhost:3000/channels/removePass", data, {
@@ -61,15 +59,14 @@ const RemovePassword = ({ handleClose, el, user_id }: any) => {
       >
        <Button
             sx={{
-              // backgroundColor: "#806EA9", // Change the background color to purple
-              color: "#3D3C65", // Change the text color to white
+              color: "#3D3C65",
               borderRadius: "12px",
               width: "150px",
               height: "50px",
               fontSize: "18px",
               fontWeight: 600,
               "&:hover": {
-                backgroundColor: "#3D3C65", // Change the background color on hover
+                backgroundColor: "#3D3C65",
                 color: "#b7b7c9",
               },
             }}
@@ -80,14 +77,14 @@ const RemovePassword = ({ handleClose, el, user_id }: any) => {
         </Button>
         <Button
             sx={{
-              backgroundColor: "#3D3C65", // Change the background color to purple 3D3C65
-              color: "#f78562", // Change the text color to white
+              backgroundColor: "#3D3C65",
+              color: "#f78562",
               borderRadius: "12px",
               height: "50px",
               fontSize: "18px",
               fontWeight: 600,
               "&:hover": {
-                backgroundColor: "#3D3C65", // Change the background color on hover
+                backgroundColor: "#3D3C65",
                 color: "#b7b7c9",
               },
             }}

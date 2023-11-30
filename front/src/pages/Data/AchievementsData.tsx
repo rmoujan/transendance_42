@@ -1,4 +1,3 @@
-import React from 'react'
 import Badge from "../../img/badge.png"
 
 export const AchievementsData = [

@@ -1,4 +1,3 @@
-import React, { useEffect } from "react";
 import {
   Avatar,
   Box,
@@ -7,15 +6,10 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { Chat, Prohibit, UserMinus } from "@phosphor-icons/react";
+import { useEffect } from "react";
+import { BlockFriend, DeleteFriend, FetchFriends } from "../redux/slices/app";
 import {
-  Chat,
-  Prohibit,
-  SpeakerSimpleNone,
-  SpeakerSimpleSlash,
-  UserMinus,
-} from "@phosphor-icons/react";
-import {
-  mutedContact,
   selectConversation,
   showSnackbar,
   updatedContactInfo,
@@ -27,64 +21,15 @@ import {
 import { useAppDispatch, useAppSelector } from "../redux/store/store";
 import { socket, socket_user } from "../socket";
 import StyledBadge from "./StyledBadge";
-import { BlockFriend, DeleteFriend, FetchFriends } from "../redux/slices/app";
-
-interface State {
-  amount: string;
-  password: string;
-  weight: string;
-  weightRange: string;
-  muted: boolean;
-}
-
-interface Props {
-  id: number;
-  name: string;
-  img: string;
-  online: boolean;
-}
 
 const ContactElements = (cont: any) => {
-  const { conversations } = useAppSelector(
-    state => state.converstation.direct_chat
-  );
-  // console.log(cont);
-  const { contact, profile } = useAppSelector(state => state);
-  // console.log(contact);
+  const { contact, profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const id = cont.id_user;
 
-  // console.log(id);
-  const [values, setValues] = React.useState<State>({
-    amount: "",
-    password: "",
-    weight: "",
-    weightRange: "",
-    muted: false,
-  });
-
-  const handleClickMuted = () => {
-    // ! emit "mute_converstation" event
-
-    // socket.emit("mute_converstation", { to: _id, from: user_id });
-    dispatch(mutedContact({ room_id: id }));
-
-    if (values.muted === true) {
-      console.log("unmute");
-    } else {
-      console.log("mute");
-    }
-    setValues({
-      ...values,
-      muted: !values.muted,
-    });
-  };
-
   useEffect(() => {
     const handleHistoryDms = (data: any) => {
-      // console.log("data", data);
       if (data.length === 0 || !data[0]) {
-        // console.log("empty");
         dispatch(emptyConverstation());
       } else {
         dispatch(
@@ -99,8 +44,8 @@ const ContactElements = (cont: any) => {
 
     if (!contact.room_id) return;
     socket.emit("allMessagesDm", {
-      room_id: contact.room_id, // selected conversation
-      user_id: profile._id, // current user
+      room_id: contact.room_id,
+      user_id: profile._id,
     });
     socket.on("historyDms", handleHistoryDms);
 
@@ -114,7 +59,6 @@ const ContactElements = (cont: any) => {
         width: "100%",
         height: 85,
         borderRadius: "1",
-        // backgroundColor: "#806EA9",
       }}
       p={2}
     >
@@ -144,10 +88,6 @@ const ContactElements = (cont: any) => {
         <Stack direction={"row"} spacing={1}>
           <IconButton
             onClick={() => {
-              // ! emit "start_converstation" event
-
-              // console.log("start_converstation", id);
-              console.log(conversations);
               dispatch(updatedContactInfo("CONTACT"));
               dispatch(
                 selectConversation({
@@ -161,36 +101,28 @@ const ContactElements = (cont: any) => {
           >
             <Chat />
           </IconButton>
-          {/* <IconButton aria-label="mute contact" onClick={handleClickMuted}>
-            {values.muted ? <SpeakerSimpleSlash /> : <SpeakerSimpleNone />}
-          </IconButton> */}
 
           <IconButton
             onClick={() => {
-              console.log("Delete Contact");
-              // !  "delete_contact"
-              // * id_user
               const id_user: number = id;
               socket_user.emit("friends-list", id_user);
               socket_user.emit("newfriend", id_user);
-              dispatch(DeleteFriend(id_user))
+              dispatch(DeleteFriend(id_user));
               dispatch(FetchFriends());
-              dispatch(showSnackbar({
-                severity: "success",
-                message: `${cont.name} has been deleted`
-              }))
-              
+              dispatch(
+                showSnackbar({
+                  severity: "success",
+                  message: `${cont.name} has been deleted`,
+                })
+              );
             }}
           >
             <UserMinus />
           </IconButton>
           <IconButton
             onClick={() => {
-              console.log("Block Contact");
-              // !  "block_contact"
-              // * id_user
               const id_user: number = id;
-              dispatch(BlockFriend(id_user))
+              dispatch(BlockFriend(id_user));
               dispatch(FetchFriends());
               dispatch(
                 showSnackbar({

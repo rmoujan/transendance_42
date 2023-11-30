@@ -45,9 +45,10 @@ export default function RHFAutocomplete({
         <Autocomplete
           disableClearable
           {...field}
-          onChange={(event, newValue) =>
-            setValue(name, newValue, { shouldValidate: true })
-          }
+          onChange={(event, newValue) => {
+            event;
+            return setValue(name, newValue, { shouldValidate: true });
+          }}
           renderInput={(params) => (
             <TextField
               label={label}

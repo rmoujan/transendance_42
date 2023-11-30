@@ -2,7 +2,7 @@ import { buttonClasses } from "@mui/base/Button";
 import { Tab, tabClasses } from "@mui/base/Tab";
 import { TabPanel } from "@mui/base/TabPanel";
 import { TabsList } from "@mui/base/TabsList";
-import { grey, purple } from "@mui/material/colors";
+import { grey } from "@mui/material/colors";
 import { styled } from "@mui/system";
 
 const StyledTab = styled(Tab)`

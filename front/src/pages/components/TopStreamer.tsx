@@ -1,13 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { topData } from "../Data/TopStreamerData";
-import badge from "../../img/badge.png";
-import Maskgroup from "../../img/Maskgroupp.png";
-import { handelProfile } from "./RightbarData";
-import { useNavigate } from "react-router-dom";
-import Path from "./Path";
-import CircularProgressbar from "react-circular-progressbar";
-import { Progress } from "@material-tailwind/react";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { topData } from "../Data/TopStreamerData";
 interface TopStreamerDataProps {
   toggle: boolean;
 }

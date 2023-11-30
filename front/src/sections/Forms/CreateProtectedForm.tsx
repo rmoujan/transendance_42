@@ -61,18 +61,22 @@ const CreateProtectedForm = ({ handleClose }: any) => {
   const onSubmit = async (data: any) => {
     try {
       setIsLoading(true);
-      const formData = new FormData();
-      formData.append("file", file);
-      const dataAvatar: any = await axios.patch(
-        "http://localhost:3000/users/upload/avatar",
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const dataAvatar: any = await axios.patch(
+          "http://localhost:3000/users/upload/avatar",
+          formData,
+          {
+            withCredentials: true,
+          }
+        );
 
-      // console.log("avatarUrl: ", dataAvatar.dat);
-      data.avatar = dataAvatar.data;
+        data.avatar = dataAvatar.data;
+      } else {
+        data.avatar =
+          "https://cdn6.aptoide.com/imgs/1/2/2/1221bc0bdd2354b42b293317ff2adbcf_icon.png";
+      }
       const res: any = await axios.post(
         "http://localhost:3000/channels/create",
         data,

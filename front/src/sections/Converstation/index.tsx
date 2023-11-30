@@ -6,7 +6,7 @@ import Messages from "../../components/converstation/Messages";
 import {
   addNewConversation,
   fetchCurrentMessages,
-  updatedConverstation
+  updatedConverstation,
 } from "../../redux/slices/converstation";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { socket } from "../../socket";
@@ -15,12 +15,11 @@ const Converstation = () => {
   const dispatch = useAppDispatch();
   const messageListRef: any = useRef(null);
   const { current_messages, conversations } = useAppSelector(
-    state => state.converstation.direct_chat
+    (state) => state.converstation.direct_chat
   );
-  const { profile, contact } = useAppSelector(state => state);
+  const { profile, contact } = useAppSelector((state) => state);
 
   useEffect(() => {
-    // Scroll to the bottom of the message list when new messages are added
     messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
 
     const handleChatToDm = (data: any) => {
@@ -37,7 +36,7 @@ const Converstation = () => {
         unread: 0,
       };
       const existingConversation = conversations.find(
-        el => el.room_id === data.id
+        (el) => el.room_id === data.id
       );
       if (!existingConversation) {
         dispatch(addNewConversation(newDataConversation));
@@ -69,9 +68,7 @@ const Converstation = () => {
       width={"auto"}
       className="shadow-2xl"
     >
-      {/* header chat */}
       <Header />
-      {/* messaging */}
       <Box
         ref={messageListRef}
         width={"100%"}
@@ -87,7 +84,6 @@ const Converstation = () => {
         <Messages />
       </Box>
 
-      {/* typing */}
       <Chatbox />
     </Stack>
   );

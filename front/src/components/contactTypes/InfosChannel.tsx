@@ -1,3 +1,4 @@
+import React, { useEffect, useRef, useState } from "react";
 import {
   Avatar,
   Box,
@@ -11,17 +12,13 @@ import {
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import { Gear, Prohibit, SignOut, X } from "@phosphor-icons/react";
-import React, { useEffect, useRef, useState } from "react";
 import {
-  resetContact,
-  toggleDialog,
-  updatedContactInfo,
+  toggleDialog
 } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import ChangeChannels from "../channels/ChangeChannels";
 import { LeaveDialog, RemoveDialog } from "../dialogs/Dialogs";
 import MembersSettings from "./MembersSettings";
-import { FetchChannels } from "../../redux/slices/channels";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -39,32 +36,23 @@ const InfosChannel = () => {
   const [member, setMember] = useState(false);
   const dispatch = useAppDispatch();
   const { contact, channels, profile } = useAppSelector((store) => store);
-  console.log(contact);
-  console.log(channels);
-  let img: string;
   useEffect(() => {
     let selectedChannel: any;
     if (contact.type_chat === "public") {
-      console.log("public");
       selectedChannel = channels.publicChannels.find((channel: any) => {
         return channel?.id_channel === contact.room_id;
       });
     }
     if (contact.type_chat === "protected") {
-      console.log("protected");
       selectedChannel = channels.protectedChannels.find(
         (channel: any) => channel?.id_channel === contact.room_id
       );
     }
     if (contact.type_chat === "private") {
-      console.log(channels);
-      console.log("private");
-      console.log(contact.room_id);
       selectedChannel = channels.privateChannels.find(
         (channel: any) => channel?.id_channel === contact.room_id
       );
     }
-    console.log(selectedChannel);
     const isOwner = selectedChannel.users.some((user: any) => {
       return (
         user.userId === profile._id && user.status_UserInChannel === "owner"
@@ -95,35 +83,24 @@ const InfosChannel = () => {
       setOwner(true);
     }
   }, [contact, profile, channels]);
-  console.log(channels.publicChannels);
   if (contact.type_chat === "public") {
-    console.log("public");
     const channel = channels.publicChannels.find((channel: any) => {
       return channel?.id_channel === contact.room_id;
     });
-    console.log(channel)
 
     currentInfos.current = channel;
-    // contact.name = channel?.name;
   } else if (contact.type_chat === "protected") {
-    // console.log("protected");
     const channel = channels.protectedChannels.find(
       (channel: any) => channel?.id_channel === contact.room_id
     );
-    console.log(channel)
     currentInfos.current = channel;
 
-    // contact.name = channel?.name;
   } else if (contact.type_chat === "private") {
-    console.log("private");
     const channel: any = channels.privateChannels.find(
       (channel: any) => channel?.id_channel === contact.room_id
     );
-    console.log(channel);
 
     currentInfos.current = channel;
-    console.log(currentInfos.current);
-    img = channel.img;
   }
 
   const [openBlock, setOpenBlock] = useState(false);
@@ -194,7 +171,6 @@ const InfosChannel = () => {
           <Gear />
         </IconButton>
       )}
-      {/* <DialogContent> */}
       <Stack
         sx={{
           height: "100%",

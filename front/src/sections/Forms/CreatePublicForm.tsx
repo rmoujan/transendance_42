@@ -48,23 +48,24 @@ const CreatePublicForm = ({ handleClose }: any) => {
   } = methods; // useful methods from useForm()
 
   const onSubmit = async (data: any) => {
-    // setIsLoading(true);
     try {
-      console.log(file);
       setIsLoading(true);
+      if (file) {
+        const formData = new FormData();
+        formData.append("file", file);
+        const dataAvatar: any = await axios.patch(
+          "http://localhost:3000/users/upload/avatar",
+          formData,
+          {
+            withCredentials: true,
+          }
+        );
 
-      const formData = new FormData();
-      formData.append("file", file);
-      const dataAvatar: any = await axios.patch(
-        "http://localhost:3000/users/upload/avatar",
-        formData,
-        {
-          withCredentials: true,
-        }
-      );
-
-      // console.log("avatarUrl: ", dataAvatar.dat);
-      data.avatar = dataAvatar.data;
+        data.avatar = dataAvatar.data;
+      } else {
+        data.avatar =
+          "https://cdn6.aptoide.com/imgs/1/2/2/1221bc0bdd2354b42b293317ff2adbcf_icon.png";
+      }
       const res: any = await axios.post(
         "http://localhost:3000/channels/create",
         data,
@@ -111,8 +112,6 @@ const CreatePublicForm = ({ handleClose }: any) => {
   const handleDrop = useCallback(
     (acceptedFiles: any) => {
       const file = acceptedFiles[0];
-      console.log("file", file);
-      console.log(acceptedFiles);
       setFile(file);
 
       const newFile = Object.assign(file, {
@@ -122,8 +121,6 @@ const CreatePublicForm = ({ handleClose }: any) => {
 
       if (file) {
         setValue(title, newFile, { shouldValidate: true });
-        const filePath = file.path;
-        console.log("File Path:", filePath);
       }
     },
     [setValue]

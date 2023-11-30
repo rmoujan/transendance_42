@@ -52,7 +52,7 @@ export default function RHFSelect({
     undefined
   ); // State to hold the selected option
 
-  const handleSelectChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleSelectChange = (event: React.ChangeEvent<{ name?: string; value: string }>) => {
     const selectedValue = event.target.value as string;
     const selectedOption = options.find(
       option => option.value === selectedValue

@@ -60,12 +60,11 @@ const ChatTabs = () => {
   const isDarkMode = useIsDarkMode();
   const dispatch = useAppDispatch();
 
-  // !!! fetch all conversations with user_is
-  const { profile, contact } = useAppSelector((state) => state);
-  const { friends } = useAppSelector((state) => state.app);
+  const { profile } = useAppSelector((state) => state);
   React.useEffect(() => {
     if (socket_user) {
       socket_user.on("friendsUpdateChat", (data: any) => {
+        data;
         dispatch(FetchFriends());
       });
     }
@@ -73,17 +72,14 @@ const ChatTabs = () => {
       dispatch(FetchProfile());
     }
     if (socket) {
-      // console.log(socket?.connected);
       socket.emit("allConversationsDm", { _id: profile._id });
       socket.on("response", (data: any) => {
-        // console.log(data);
         dispatch(
           fetchConverstations({ conversations: data, user_id: profile._id })
         );
       });
     }
   }, [profile._id]);
-  // !! fetch all conversations with user_id
 
   return (
     <div className={isDarkMode ? "dark" : ""}>

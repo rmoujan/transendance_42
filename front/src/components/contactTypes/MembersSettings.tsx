@@ -15,9 +15,8 @@ import {
   UserMinus,
   UserPlus,
 } from "@phosphor-icons/react";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
-import { socket, socket_user } from "../../socket";
 import axios from "axios";
+import { FetchFriends } from "../../redux/slices/app";
 import {
   FetchChannels,
   FetchPrivatesChannels,
@@ -29,40 +28,27 @@ import {
   showSnackbar,
   toggleDialog,
 } from "../../redux/slices/contact";
-import { FetchFriends } from "../../redux/slices/app";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
+import { socket, socket_user } from "../../socket";
 
 const MembersSettings = (el: any) => {
   const { _id } = useAppSelector((state) => state.profile);
   const { friends } = useAppSelector((state) => state.app);
-  // console.log('**************************')
-  // console.log(_id, friends, el.el.userId);
-  // console.log('**************************')
   const dispatch = useAppDispatch();
   const { user } = el.el;
-  // console.log(el.isOwner);
-  // console.log(el.isAdmin);
-  // console.log(el.isMember);
-  console.log(el.el);
 
-  // console.log(_id, user);
   const [friend, setFriend] = useState(false);
-  const [muted, setMuted] = useState(false);
 
   useEffect(() => {
-    // console.log(el.el, owner);
-    // check friends is true or false using el.el.userId
     if (friends.length > 0 && el.el.userId !== _id) {
       const isFriend = friends.some((friend: any) => {
         return friend.id_user === el.el.userId;
       });
-      // console.log(isFriend);
       setFriend(isFriend);
     }
   }, [user, _id, el]);
 
   const friendRequest = () => {
-    console.log("friend request");
-    // ! emit "friend_request" event
     const id_user = el.el.userId;
     socket_user.emit("add-friend", { id_user });
     dispatch(FetchFriends());
@@ -74,13 +60,8 @@ const MembersSettings = (el: any) => {
         message: `${el.el.user.name} has been deleted`,
       })
     );
-    // socket.emit("friend_request", { to: _id, from: user_id });
-    // dispatch(updatedContactInfo({ friend_request: true }));
   };
   const makeAdmin = async () => {
-    // console.log("make admin");
-    // console.log(user.id_user, _id, el.el.channelId)
-    // ! emit "make_admin" event
     const res = await axios.post("http://localhost:3000/channels/setAdmin", {
       to: user.id_user,
       from: _id,
@@ -108,12 +89,9 @@ const MembersSettings = (el: any) => {
       );
     }
 
-    // ! dispatch "updatedChannels" action
   };
 
   const handlekick = () => {
-    console.log("kick Contact");
-    // ! emit "kick_contact" event
     socket.emit("kickUserFromChannel", {
       to: user.id_user,
       from: _id,
@@ -121,7 +99,6 @@ const MembersSettings = (el: any) => {
     });
 
     socket.on("ResponsekickUser", (data: any) => {
-      console.log(data);
       if (data == true) {
         dispatch(toggleDialog());
         dispatch(FetchChannels());
@@ -146,14 +123,12 @@ const MembersSettings = (el: any) => {
     });
   };
   const handleBan = () => {
-    console.log("Ban User");
     socket.emit("banUserFRomChannel", {
       to: el.el.userId,
       from: _id,
       channel_id: el.el.channelId,
     });
     socket.on("ResponseBannedUser", (data: any) => {
-      console.log(data);
       if (data == true) {
         dispatch(toggleDialog());
         dispatch(FetchChannels());
@@ -178,17 +153,13 @@ const MembersSettings = (el: any) => {
     });
   };
   const handleClickMuted = () => {
-    // ! emit "mute_converstation" event
-    console.log(el.el.muted);
     if (el.el.muted === true) {
-      console.log("unmute");
       socket.emit("unmuteUserFromChannel", {
         to: user.id_user,
         from: _id,
         channel_id: el.el.channelId,
       });
     } else {
-      console.log("mute");
       socket.emit("muteUserFromChannel", {
         to: user.id_user,
         from: _id,
@@ -196,7 +167,6 @@ const MembersSettings = (el: any) => {
       });
     }
     socket.on("ResponsunmutekUser", (data: any) => {
-      console.log(data);
       if (data == true) {
         dispatch(toggleDialog());
         dispatch(FetchChannels());
@@ -220,7 +190,6 @@ const MembersSettings = (el: any) => {
       }
     });
     socket.on("ResponsemuteUser", (data: any) => {
-      console.log(data);
       if (data == true) {
         dispatch(toggleDialog());
         dispatch(FetchChannels());
@@ -244,7 +213,6 @@ const MembersSettings = (el: any) => {
       }
     });
 
-    // setMuted(() => !muted);
   };
 
   return (

@@ -4,7 +4,7 @@ import CreatePrivateForm from "../../sections/Forms/CreatePrivateForm";
 import CreateProtectedForm from "../../sections/Forms/CreateProtectedForm";
 import CreatePublicForm from "../../sections/Forms/CreatePublicForm";
 
-const CreateTabs = ({ handleClose, el }: any) => {
+const CreateTabs = ({ handleClose }: any) => {
   return (
     <Tabs defaultValue={0}>
       <StyledTabsList>

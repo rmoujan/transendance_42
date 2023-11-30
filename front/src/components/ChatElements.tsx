@@ -11,11 +11,6 @@ import { socket } from "../socket";
 import StyledBadge from "./StyledBadge";
 
 
-/**
- * 
- * 
- * Type '{ room_id: string | null; id: string | null; user_id: string | null; name: string | null; online: boolean; img: string | null; msg: string | null; time: string | null; unread: number | null; pinned: boolean; key: number; }'
- */
 export interface IdType {
   id: number;
   user_id?: number | undefined;
@@ -41,10 +36,8 @@ const ChatElements = (id: IdType) => {
   const dispatch = useAppDispatch();
   let selected_id: number = 0;
   const selectedChatId = contact.room_id;
-  // console.log(id);
   if (id.id && id.user_id && id.room_id) {
     selected_id = id.id;
-    // console.log(id.id, id.user_id, id.room_id);
   } else if (id?.channel_type === "channel") {
     selected_id = id.id;
   } else {
@@ -72,7 +65,6 @@ const ChatElements = (id: IdType) => {
     <StyledChatBox
       onClick={() => {
         dispatch(updatedContactInfo("CONTACT"));
-        console.log(selected_id, id.name, id.img);
         dispatch(
           selectConversation({
             room_id: selected_id,

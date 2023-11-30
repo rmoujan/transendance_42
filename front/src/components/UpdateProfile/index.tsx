@@ -15,9 +15,14 @@ import {
 } from "@phosphor-icons/react";
 import React, { useRef } from "react";
 import { showSnackbar } from "../../redux/slices/contact";
-import { toggleProfile, updateAvatar } from "../../redux/slices/profile";
+import {
+  FetchProfile,
+  toggleProfile,
+  updateAvatar,
+} from "../../redux/slices/profile";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import GalleryDialog from "./GalleryDialog";
+import axios from "axios";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -33,14 +38,24 @@ const UpdateProfile = () => {
   const dispatch = useAppDispatch();
   const [openGallery, setOpenGallery] = React.useState(false);
 
-  const uploadInputRef = useRef(null);
+  const uploadInputRef = useRef<any>(null);
+  const formData = new FormData();
 
-  const onUploadImage = (e: any) => {
+  const onUploadImage = async (e: any) => {
     const file = e.target.files[0];
+
     if (file) {
-      // Create a URL for the selected file
       const filePath = URL.createObjectURL(file);
-      // Dispatch the updateAvatar action to update the avatar in the Redux store
+      formData.append("name", profile.name);
+      formData.append("photo", file);
+      // Create a URL for the selected file
+      await axios.post("http://localhost:3000/profile/modify-photo", formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      dispatch(FetchProfile());
       dispatch(updateAvatar(filePath));
       dispatch(toggleProfile());
       dispatch(
@@ -167,9 +182,7 @@ const UpdateProfile = () => {
           </Button>
           <Button
             onClick={() => {
-              console.log("open galleryss");
               setOpenGallery(true);
-              // dispatch(toggleProfile());
             }}
             variant="contained"
             endIcon={<FinnTheHuman size={30} weight="bold" />}

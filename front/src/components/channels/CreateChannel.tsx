@@ -37,11 +37,9 @@ const CreateChannel = ({ open, handleClose }: any) => {
         style: {
           backgroundColor: "#696693",
           borderRadius: "28px",
-          // padding: "32px 135px",
         },
       }}
     >
-      {/* {console.log(handleClose)} */}
       <DialogTitle sx={{ my: 2 }}>
         <Typography
           variant="h4"

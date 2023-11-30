@@ -52,17 +52,14 @@ export const ChannelsSlice = createSlice({
   reducers: {
     fetchPublicChannels(state, action) {
       //~ get all public channels
-      console.log(action.payload);
       state.publicChannels = action.payload;
     },
     fetchProtectedChannels(state, action) {
       //~ get all protected channels
-      console.log(action.payload);
       state.protectedChannels = action.payload;
     },
     fetchPrivateChannels(state, action) {
       //~ get all private channels
-      console.log(action.payload);
       state.privateChannels = action.payload;
     },
     fetchChannels(state, action) {
@@ -82,7 +79,6 @@ export const ChannelsSlice = createSlice({
           return inputDate.toLocaleDateString(undefined, options);
         }
       };
-      // state.channels = action.payload;
       const firstTime = () => {
         const current = new Date();
         const hours = current.getHours();
@@ -116,7 +112,6 @@ export const ChannelsSlice = createSlice({
 
       const messages: any = action.payload.messages;
       const idChannel = messages[0]?.channelId;
-      console.log(action.payload)
       state.current_channel = state.channels.filter((el: any) => el?.channel_id === idChannel)[0];
       const user_id = action.payload.user_id;
       const formatted_messages = messages.map((el: any) => ({
@@ -137,9 +132,8 @@ export const ChannelsSlice = createSlice({
       state.current_messages = action.payload;
     },
     updateChannelsMessages(state, action) {
-      const message: any = action.payload.messages; // Assuming 'messages' is a single message object
+      const message: any = action.payload.messages;
       const user_id: any = action.payload.user_id;
-      console.log(action.payload);
       const formatted_message: any = {
         id: message.id,
         type: message.type,
@@ -147,7 +141,6 @@ export const ChannelsSlice = createSlice({
         incoming: message.sender_id !== user_id,
         outgoing: message.sender_id === user_id,
       };
-      // console.log(formatted_message);
 
       state.current_messages.push(formatted_message);
     },
@@ -166,7 +159,6 @@ export function FetchChannels() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         dispatch(ChannelsSlice.actions.fetchChannels(res.data));
       })
       .catch((err) => console.log(err));
@@ -182,7 +174,6 @@ export function FetchPublicChannels() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         dispatch(ChannelsSlice.actions.fetchPublicChannels(res.data));
       })
       .catch((err) => console.log(err));
@@ -198,7 +189,6 @@ export function FetchPrivatesChannels() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         dispatch(ChannelsSlice.actions.fetchPrivateChannels(res.data));
       })
       .catch((err) => console.log(err));
@@ -214,7 +204,6 @@ export function FetchProtectedChannels() {
         },
       })
       .then((res) => {
-        console.log(res.data);
         dispatch(ChannelsSlice.actions.fetchProtectedChannels(res.data));
       })
       .catch((err) => console.log(err));

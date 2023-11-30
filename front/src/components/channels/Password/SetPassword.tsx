@@ -3,13 +3,22 @@ import axios from "axios";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
-import { resetContact, showSnackbar, toggleDialog } from "../../../redux/slices/contact";
+import {
+  resetContact,
+  showSnackbar,
+  toggleDialog,
+} from "../../../redux/slices/contact";
 import { useAppDispatch } from "../../../redux/store/store";
 import FormProvider from "../../hook-form/FormProvider";
 import { Button, IconButton, InputAdornment, Stack } from "@mui/material";
 import { RHFTextField } from "../../../components/hook-form";
 import { Eye, EyeSlash } from "@phosphor-icons/react";
-import { FetchChannels, FetchPrivatesChannels, FetchProtectedChannels, FetchPublicChannels } from "../../../redux/slices/channels";
+import {
+  FetchChannels,
+  FetchPrivatesChannels,
+  FetchProtectedChannels,
+  FetchPublicChannels,
+} from "../../../redux/slices/channels";
 
 const SetPassword = ({ handleClose, el, user_id }: any) => {
   const dispatch = useAppDispatch();
@@ -39,31 +48,40 @@ const SetPassword = ({ handleClose, el, user_id }: any) => {
 
   const onSubmit = async (data: any) => {
     try {
-      //   console.log(el);
-      //   console.log(user_id);
       data.channel_id = el.id_channel;
       data.user_id = user_id;
-      console.log(data);
-      await axios.post("http://localhost:3000/channels/setPass", data, {
-        withCredentials: true,
-      });
-      handleClose();
-      dispatch(toggleDialog());
-      dispatch(FetchChannels());
-      dispatch(FetchProtectedChannels());
-      dispatch(FetchPublicChannels());
-      dispatch(FetchPrivatesChannels());
-      dispatch(resetContact());
-      dispatch(
-        showSnackbar({
-          severity: "success",
-          message: "You upgrated to Protected channel",
-        })
+      const res = await axios.post(
+        "http://localhost:3000/channels/setPass",
+        data,
+        {
+          withCredentials: true,
+        }
       );
+      if (res.data == true) {
+        dispatch(toggleDialog());
+        dispatch(FetchChannels());
+        dispatch(FetchProtectedChannels());
+        dispatch(FetchPublicChannels());
+        dispatch(FetchPrivatesChannels());
+        dispatch(resetContact());
+        dispatch(
+          showSnackbar({
+            severity: "success",
+            message: "You upgrated to Protected channel",
+          })
+        );
+      } else {
+        dispatch(
+          showSnackbar({
+            severity: "error",
+            message: "Updated to Protected channel has been failed",
+          })
+        );
+      }
+      handleClose();
     } catch (err) {
       console.error(err);
       reset();
-      handleClose();
       dispatch(
         showSnackbar({
           severity: "error",
@@ -71,6 +89,7 @@ const SetPassword = ({ handleClose, el, user_id }: any) => {
         })
       );
     }
+    handleClose();
   };
 
   return (
@@ -120,15 +139,14 @@ const SetPassword = ({ handleClose, el, user_id }: any) => {
       >
         <Button
           sx={{
-            // backgroundColor: "#806EA9", // Change the background color to purple
-            color: "#3D3C65", // Change the text color to white
+            color: "#3D3C65",
             borderRadius: "12px",
             width: "150px",
             height: "50px",
             fontSize: "18px",
             fontWeight: 600,
             "&:hover": {
-              backgroundColor: "#3D3C65", // Change the background color on hover
+              backgroundColor: "#3D3C65",
               color: "#b7b7c9",
             },
           }}
@@ -139,14 +157,14 @@ const SetPassword = ({ handleClose, el, user_id }: any) => {
         </Button>
         <Button
           sx={{
-            backgroundColor: "#3D3C65", // Change the background color to purple 3D3C65
-            color: "#f78562", // Change the text color to white
+            backgroundColor: "#3D3C65",
+            color: "#f78562",
             borderRadius: "12px",
             height: "50px",
             fontSize: "18px",
             fontWeight: 600,
             "&:hover": {
-              backgroundColor: "#3D3C65", // Change the background color on hover
+              backgroundColor: "#3D3C65",
               color: "#b7b7c9",
             },
           }}

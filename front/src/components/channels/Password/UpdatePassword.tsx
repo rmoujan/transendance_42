@@ -50,12 +50,9 @@ const UpdatePassword = ({ handleClose, el, user_id }: any) => {
 
   const onSubmit = async (data: any) => {
     try {
-      //   console.log(el);
-      //   console.log(user_id);
       setIsLoading(true);
       data.channel_id = el.id_channel;
       data.user_id = user_id;
-      console.log(data);
       const res = await axios.post(
         "http://localhost:3000/channels/updatePass",
         data,
@@ -63,15 +60,6 @@ const UpdatePassword = ({ handleClose, el, user_id }: any) => {
           withCredentials: true,
         }
       );
-      console.log(res.data)
-      dispatch(
-        showSnackbar({
-          severity: "success",
-          message: "You upgrated to Protected channel",
-        })
-      );
-      console.log(res.data)
-
       if (res.data == true) {
         dispatch(toggleDialog());
         dispatch(FetchChannels());

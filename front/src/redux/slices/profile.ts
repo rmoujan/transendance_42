@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { useDispatch } from "react-redux";
 
 export interface Profile {
     open: boolean;
@@ -53,7 +52,6 @@ export const ProfileSlice = createSlice({
 export default ProfileSlice.reducer;
 
 export function FetchProfile() {
-    // const dispatch = useDispatch();
     return async (dispatch: any) => {
         try {
             const res = await axios.get("http://localhost:3000/auth/get-user", { withCredentials: true })
@@ -61,7 +59,6 @@ export function FetchProfile() {
             {
                 dispatch(ProfileSlice.actions.fetchProfile(res.data));
             }
-            console.log('fetch profile succefully!!');
         } catch (error) {
             console.log("unfortunally there's no friends");
         }

@@ -9,9 +9,8 @@ import {
   SearchIconWrapper,
   StyledInputBase,
 } from "../../components/search";
-import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { FetchChannels } from "../../redux/slices/channels";
-import { profile } from "console";
+import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
 const Channels = () => {
   const [openCreateChannel, setOpenCreateChannel] = useState(false);
@@ -19,7 +18,6 @@ const Channels = () => {
   const { channels, current_messages } = useAppSelector((state) => state.channels);
   const {profile} = useAppSelector((state) => state)
   const dispatch = useAppDispatch();
-  // console.log(channels);
 
   // this is will close join channel modal
   const handleCloseJoinChannel = () => {
@@ -31,7 +29,6 @@ const Channels = () => {
   };
 
   useEffect(() => {
-    console.log("channels", channels);
     dispatch(FetchChannels());
   }, [profile._id, current_messages]);
   return (
@@ -74,14 +71,13 @@ const Channels = () => {
                 }}
                 startIcon={<PlusCircle size={26} />}
                 sx={{
-                  fontSize: "18px", // Adjust the font size as needed
-                  padding: "10px 17px", // Adjust the padding as needed
-                  // neeed to make it center
-                  backgroundColor: "#3D3C65", // Change the background color to purple
-                  color: "#B7B7C9", // Change the text color to white
+                  fontSize: "18px", 
+                  padding: "10px 17px",
+                  backgroundColor: "#3D3C65",
+                  color: "#B7B7C9",
                   borderRadius: "18px",
                   "&:hover": {
-                    backgroundColor: "#3D3954", // Change the background color on hover
+                    backgroundColor: "#3D3954",
                     color: "#B7B7C9",
                   },
                 }}
@@ -123,13 +119,9 @@ const Channels = () => {
               height: "100%",
             }}
           >
-            {/* <SimpleBarStyle> */}
-            {/* <Stack sx={{ backgroundColor: "#F3A162", borderRadius: "25px" }}> */}
             {channels.map((el: any, index) => {
               return <ChannelElements key={index} {...el} />;
             })}
-            {/* </Stack> */}
-            {/* </SimpleBarStyle> */}
           </Stack>
         </Stack>
       </Box>

@@ -49,7 +49,6 @@ const HeaderDM = () => {
               <IconButton>
                 <Avatar
                   onClick={() => {
-                    // console.log(contact);
                     dispatch(toggleDialog());
                   }}
                   alt={contact.name}
@@ -68,12 +67,11 @@ const HeaderDM = () => {
               color={"#322554"}
               sx={{ padding: 0, fontWeight: 400, fontSize: "14px" }}
             >
-              Online {/* change this later */}
+              Online
             </Typography>
           </Stack>
         </Stack>
         <Stack direction={"row"} alignItems={"center"} spacing={3}>
-          {/* invite botton */}
           <Stack>
             <Button
               onClick={() => {
@@ -90,7 +88,6 @@ const HeaderDM = () => {
               Invite to Play
             </Button>
           </Stack>
-          {/* Menu option is done */}
           <MenuOptions />
         </Stack>
       </Stack>

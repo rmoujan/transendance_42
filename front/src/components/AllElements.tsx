@@ -15,7 +15,6 @@ const StyledChatBox = styled(Box)(() => ({
 }));
 
 const AllElements = (el: any) => {
-  console.log(el)
   const { contact, profile } = useAppSelector((state) => state);
   const dispatch = useAppDispatch();
   const selected_id = el.room_id;

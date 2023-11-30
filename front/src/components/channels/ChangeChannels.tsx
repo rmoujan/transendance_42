@@ -17,7 +17,6 @@ const Transition = React.forwardRef(function Transition(
 });
 
 const ChangePassword = ({ handleClose, el }: any) => {
-  // console.log('===>', el.el)
   return (
     <Tabs defaultValue={0}>
       <StyledTabsList>
@@ -63,9 +62,6 @@ const ChangePassword = ({ handleClose, el }: any) => {
 };
 
 const ChangeChannels = ({ open, handleClose, el }: any) => {
-  // console.log(el.user_id);
-  // console.log(el.el);
-  // console.log(el)
   return (
     <Dialog
       fullWidth
@@ -84,11 +80,9 @@ const ChangeChannels = ({ open, handleClose, el }: any) => {
         style: {
           backgroundColor: "#696693",
           borderRadius: "28px",
-          // padding: "32px 135px",
         },
       }}
     >
-      {/* {console.log(handleClose)} */}
       <DialogTitle
         sx={{
           my: 2,

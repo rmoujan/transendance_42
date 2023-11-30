@@ -1,7 +1,7 @@
 import React from "react";
 
 const ProfileCard = (friend :any) => {
-    console.log("friend card");
+    console.log("=======>");
     console.log(friend.friend);
     return (
         <>

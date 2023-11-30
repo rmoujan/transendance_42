@@ -45,7 +45,6 @@ export const ConverstationSlice = createSlice({
   initialState,
   reducers: {
     fetchConverstations(state, action) {
-      // console.log(action.payload.conversations);
       // ! get all converstation
       const list: any[] = action.payload.conversations
         .filter((el: any) => !(el.room_id === action.payload.user_id || el.user_id !== action.payload.user_id))
@@ -162,11 +161,8 @@ export const ConverstationSlice = createSlice({
     setCurrentConverstation(state, action) {
       // ~ set current converstation
       const user_id = action.payload.user_id;
-      console.log(action.payload.data);
-      console.log(action.payload.data[0]);
       const room_id = action.payload.data[0]?.idDm;
       state.direct_chat.current_conversation = state.direct_chat.conversations.filter((el: any) => el?.room_id === room_id)[0];
-      // check if room_id is in converstations id list
       const messages: any = action.payload.data;
       const formatted_messages = messages.map((el: any) => ({
         id: el.idDm,
@@ -198,13 +194,10 @@ export const ConverstationSlice = createSlice({
     updateUnread(state, action) {
       // ~ update unread messages
       const room_id = action.payload.id;
-      console.log(state.direct_chat.conversations);
       state.direct_chat.conversations = state.direct_chat.conversations.map((el: any) => {
         if (el?.room_id !== room_id) {
-          console.log(el);
           return el;
         } else {
-          console.log(el);
           el.unread += 1;
           return {
             el

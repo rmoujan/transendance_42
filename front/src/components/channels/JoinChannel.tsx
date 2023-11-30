@@ -40,7 +40,6 @@ const JoinChannel = ({ open, handleClose }: any) => {
         },
       }}
     >
-      {/* {console.log(handleClose)} */}
       <DialogTitle sx={{ my: 2 }}>
         {" "}
         <Typography
