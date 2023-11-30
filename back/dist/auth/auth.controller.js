@@ -31,6 +31,7 @@ let AuthController = class AuthController {
     }
     Login() { }
     async redirect(req, res) {
+        console.log('alright');
         const accessToken = this.jwt.sign(req.user);
         res
             .cookie(this.config.get('cookie'), accessToken, {
@@ -66,6 +67,8 @@ let AuthController = class AuthController {
     }
     async Verify_QrCode(body, req) {
         const msg = await this.service.Verify_QrCode(body, req);
+        if (msg == null)
+            return (null);
         return msg.msg;
     }
     async Insert_Friends(body, req) {

@@ -13,6 +13,12 @@ type User = {
   secretKey: string | null;
   status_user: string;
 };
+
+const handleclick = async ()=>{
+  const data = await axios.get('http://localhost:3000/auth/login/42');
+  window.location.href = '/login';
+}
+
 function Login() {
   // const [twoFactor, setTwoFactor] = useState<User[]>([]);
   // useEffect(() => {
@@ -80,7 +86,7 @@ function Login() {
                 Log In with Intra
               </button>
             )} */}
-            <a href="http://localhost:3000/auth/login/42">
+            <a href="http://localhost:3000/auth/login/42" onClick={handleclick}>
               <button className="font-bold hover:scale-105 duration-300 mobile:w-60 tablet:w-80  bg-gradient-to-br from-[#FE754D] to-[#ce502a]  text-white p-2 rounded-full mb-6">
                 <img src={logo42} alt="42" className="w-6 h-6 inline mr-2" />
                 <span>Log In with Intra</span>

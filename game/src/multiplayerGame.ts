@@ -118,7 +118,7 @@ class MyMultiplayerGame {
 	
 			if (room.winner === this.playerNumber) {
 				if (room.gameAbondoned) {
-					this.message.innerHTML = "Game abondoned, You Won!";
+					this.message.innerHTML = "Game abondoned!";
 				} else {
 					this.message.innerHTML = "Game Over, You Won!";
 				}

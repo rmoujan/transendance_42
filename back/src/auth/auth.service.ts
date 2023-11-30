@@ -107,19 +107,21 @@ export class AuthService {
     /* 98853 mmanouze */
     // console.log(body);
     //   const { code } = body;
-    const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-    const user = await this.prisma.user.findUnique({
-      where: { id_user: decoded.id },
-    });
-    //   const user = await this.prisma.user.findUnique({where: {id_user: decoded.id}});
-    // console.log(user);
-    // console.log(body);
-    if (
-      authenticator.verify({ token: body.inputValue, secret: user.secretKey })
-    ){
-      return { msg: "true" };
-    }
-    else 
-      return { msg: "false" };
+    try{
+      const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+      const user = await this.prisma.user.findUnique({
+        where: { id_user: decoded.id },
+      });
+      //   const user = await this.prisma.user.findUnique({where: {id_user: decoded.id}});
+      // console.log(user);
+      // console.log(body);
+      if (
+        authenticator.verify({ token: body.inputValue, secret: user.secretKey })
+      ){
+        return { msg: "true" };
+      }
+      else 
+        return { msg: "false" };
+    }catch(error){return (null);}
   }
 }

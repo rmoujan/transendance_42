@@ -33,8 +33,13 @@ let FortyTwoStrategy = class FortyTwoStrategy extends (0, passport_1.PassportStr
         this.config = config;
     }
     async validate(accessToken, refreshToken, profile, req, res) {
-        const payload = await this.authservice.ValidateUsers(profile._json, req, res);
-        return payload;
+        try {
+            const payload = await this.authservice.ValidateUsers(profile._json, req, res);
+            return payload;
+        }
+        catch (error) {
+            console.log('heeeeeeeeey');
+        }
     }
 };
 exports.FortyTwoStrategy = FortyTwoStrategy;

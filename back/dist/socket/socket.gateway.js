@@ -69,16 +69,19 @@ let SocketGateway = class SocketGateway {
         }
     }
     async handleUserOnline(client) {
-        const decoded = this.decodeCookie(client);
-        if (decoded == null)
-            return;
-        await this.prisma.user.update({
-            where: { id_user: decoded.id },
-            data: {
-                status_user: "online",
-            },
-        });
-        this.server.emit("online", { id_user: decoded.id });
+        try {
+            const decoded = this.decodeCookie(client);
+            if (decoded == null)
+                return;
+            await this.prisma.user.update({
+                where: { id_user: decoded.id },
+                data: {
+                    status_user: "online",
+                },
+            });
+            this.server.emit("online", { id_user: decoded.id });
+        }
+        catch (error) { }
     }
     async handleUserOffline(client) {
         const decoded = this.decodeCookie(client);

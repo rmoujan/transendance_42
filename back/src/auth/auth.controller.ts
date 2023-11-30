@@ -38,7 +38,7 @@ export class AuthController {
   @Get("login/42/redirect")
   @UseGuards(AuthGuard("42"))
   async redirect(@Req() req: any, @Res() res: any) {
-    // console.log('alright');
+    console.log('alright');
     const accessToken = this.jwt.sign(req.user);
     // console.log(req.user);
     res
@@ -89,6 +89,8 @@ export class AuthController {
   @Post("verify-qrcode")
   async Verify_QrCode(@Body() body: NumberDto, @Req() req) {
     const msg = await this.service.Verify_QrCode(body, req);
+    if (msg == null)
+      return (null);
     // if (msg.msg == "true") {
     //   const accessToken = this.jwt.sign(req.user);
     //   // console.log(req.user);

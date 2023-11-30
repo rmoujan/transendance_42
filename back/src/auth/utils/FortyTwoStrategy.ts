@@ -26,6 +26,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
         });
     }
 
+    
     async validate(accessToken: string, refreshToken: string, profile: any, @Req() req, @Res() res) {
 
         // const decodedToken = this.jwt.verify(req.cookies[this.config.get('cookie')]);
@@ -34,8 +35,15 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
         //     if (user.TwoFactor)
         //         res.redirect('http://localhost:3000/auth/')
         // }
+        try {
+            const payload = await this.authservice.ValidateUsers(profile._json, req, res);
+            return payload;
+            
+        }
+        catch(error){
+            console.log('heeeeeeeeey');
 
-        const payload = await this.authservice.ValidateUsers(profile._json, req, res);
+        }
 
         // console.log(res.Body);
         // res.req.session.token = payload;
@@ -46,6 +54,5 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
         // const jwtToken = await this.jwt.sign(payload);
         // console.log(profile);
 
-        return payload;
     }
 }

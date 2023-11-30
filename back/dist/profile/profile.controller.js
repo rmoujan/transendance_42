@@ -63,6 +63,9 @@ let ProfileController = class ProfileController {
         const user = await this.prisma.user.findUnique({
             where: { id_user: decoded.id },
         });
+        let winspercent;
+        let lossespercent;
+        let progress;
         let gameP = user.games_played + 1;
         let gameW = user.WonBot;
         let gameL = user.LoseBot;
@@ -71,11 +74,19 @@ let ProfileController = class ProfileController {
         console.log("game_played: " + user.games_played);
         if (body.won) {
             gameW++;
+            progress = ((gameW - gameL) / gameP) * 100;
+            progress = progress < 0 ? 0 : progress;
+            winspercent = (gameW / gameP) * 100;
+            lossespercent = (gameL / gameP) * 100;
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
                     WonBot: gameW,
+                    wins: gameW,
                     games_played: gameP,
+                    Progress: progress,
+                    Wins_percent: winspercent,
+                    Losses_percent: lossespercent,
                     history: {
                         create: {
                             winner: true,
@@ -91,11 +102,19 @@ let ProfileController = class ProfileController {
         }
         else {
             gameL++;
+            progress = ((gameW - gameL) / gameP) * 100;
+            progress = progress < 0 ? 0 : progress;
+            winspercent = (gameW / gameP) * 100;
+            lossespercent = (gameL / gameP) * 100;
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
                     LoseBot: gameL,
+                    losses: gameL,
                     games_played: gameP,
+                    Progress: progress,
+                    Wins_percent: winspercent,
+                    Losses_percent: lossespercent,
                     history: {
                         create: {
                             winner: false,

@@ -102,15 +102,20 @@ let AuthService = class AuthService {
         return qrCodeDataURL;
     }
     async Verify_QrCode(body, req) {
-        const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        const user = await this.prisma.user.findUnique({
-            where: { id_user: decoded.id },
-        });
-        if (otplib_1.authenticator.verify({ token: body.inputValue, secret: user.secretKey })) {
-            return { msg: "true" };
+        try {
+            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const user = await this.prisma.user.findUnique({
+                where: { id_user: decoded.id },
+            });
+            if (otplib_1.authenticator.verify({ token: body.inputValue, secret: user.secretKey })) {
+                return { msg: "true" };
+            }
+            else
+                return { msg: "false" };
         }
-        else
-            return { msg: "false" };
+        catch (error) {
+            return (null);
+        }
     }
 };
 exports.AuthService = AuthService;

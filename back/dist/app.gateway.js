@@ -332,68 +332,85 @@ let AppGateway = class AppGateway {
         let username = user.name;
         let enemyname = enemyUser.name;
         if (player && !player.won) {
-            gameL++;
-            progress = ((gameW - gameL) / gameP) * 100;
-            progress = progress < 0 ? 0 : progress;
-            winspercent = (gameW / gameP) * 100;
-            lossespercent = (gameL / gameP) * 100;
+            if (enemy.score === 5) {
+                gameL++;
+                progress = ((gameW - gameL) / gameP) * 100;
+                progress = progress < 0 ? 0 : progress;
+                winspercent = (gameW / gameP) * 100;
+                lossespercent = (gameL / gameP) * 100;
+                await this.prisma.user.update({
+                    where: { id_user: decoded.id },
+                    data: {
+                        losses: gameL,
+                        games_played: gameP,
+                        Progress: progress,
+                        Wins_percent: winspercent,
+                        Losses_percent: lossespercent,
+                        history: {
+                            create: {
+                                useravatar: useravatar,
+                                username: username,
+                                winner: false,
+                                userscore: UserScore,
+                                enemyId: OppositeId,
+                                enemyname: enemyname,
+                                enemyavatar: enemyavatar,
+                                enemyscore: EnemyScore,
+                            },
+                        },
+                    },
+                });
+            }
             console.log("leave");
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
-                    losses: gameL,
-                    games_played: gameP,
-                    Progress: progress,
-                    Wins_percent: winspercent,
-                    Losses_percent: lossespercent,
                     InGame: false,
                     status_user: "online",
                     homies: false,
                     invited: false,
                     homie_id: 0,
-                    history: {
-                        create: {
-                            useravatar: useravatar,
-                            username: username,
-                            winner: false,
-                            userscore: UserScore,
-                            enemyId: OppositeId,
-                            enemyname: enemyname,
-                            enemyavatar: enemyavatar,
-                            enemyscore: EnemyScore,
-                        },
-                    },
                 },
             });
         }
         else if (player) {
-            gameW++;
-            progress = ((gameW - gameL) / gameP) * 100;
-            progress = progress < 0 ? 0 : progress;
-            winspercent = (gameW / gameP) * 100;
-            lossespercent = (gameL / gameP) * 100;
+            if (player.score === 5) {
+                gameW++;
+                progress = ((gameW - gameL) / gameP) * 100;
+                progress = progress < 0 ? 0 : progress;
+                winspercent = (gameW / gameP) * 100;
+                lossespercent = (gameL / gameP) * 100;
+                await this.prisma.user.update({
+                    where: { id_user: decoded.id },
+                    data: {
+                        wins: gameW,
+                        games_played: gameP,
+                        Progress: progress,
+                        Wins_percent: winspercent,
+                        Losses_percent: lossespercent,
+                        history: {
+                            create: {
+                                useravatar: useravatar,
+                                winner: true,
+                                username: username,
+                                userscore: UserScore,
+                                enemyId: OppositeId,
+                                enemyname: enemyname,
+                                enemyavatar: enemyavatar,
+                                enemyscore: EnemyScore,
+                            },
+                        },
+                    },
+                });
+            }
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
-                    wins: gameW,
-                    games_played: gameP,
-                    Progress: progress,
-                    Wins_percent: winspercent,
-                    Losses_percent: lossespercent,
                     InGame: false,
                     status_user: "online",
-                    history: {
-                        create: {
-                            useravatar: useravatar,
-                            winner: true,
-                            username: username,
-                            userscore: UserScore,
-                            enemyId: OppositeId,
-                            enemyname: enemyname,
-                            enemyavatar: enemyavatar,
-                            enemyscore: EnemyScore,
-                        },
-                    },
+                    homies: false,
+                    invited: false,
+                    homie_id: 0,
                 },
             });
         }

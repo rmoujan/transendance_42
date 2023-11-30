@@ -288,15 +288,15 @@ function Maincontent() {
                       </div>
                      
                     </div> */}
-                    <div className=" flex flex-col justify-center items-center -mt-10">
+                    <div className=" flex flex-col justify-center items-center mt-5">
 
-                      <div className="text-white font-bold text-[8rem]">
+                      <div className="text-white font-bold text-[8rem] mb-10">
                         vs
                       </div>
                       <img className=" -mt-10" src={Table} alt="" />
-                      <DialogActions>
+                      {/* <DialogActions>
                       <button  className="bg-[#D75D3A] px-10 rounded-[35px] text-white text-[4rem]" onClick={handleClose} autoFocus>Play</button>
-                      </DialogActions>
+                      </DialogActions> */}
                     </div>
                 </DialogContent>
               </div>
