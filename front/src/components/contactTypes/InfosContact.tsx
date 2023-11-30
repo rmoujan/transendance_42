@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import {
   Avatar,
   Box,
@@ -12,18 +11,17 @@ import {
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import {
-  CaretRight,
   Prohibit,
-  SpeakerSimpleX,
-  Star,
   Trash,
-  X,
+  X
 } from "@phosphor-icons/react";
-import React, { useRef, useState } from "react";
-import { toggleDialog, updatedContactInfo } from "../../redux/slices/contact";
+import React, { useState } from "react";
+import {
+  toggleDialog
+} from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
-import { BlockDialog, DeleteDialog, MuteDialog } from "../dialogs/Dialogs";
+import { BlockDialog, DeleteDialog } from "../dialogs/Dialogs";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -36,27 +34,17 @@ const Transition = React.forwardRef(function Transition(
 
 const InfosContact = () => {
   const dispatch = useAppDispatch();
-  const { contact } = useAppSelector(store => store);
+  const { contact } = useAppSelector((store) => store);
   console.log(contact);
-
 
   const [openBlock, setOpenBlock] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
-  const [openMute, setOpenMute] = useState(false);
 
   const handleCloseBlock = () => {
     setOpenBlock(false);
   };
   const handleCloseDelete = () => {
     setOpenDelete(false);
-  };
-
-  const handleCloseMute = () => {
-    setOpenMute(false);
-  };
-
-  const handleFileUpload = () => {
-    // handle click
   };
 
   return (
@@ -68,11 +56,19 @@ const InfosContact = () => {
         dispatch(toggleDialog());
       }}
       PaperProps={{
-        style: { backgroundColor: "#AE9BCD", borderRadius: "35px" },
+        style: { backgroundColor: "#696693", borderRadius: "35px" },
       }}
       // aria-describedby="alert-dialog-slide-description"
     >
-      <Typography sx={{ m: "0 8px", p: 2 }} variant="h6">
+      <Typography
+        sx={{
+          my: 2,
+        }}
+        variant="h4"
+        align="center"
+        fontWeight={600}
+        color={"#25213B"}
+      >
         Contact info
       </Typography>
       {/* <DialogTitle sx={{ m: "0 8px", p: 2 }} >Contact info</DialogTitle> */}
@@ -85,7 +81,7 @@ const InfosContact = () => {
           position: "absolute",
           left: "22.7em",
           top: 10,
-          color: theme => theme.palette.grey[800],
+          color: "#25213B",
         }}
       >
         <X />
@@ -113,7 +109,11 @@ const InfosContact = () => {
           />
           {/* name */}
           <Stack direction={"column"} alignItems={"center"}>
-            <Typography variant="h3" color={"#322554"} sx={{ padding: 0 }}>
+            <Typography
+              variant="h3"
+              color={"#25213B"}
+              sx={{ padding: 0, fontWeight: 700 }}
+            >
               {contact.name}
             </Typography>
           </Stack>
@@ -130,47 +130,40 @@ const InfosContact = () => {
               padding: "55px 0",
               margin: "10px",
               borderRadius: "35px",
-              backgroundColor: "#EADDFF",
+              backgroundColor: "#B7B7C9",
             }}
           >
             <Stack direction={"column"} alignItems={"center"}>
-              <Typography variant="h3">Games</Typography>
-              <Typography variant="h3">150</Typography>
+              <Typography variant="h3" fontWeight={600} color={"#3D3954"}>
+                Games
+              </Typography>
+              <Typography variant="h3" color={"#3D3954"}>
+                150
+              </Typography>
             </Stack>
             <Divider orientation="vertical" variant="middle" flexItem />
             <Stack direction={"column"} alignItems={"center"}>
-              <Typography variant="h3">Wins</Typography>
-              <Typography variant="h3">150</Typography>
+              <Typography variant="h3" fontWeight={600} color={"#3D3954"}>
+                Wins
+              </Typography>
+              <Typography variant="h3" color={"#3D3954"}>
+                150
+              </Typography>
             </Stack>
             <Divider orientation="vertical" variant="middle" flexItem />
             <Stack direction={"column"} alignItems={"center"}>
-              <Typography variant="h3">Loses</Typography>
-              <Typography variant="h3">150</Typography>
+              <Typography variant="h3" fontWeight={600} color={"#3D3954"}>
+                Loses
+              </Typography>
+              <Typography variant="h3" color={"#3D3954"}>
+                150
+              </Typography>
             </Stack>
           </Box>
         </Stack>
         <Divider />
         {/* Buttons */}
         <Stack direction={"row"} justifyContent={"center"} spacing={4}>
-          <Button
-            onClick={() => {
-              setOpenMute(true);
-            }}
-            variant="contained"
-            endIcon={<SpeakerSimpleX size={30} />}
-            sx={{
-              borderRadius: "15px",
-              fontSize: "20px",
-              padding: "10px 22px",
-              color: "#EADDFF",
-              backgroundColor: "#322554",
-              "&:hover": {
-                backgroundColor: "#806EA9",
-              },
-            }}
-          >
-            Mute
-          </Button>
           <Button
             onClick={() => {
               setOpenDelete(true);
@@ -182,9 +175,10 @@ const InfosContact = () => {
               fontSize: "20px",
               padding: "10px 22px",
               color: "#EADDFF",
-              backgroundColor: "#322554",
+              width: "200px",
+              backgroundColor: "#3D3C65",
               "&:hover": {
-                backgroundColor: "#806EA9",
+                backgroundColor: "#3D3954",
               },
             }}
           >
@@ -201,9 +195,10 @@ const InfosContact = () => {
               fontSize: "20px",
               padding: "10px 22px",
               color: "#EADDFF",
-              backgroundColor: "#DF1D1D",
+              width: "200px",
+              backgroundColor: "#3D3C65",
               "&:hover": {
-                backgroundColor: "#ef8285",
+                backgroundColor: "#3D3954",
               },
             }}
           >
@@ -211,7 +206,6 @@ const InfosContact = () => {
           </Button>
         </Stack>
       </Stack>
-      {openMute && <MuteDialog open={openMute} handleClose={handleCloseMute} />}
       {openDelete && (
         <DeleteDialog open={openDelete} handleClose={handleCloseDelete} />
       )}

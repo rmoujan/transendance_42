@@ -48,9 +48,6 @@ function Friends({ user }: AccountOwnerProps) {
     console.log("invite to playe");
     const id = friend.id_user;
     if (socket_user) socket_user.emit("invite-game", { id_user: id });
-    //friend.id_user
-    //accountOwner = false
-    //get returngameinfos from backend
     axios.post(
       "http://localhost:3000/profile/gameinfos",
       {
@@ -62,21 +59,16 @@ function Friends({ user }: AccountOwnerProps) {
         withCredentials: true,
       }
     );
-    // setaccountOwner(false);
     console.log("accountOwner id");
-    // console.log(user[0].id_user);
     console.log("status ");
     console.log(false);
     console.log(true);
 
-    // Update selectedFriend with the clicked friend's information
     setSelectedFriend(friend);
-    //   console.log(" 2 : ", friend.id_user);
+	axios.post("http://localhost:3000/profile/GameFlag", {flag:2}, {withCredentials:true});
     setTimeout(() => {
-      window.location.href = "http://localhost:5173/game";
+		window.location.href = "http://localhost:5173/game";
     }, 1000);
-    // console.log(friend);
-    // setLoding(true);
   };
 
   const [query, setQuery] = useState("");

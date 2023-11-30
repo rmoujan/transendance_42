@@ -57,6 +57,7 @@ export class ChannelsController {
   
   @Post('join')
   async join(@Req() req, @Body() data: any) {
+    
     console.log("-------------------------- Starting Joining a Channel  -------------------------- ");
     console.log(data);
     if (data)

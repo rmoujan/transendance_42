@@ -26,6 +26,7 @@ export class AppGateway
   private roomsId: number = 1;
   private users = new Map();
   private rooms: Room[] = [];
+  private playingUsers: number[] = [];
   private frRooms: Room[] = [];
   private framePerSec: number = 50;
   private isPaused: boolean = false;
@@ -57,6 +58,12 @@ export class AppGateway
   }
 
   async handleConnection(client: Socket, ...args: any[]) {
+	const userId: number = this.decodeCookie(client).id;
+	if (this.playingUsers.includes(userId)) {
+		client.disconnect();
+		return ;
+	}
+	this.playingUsers.push(userId);
     this.logger.log(`Client connected: ${client.id}`);
   }
 
@@ -64,6 +71,7 @@ export class AppGateway
   async handleDisconnect(client: Socket) {
     const room: Room | null = this.findRoomBySocketId(client.id);
     const decoded = this.decodeCookie(client);
+	this.playingUsers = this.playingUsers.filter(item => item !== decoded.id);
     if (decoded == null) return;
     await this.prisma.user.update({
       where: { id_user: decoded.id },
@@ -75,6 +83,7 @@ export class AppGateway
         homie_id: 0,
       },
     });
+
     if (room) {
       room.gameAbondoned = true;
       this.logger.log(`User disconnected : ${client.id}`);
@@ -91,6 +100,7 @@ export class AppGateway
       this.logger.log(`User disconnected : ${client.id}`);
     }
     this.users.delete(this.decodeCookie(client).id);
+	console.log(this.users);
   }
 
   @SubscribeMessage("join-friends-room")
@@ -576,7 +586,8 @@ export class AppGateway
           room.roomBall.y + room.roomBall.r >= 644 ||
           room.roomBall.y - room.roomBall.r <= 0
         ) {
-          room.roomBall.velocityY *= -1;
+			room.roomBall.y = room.roomBall.y + room.roomBall.r >= 644 ? room.roomBall.y - room.roomBall.r : room.roomBall.y + room.roomBall.r;
+          	room.roomBall.velocityY *= -1;
         }
 
         let player =

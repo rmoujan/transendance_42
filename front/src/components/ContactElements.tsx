@@ -177,7 +177,7 @@ const ContactElements = (cont: any) => {
               dispatch(FetchFriends());
               dispatch(showSnackbar({
                 severity: "success",
-                message: `${contact.name} has been deleted`
+                message: `${cont.name} has been deleted`
               }))
               
             }}
@@ -195,7 +195,7 @@ const ContactElements = (cont: any) => {
               dispatch(
                 showSnackbar({
                   severity: "success",
-                  message: `${contact.name} has been blocked`,
+                  message: `${cont.name} has been blocked`,
                 })
               );
             }}

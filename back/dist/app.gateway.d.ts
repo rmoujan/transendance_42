@@ -11,6 +11,7 @@ export declare class AppGateway implements OnGatewayInit, OnGatewayConnection, O
     private roomsId;
     private users;
     private rooms;
+    private playingUsers;
     private frRooms;
     private framePerSec;
     private isPaused;

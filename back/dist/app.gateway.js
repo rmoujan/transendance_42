@@ -22,6 +22,7 @@ let AppGateway = class AppGateway {
         this.roomsId = 1;
         this.users = new Map();
         this.rooms = [];
+        this.playingUsers = [];
         this.frRooms = [];
         this.framePerSec = 50;
         this.isPaused = false;
@@ -45,11 +46,18 @@ let AppGateway = class AppGateway {
         this.logger.log("Websocket Gateway initialized");
     }
     async handleConnection(client, ...args) {
+        const userId = this.decodeCookie(client).id;
+        if (this.playingUsers.includes(userId)) {
+            client.disconnect();
+            return;
+        }
+        this.playingUsers.push(userId);
         this.logger.log(`Client connected: ${client.id}`);
     }
     async handleDisconnect(client) {
         const room = this.findRoomBySocketId(client.id);
         const decoded = this.decodeCookie(client);
+        this.playingUsers = this.playingUsers.filter(item => item !== decoded.id);
         if (decoded == null)
             return;
         await this.prisma.user.update({
@@ -78,6 +86,7 @@ let AppGateway = class AppGateway {
             this.logger.log(`User disconnected : ${client.id}`);
         }
         this.users.delete(this.decodeCookie(client).id);
+        console.log(this.users);
     }
     async handleJoinFriendsRoom(client, data) {
         const userId = this.decodeCookie(client).id;
@@ -525,6 +534,7 @@ let AppGateway = class AppGateway {
                 room.roomBall.y += room.roomBall.velocityY;
                 if (room.roomBall.y + room.roomBall.r >= 644 ||
                     room.roomBall.y - room.roomBall.r <= 0) {
+                    room.roomBall.y = room.roomBall.y + room.roomBall.r >= 644 ? room.roomBall.y - room.roomBall.r : room.roomBall.y + room.roomBall.r;
                     room.roomBall.velocityY *= -1;
                 }
                 let player = room.roomBall.x < 1088 / 2
