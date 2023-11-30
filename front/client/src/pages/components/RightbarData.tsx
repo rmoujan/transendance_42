@@ -36,8 +36,11 @@ const RightbarData: React.FC<RightbarDataProps> = ({ toggle }) => {
         setUsers(friends);
         if (socket_user) {
           socket_user.on("RefreshFriends", async () => {
+            try {
             const newfriends = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true }); 
             setUsers(newfriends.data); 
+            }catch (err) {
+            }
           });
           socket_user.on("offline", (data: any) => {
             setUsers(prevUsers => {

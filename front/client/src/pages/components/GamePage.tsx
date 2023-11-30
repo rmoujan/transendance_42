@@ -3,8 +3,8 @@ import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import MyBotGame from "../../../../game/src/botGame.ts";
 import MyMultiplayerGame from "../../../../game/src/multiplayerGame.ts";
-import { socket_user, socketuser } from "../../socket.ts";
-import { fadeIn } from "./variants.ts";
+import { socket_user, socketuser } from "../../socket";
+import { fadeIn } from "./variants";
 
 if (socket_user == undefined) {
   socketuser();
@@ -28,11 +28,14 @@ function GamePage() {
   };
 
   const handleMultiplayerGameClick = async () => {
+    try {
     if (myMultiplayerGameInstance.current) {
       myMultiplayerGameInstance.current.startMultiplayerGame();
       await axios.get("http://localhost:3000/profile/avatar", {
         withCredentials: true,
       });
+    }
+    }catch (err) {
     }
   };
 
@@ -44,6 +47,7 @@ function GamePage() {
   }, []);
 
   const handleGameFromHome = async () => {
+    try {
     const outcome = await axios.get("http://localhost:3000/profile/GameFlag", {
       withCredentials: true,
     });
@@ -60,6 +64,8 @@ function GamePage() {
       }, 200);
     } else if (outcome.data.flag === 2) {
       handleMultiplayerGameClick();
+    }
+    }catch (err) {
     }
   };
 

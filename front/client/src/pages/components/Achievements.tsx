@@ -13,6 +13,7 @@ function Achievements() {
   const [Achievements, setAchievements] = useState<Achievements[]>([]);
   useEffect(() => {
     const fetchData = async () => {
+      try {
       const { data } = await axios.get(
         "http://localhost:3000/profile/Achievments",
         {
@@ -20,6 +21,8 @@ function Achievements() {
         }
       );
       setAchievements(data);
+    } catch (err) {
+    }
     };
     fetchData();
   }, []);

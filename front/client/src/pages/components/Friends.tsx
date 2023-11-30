@@ -26,8 +26,11 @@ type AccountOwnerProps = {
 function Friends({ }: AccountOwnerProps) {
   useEffect(() => {
     const fetchData = async () => {
+      try {
       const {data}  = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true });
       setFriend(data);
+    } catch (err) {
+    }
     };
     fetchData();
   }
@@ -37,6 +40,7 @@ function Friends({ }: AccountOwnerProps) {
   const InviteToPlaye = (friend: any) => {
     const id = friend.id_user;
     if (socket_user) socket_user.emit("invite-game", { id_user: id });
+    try {
     axios.post(
       "http://localhost:3000/profile/gameinfos",
       {
@@ -54,6 +58,8 @@ function Friends({ }: AccountOwnerProps) {
     setTimeout(() => {
 		window.location.href = "http://localhost:5173/game";
     }, 1000);
+    }catch (err) {
+    }
   };
 
   return (

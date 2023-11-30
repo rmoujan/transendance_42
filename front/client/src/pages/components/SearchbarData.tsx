@@ -26,8 +26,11 @@ function SearchbarData() {
   const navigate = useNavigate();
   useEffect(() => {
     const fetchData = async () => {
+      try {
       const { data } = await axios.get("http://localhost:3000/auth/friends", { withCredentials: true });
       setUsers(data);
+    } catch (err) {
+    }
     };
     fetchData();
   }, []);

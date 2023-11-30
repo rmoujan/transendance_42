@@ -49,14 +49,6 @@ function FriendList() {
   const [friend, setFriend] = useState<User[]>([]);
   const [filteredUser, setFilteredUser] = useState<
     {
-      // id: number;
-      // img: string;
-      // name: string;
-      // email: string;
-      // job: string;
-      // org: string;
-      // online: boolean;
-      // date: string;
       id_user: number;
       name: string;
       avatar: string;
@@ -135,6 +127,7 @@ function FriendList() {
 
   const [NotFriends, setNotFriends] = useState<User[]>([]);
   const fetchData = async () => {
+    try {
     const { data } = await axios.get("http://localhost:3000/auth/friends", {
       withCredentials: true,
     });
@@ -144,6 +137,8 @@ function FriendList() {
     );
     setNotFriends(dataUser.data);
     setFriend(data);
+  } catch (err) {
+  }
   };
   useEffect(() => {
     fetchData();

@@ -1,6 +1,4 @@
-import Arcane from "../../img/Arcane.png"
-import Girl from "../../img/Girl.png"
-import Luffy from "../../img/Luffy.png"
+
 export const TABS = [
     {
       label: "All",
@@ -21,7 +19,6 @@ export const TABS = [
   export  const TABLE_ROWS = [
     {
       id:1,
-      img: Arcane,
       name: "John Michael",
       email: "john@creative-tim.com",
       job: "500",
@@ -31,7 +28,6 @@ export const TABS = [
     },
     {
       id:2,
-      img: Girl,
       name: "Alexa Liras",
       email: "alexa@creative-tim.com",
       job: "500",
@@ -41,7 +37,6 @@ export const TABS = [
     },
     {
       id:3,
-      img: Luffy,
       name: "Laurent Perrier",
       email: "laurent@creative-tim.com",
       job: "500",
@@ -51,7 +46,6 @@ export const TABS = [
     },
     {
       id:4,
-      img: Arcane,
       name: "Michael Levi",
       email: "michael@creative-tim.com",
       job: "500",
@@ -61,7 +55,6 @@ export const TABS = [
     },
     {
       id:5,
-      img: Girl,
       name: "Richard Gran",
       email: "richard@creative-tim.com",
       job: "500",
@@ -71,7 +64,6 @@ export const TABS = [
     },
     {
       id:6,
-      img: Girl,
       name: "Richard Gran",
       email: "richard@creative-tim.com",
       job: "500",
@@ -81,7 +73,6 @@ export const TABS = [
     },
     {
         id:7,
-        img: Girl,
         name: "Richard Gran",
         email: "richard@creative-tim.com",
         job: "500",
@@ -91,7 +82,6 @@ export const TABS = [
       },
       {
         id:8,
-        img: Girl,
         name: "Richard Gran",
         email: "richard@creative-tim.com",
         job: "500",
@@ -101,7 +91,6 @@ export const TABS = [
       },
       {
         id:9,
-        img: Girl,
         name: "Richard Gran",
         email: "richard@creative-tim.com",
         job: "500",
@@ -111,7 +100,6 @@ export const TABS = [
       },
       {
         id:10,
-        img: Girl,
         name: "Richard Gran",
         email: "richard@creative-tim.com",
         job: "500",
@@ -121,7 +109,6 @@ export const TABS = [
       },
       {
         id:11,
-        img: Girl,
         name: "Richard Gran",
         email: "richard@creative-tim.com",
         job: "500",
@@ -131,7 +118,6 @@ export const TABS = [
       },
       {
         id:12,
-        img: Girl,
         name: "Richard Gran",
         email: "richard@creative-tim.com",
         job: "500",
@@ -141,7 +127,6 @@ export const TABS = [
       },
       {
         id:13,
-        img: Girl,
         name: "Richard Gran",
         email: "richard@creative-tim.com",
         job: "500",
@@ -151,7 +136,6 @@ export const TABS = [
       },
       {
         id:14,
-        img: Girl,
         name: "Richard Gran",
         email: "richard@creative-tim.com",
         job: "500",

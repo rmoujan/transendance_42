@@ -1,5 +1,3 @@
-import { IconButton, Stack, TextField } from "@mui/material";
-import { PencilSimpleLine } from "@phosphor-icons/react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
@@ -9,7 +7,6 @@ import UpdateProfile from "../../components/UpdateProfile";
 import astronaut from "../../img/astronaut_.png";
 import Cover from "../../img/bg33.png";
 import { showSnackbar } from "../../redux/slices/contact";
-import { toggleProfile } from "../../redux/slices/profile";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import { socket_user, socketuser } from "../../socket";
 import AboutMe from "./AboutMe";
@@ -32,16 +29,17 @@ type User = {
 };
 function MaincontentSetting() {
   const { profile } = useAppSelector((state) => state);
-  const [isEditing, setIsEditing] = useState(false);
-  const [userName, setUserName] = useState("");
   const [twoFactor, setTwoFactor] = useState<User[]>([]);
   const [name, setName] = useState<string>("");
   const [photo, setPhoto] = useState<File | null>(null);
   const fetchData = async () => {
+    try {
     const { data } = await axios.get("http://localhost:3000/auth/get-user", {
       withCredentials: true,
     });
     setTwoFactor(data);
+  } catch (err) {
+  }
   };
   useEffect(() => {
     if (socket_user == undefined) {
@@ -49,14 +47,6 @@ function MaincontentSetting() {
     }
     fetchData();
   }, []);
-
-  const handleEditClick = () => {
-    setIsEditing(!isEditing);
-  };
-
-  const handleUserNameChange = (event: any) => {
-    setUserName(event.target.value);
-  };
 
   const dispatch = useAppDispatch();
 
@@ -207,65 +197,6 @@ function MaincontentSetting() {
                           onChange={(e) => setName(e.target.value)} 
                         />
                       </div>
-                      <Stack direction={"row"} spacing={2} p={2}>
-                        <IconButton
-                          aria-label="upload image"
-                          size="large"
-                          onClick={() => {
-                            dispatch(toggleProfile());
-                          }}
-                        >
-                          <TbPhotoEdit className="text-4xl text-[#B7B7C9]" />
-                        </IconButton>
-
-                        <IconButton
-                          aria-label="change-user-name"
-                          size="large"
-                          onClick={handleEditClick}
-                        >
-                          <PencilSimpleLine
-                            size={36}
-                            weight="bold"
-                            color="#B7B7C9"
-                          />
-                        </IconButton>
-
-                        {isEditing && (
-                          <TextField
-                            label="Edit Profile Name"
-                            variant="outlined"
-                            value={userName}
-                            onChange={handleUserNameChange}
-                            sx={{
-                              "& .MuiInputLabel-root": {
-                                color: "#B7B7C9",
-                                fontWeight: "bold",
-                              },
-                              "& .MuiOutlinedInput-root": {
-                                "& fieldset": {
-                                  borderColor: "#B7B7C9",
-                                  borderWidth: "2px",
-                                  fontWeight: "bold",
-                                },
-                                "&:hover fieldset": {
-                                  borderColor: "#B7B7C9",
-                                },
-                                "&.Mui-focused fieldset": {
-                                  borderColor: "#B7B7C9",
-                                },
-                              },
-                              "& .MuiInputBase-input": {
-                                color: "#B7B7C9",
-                                fontWeight: "bold",
-                              },
-                              "& .MuiInputBase-input::placeholder": {
-                                color: "#B7B7C9",
-                                fontWeight: "bold",
-                              },
-                            }}
-                          />
-                        )}
-                      </Stack>
                       <div className=" flex flex-row text-white items-center text-center mt-5">
                         <TbPhotoEdit className="text-2xl" />
                         <div className=" ml-3 text-lg w-72 text-center items-center p-2 border-2 border-white max-w-[200px] overflow-hidden rounded-2xl">

@@ -50,6 +50,7 @@ function Searchbar() {
   const [user, setUser] = useState<User[]>([]);
   const [Notification, setNotification] = useState<Array<any>>([]);
   const fetchData = async () => {
+    try {
     const { data } = await axios.get("http://localhost:3000/auth/get-user", {
       withCredentials: true,
     });
@@ -70,6 +71,8 @@ function Searchbar() {
     );
     setNotification(notif.data);
     setUser(data);
+  } catch (err) {
+  }
   };
   const accepteGame = (friend: any) => {
     axios.post(
@@ -94,6 +97,7 @@ function Searchbar() {
      socket_user.emit("userOnline");
 
       socket_user.on("notification", async () => {
+        try {
         const { data } = await axios.get(
           "http://localhost:3000/profile/Notifications",
           {
@@ -101,6 +105,8 @@ function Searchbar() {
           }
         );
         setNotification(data);
+      } catch (err) {
+      }
       });
     }
     fetchData();
