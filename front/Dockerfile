@@ -5,8 +5,15 @@ FROM node:latest
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the container
-COPY package*.json ./
+WORKDIR /app/game
 
+COPY ./game .
+
+RUN npm install
+
+WORKDIR /app/client
+
+COPY ./client .
 # Install project dependencies
 RUN npm run install-deps
 
@@ -14,7 +21,6 @@ RUN npm run install-deps
 EXPOSE 5173
 
 # Copy the rest of the application code to the container
-COPY . .
 
 # Build the Vite project
 #RUN npm run build
