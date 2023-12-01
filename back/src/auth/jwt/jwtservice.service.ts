@@ -29,6 +29,7 @@ export class JwtService extends PassportStrategy(Strategy, 'jwt') {
 
     sign(payload: User) {
         return jwt.sign(payload, this.secretKey, { expiresIn: '6h'}); // Adjust expiration as needed
+        // NOTE(XENOBAS): HARD CODED MAGIC VALUE 6h SHOULD BE ENV VARIABLE
     }
 
     verify(token: string): any {

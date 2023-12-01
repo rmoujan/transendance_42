@@ -17,7 +17,7 @@ import { PrismaService } from "src/prisma.service";
 import { NumberDto } from "./utils/numberDto";
 import { NumberDtoO } from "./utils/NumberDtoO";
 import { ConfigService } from "@nestjs/config";
-
+import { TFDTO } from "./utils/TFDTO";
 import { sign } from "jsonwebtoken"; // Update with the correct import
 import {
   ExceptionFilter,
@@ -105,11 +105,11 @@ export class AuthController {
 
   /************************************** */
 
-  @Post("verify-qrcode")
+  @Post("verify-qrcode")  
   async Verify_QrCode(@Body() body: NumberDto, @Req() req) {
     const msg = await this.service.Verify_QrCode(body, req);
     if (msg == null) return null;
-    return msg.msg;
+    return msg.msg; // NOTE(XENOBAS): COULD BE msg?.msg to treat in case msg goes UNDEFINED
   }
 
   /************************************** */
@@ -143,6 +143,7 @@ export class AuthController {
           AND: [{ userId: decoded.id }, { id_user: body.id_user }],
         },
       });
+      // NOTE(XENOBAS): YOU COULD USE Promise.all
       const user = await this.prisma.user.findUnique({
         where: { id_user: decoded.id },
         include: { freind: true },
@@ -314,7 +315,7 @@ export class AuthController {
   /************************************** */
 
   @Post("TwoFactorAuth")
-  async TwofactorAuth(@Body() body, @Req() req) {
+  async TwofactorAuth(@Body() body:TFDTO, @Req() req) {
     try {
       const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
       const user = await this.prisma.user.update({
