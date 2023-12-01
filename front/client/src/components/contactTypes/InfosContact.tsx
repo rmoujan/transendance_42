@@ -12,10 +12,11 @@ import {
 import { TransitionProps } from "@mui/material/transitions";
 import { Prohibit, Trash, X } from "@phosphor-icons/react";
 import React, { useState } from "react";
-import { toggleDialog } from "../../redux/slices/contact";
+import { resetContact, toggleDialog } from "../../redux/slices/contact";
 import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 
 import { BlockDialog, DeleteDialog } from "../dialogs/Dialogs";
+import { FetchFriends } from "../../redux/slices/app";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -33,6 +34,14 @@ const InfosContact = () => {
   const currentFriend: any = friends.filter(
     (el: any) => el.id_user == contact.room_id
   );
+  if (currentFriend.length == 0) {
+    if (contact.contactInfos.open == true) {     
+      dispatch(toggleDialog());
+      dispatch(FetchFriends());
+      dispatch(resetContact());
+    }
+    return null;
+  }
 
   const [openBlock, setOpenBlock] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
