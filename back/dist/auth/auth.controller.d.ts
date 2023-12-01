@@ -3,7 +3,8 @@ import { JwtService } from "../auth/jwt/jwtservice.service";
 import { PrismaService } from "src/prisma.service";
 import { NumberDto } from "./utils/numberDto";
 import { NumberDtoO } from "./utils/NumberDtoO";
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from "@nestjs/config";
+import { TFDTO } from "./utils/TFDTO";
 import { ExceptionFilter, UnauthorizedException, ArgumentsHost } from "@nestjs/common";
 export declare class UnauthorizedExceptionFilter implements ExceptionFilter {
     catch(exception: UnauthorizedException, host: ArgumentsHost): void;
@@ -52,5 +53,5 @@ export declare class AuthController {
         invited: boolean;
         homie_id: number;
     }[]>;
-    TwofactorAuth(body: any, req: any): Promise<void>;
+    TwofactorAuth(body: TFDTO, req: any): Promise<void>;
 }

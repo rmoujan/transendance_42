@@ -24,6 +24,8 @@ const BotDto_1 = require("./BotDto");
 const ingameDto_1 = require("./ingameDto");
 const infosDto_1 = require("./infosDto");
 const config_1 = require("@nestjs/config");
+const VerifyDTO_1 = require("./VerifyDTO");
+const flagDTO_1 = require("./flagDTO");
 let ProfileController = class ProfileController {
     constructor(Profile, prisma, jwt, config) {
         this.Profile = Profile;
@@ -497,7 +499,7 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [VerifyDTO_1.VerifyDTO, Object]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "verify_Otp", null);
 __decorate([
@@ -512,7 +514,7 @@ __decorate([
     __param(0, (0, common_1.Req)()),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, flagDTO_1.flagDTO]),
     __metadata("design:returntype", Promise)
 ], ProfileController.prototype, "GameFlag", null);
 __decorate([

@@ -56,6 +56,7 @@ const TwoFactor = () => {
 
   const toggleTwoF = async (user: User) => {
     const backURL = "http://localhost:3000/auth/TwoFactorAuth";
+
     const updatedTwoFactorStatus = !user.TwoFactor;
     const twoFactor = { id_user: user.id_user, enable: updatedTwoFactorStatus };
     setTwoFactor((prevUsers) =>
@@ -68,6 +69,7 @@ const TwoFactor = () => {
     axios.post(backURL, twoFactor, {
       withCredentials: true,
     });
+    axios.post("http://localhost:3000/profile/verifyOtp", {verify: false}, {withCredentials: true});
   };
 
   const handleClose = () => {

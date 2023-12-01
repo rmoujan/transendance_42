@@ -349,7 +349,7 @@ export class ProfileController {
     }
     catch(error){}
   }
-
+  
   @Get("verifyOtp")
   async Get_Otp(@Req() req){
     try {

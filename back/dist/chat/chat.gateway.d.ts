@@ -5,7 +5,6 @@ import { JwtService } from '../auth/jwt/jwtservice.service';
 import { ChatService } from './chat.service';
 import { UsersService } from 'src/users/users.service';
 import { ChannelsService } from 'src/channel/channel.service';
-import { ChatDto } from './dtoChat/chat.dto';
 export declare class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     private jwt;
     private readonly ChatService;
@@ -33,6 +32,6 @@ export declare class ChatGateway implements OnGatewayInit, OnGatewayConnection, 
     leavingRoom(client: Socket, data: any): Promise<boolean>;
     bannedUser(client: Socket, data: any): Promise<boolean>;
     kickUser(client: Socket, data: any): Promise<boolean>;
-    muteUser(client: Socket, data: ChatDto): Promise<boolean>;
+    muteUser(client: Socket, data: any): Promise<boolean>;
     unmuteUser(client: Socket, data: any): Promise<boolean>;
 }

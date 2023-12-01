@@ -86,7 +86,6 @@ let AppGateway = class AppGateway {
             this.logger.log(`User disconnected : ${client.id}`);
         }
         this.users.delete(this.decodeCookie(client).id);
-        console.log(this.users);
     }
     async handleJoinFriendsRoom(client, data) {
         const userId = this.decodeCookie(client).id;
@@ -370,7 +369,6 @@ let AppGateway = class AppGateway {
                     },
                 });
             }
-            console.log("leave");
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {

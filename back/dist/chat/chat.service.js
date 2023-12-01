@@ -108,8 +108,7 @@ let ChatService = class ChatService {
                     ]
                 }
             });
-            console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  :: ${dms}`);
-            return dms;
+            return (dms);
         }
         catch (error) {
             throw new common_1.NotFoundException(`there is no dms , error`);
@@ -126,7 +125,6 @@ let ChatService = class ChatService {
                 },
             });
             if (dm1) {
-                console.log(`get Dm1 |${dm1}|`);
                 return dm1;
             }
             const dm2 = await this.prisma.dm.findUnique({
@@ -138,7 +136,6 @@ let ChatService = class ChatService {
                 },
             });
             if (dm2) {
-                console.log(`get dm2 |${dm2}|`);
                 return dm2;
             }
         }
@@ -156,7 +153,7 @@ let ChatService = class ChatService {
                     dateSent: 'asc'
                 }
             });
-            return messages;
+            return (messages);
         }
         catch (error) {
             throw new common_1.NotFoundException(`we have no messages`);
@@ -187,7 +184,7 @@ let ChatService = class ChatService {
                     dateSent: 'asc'
                 }
             });
-            return messages;
+            return (messages);
         }
         catch (error) {
             throw new common_1.NotFoundException(`Error getting messages in this Channel`);
@@ -203,7 +200,7 @@ let ChatService = class ChatService {
                     dateSent: 'desc'
                 }
             });
-            return lastMessage;
+            return (lastMessage);
         }
         catch (error) {
             throw new common_1.NotFoundException(`There is no last message`);
@@ -220,7 +217,6 @@ let ChatService = class ChatService {
                 },
             });
             if (record) {
-                console.log("DELETING USER \n");
                 const deleteMsg = await this.prisma.discussion.deleteMany({
                     where: {
                         userId: idUs,
@@ -235,7 +231,7 @@ let ChatService = class ChatService {
                         },
                     },
                 });
-                return result;
+                return (result);
             }
         }
         catch (error) {
@@ -257,9 +253,9 @@ let ChatService = class ChatService {
                 },
             });
             if (block.length > 0 || block2.length > 0) {
-                return true;
+                return (true);
             }
-            return false;
+            return (false);
         }
         catch (error) {
             throw new common_1.NotFoundException(`Error occured when check blocked user`);

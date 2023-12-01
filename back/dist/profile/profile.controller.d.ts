@@ -7,6 +7,8 @@ import { MixedDto } from "./BotDto";
 import { BooleanDto } from "./ingameDto";
 import { Infos } from "./infosDto";
 import { ConfigService } from '@nestjs/config';
+import { VerifyDTO } from "./VerifyDTO";
+import { flagDTO } from "./flagDTO";
 export declare class ProfileController {
     private Profile;
     private prisma;
@@ -109,12 +111,12 @@ export declare class ProfileController {
     }>;
     Logout(req: any, res: any): Promise<void>;
     deletecookie(res: any): void;
-    verify_Otp(body: any, req: any): Promise<void>;
+    verify_Otp(body: VerifyDTO, req: any): Promise<void>;
     Get_Otp(req: any): Promise<{
         verified: boolean;
         TFA: boolean;
     }>;
-    GameFlag(req: any, body: any): Promise<void>;
+    GameFlag(req: any, body: flagDTO): Promise<void>;
     GetFalg(req: any): Promise<{
         flag: number;
     }>;

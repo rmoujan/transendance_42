@@ -22,6 +22,7 @@ const prisma_service_1 = require("../prisma.service");
 const numberDto_1 = require("./utils/numberDto");
 const NumberDtoO_1 = require("./utils/NumberDtoO");
 const config_1 = require("@nestjs/config");
+const TFDTO_1 = require("./utils/TFDTO");
 const common_2 = require("@nestjs/common");
 let UnauthorizedExceptionFilter = class UnauthorizedExceptionFilter {
     catch(exception, host) {
@@ -57,7 +58,7 @@ let AuthController = class AuthController {
         try {
             const accessToken = this.jwt.sign(req.user);
             res
-                .cookie(this.config.get('cookie'), accessToken, {
+                .cookie(this.config.get("cookie"), accessToken, {
                 httponly: true,
             })
                 .status(200);
@@ -65,7 +66,7 @@ let AuthController = class AuthController {
                 where: { id_user: req.user.id },
             });
             if (user.TwoFactor) {
-                res.redirect(this.config.get('AuthenticationPath'));
+                res.redirect(this.config.get("AuthenticationPath"));
                 return req;
             }
             if (user.IsFirstTime) {
@@ -73,10 +74,10 @@ let AuthController = class AuthController {
                     where: { id_user: req.user.id },
                     data: { IsFirstTime: false },
                 });
-                res.redirect(this.config.get('settingsPath'));
+                res.redirect(this.config.get("settingsPath"));
             }
             else {
-                res.redirect(this.config.get('homepath'));
+                res.redirect(this.config.get("homepath"));
             }
             return req;
         }
@@ -89,12 +90,12 @@ let AuthController = class AuthController {
     async Verify_QrCode(body, req) {
         const msg = await this.service.Verify_QrCode(body, req);
         if (msg == null)
-            return (null);
+            return null;
         return msg.msg;
     }
     async Insert_Friends(body, req) {
         try {
-            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
             await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
@@ -136,7 +137,7 @@ let AuthController = class AuthController {
             const friendData = await this.prisma.user.findUnique({
                 where: { id_user: Body.id_user },
             });
-            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
             const user = await this.prisma.freind.deleteMany({
                 where: {
                     AND: [{ userId: decoded.id }, { id_freind: Body.id_user }],
@@ -155,7 +156,7 @@ let AuthController = class AuthController {
             const friendData = await this.prisma.user.findUnique({
                 where: { id_user: Body.id_user },
             });
-            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
             const user = await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
@@ -172,7 +173,7 @@ let AuthController = class AuthController {
     }
     async DeBlock_friends(Body, req) {
         try {
-            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
             await this.prisma.blockedUser.deleteMany({
                 where: {
                     AND: [{ id_blocked_user: Body.id_user }, { userId: decoded.id }],
@@ -183,7 +184,7 @@ let AuthController = class AuthController {
     }
     async Get_FriendsList(req) {
         try {
-            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
             const user = await this.prisma.user.findUnique({
                 where: { id_user: decoded.id },
             });
@@ -213,7 +214,7 @@ let AuthController = class AuthController {
     }
     async only_friends(req) {
         try {
-            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
             const friends = await this.prisma.user.findUnique({
                 where: { id_user: decoded.id },
                 include: {
@@ -247,7 +248,7 @@ let AuthController = class AuthController {
     }
     async Get_User(req) {
         try {
-            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
             let obj = [];
             const user = await this.prisma.user.findUnique({
                 where: { id_user: decoded.id },
@@ -266,7 +267,7 @@ let AuthController = class AuthController {
     }
     async TwofactorAuth(body, req) {
         try {
-            const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
             const user = await this.prisma.user.update({
                 where: { id_user: decoded.id },
                 data: {
@@ -377,11 +378,12 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [TFDTO_1.TFDTO, Object]),
     __metadata("design:returntype", Promise)
 ], AuthController.prototype, "TwofactorAuth", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)("auth"),
+    (0, common_1.UseFilters)(new UnauthorizedExceptionFilter()),
     __metadata("design:paramtypes", [auth_service_1.AuthService,
         jwtservice_service_1.JwtService,
         prisma_service_1.PrismaService,

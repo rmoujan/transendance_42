@@ -28,22 +28,24 @@ let UsersController = class UsersController {
         return this.usersService.findAll();
     }
     async findById(id) {
-        const user = await this.usersService.findById(id);
-        return (user);
+        if (id) {
+            const user = await this.usersService.findById(id);
+            return (user);
+        }
     }
     async findByName(name) {
-        const user = await this.usersService.findByName(name);
-        return (user.id_user);
+        if (name) {
+            const user = await this.usersService.findByName(name);
+            return (user.id_user);
+        }
     }
     async updateUserDetails(file) {
         try {
             const rest = await this.cloudinaryService.uploadImage(file);
             const avatarUrl = rest.secure_url;
-            console.log("avatarUrl: ", avatarUrl);
-            return avatarUrl;
+            return (avatarUrl);
         }
         catch (error) {
-            console.log("error in uploading: ", error);
             return error;
         }
     }

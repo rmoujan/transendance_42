@@ -1,91 +1,17 @@
-import Dialog from "@mui/material/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import React, { FC, useEffect, useRef, useState } from "react";
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
 import { CgSpinner } from "react-icons/cg";
+import { showSnackbar } from "../redux/slices/contact";
+import { useAppDispatch } from "../redux/store/store";
 
-type User = {
-  id_user: number;
-  name: string;
-  avatar: string;
-  TwoFactor: boolean;
-  secretKey: string | null;
-  status_user: string;
-};
+interface Props {}
 
-const TwoFactor = () => {
-  const [twoFactor, setTwoFactor] = useState<User[]>([]);
-  const [open, setOpen] = useState<boolean>(false);
-  const [qrCodeDataURL, setQRCodeDataURL] = useState("");
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
+const Otpinput: FC<Props> = (): JSX.Element => {
   const [otp, setOtp] = useState<string[]>(new Array(6).fill(""));
-  const [activeOTPIndex, setActiveOTPIndex] = useState<number>(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [inputValue, setInputValue] = useState<string>("");
   const [loding, setLoding] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-      const { data } = await axios.get("http://localhost:3000/auth/get-user", {
-        withCredentials: true,
-      });
-      setTwoFactor(data);
-    } catch (err) {
-    }
-    };
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
-    try {
-    const { data } = await axios.get("http://localhost:3000/auth/get-qrcode", {
-      withCredentials: true,
-    });
-    setQRCodeDataURL(data);
-  } catch (err) {
-  }
-  };
-  useEffect(() => {fetchData();}, []);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, [activeOTPIndex]);
-
-  const toggleTwoFactor = async () => {
-    try {
-      await fetchData();
-      setOpen(true);
-    } catch (error) {
-    }
-  };
-
-  const toggleTwoF = async (user: User) => {
-    try {
-    const backURL = "http://localhost:3000/auth/TwoFactorAuth";
-    const updatedTwoFactorStatus = !user.TwoFactor;
-    const twoFactor = { id_user: user.id_user, enable: updatedTwoFactorStatus };
-    setTwoFactor((prevUsers) =>
-      prevUsers.map((u) =>
-        u.id_user === user.id_user
-          ? { ...u, TwoFactor: updatedTwoFactorStatus }
-          : u
-      )
-    );
-    axios.post(backURL, twoFactor, {
-      withCredentials: true,
-    });
-    }catch (err) {
-    }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  const [activeOTPIndex, setActiveOTPIndex] = useState<number>(0);
+  const [inputValue, setInputValue] = useState<string>("");
+  const inputRef = useRef<HTMLInputElement>(null);
   const handleOnChange = (
     { target }: React.ChangeEvent<HTMLInputElement>,
     index: number
@@ -94,6 +20,7 @@ const TwoFactor = () => {
     const newOTP: string[] = [...otp];
 
     newOTP[index] = value.substring(value.length - 1);
+
     if (!value) setActiveOTPIndex(index - 1);
     else setActiveOTPIndex(index + 1);
     setOtp(newOTP);
@@ -105,164 +32,73 @@ const TwoFactor = () => {
     setInputValue(newInputValue);
   };
 
-  function onVerify(user: User) {
-    try {
+  useEffect(() => {
+    inputRef.current?.focus();
+  }, [activeOTPIndex]);
+  const dispatch = useAppDispatch();
+  function onVerify() {
     const backendURL = "http://localhost:3000/auth/verify-qrcode";
-    const backURL = "http://localhost:3000/auth/TwoFactorAuth";
     const data = { inputValue };
-    const updatedTwoFactorStatus = !user.TwoFactor;
-    const twoFactor = { id_user: user.id_user, enable: updatedTwoFactorStatus };
 
     axios
       .post(backendURL, data, { withCredentials: true })
       .then((response) => {
+        console.log(response.data);
+        console.log("before redirect");
         if (response.data == true) {
-          setTwoFactor((prevUsers) =>
-            prevUsers.map((u) =>
-              u.id_user === user.id_user
-                ? { ...u, TwoFactor: updatedTwoFactorStatus }
-                : u
-            )
-          );
-          axios.post(backURL, twoFactor, {
-            withCredentials: true,
-          });
-          setTimeout(() => {
-            window.location.href = "/Authentication";
-          }, 1000);
+          console.log("redirect to login page");
+          window.location.href = "http://localhost:5173/home";
         } else {
-          setTwoFactor((prevUsers) =>
-            prevUsers.map((u) =>
-              u.id_user === user.id_user
-                ? { ...u, TwoFactor: !updatedTwoFactorStatus }
-                : u
-            )
+          console.log("error");
+          dispatch(
+            showSnackbar({
+              severity: "error",
+              message: "OTP is not correct",
+            })
           );
-          alert("otp is not correct");
         }
+
         setLoding(false);
       })
       .catch((error) => {
         console.error("Error:", error);
         setLoding(false);
       });
-    setOpen(false);
-    }catch (err) {
-      setLoding(false);
-      setOpen(false);
-    }
+      axios.post("http://localhost:3000/profile/verifyOtp", {verify: true}, {withCredentials: true});
+
   }
-
+ 
   return (
-    <>
-      {twoFactor.map((user) => (
-        <div key={user.id_user}>
-          {user.TwoFactor ? (
-            <button
-              className="text-lg bg-[#a73232] rounded-2xl p-3 select-none"
-              onClick={() => toggleTwoF(user)}
-            >
-              Disable Two-Factor(2FA)
-            </button>
-          ) : (
-            <button
-              className="text-lg bg-[#7ca732] rounded-2xl p-3 select-none"
-              onClick={() => toggleTwoFactor()}
-            >
-              Enable Two-Factor(2FA)
-            </button>
-          )}
-          <Dialog
-            fullScreen={fullScreen}
-            open={open}
-            onClose={handleClose}
-            maxWidth="xl"
-            aria-labelledby="responsive-dialog-title"
-            sx={{
-              p: 5,
-              "& .MuiPaper-root": {
-                borderRadius: "26px",
-              },
-            }}
-            PaperProps={{
-              style: {
-                //backgroundColor transparent
-                backgroundColor: "transparent",
-
-                borderRadius: "28px",
-                // padding: "32px 135px",
-              },
-            }}
-            className="duration-500 backdrop-blur-lg  group-hover:blur-sm hover:!blur-none group-hover:scale-[0.85] hover:!scale-100 cursor-pointer p-8 group-hover:mix-blend-luminosity hover:!mix-blend-normal shadow-2xl"
-          >
-            <div className="bg-[#8b98e452] h-[65vh]">
-              <DialogContent>
-                <div className=" flex flex-col justify-center items-center ">
-                  <div className="relative justify-center flex flex-col  space-y-8 w-200 h-auto pt-5  rounded-[40px] md:flex-row md:space-y-0 ">
-                    <div className="relative flex flex-col justify-center  items-center ">
-                      <div className=" text-[#B7B7C9] font-bold text-2xl mb-3 ">
-                        Get the App to Scan QR Code
-                      </div>
-                      <p className=" max-w-[15vw] text-white text-center">
-                        First you need to download the Google Authenticator
-                        application on your smartphone. This application is
-                        available on the App Store and Google Play.
-                      </p>
-                      <div className=" text-[#B7B7C9] font-bold text-2xl mb-3 ">
-                        Scan QR Code
-                      </div>
-                      <p className=" max-w-[15vw] text-white text-center">
-                        Open the Google Authenticator application on your
-                        smartphone and scan the QR code below.
-                      </p>
-                      <div className=" text-[#B7B7C9] font-bold text-2xl mb-3 ">
-                        Enter the code
-                      </div>
-                      <p className=" max-w-[15vw] text-white text-center">
-                        Enter the code generated by the Google Authenticator
-                        application.
-                      </p>
-                      <img
-                        src={qrCodeDataURL}
-                        alt="QRcode"
-                        className=" mb-5 rounded-2xl bg-red-400 mt-5"
-                      />
-                      <div className=" text-[#B7B7C9] font-bold text-2xl mb-3 ">
-                        Enter your OTP{" "}
-                      </div>
-                      <div className="flex flex-row justify-center p-3 md:pl-14 md:pr-14">
-                        {otp.map((_, index) => {
-                          return (
-                            <React.Fragment key={index}>
-                              <input
-                                ref={index === activeOTPIndex ? inputRef : null}
-                                type="number"
-                                className="remove-arrow bg-[#B7B7C9] rounded-[10px] w-10 h-10 mr-1 text-[#3b3760] font-bold text-center font-zcool"
-                                onChange={(e) => handleOnChange(e, index)}
-                                value={otp[index]}
-                              />
-                            </React.Fragment>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => onVerify(user)}
-                    className=" w-1/2  flex gap-1 items-center justify-center py-2.5 font-bold text-white hover:scale-105 duration-300 cursor-pointer bg-gradient-to-br from-[#FE754D] to-[#ce502a] rounded-full shadow-2xl"
-                  >
-                    {loding && (
-                      <CgSpinner className=" animate-spin" size={20} />
-                    )}
-                    <span>Verify OTP</span>
-                  </button>
-                </div>
-              </DialogContent>
-            </div>
-          </Dialog>
+    <div className="relative justify-center flex flex-col m-12 space-y-8 w-200 h-auto pt-5 pb-4 bg-[#3b376041] shadow-2xl rounded-[40px] md:flex-row md:space-y-0 ">
+      <div className="relative flex flex-col justify-center p-8 items-center md:p-14">
+        <div className=" text-[#B7B7C9] font-bold text-2xl mb-3 ">
+          Enter your OTP{" "}
         </div>
-      ))}
-    </>
+        <div className="flex flex-row justify-center p-3 md:pl-14 md:pr-14">
+          {otp.map((_, index) => {
+            return (
+              <React.Fragment key={index}>
+                <input
+                  ref={index === activeOTPIndex ? inputRef : null}
+                  type="number"
+                  className="remove-arrow bg-[#B7B7C9] rounded-[10px] w-10 h-10 mr-1 text-[#3b3760] font-bold text-center font-zcool"
+                  onChange={(e) => handleOnChange(e, index)}
+                  value={otp[index]}
+                />
+                {}
+              </React.Fragment>
+            );
+          })}
+        </div>
+        <button
+          onClick={onVerify}
+          className=" w-1/2  flex gap-1 items-center justify-center py-2.5 font-bold text-white hover:scale-105 duration-300 cursor-pointer bg-gradient-to-br from-[#FE754D] to-[#ce502a] my-3 rounded-full shadow-2xl"
+        >
+          {loding && <CgSpinner className=" animate-spin" size={20} />}
+          <span>Verify OTP</span>
+        </button>
+        </div>
+    </div>
   );
 };
-export default TwoFactor;
+export default Otpinput;

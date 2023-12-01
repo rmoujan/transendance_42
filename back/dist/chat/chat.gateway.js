@@ -21,7 +21,6 @@ const jwtservice_service_1 = require("../auth/jwt/jwtservice.service");
 const chat_service_1 = require("./chat.service");
 const users_service_1 = require("../users/users.service");
 const channel_service_1 = require("../channel/channel.service");
-const chat_dto_1 = require("./dtoChat/chat.dto");
 let ChatGateway = class ChatGateway {
     constructor(jwt, ChatService, UsersService, ChannelsService) {
         this.jwt = jwt;
@@ -47,20 +46,14 @@ let ChatGateway = class ChatGateway {
         }, {});
         const specificCookie = cookies["cookie"];
         const decoded = this.jwt.verify(specificCookie);
-        return decoded;
+        return (decoded);
     }
     handleConnection(client) {
         if (client) {
             const decoded = this.decodeCookie(client);
-            console.log(`decoded is ===========  ${decoded}`);
             if (decoded) {
                 if (decoded.id) {
-                    this.logger.log(` ********  User  Connected : ${decoded.id} and its sockets is ${client.id}`);
                     this.connectedClients.set(decoded.id, client);
-                    console.log("------------------------------- OUTPUT MAP OF CONNECTE CLIENTS ----------------------------------");
-                    for (const [key, value] of this.connectedClients) {
-                        console.log(`Key: ${key}, Value: ${value}`);
-                    }
                 }
             }
         }
@@ -68,21 +61,14 @@ let ChatGateway = class ChatGateway {
     handleDisconnect(client) {
         if (client) {
             const decoded = this.decodeCookie(client);
-            console.log(`decoded is ===========  ${decoded}`);
             if (decoded) {
                 if (decoded.id) {
-                    this.logger.log(` ******   Client Disconnect : ${decoded.id}`);
                     this.connectedClients.delete(decoded.id);
-                    console.log("------------------ Client Disconnection :: OUTPUT MAP OF CONNECTE CLIENTS");
-                    for (const [key, value] of this.connectedClients) {
-                        console.log(`Key: ${key}, Value: ${value}`);
-                    }
                 }
             }
         }
     }
     createRoom(senderId, recieverId) {
-        console.log(`From Create Room Server Side : sender is ${senderId} and reciever is ${recieverId}`);
         const roomName1 = `room_${senderId}_${recieverId}`;
         const roomName2 = `room_${recieverId}_${senderId}`;
         const check1 = this.roomsDm.indexOf(roomName1);
@@ -97,7 +83,8 @@ let ChatGateway = class ChatGateway {
             return this.roomsDm[check2];
     }
     leaveRoom(client, roomName) {
-        client.leave(roomName);
+        if (client)
+            client.leave(roomName);
     }
     joinRoom(client, roomName) {
         if (client)
@@ -106,10 +93,9 @@ let ChatGateway = class ChatGateway {
     async handling_joinRoom_dm(room, senderId, receiverId, message) {
         const senderClient = this.connectedClients.get(senderId);
         const receiverClient = this.connectedClients.get(receiverId);
-        console.log("*************   handling_joinRoom_dm");
         const result = await this.ChatService.cheakBlockedUser(senderId, receiverId);
         if (result) {
-            console.log("u are blocked from the reciever");
+            console.log();
         }
         else {
             this.joinRoom(senderClient, room);
@@ -123,7 +109,6 @@ let ChatGateway = class ChatGateway {
                     send: senderId,
                     recieve: receiverId
                 };
-                console.log(`¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤`);
                 this.server.to(room).emit('chatToDm', data);
             }
         }
@@ -133,25 +118,19 @@ let ChatGateway = class ChatGateway {
         try {
             if (data) {
                 if (!data.message || !data.from || !data.to) {
-                    console.log("channel false 11");
                     return (false);
                 }
             }
             else {
-                console.log("channel fals1e   22");
                 return (false);
             }
-            console.log("*************   direct_message");
-            console.log(data);
             room = this.createRoom(data.from, data.to);
             this.handling_joinRoom_dm(room, data.from, data.to, data.message);
         }
         catch (error) {
-            console.log("error");
         }
     }
     async handling_joinRoom_group(data, users) {
-        console.log("*************   handling_joinRoom_group");
         const room = `room_${data.id}`;
         for (const user of users) {
             const client = this.connectedClients.get(user.userId);
@@ -173,17 +152,13 @@ let ChatGateway = class ChatGateway {
         }
     }
     async sendInChannel(client, data) {
-        console.log("-------------------------------------- channel_message -----------------------------");
-        console.log(data);
         try {
             if (data) {
                 if (!data.message || !data.from || !data.to) {
-                    console.log("channel false 11");
                     return (false);
                 }
             }
             else {
-                console.log("channel fals1e   22");
                 return (false);
             }
             const channel = await this.ChatService.findChannel(data.to);
@@ -197,14 +172,10 @@ let ChatGateway = class ChatGateway {
         }
     }
     async allConversationsDm(client, data) {
-        console.log("*************   allConversationsDm");
-        console.log(data);
         try {
             const decoded = this.decodeCookie(client);
             const user = await this.UsersService.findById(decoded.id);
             const dms = await this.ChatService.getAllConversations(user.id_user);
-            console.log(`##################################### DMS of ${user.id_user}`);
-            console.log(dms);
             let recv;
             let send;
             let namerecv;
@@ -252,13 +223,10 @@ let ChatGateway = class ChatGateway {
             }
         }
         catch (error) {
-            console.log("error");
             client.emit('response', false);
         }
     }
     async getAllMessages(client, data) {
-        console.log("---------------------- allMessagesDm -----------------------------");
-        console.log(data);
         try {
             if (data) {
                 if (!data.room_id || !data.user_id) {
@@ -283,13 +251,10 @@ let ChatGateway = class ChatGateway {
             }
         }
         catch (error) {
-            console.log("error");
             client.emit('historyDms', false);
         }
     }
     async getAllMessagesRoom(client, data) {
-        console.log("********************** allMessagesRoom");
-        console.log(data);
         try {
             if (data) {
                 if (!data.user_id || !data.id) {
@@ -307,13 +272,10 @@ let ChatGateway = class ChatGateway {
             }
         }
         catch (error) {
-            console.log("error");
             client.emit('hostoryChannel', false);
         }
     }
     async leavingRoom(client, data) {
-        console.log("-------------------------- leave from this Channel -------------------------- ");
-        console.log(data);
         try {
             if (data) {
                 if (!data.user_id || !data.channel_id) {
@@ -326,7 +288,6 @@ let ChatGateway = class ChatGateway {
             if (user) {
                 const leave = await this.ChatService.getLeavingRoom(data.user_id, data.channel_id);
                 if (leave) {
-                    console.log(`User with ${data.user_id} is leaving room with id ${data.channel_id}`);
                     client.emit('ResponseLeaveUser', true);
                 }
                 else {
@@ -335,13 +296,10 @@ let ChatGateway = class ChatGateway {
             }
         }
         catch (error) {
-            console.log("error");
             client.emit('ResponseLeaveUser', false);
         }
     }
     async bannedUser(client, data) {
-        console.log("-------------------------- banUser from this Channel -------------------------- ");
-        console.log(data);
         try {
             if (data) {
                 if (!data.to || !data.from || !data.channel_id) {
@@ -354,20 +312,14 @@ let ChatGateway = class ChatGateway {
             const user2 = await this.UsersService.findById(data.to);
             if (client) {
                 const decoded = this.decodeCookie(client);
-                console.log(`checking id of clients and user are ${decoded.id} --- ${data.from}`);
                 if (user1) {
                     if (user1.id_user == data.from) {
                         if (user1 && user2) {
                             const bannedUser = await this.ChannelsService.banUser(data.channel_id, data.from, data.to);
                             if (bannedUser) {
-                                const result = "operation accomplished successfully";
-                                console.log(result);
-                                console.log(bannedUser);
                                 client.emit('ResponseBannedUser', true);
                             }
                             else {
-                                const result = "operation does not accomplished successfully";
-                                console.log(result);
                                 client.emit('ResponseBannedUser', false);
                             }
                         }
@@ -376,13 +328,10 @@ let ChatGateway = class ChatGateway {
             }
         }
         catch (error) {
-            console.log("error");
             client.emit('ResponseBannedUser', false);
         }
     }
     async kickUser(client, data) {
-        console.log("-------------------------- kickUser from this Channel -------------------------- ");
-        console.log(data);
         try {
             if (data) {
                 if (!data.to || !data.from || !data.channel_id) {
@@ -400,11 +349,9 @@ let ChatGateway = class ChatGateway {
                         if (user1 && user2) {
                             const kickUser = await this.ChannelsService.kickUser(data, data.from, data.to);
                             if (kickUser) {
-                                console.log("kick user 1");
                                 client.emit('ResponsekickUser', true);
                             }
                             else {
-                                console.log("kick user 2");
                                 client.emit('ResponsekickUser', false);
                             }
                         }
@@ -413,12 +360,10 @@ let ChatGateway = class ChatGateway {
             }
         }
         catch (error) {
-            console.log("error");
             client.emit('ResponsekickUser', false);
         }
     }
     async muteUser(client, data) {
-        console.log("-------------------------- MUTEUSER from this Channel -------------------------- ");
         try {
             if (data) {
                 if (!data.to || !data.from || !data.channel_id) {
@@ -427,7 +372,6 @@ let ChatGateway = class ChatGateway {
             }
             else
                 return (false);
-            console.log(data);
             const user1 = await this.UsersService.findById(data.from);
             const user2 = await this.UsersService.findById(data.to);
             if (client) {
@@ -437,11 +381,9 @@ let ChatGateway = class ChatGateway {
                         if (user1 && user2) {
                             const muteUser = await this.ChannelsService.muteUser(data, user1.id_user, data.to);
                             if (muteUser) {
-                                console.log("mute user 1");
                                 client.emit('ResponsemuteUser', true);
                             }
                             else {
-                                console.log("mute user 2");
                                 client.emit('ResponsemuteUser', false);
                             }
                         }
@@ -450,12 +392,10 @@ let ChatGateway = class ChatGateway {
             }
         }
         catch (error) {
-            console.log("error");
             client.emit('ResponsemuteUser', false);
         }
     }
     async unmuteUser(client, data) {
-        console.log("-------------------------- UNMUTEUSER from this Channel -------------------------- ");
         try {
             if (data) {
                 if (!data.to || !data.from || !data.channel_id) {
@@ -464,7 +404,6 @@ let ChatGateway = class ChatGateway {
             }
             else
                 return (false);
-            console.log(data);
             const user1 = await this.UsersService.findById(data.from);
             const user2 = await this.UsersService.findById(data.to);
             if (client) {
@@ -474,11 +413,9 @@ let ChatGateway = class ChatGateway {
                         if (user1 && user2) {
                             const unmuteUser = await this.ChannelsService.unmuteUser(data, user1.id_user, data.to);
                             if (unmuteUser) {
-                                console.log("mute user 1");
                                 client.emit('ResponsunmutekUser', true);
                             }
                             else {
-                                console.log("mute user 2");
                                 client.emit('ResponsunmutekUser', false);
                             }
                         }
@@ -487,7 +424,6 @@ let ChatGateway = class ChatGateway {
             }
         }
         catch (error) {
-            console.log("error");
             client.emit('ResponsunmutekUser', false);
         }
     }
@@ -566,7 +502,7 @@ __decorate([
     __param(0, (0, websockets_2.ConnectedSocket)()),
     __param(1, (0, websockets_1.MessageBody)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [socket_io_1.Socket, chat_dto_1.ChatDto]),
+    __metadata("design:paramtypes", [socket_io_1.Socket, Object]),
     __metadata("design:returntype", Promise)
 ], ChatGateway.prototype, "muteUser", null);
 __decorate([
@@ -582,6 +518,9 @@ exports.ChatGateway = ChatGateway = __decorate([
         namespace: "chat",
         cors: { origin: 'http://localhost:5173', methods: ['GET', 'POST'] },
     }),
-    __metadata("design:paramtypes", [jwtservice_service_1.JwtService, chat_service_1.ChatService, users_service_1.UsersService, channel_service_1.ChannelsService])
+    __metadata("design:paramtypes", [jwtservice_service_1.JwtService,
+        chat_service_1.ChatService,
+        users_service_1.UsersService,
+        channel_service_1.ChannelsService])
 ], ChatGateway);
 //# sourceMappingURL=chat.gateway.js.map

@@ -17,26 +17,29 @@ let UsersService = class UsersService {
         this.prisma = prisma;
     }
     async findById(userId) {
-        const user = await this.prisma.user.findUnique({
-            where: { id_user: userId },
-        });
-        if (!user) {
-            console.log("user not found\n");
-            throw new common_1.NotFoundException(`User with ID ${userId} not found`);
+        if (userId) {
+            const user = await this.prisma.user.findUnique({
+                where: { id_user: userId },
+            });
+            if (!user) {
+                throw new common_1.NotFoundException(`User with ID ${userId} not found`);
+            }
+            return user;
         }
-        return user;
     }
     async findAll() {
         return this.prisma.user.findMany();
     }
     async findByName(name) {
-        const user = await this.prisma.user.findUnique({
-            where: { name: name },
-        });
-        if (!user) {
-            throw new common_1.NotFoundException(`User with ${name} not found`);
+        if (name) {
+            const user = await this.prisma.user.findUnique({
+                where: { name: name },
+            });
+            if (!user) {
+                throw new common_1.NotFoundException(`User with ${name} not found`);
+            }
+            return user;
         }
-        return user;
     }
 };
 exports.UsersService = UsersService;

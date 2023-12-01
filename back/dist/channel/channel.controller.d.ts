@@ -1,5 +1,4 @@
 import { ChannelsService } from './channel.service';
-import { CreateChannelDto } from './dto/create-channel.dto';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '../auth/jwt/jwtservice.service';
 import { ConfigService } from '@nestjs/config';
@@ -9,7 +8,7 @@ export declare class ChannelsController {
     private readonly UsersService;
     private config;
     constructor(jwt: JwtService, channelsService: ChannelsService, UsersService: UsersService, config: ConfigService);
-    create(req: any, data: CreateChannelDto): Promise<boolean | {
+    create(req: any, data: any): Promise<boolean | {
         message: string;
         error: any;
     }>;

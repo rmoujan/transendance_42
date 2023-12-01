@@ -1,10 +1,8 @@
-import { Injectable, ExecutionContext, Res, Req } from "@nestjs/common";
+import { Injectable, Res, Req } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from 'passport-42';
 import { AuthService } from "../auth.service";
 import { JwtService } from "../jwt/jwtservice.service";
-import axios from 'axios';
-import { Response } from "express";
 import { PrismaService } from "src/prisma.service";
 import { ConfigService } from '@nestjs/config';
 

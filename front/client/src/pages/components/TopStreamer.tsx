@@ -10,9 +10,6 @@ const TopStreamer: React.FC<TopStreamerDataProps> = ({ toggle }) => {
   const [TopStreamer, setTopStreamer] = useState<any[]>([]);
   useEffect(() => {
     const fetchUsers = async () => {
-      await axios.get("http://localhost:3000/auth/get-all-users", {
-        withCredentials: true,
-      }); // NOTE(XENOBAS): UNUSED VALUE, THIS COULD BE THE ISSUE; ALTHOUGH I DOUBT IT.
       const topThreeStreamer = await axios.get("http://localhost:3000/profile/TopThree", {
         withCredentials: true,
       });

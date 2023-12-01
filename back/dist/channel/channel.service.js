@@ -160,17 +160,13 @@ let ChannelsService = class ChannelsService {
                 throw new common_1.NotFoundException(`your not allowed to join this channel ${ch.name} cuz  you are banned`);
             }
             if (ch) {
-                console.log(ch);
-                console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤ 1");
                 if (ch.visibility === "protected") {
-                    console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤ 2");
                     let test = await this.verifyPassword(data.sendData.password, ch.password);
                     if (test) {
                         join = 1;
                     }
                 }
                 if (join == 1 || ch.visibility === "public") {
-                    console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤ 3");
                     const memberchannel = await this.prisma.memberChannel.create({
                         data: {
                             userId: usid,
@@ -179,13 +175,11 @@ let ChannelsService = class ChannelsService {
                             muted: false,
                         },
                     });
-                    console.log("############### AFTER JOINGING ");
                     return true;
                 }
             }
         }
         catch (error) {
-            console.log("ERRRRRRRRRRRRROR JOIN CHANNEL");
             throw new common_1.NotFoundException(`Error occured when joining this channel`);
         }
     }
@@ -414,7 +408,6 @@ let ChannelsService = class ChannelsService {
                                     status_User: 'kicked',
                                 },
                             });
-                            console.log(`AFTER KICKING THIS USER ${updateChannel}`);
                             return updateChannel;
                         }
                         else {
