@@ -57,7 +57,7 @@ const MembersSettings = (el: any) => {
     dispatch(
       showSnackbar({
         severity: "success",
-        message: `${el.el.user.name} has been deleted`,
+        message: `Sent a friend request to ${el.el.user.name}`,
       })
     );
   };
