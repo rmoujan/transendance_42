@@ -3,6 +3,7 @@ import {
   Get,
   UseGuards,
   Redirect,
+  UseFilters,
   Post,
   Body,
   Res,
@@ -17,7 +18,40 @@ import { NumberDto } from "./utils/numberDto";
 import { NumberDtoO } from "./utils/NumberDtoO";
 import { ConfigService } from "@nestjs/config";
 
+import { sign } from "jsonwebtoken"; // Update with the correct import
+import {
+  ExceptionFilter,
+  Catch,
+  UnauthorizedException,
+  ArgumentsHost,
+} from "@nestjs/common";
+
+@Catch(UnauthorizedException)
+export class UnauthorizedExceptionFilter implements ExceptionFilter {
+  catch(exception: UnauthorizedException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse();
+    const request = ctx.getRequest();
+
+    // Check if the request is an AJAX request or a regular page request
+    const isAjax =
+      request.xhr ||
+      (request.headers.accept && request.headers.accept.indexOf("json") > -1);
+    if (isAjax) {
+      // Respond with a JSON error for AJAX requests
+      response.status(401).json({
+        statusCode: 401,
+        message: "Unauthorized",
+      });
+    } else {
+      // Redirect to the login page for regular page requests
+      response.redirect("http://localhost:5173/login");
+    }
+  }
+}
+
 @Controller("auth")
+@UseFilters(new UnauthorizedExceptionFilter())
 export class AuthController {
   constructor(
     private service: AuthService,
@@ -58,6 +92,8 @@ export class AuthController {
       } else {
         res.redirect(this.config.get("homepath"));
       }
+      console.log("req.user");
+      console.log(req.user);
       return req;
     } catch (error) {}
   }

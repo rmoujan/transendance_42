@@ -12,7 +12,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.AuthController = void 0;
+exports.AuthController = exports.UnauthorizedExceptionFilter = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const passport_1 = require("@nestjs/passport");
@@ -22,6 +22,29 @@ const prisma_service_1 = require("../prisma.service");
 const numberDto_1 = require("./utils/numberDto");
 const NumberDtoO_1 = require("./utils/NumberDtoO");
 const config_1 = require("@nestjs/config");
+const common_2 = require("@nestjs/common");
+let UnauthorizedExceptionFilter = class UnauthorizedExceptionFilter {
+    catch(exception, host) {
+        const ctx = host.switchToHttp();
+        const response = ctx.getResponse();
+        const request = ctx.getRequest();
+        const isAjax = request.xhr ||
+            (request.headers.accept && request.headers.accept.indexOf("json") > -1);
+        if (isAjax) {
+            response.status(401).json({
+                statusCode: 401,
+                message: "Unauthorized",
+            });
+        }
+        else {
+            response.redirect("http://localhost:5173/login");
+        }
+    }
+};
+exports.UnauthorizedExceptionFilter = UnauthorizedExceptionFilter;
+exports.UnauthorizedExceptionFilter = UnauthorizedExceptionFilter = __decorate([
+    (0, common_2.Catch)(common_2.UnauthorizedException)
+], UnauthorizedExceptionFilter);
 let AuthController = class AuthController {
     constructor(service, jwt, prisma, config) {
         this.service = service;
@@ -55,6 +78,8 @@ let AuthController = class AuthController {
             else {
                 res.redirect(this.config.get("homepath"));
             }
+            console.log("req.user");
+            console.log(req.user);
             return req;
         }
         catch (error) { }
@@ -359,6 +384,7 @@ __decorate([
 ], AuthController.prototype, "TwofactorAuth", null);
 exports.AuthController = AuthController = __decorate([
     (0, common_1.Controller)("auth"),
+    (0, common_1.UseFilters)(new UnauthorizedExceptionFilter()),
     __metadata("design:paramtypes", [auth_service_1.AuthService,
         jwtservice_service_1.JwtService,
         prisma_service_1.PrismaService,

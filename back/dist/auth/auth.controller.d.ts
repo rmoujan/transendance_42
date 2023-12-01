@@ -4,6 +4,10 @@ import { PrismaService } from "src/prisma.service";
 import { NumberDto } from "./utils/numberDto";
 import { NumberDtoO } from "./utils/NumberDtoO";
 import { ConfigService } from "@nestjs/config";
+import { ExceptionFilter, UnauthorizedException, ArgumentsHost } from "@nestjs/common";
+export declare class UnauthorizedExceptionFilter implements ExceptionFilter {
+    catch(exception: UnauthorizedException, host: ArgumentsHost): void;
+}
 export declare class AuthController {
     private service;
     private jwt;
