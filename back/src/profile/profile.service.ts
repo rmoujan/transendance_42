@@ -30,7 +30,7 @@ export class ProfileService {
     async ModifyPhoto(photo:any, req:any, res:any) {
         try{
             const verifyToken = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-            const filePath = '/home/mmanouze/Desktop/last/front/public/uploads/' + photo.originalname; // Use the original name or generate a unique name
+            const filePath = '/home/mmanouze/Desktop/last_transendance/front/client/public/uploads/' + photo.originalname; // Use the original name or generate a unique name
             const rightPath = '/public/uploads/' + photo.originalname;//path to store in db
             fs.writeFileSync(filePath, photo.buffer);
             await this.prisma.user.update({
