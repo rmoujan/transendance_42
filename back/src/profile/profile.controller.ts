@@ -18,6 +18,8 @@ import { MixedDto } from "./BotDto";
 import { BooleanDto } from "./ingameDto";
 import { Infos } from "./infosDto";
 import { ConfigService } from '@nestjs/config';
+import { VerifyDTO } from "./VerifyDTO";
+import { flagDTO } from "./flagDTO";
 
 @Controller("profile")
 export class ProfileController {
@@ -335,7 +337,7 @@ export class ProfileController {
   }
 
   @Post("verifyOtp")
-  async verify_Otp(@Body() body:any, @Req() req){
+  async verify_Otp(@Body() body:VerifyDTO, @Req() req){
     try {
       const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
       await this.prisma.user.update({
@@ -361,7 +363,7 @@ export class ProfileController {
   }
 
   @Post('GameFlag')
-  async GameFlag(@Req() req:any, @Body() body:any){
+  async GameFlag(@Req() req:any, @Body() body:flagDTO){
     try{
       const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
       await this.prisma.user.update({

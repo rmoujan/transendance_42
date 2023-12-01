@@ -15,7 +15,7 @@ export class JwtAuthGuard implements CanActivate {
     const response = context.switchToHttp().getResponse();
 
     // Extract the JWT token from cookies
-    const token = request.cookies.cookie;
+    const token = request.cookies.cookie; // NOTE(XENOBAS): HERE YOU ARE NOT ACCESSING THE request.cookies USING THE ENV VARIABLE `cookie`
 
     if (!token) {
       response.send("false").status(401);
