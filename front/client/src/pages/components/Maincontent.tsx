@@ -11,10 +11,10 @@ import Maskgroup from "../../img/Maskgroupp.png";
 import Raket from "../../img/Raket.png";
 import Rakets from "../../img/Rakets.png";
 import Table from "../../img/tableping.png";
-import TopStreamer from "./TopStreamer";
-import { fadeIn } from "./variants";
 import { socket_user, socketuser } from "../../socket";
 import Friends from "./Friends";
+import TopStreamer from "./TopStreamer";
+import { fadeIn } from "./variants";
 
 type User = {
   id_user: number;
@@ -75,10 +75,15 @@ function Maincontent() {
       socketuser();
     }
     const fetchData = async () => {
-      const { data } = await axios.get("http://localhost:3000/auth/get-user", {
-        withCredentials: true,
-      });
-      setUser(data);
+      try {
+        const { data } = await axios.get(
+          "http://localhost:3000/auth/get-user",
+          {
+            withCredentials: true,
+          }
+        );
+        setUser(data);
+      } catch (err) {}
     };
     fetchData();
   }, []);
@@ -168,29 +173,29 @@ function Maincontent() {
                   classic
                 </h4>
               </div>
-              <div className="bg-gradient-to-tr from-[#3F3B5B] via-[#2A2742] to-[#2A2742] lg:h-60 tablet:w-96 mobile:w-44 lg-laptop:w-[30rem] lg-laptop:h-72 h-56  duration-500 group-hover:blur-sm hover:!blur-none group-hover:scale-[0.85] hover:!scale-100 cursor-pointer p-8 rounded-[46px] group-hover:mix-blend-luminosity hover:!mix-blend-normal shadow-2xl">
+              <div
+                className="bg-gradient-to-tr from-[#3F3B5B] via-[#2A2742] to-[#2A2742] lg:h-60 tablet:w-96 mobile:w-44 lg-laptop:w-[30rem] lg-laptop:h-72 h-56  duration-500 group-hover:blur-sm hover:!blur-none group-hover:scale-[0.85] hover:!scale-100 cursor-pointer p-8 rounded-[46px] group-hover:mix-blend-luminosity hover:!mix-blend-normal shadow-2xl"
+                onClick={handleBotGame}
+              >
                 <img
                   className="mx-auto w-40 lg-laptop:-mt-24 -mt-7 tablet:w-36 lg-laptop:w-60 laptop:w-40 mobile:mb-8 tablet:mb-0"
                   src={Astronaut}
                   alt=""
                 />
-                <span
-                  className="uppercase text-lg tablet:text-2xl font-bold mobile:text-center tablet:text-start text-white ml-3"
-                  onClick={handleBotGame}
-                >
+                <span className="uppercase text-lg tablet:text-2xl font-bold mobile:text-center tablet:text-start text-white ml-3">
                   BOT
                 </span>
               </div>
-              <div className=" bg-gradient-to-tr from-[#3F3B5B] via-[#2A2742] to-[#2A2742] lg:h-60 tablet:w-96 mobile:w-44 lg-laptop:w-[30rem]  h-56 lg-laptop:h-72 duration-500 group-hover:blur-sm hover:!blur-none group-hover:scale-[0.85] hover:!scale-100 cursor-pointer p-8 rounded-[46px] group-hover:mix-blend-luminosity hover:!mix-blend-normal shadow-2xl">
+              <div
+                className=" bg-gradient-to-tr from-[#3F3B5B] via-[#2A2742] to-[#2A2742] lg:h-60 tablet:w-96 mobile:w-44 lg-laptop:w-[30rem]  h-56 lg-laptop:h-72 duration-500 group-hover:blur-sm hover:!blur-none group-hover:scale-[0.85] hover:!scale-100 cursor-pointer p-8 rounded-[46px] group-hover:mix-blend-luminosity hover:!mix-blend-normal shadow-2xl"
+                onClick={handleMultiplayerGame}
+              >
                 <img
                   className="mx-auto lg-laptop:-mt-14 tablet:-mt-5 mobile:mb-8 tablet:mb-0 lg-laptop:mb-16"
                   src={Rakets}
                   alt=""
                 />
-                <h4
-                  className="uppercase text-lg tablet:text-2xl font-bold mobile:text-center tablet:text-start text-white"
-                  onClick={handleMultiplayerGame}
-                >
+                <h4 className="uppercase text-lg tablet:text-2xl font-bold mobile:text-center tablet:text-start text-white">
                   Random player
                 </h4>
               </div>

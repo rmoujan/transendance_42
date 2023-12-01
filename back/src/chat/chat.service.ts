@@ -9,7 +9,6 @@ import { receiveMessageOnPort } from 'worker_threads';
 export class ChatService {
 
   constructor(private prisma: PrismaService) { }
-  // Find a CHANNEL By ID
   async findChannel(idch: number) {
     try {
       const channel = await this.prisma.channel.findUnique({
@@ -23,7 +22,6 @@ export class ChatService {
       throw new NotFoundException(`no channel`);
     }
   }
-  // get all users in a specific channel :
   async getUsersInChannel(idch: number) {
     try
     {
@@ -40,9 +38,7 @@ export class ChatService {
     }
   }
 
-  // gcheck is this dm is already exist in database, otherwise create one and return it.
   async checkDm(idSend: number, idRecv: number) {
-    // let result: Dm;
     try {
     const dm1 = await this.prisma.dm.findUnique({
       where: {
@@ -82,7 +78,6 @@ export class ChatService {
     throw new NotFoundException(`Error occured when checking dm`);
   }
   }
-  // get all users in a specific channel :
   async createMsg(idSend: number, idRecv: number, dmVar: Dm, msg: string, typeMsg: string) {
     try {
       const result = await this.prisma.conversation.create({
@@ -100,7 +95,6 @@ export class ChatService {
       throw new NotFoundException(`Error occured when creating a message`);
     }
   }
-  // get All Conversations of currently User :
   async getAllConversations(id: number) {
     try {
 
@@ -112,8 +106,7 @@ export class ChatService {
           ]
         }
       });
-      console.log(`!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  :: ${dms}`);
-      return dms;
+      return (dms);
     }
     catch (error) {
       throw new NotFoundException(`there is no dms , error`);
@@ -121,8 +114,7 @@ export class ChatService {
   }
 
 
-  // get All Conversations of currently User Dm :
-  // getDm based on idReciever and idSEnder .
+
   async getDm(idSend: number, idRecv: number) {
     try {
       const dm1 = await this.prisma.dm.findUnique({
@@ -134,7 +126,6 @@ export class ChatService {
         },
       });
       if (dm1) {
-        console.log(`get Dm1 |${dm1}|`);
         return dm1;
       }
 
@@ -147,7 +138,6 @@ export class ChatService {
         },
       });
       if (dm2) {
-        console.log(`get dm2 |${dm2}|`);
         return dm2;
       }
     }
@@ -156,8 +146,6 @@ export class ChatService {
     }
   }
 
-
-  // get All Conversations of currently User Dm :
   async getAllMessages(id: number) {
     try {
 
@@ -166,14 +154,13 @@ export class ChatService {
           idDm: id
         },
         orderBy: {
-          dateSent: 'asc' // or 'desc' for descending order
+          dateSent: 'asc'
         }
       });
-      return messages;
+      return (messages);
     }
     catch (error) {
       throw new NotFoundException(`we have no messages`);
-      // console.error('we have no public channels', error);
     }
   }
 
@@ -201,10 +188,10 @@ export class ChatService {
           channelId: id
         },
         orderBy: {
-          dateSent: 'asc' // or 'desc' for descending order
+          dateSent: 'asc'
         }
       });
-      return messages;
+      return (messages);
     }
     catch (error) {
       throw new NotFoundException(`Error getting messages in this Channel`);
@@ -219,10 +206,10 @@ export class ChatService {
           idDm: id
         },
         orderBy: {
-          dateSent: 'desc' // or 'desc' for descending order
+          dateSent: 'desc'
         }
       });
-      return lastMessage;
+      return (lastMessage);
     }
     catch (error) {
       throw new NotFoundException(`There is no last message`);
@@ -243,8 +230,7 @@ export class ChatService {
         },
       });
       if (record) {
-        console.log("DELETING USER \n");
-        // delete all messages of this user from channel first :
+
         const deleteMsg = await this.prisma.discussion.deleteMany({
           where: {
             userId: idUs,
@@ -260,7 +246,7 @@ export class ChatService {
             },
           },
         });
-        return result;
+        return (result);
       }
     }
     catch (error) {
@@ -285,9 +271,9 @@ export class ChatService {
         },
       });
       if (block.length > 0 || block2.length > 0) {
-        return true;
+        return (true);
       }
-      return false;
+      return (false);
     }
     catch (error) {
       throw new NotFoundException(`Error occured when check blocked user`);

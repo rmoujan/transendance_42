@@ -44,18 +44,25 @@ function MaincontentProfile() {
       socketuser();
     }
     const fetchData = async () => {
-      const { data } = await axios.get("http://localhost:3000/auth/get-user", {
-        withCredentials: true,
-      });
-      if (data == null) {
-
-        window.location.href = "/login";
-      }
-      const History = await axios.get("http://localhost:3000/profile/History", {
-        withCredentials: true,
-      });
-      setGameHistory(History.data);
-      setUser(data);
+      try {
+        const { data } = await axios.get(
+          "http://localhost:3000/auth/get-user",
+          {
+            withCredentials: true,
+          }
+        );
+        if (data == null) {
+          window.location.href = "/login";
+        }
+        const History = await axios.get(
+          "http://localhost:3000/profile/History",
+          {
+            withCredentials: true,
+          }
+        );
+        setGameHistory(History.data);
+        setUser(data);
+      } catch (err) {}
     };
     fetchData();
   }, []);
@@ -74,9 +81,11 @@ function MaincontentProfile() {
     }
   };
   const fetchData = async () => {
-    await axios.get("http://localhost:3000/auth/get-user", {
-      withCredentials: true,
-    });
+    try {
+      await axios.get("http://localhost:3000/auth/get-user", {
+        withCredentials: true,
+      });
+    } catch (err) {}
   };
   useEffect(() => {
     if (socket == undefined) {
@@ -97,10 +106,9 @@ function MaincontentProfile() {
     }
     if (name) {
       try {
-        await axios
-          .post(backendURLName, dataName, {
-            withCredentials: true,
-          });
+        await axios.post(backendURLName, dataName, {
+          withCredentials: true,
+        });
         dispatch(
           showSnackbar({
             severity: "success",
@@ -146,7 +154,6 @@ function MaincontentProfile() {
   };
   return (
     <main className=" overflow-scroll resultUserContainer flex flex-col w-full  overflow-y-auto mb-14">
-     
       <div className="flex w-full mx-auto pr-5 lg:px-6 py-8 ">
         <div className="flex flex-col w-full h-full text-gray-900 text-xl ">
           <motion.div
@@ -164,7 +171,8 @@ function MaincontentProfile() {
               initial="hidden"
               whileInView={"show"}
               viewport={{ once: false, amount: 0.7 }}
-              className="w-full flex flex-col items-center justify-center mt-2 mb-10 space-y-10 lg:flex-row lg:space-x-8 lg:justify-center">
+              className="w-full flex flex-col items-center justify-center mt-2 mb-10 space-y-10 lg:flex-row lg:space-x-8 lg:justify-center"
+            >
               <div className="bg-[#3f3b5b91] rounded-3xl flex flex-col items-center lg:w-3/4 lg-laptop:w-3/5">
                 <div className=" text-white text-center mt-5 mobile:text-xl tablet:text-3xl font-bold px-11 tablet:px-52">
                   Progress
@@ -175,8 +183,10 @@ function MaincontentProfile() {
                       {user.map((item) => (
                         <div
                           key={item.id_user}
-                          className="bg-[#ce502ad3] absolute top-0 left-0 flex font-PalanquinDark h-full items-center justify-center rounded-2xl text-lg font-semibold text-white" style={{ width: `${item.Progress}%` }}>
-                          <p >{item.Progress}%</p>
+                          className="bg-[#ce502ad3] absolute top-0 left-0 flex font-PalanquinDark h-full items-center justify-center rounded-2xl text-lg font-semibold text-white"
+                          style={{ width: `${item.Progress}%` }}
+                        >
+                          <p>{item.Progress}%</p>
                         </div>
                       ))}
                     </div>
@@ -193,16 +203,17 @@ function MaincontentProfile() {
                 className="flex-col p-4 tablet:min-w-[60vh] max-w-[20px] lg-laptop:px-2 bg-[#3f3b5b91] rounded-3xl mobile:h-3/4  lg-laptop:mt-9 lg-laptop:min-w-[40%] lg-laptop:h-full tablet:w-2/5 lg-laptop:w-1/5 laptop:mb-10 shadow-2xl justify-center mobile:items-center"
               >
                 <div className="flex justify-center items-center text-white  text-2xl  laptop:text-4xl font-PalanquinDark">
-                    Edit Profile
-                  </div>
+                  Edit Profile
+                </div>
                 <div className=" text-white  flex flex-col justify-center px-3 max-w-[400px] bg-black/20 rounded-2xl shadow-2xl mt-8  mx-2 text-2xl text-center p-4 overflow-hidden">
                   <div className="flex flex-row text-white items-center text-center">
                     <TbUserEdit className="text-2xl" />
+
                     <input
-                      className="bg-transparent border-2 border-white rounded-2xl p-2 ml-3 w-40 text-white"
+                      className="bg-transparent border-2 border-white text-lg rounded-2xl p-2 ml-3 w-40 text-white"
                       type="text"
                       placeholder="Edit Profile Name"
-                      value={name} 
+                      value={name}
                       onChange={(e) => setName(e.target.value)}
                     />
                   </div>
@@ -214,11 +225,11 @@ function MaincontentProfile() {
                   </div>
 
                   <button
-                        className=" flex justify-center items-center text-white text-lg bg-[#7ca732] hover:bg-[#5c782d] rounded-2xl p-3 px-5 mt-5"
-                        onClick={Save}
-                      >
-                        Save
-                      </button>
+                    className=" flex justify-center items-center text-white text-lg bg-gradient-to-br from-[#fe764dd3] to-[#ce502ad3] rounded-2xl p-3 px-5 mt-5"
+                    onClick={Save}
+                  >
+                    Save
+                  </button>
                 </div>
               </motion.div>
 
@@ -233,16 +244,13 @@ function MaincontentProfile() {
                   About Me
                 </div>
                 <div className=" text-white  flex justify-center px-3 max-w-[400px] bg-black/20 rounded-2xl shadow-2xl mt-8 font-Bad_Script mx-2 text-2xl text-center p-4 overflow-hidden">
-
-                  {
-                    user.map((item) => (
-                      <p className="whitespace-pre-line"
-                        key={item.id_user}
-                      >
-                        {item.About === null ? "You don't have any About Me yet !" : item.About}
-                      </p>
-                    ))
-                  }
+                  {user.map((item) => (
+                    <p className="whitespace-pre-line" key={item.id_user}>
+                      {item.About === null
+                        ? "You don't have any About Me yet !"
+                        : item.About}
+                    </p>
+                  ))}
                 </div>
               </motion.div>
 
@@ -269,33 +277,55 @@ function MaincontentProfile() {
                       key={index}
                       className=" bg-black/20 rounded-2xl shadow-2xl flex justify-center items-center p-4 w-[30rem] -mr-10 my-3"
                     >
-                      {
-                        item.winner ? (
-                          <span className=" px-3 font-bold text-emerald-400 ml-2 ">Win</span>
-                        ) : (
-                          <span className=" font-bold text-red-400  px-3  ml-2">Loss</span>
-                        )
-                      }
-                      <span className=" text-white font-bold px-3">{item.username}</span>
-                      <img src={item.useravatar} alt="" className="rounded-full w-12 h-12 mr-5 border-2" />
-                      <span className=" text-white text-2xl font-bold">{item.userscore}</span>
+                      {item.winner ? (
+                        <span className=" px-3 font-bold text-emerald-400 ml-2 ">
+                          Win
+                        </span>
+                      ) : (
+                        <span className=" font-bold text-red-400  px-3  ml-2">
+                          Loss
+                        </span>
+                      )}
+                      <span className=" text-white font-bold px-3">
+                        {item.username}
+                      </span>
+                      <img
+                        src={item.useravatar}
+                        alt=""
+                        className="rounded-full w-12 h-12 mr-5 border-2"
+                      />
+                      <span className=" text-white text-2xl font-bold">
+                        {item.userscore}
+                      </span>
                       <span className=" text-white font-bold">:</span>
-                      <span className=" text-white text-2xl font-bold">{item.enemyscore}</span>
+                      <span className=" text-white text-2xl font-bold">
+                        {item.enemyscore}
+                      </span>
 
-                      {
-                        (item.enemyId === 9) ? (
-                          <>
-                            <img src={bot} alt="" className="rounded-full w-12 h-12 ml-5 -mt-1 border-2" />
-                            <span className=" text-white px-3 font-bold">Bot</span>
-                          </>
-                        ) : (
-                          <>
-                            <img src={item.enemyavatar} alt="" className="rounded-full w-12 h-12 ml-5 border-2" />
-                            <span className=" text-white px-3 font-bold">{item.enemyname}</span>
-                          </>
-                        )
-                      }
-                      </div>
+                      {item.enemyId === 9 ? (
+                        <>
+                          <img
+                            src={bot}
+                            alt=""
+                            className="rounded-full w-12 h-12 ml-5 -mt-1 border-2"
+                          />
+                          <span className=" text-white px-3 font-bold">
+                            Bot
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <img
+                            src={item.enemyavatar}
+                            alt=""
+                            className="rounded-full w-12 h-12 ml-5 border-2"
+                          />
+                          <span className=" text-white px-3 font-bold">
+                            {item.enemyname}
+                          </span>
+                        </>
+                      )}
+                    </div>
                   ))}
                 </div>
               </motion.div>
@@ -310,18 +340,14 @@ function MaincontentProfile() {
                 <div className=" text-white flex justify-center items-center  text-2xl  tablet:text-4xl font-PalanquinDark">
                   Achievements
                 </div>
-            <div className="my-1 flex flex-col max-w-[30rem] mx-auto text-white">
+                <div className="my-1 flex flex-col max-w-[30rem] mx-auto text-white">
                   <Achievements />
                 </div>
               </motion.div>
             </div>
-
-          
           </div>
-         
         </div>
       </div>
-
     </main>
   );
 }

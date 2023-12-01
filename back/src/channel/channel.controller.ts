@@ -17,10 +17,7 @@ export class ChannelsController {
     ) { }
 
   @Post('create')
-  async create(@Req() req, @Body() data: CreateChannelDto) {
-
-    console.log("-------------------------- Starting Creating a Channel -------------------------- ");
-    console.log(data);
+  async create(@Req() req, @Body() data: any) {
 
     if (data)
     {
@@ -40,11 +37,9 @@ export class ChannelsController {
       return (false);
     try {
       const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-      // console.log(decode);
       const user = await this.UsersService.findById(decode.id);
       if (user) {
         const channel = await this.channelsService.createChannel(data, user.id_user);
-        console.log(channel)
         if (channel)
           return (true);
         else
@@ -57,9 +52,7 @@ export class ChannelsController {
   
   @Post('join')
   async join(@Req() req, @Body() data: any) {
-    
-    console.log("-------------------------- Starting Joining a Channel  -------------------------- ");
-    console.log(data);
+
     if (data)
     {
       if (!data.sendData.id_channel || !data.sendData.name || !data.sendData.visibility)
@@ -78,34 +71,24 @@ export class ChannelsController {
       return (false);
     try {
       const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-      // console.log(decode);
-      // console.log("----------------");
       const user = await this.UsersService.findById(decode.id);
       if (user) {
-        // console.log(user);
         const memberChannel = await this.channelsService.joinChannel(
           data,
           user.id_user,
         );
-        // console.log(memberChannel);
-        // console.log("end joing chanel 1");
         if (memberChannel)
         {
-          console.log("operation accomplished successfully");
           return (true);
         }
         else 
         {
-          console.log("operation does not accomplished successfully");
           return (false);
         }
       }
       else
         return (false);
     } catch (error) {
-      // console.log(error.message);
-      // console.log("ooooooooooooooooooooooooooooooooooooooooooooo");
-      // return { message: 'An error occurred', error: error.message };
       return (false);
     }
   }
@@ -113,8 +96,6 @@ export class ChannelsController {
   @Post('updatePass')
   async updatePass(@Req() req, @Body() data: any) {
 
-    console.log("-------------------------- UPDATE PASSWORD  -------------------------- ");
-    console.log(data);
     if (data)
     {
       if (!data.password || !data.channel_id || !data.user_id)
@@ -133,21 +114,18 @@ export class ChannelsController {
         if (updated)
           return (true);
         else
-          return false;
+          return (false);
       }
       else  
-        return false;
+        return (false);
     } catch (error) {
-      console.log(error.message);
       return { message: 'An error occurred', error: error.message };
     }
   }
 
   @Post('removePass')
   async removePass(@Req() req, @Body() data: any) {
-    console.log("-------------------------- REMOVE PASSWORD  -------------------------- ");
-    console.log(data);
-    // { id_channel: 10, user_id: 90652 }
+
     if (data)
     {
       if (!data.id_channel || !data.user_id)
@@ -164,12 +142,11 @@ export class ChannelsController {
         if (remove)
           return (true);
         else
-          return false;
+          return (false);
       }
       else
-        return false;
+        return (false);
     } catch (error) {
-      // console.log(error.message);
       return { message: 'An error occurred', error: error.message };
     }
   }
@@ -177,13 +154,11 @@ export class ChannelsController {
 
   @Post('setPass')
   async setPass(@Req() req, @Body() data: any) {
-    console.log("-------------------------- SET PASSWORD  -------------------------- ");
-    console.log(data);
+
     if (data)
     {
       if (!data.password || !data.user_id || !data.channel_id)
       {
-        console.log("inside false");
         return (false);
       }
     }
@@ -197,7 +172,6 @@ export class ChannelsController {
         const setch = await this.channelsService.setPass(data, user.id_user);
         if (setch)
         {
-          console.log("set ch true", setch);
           return (true);
         }
         else
@@ -206,26 +180,22 @@ export class ChannelsController {
       else
           return (false);
     } catch (error) {
-      // console.log(error.message);
       return { message: 'An error occurred', error: error.message };
     }
   }
-// weslt hena !!!!
+
   @Post('setAdmin')
   async setAdmin(@Req() req, @Body() data: any) {
-    console.log("-------------------------- SET ADMIN  -------------------------- ");
-    console.log(data);
+
     if (data)
     {
       if (!data.to || !data.channel_id || !data.from)
       {
-        console.log("inside false");
         return (false);
       }
     }
     else
       return (false);
-    // data li katsift ha hiya : { to: 90652, channel_id: 2 }
     try {
       const result = await this.channelsService.setAdmin(data);
       if (result)
@@ -233,7 +203,6 @@ export class ChannelsController {
       else
         return (false);
     } catch (error) {
-      console.log(error.message);
       return { message: 'An error occurred', error: error.message };
     }
   }
@@ -241,14 +210,10 @@ export class ChannelsController {
   @Post('removeChannel')
   async removeChannel(@Req() req, @Body() data: any) {
 
-    console.log("-------------------------- Remove Channel  -------------------------- ");
-    console.log(data);
-    // { user_id: 90652, channel_id: 28 }
     if (data)
     {
       if (!data.user_id || !data.channel_id)
       {
-        console.log("inside false");
         return (false);
       }
     }
@@ -264,7 +229,6 @@ export class ChannelsController {
           return(false);
       }
     } catch (error) {
-      console.log(error.message);
       return { message: 'An error occurred', error: error.message };
     }
   }
@@ -274,7 +238,6 @@ export class ChannelsController {
     try {
       return this.channelsService.getPublicChannels();
     } catch (error) {
-      console.log(error.message);
       return { message: 'An error occurred', error: error.message };
     }
   }
@@ -284,7 +247,6 @@ export class ChannelsController {
     try {
       return this.channelsService.getProtectedChannels();
     } catch (error) {
-      console.log(error.message);
       return { message: 'An error occurred', error: error.message };
     }
   }
@@ -294,21 +256,17 @@ export class ChannelsController {
     try {
       return this.channelsService.getPrivateChannels();
     } catch (error) {
-      console.log(error.message);
       return { message: 'An error occurred', error: error.message };
     }
   }
 
-  // all channels , that a user inside them .
   @Get('allChannels')
   async getAllChannels(@Req() req, @Body() data: any) {
-    console.log("-------------------------- all channels that a user inside them -------------------------- ");
     try {
 
       const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
       const user = await this.UsersService.findById(decode.id);
       const myAllChannels = await this.channelsService.getAllChannels(user.id_user);
-      // console.log(myAllChannels);
       let message = "";
       let sent: Date | null = null;
       if (myAllChannels) {
@@ -338,14 +296,10 @@ export class ChannelsController {
           };
           arrayOfChannels.push(newCh);
         }
-        // console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤");
-        // console.log(arrayOfChannels);
         return arrayOfChannels;
       }
     } catch (error) {
-      // console.log(error.message);
       return { message: 'An error occurred', error: error.message };
     }
   }
-  //  ENNNND OF END POINTS !!!!!
 }

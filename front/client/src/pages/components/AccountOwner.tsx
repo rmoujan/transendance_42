@@ -1,8 +1,8 @@
 import { Popover, Transition } from "@headlessui/react";
+import axios from "axios";
 import { Fragment, useEffect, useState } from "react";
 import Cover from "../../img/bg33.png";
 import { socket_user } from "../../socket";
-import axios from "axios";
 type User = {
   id_user: number;
   name: string;
@@ -23,22 +23,29 @@ type AccountOwnerProps = {
 };
 function AccountOwner({ user }: AccountOwnerProps) {
   const [NotFriends, setNotFriends] = useState<User[]>([]);
+
   useEffect(() => {
     const fetchData = async () => {
+      try {
       const { data } = await axios.get(
         "http://localhost:3000/profile/NotFriends",
         { withCredentials: true }
       );
       setNotFriends(data);
+    } catch (err) {
+    }
     };
     fetchData();
   }, []);
   const [friend, setFriend] = useState<User[]>([]);
   function AddMember(id_user: number) {
+    try {
     if (socket_user) socket_user.emit("add-friend", { id_user });
 
     const updatedUsers = friend.filter((user) => user.id_user !== id_user);
     setFriend(updatedUsers);
+    } catch (err) {
+    }
   }
   return (
     <div className="bg-[#3f3b5b91] min-w-screen lg-laptop:w-[70%]  lg-laptop:mt-16 rounded-3xl mb-11 shadow-2xl">

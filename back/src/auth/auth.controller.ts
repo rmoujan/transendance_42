@@ -3,6 +3,7 @@ import {
   Get,
   UseGuards,
   Redirect,
+  UseFilters,
   Post,
   Body,
   Res,
@@ -15,7 +16,9 @@ import { JwtAuthGuard } from "../auth/jwt/JwtGuard";
 import { PrismaService } from "src/prisma.service";
 import { NumberDto } from "./utils/numberDto";
 import { NumberDtoO } from "./utils/NumberDtoO";
-import { ConfigService } from '@nestjs/config';
+import { ConfigService } from "@nestjs/config";
+
+import { sign } from "jsonwebtoken"; // Update with the correct import
 import {
   ExceptionFilter,
   Catch,
@@ -47,6 +50,7 @@ export class UnauthorizedExceptionFilter implements ExceptionFilter {
   }
 }
 @Controller("auth")
+@UseFilters(new UnauthorizedExceptionFilter())
 export class AuthController {
   constructor(
     private service: AuthService,
@@ -64,11 +68,10 @@ export class AuthController {
   @Get("login/42/redirect")
   @UseGuards(AuthGuard("42"))
   async redirect(@Req() req: any, @Res() res: any) {
-    try{
-
+    try {
       const accessToken = this.jwt.sign(req.user);
       res
-        .cookie(this.config.get('cookie'), accessToken , {
+        .cookie(this.config.get("cookie"), accessToken, {
           httponly: true,
         })
         .status(200);
@@ -76,7 +79,7 @@ export class AuthController {
         where: { id_user: req.user.id },
       });
       if (user.TwoFactor) {
-        res.redirect(this.config.get('AuthenticationPath'));
+        res.redirect(this.config.get("AuthenticationPath"));
         return req;
       }
       if (user.IsFirstTime) {
@@ -84,14 +87,13 @@ export class AuthController {
           where: { id_user: req.user.id },
           data: { IsFirstTime: false },
         });
-        res.redirect(this.config.get('settingsPath'));
+        res.redirect(this.config.get("settingsPath"));
       } else {
-        res.redirect(this.config.get('homepath'));
+        res.redirect(this.config.get("homepath"));
       }
       return req;
-    }catch(error){}
+    } catch (error) {}
   }
-
 
   /************************************** */
 
@@ -106,8 +108,7 @@ export class AuthController {
   @Post("verify-qrcode")
   async Verify_QrCode(@Body() body: NumberDto, @Req() req) {
     const msg = await this.service.Verify_QrCode(body, req);
-    if (msg == null)
-      return (null);
+    if (msg == null) return null;
     return msg.msg;
   }
 
@@ -116,7 +117,7 @@ export class AuthController {
   @Post("add-friends")
   async Insert_Friends(@Body() body: NumberDtoO, @Req() req) {
     try {
-      const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+      const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
       await this.prisma.user.update({
         where: { id_user: decoded.id },
         data: {
@@ -157,11 +158,11 @@ export class AuthController {
 
   @Post("remove-friends")
   async Remove_friends(@Body() Body: NumberDtoO, @Req() req) {
-    try{
+    try {
       const friendData = await this.prisma.user.findUnique({
         where: { id_user: Body.id_user },
       });
-      const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+      const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
       const user = await this.prisma.freind.deleteMany({
         where: {
           AND: [{ userId: decoded.id }, { id_freind: Body.id_user }],
@@ -172,18 +173,18 @@ export class AuthController {
           AND: [{ userId: Body.id_user }, { id_freind: decoded.id }],
         },
       });
-    }catch(error){}
+    } catch (error) {}
   }
 
   /************************************** */
 
   @Post("Block-friends")
   async Block_friends(@Body() Body: NumberDtoO, @Req() req) {
-    try{
+    try {
       const friendData = await this.prisma.user.findUnique({
         where: { id_user: Body.id_user },
       });
-      const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+      const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
       const user = await this.prisma.user.update({
         where: { id_user: decoded.id },
         data: {
@@ -195,32 +196,31 @@ export class AuthController {
         },
       });
       this.Remove_friends(Body, req);
-    }catch(error){}
+    } catch (error) {}
   }
 
   @Post("DeBlock-friends")
   async DeBlock_friends(@Body() Body: NumberDtoO, @Req() req) {
-    try{
-      const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+    try {
+      const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
       await this.prisma.blockedUser.deleteMany({
         where: {
           AND: [{ id_blocked_user: Body.id_user }, { userId: decoded.id }],
         },
       });
-    }catch(error){}
+    } catch (error) {}
   }
 
   /************************************** */
 
   @Get("get-friendsList")
   async Get_FriendsList(@Req() req) {
-    try{
-
-      const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+    try {
+      const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
       const user = await this.prisma.user.findUnique({
         where: { id_user: decoded.id },
       });
-  
+
       const friends = await this.prisma.user.findUnique({
         where: { id_user: decoded.id },
         include: {
@@ -229,23 +229,23 @@ export class AuthController {
           },
         },
       });
-  
+
       const obj = friends.freind;
       let FriendList = {};
-  
+
       const idFriends = obj.map((scope) => scope.id_freind);
       for (const num of idFriends) {
         const OneFriend = await this.prisma.user.findUnique({
           where: { id_user: num },
         });
-  
+
         const name = OneFriend.name;
         FriendList = { name: OneFriend };
       }
       const WantedObj = { AccountOwner: user, FriendList };
       const scoop = { FriendList };
       return scoop;
-    }catch(error){}
+    } catch (error) {}
   }
 
   /************************************** */
@@ -253,8 +253,8 @@ export class AuthController {
   @Get("friends")
   @UseGuards(JwtAuthGuard)
   async only_friends(@Req() req) {
-    try{
-      const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+    try {
+      const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
       const friends = await this.prisma.user.findUnique({
         where: { id_user: decoded.id },
         include: {
@@ -269,7 +269,7 @@ export class AuthController {
       const idFriends = obj.map((scope) => scope.id_freind);
       if (idFriends.length == 0) return [];
       let array: any[] = [];
-  
+
       for (const num of idFriends) {
         const OneFriend = await this.prisma.user.findUnique({
           where: { id_user: num },
@@ -281,7 +281,7 @@ export class AuthController {
         array.push(OneFriend);
       }
       return array;
-    }catch(error){}
+    } catch (error) {}
   }
 
   /************************************** */
@@ -289,41 +289,40 @@ export class AuthController {
   @Get("get-user")
   @UseGuards(JwtAuthGuard)
   async Get_User(@Req() req): Promise<any> {
-    try{
-      const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+    try {
+      const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
       let obj: any[] = [];
       const user = await this.prisma.user.findUnique({
         where: { id_user: decoded.id },
       });
       obj.push(user);
       return obj;
-    }catch(error){}
+    } catch (error) {}
   }
-
 
   /************************************** */
 
   @Get("get-all-users")
   @UseGuards(JwtAuthGuard)
   async Get_All_Users(@Req() req) {
-    try{
+    try {
       const users = await this.prisma.user.findMany({});
       return users;
-    }catch(error){}
+    } catch (error) {}
   }
 
   /************************************** */
 
   @Post("TwoFactorAuth")
   async TwofactorAuth(@Body() body, @Req() req) {
-    try{
-      const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+    try {
+      const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
       const user = await this.prisma.user.update({
         where: { id_user: decoded.id },
         data: {
           TwoFactor: body.enable,
         },
       });
-    }catch(error){}
+    } catch (error) {}
   }
 }

@@ -47,10 +47,13 @@ const ProfileCardUser: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      try {
       const { data } = await axios.get("http://localhost:3000/auth/friends", {
         withCredentials: true,
       });
        setUser(data);
+    } catch (err) {
+    }
     };
     fetchData();
   }, []);

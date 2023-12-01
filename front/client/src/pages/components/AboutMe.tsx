@@ -12,11 +12,11 @@ function AboutMe() {
     const emojiPickerRef = useRef<HTMLElement | null>(null);
     const dispatch = useAppDispatch();
     const handleSubmit = async (e: React.FormEvent) => {
-        axios.post("http://localhost:3000/profile/About", { About: inputText }, { withCredentials: true }).then(() => {
-        }
-        );
         e.preventDefault();
         try {
+            axios.post("http://localhost:3000/profile/About", { About: inputText }, { withCredentials: true }).then(() => {
+            }
+            );
             dispatch(showSnackbar({ message: "Your post has been published", type: "success" }));
             setInputText('');
         }

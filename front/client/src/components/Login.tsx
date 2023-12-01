@@ -5,8 +5,10 @@ import { fadeIn } from "../pages/components/variants";
 import TextRevealTW from "./text";
 
 const handleclick = async () => {
-  await axios.get("http://localhost:3000/auth/login/42");
-  window.location.href = "/login";
+  try {
+    await axios.get("http://localhost:3000/auth/login/42");
+    window.location.href = "/login";
+  } catch (err) {}
 };
 
 function Login() {
