@@ -6,7 +6,7 @@ import {
   CardBody,
   Chip,
   Tooltip,
-  Typography
+  Typography,
 } from "@material-tailwind/react";
 import { Modal } from "antd";
 import axios from "axios";
@@ -80,12 +80,11 @@ function FriendList() {
 
   const handelChange = (event: ChangeEvent<HTMLInputElement>) => {
     const searchTerm = event.target.value.toLowerCase();
-    const filter = friend.filter(user =>
+    const filter = friend.filter((user) =>
       user.name.toLowerCase().includes(searchTerm)
     );
     setFilteredUser(filter);
   };
-
 
   function removeFriend(id_user: number) {
     axios.post(
@@ -98,9 +97,8 @@ function FriendList() {
       socket_user.emit("friends-list", id_user);
       socket_user.emit("newfriend", id_user);
     }
-    const updatedUsers = friend.filter(user => user.id_user !== id_user);
+    const updatedUsers = friend.filter((user) => user.id_user !== id_user);
     setFriend(updatedUsers);
-
   }
 
   const handleBlockUser = (id_user: number) => {
@@ -119,7 +117,7 @@ function FriendList() {
           socket_user.emit("friends-list", id_user);
           socket_user.emit("newfriend", id_user);
         }
-        const updatedUsers = friend.filter(user => user.id_user !== id_user);
+        const updatedUsers = friend.filter((user) => user.id_user !== id_user);
         setFriend(updatedUsers);
       },
     });
@@ -128,17 +126,16 @@ function FriendList() {
   const [NotFriends, setNotFriends] = useState<User[]>([]);
   const fetchData = async () => {
     try {
-    const { data } = await axios.get("http://localhost:3000/auth/friends", {
-      withCredentials: true,
-    });
-    const dataUser = await axios.get(
-      "http://localhost:3000/profile/NotFriends",
-      { withCredentials: true }
-    );
-    setNotFriends(dataUser.data);
-    setFriend(data);
-  } catch (err) {
-  }
+      const { data } = await axios.get("http://localhost:3000/auth/friends", {
+        withCredentials: true,
+      });
+      const dataUser = await axios.get(
+        "http://localhost:3000/profile/NotFriends",
+        { withCredentials: true }
+      );
+      setNotFriends(dataUser.data);
+      setFriend(data);
+    } catch (err) {}
   };
   useEffect(() => {
     fetchData();
@@ -148,7 +145,7 @@ function FriendList() {
       fetchData();
     });
     socket_user.on("offline", (data: any) => {
-      setFriend(prevUsers => {
+      setFriend((prevUsers) => {
         return prevUsers.map((user: User) => {
           if (user.id_user === data.id_user) {
             return { ...user, status_user: "offline" };
@@ -158,7 +155,7 @@ function FriendList() {
       });
     });
     socket_user.on("online", (data: any) => {
-      setFriend(prevUsers => {
+      setFriend((prevUsers) => {
         return prevUsers.map((user: User) => {
           if (user.id_user === data.id_user) {
             return { ...user, status_user: "online" };
@@ -171,13 +168,11 @@ function FriendList() {
 
   function AddMember(id_user: number) {
     if (socket_user) socket_user.emit("add-friend", { id_user });
-    const updatedUsers = friend.filter(user => user.id_user !== id_user);
+    const updatedUsers = friend.filter((user) => user.id_user !== id_user);
     setFriend(updatedUsers);
   }
   return (
-    <motion.div
-      className=" flex w-full h-[90%] text-white bg-transparent mx-10"
-    >
+    <motion.div className=" flex w-full h-[90%] text-white bg-transparent mx-10">
       <Card className=" flex items-center h-[90%] w-full mx-10  bg-transparent  mt-10">
         <div className=" flex items-center justify-between gap-8 bg-transparent">
           <div className="flex items-center justify-between p-4 space-x-[39rem] mb-5">
@@ -214,11 +209,8 @@ function FriendList() {
               </div>
             </div>
             <div className="flex shrink-0 flex-col gap-2 sm:flex-row mr-10">
-              
               <Popover className="relative">
-                <Popover.Button
-                  className="flex items-center gap-3 p-2 rounded-xl bg-slate-500 sm:bg-indigo-500"
-                >
+                <Popover.Button className="flex items-center gap-3 p-2 rounded-xl bg-slate-500 sm:bg-indigo-500">
                   <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Add
                   member
                 </Popover.Button>
@@ -233,7 +225,7 @@ function FriendList() {
                 >
                   <Popover.Panel className="absolute right-0 z-10  w-80 -ml-40 text-white">
                     <div className=" flex flex-col  rounded-[30px] mt-3 bg-[#35324db2] hover:scale-100 ">
-                      {NotFriends.map(data => {
+                      {NotFriends.map((data) => {
                         return (
                           <ul
                             key={data?.id_user}
@@ -272,15 +264,13 @@ function FriendList() {
           </div>
         </div>
         <div className="flex flex-col items-center justify-between gap-8 md:flex-row ml-5">
-          <div className="w-full md:w-72">
-
-          </div>
+          <div className="w-full md:w-72"></div>
         </div>
         <CardBody className=" flex overflow-scroll resultUserContainer px-0 justify-center items-center w-[90%] bg-transparent">
           <table className="w-[90%] min-w-max table-auto text-left flex flex-col justify-center ">
             <thead className=" flex justify-center items-center">
               <tr className=" flex ml-[32%] mr-[32%] items-center justify-between space-x-24 fixed">
-                {TABLE_HEAD.map(head => (
+                {TABLE_HEAD.map((head) => (
                   <th key={head} className=" bg-blue-gray-50/50 p-4  ">
                     <Typography
                       variant="small"
@@ -369,7 +359,6 @@ function FriendList() {
                           </div>
                         </td>
                         <td className={`${classes} flex items-center`}>
-                     
                           <Tooltip content="Block User">
                             <BiBlock
                               className="h-8 w-8 text-red-400 -ml-14 cursor-pointer"
@@ -480,15 +469,14 @@ function FriendList() {
                                 size="sm"
                                 value={status_user}
                                 className={`${
-                                  status_user === "online"
-                                    ? " text-green-500"
-                                    : "text-red-500"
+                                  status_user === "offline"
+                                    ? "text-red-500"
+                                    : "text-green-500"
                                 }`}
                               />
                             </div>
                           </td>
                           <td className={`${classes} flex items-center`}>
-                           
                             <Tooltip content="Block User">
                               <BiBlock
                                 className="h-8 w-8 text-red-400 -ml-14 cursor-pointer"
@@ -511,11 +499,9 @@ function FriendList() {
             </tbody>
           </table>
         </CardBody>
-       
       </Card>
     </motion.div>
   );
 }
 
 export default FriendList;
-

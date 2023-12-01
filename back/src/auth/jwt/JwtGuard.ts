@@ -10,7 +10,6 @@ export class JwtAuthGuard implements CanActivate {
     private prisma: PrismaService,
     private readonly JwtService: JwtService
   ) {}
-
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const response = context.switchToHttp().getResponse();
