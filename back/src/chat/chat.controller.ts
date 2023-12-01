@@ -17,25 +17,57 @@ export class ChatController {
     @Get('allConversationsDm')
     async getAllConversations(@Req() req)
     {
-        const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        const user = await this.UsersService.findById(decode.id);
-        return this.chatService.getAllConversations(user.id_user);
+        try{
+
+            const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+            if (decode)
+            {
+                if (!decode.id)
+                    return (false);
+                const user = await this.UsersService.findById(decode.id);
+                return this.chatService.getAllConversations(user.id_user);
+            }
+            else
+                return (false);
+        }
+        catch (error) {
+            return { message: 'An error occurred', error: error.message };
+          }
     }
 
     @Get('allMessagesDm')
     async getAllMessages(@Req() req, @Body() data: any)
     {
-        // const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        // const user = await this.UsersService.findById(decode.id);
-        return this.chatService.getAllMessages(data.idDm);
-        
+        try{
+            if (data)
+            {
+                if (!data.idDm)
+                    return (false);
+            }
+            else
+                return (false);
+            return this.chatService.getAllMessages(data.idDm);   
+        }
+        catch (error) {
+            return { message: 'An error occurred', error: error.message };
+        }
     }
     @Get('allMessagesRoom')
     async getAllMessagesRoom(@Req() req, @Body() data: any)
     {
-        // const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-        // const user = await this.UsersService.findById(decode.id);
-        return this.chatService.getAllMessagesRoom(data.idRoom); 
+        try{
+            if (data)
+            {
+                if (!data.idRoom)
+                    return (false);
+            }
+            else
+                return (false);
+            return this.chatService.getAllMessagesRoom(data.idRoom); 
+        }
+        catch (error) {
+            return { message: 'An error occurred', error: error.message };
+        }
     }
 
 }

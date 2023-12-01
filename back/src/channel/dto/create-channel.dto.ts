@@ -15,15 +15,6 @@ export class CreateMemberDto {
   readonly password?: string | null;
 }
 
-// export class CreateDmDto {
-//   id_dm : number
-//   senderId : number      
-//   receiverId : number   
-//   unread : number 
-//   pinned :Boolean
-// }
-
-
 export class CreateChannelDto {
   @IsOptional()
   @IsString()

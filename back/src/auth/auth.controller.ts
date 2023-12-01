@@ -92,8 +92,6 @@ export class AuthController {
       } else {
         res.redirect(this.config.get("homepath"));
       }
-      console.log("req.user");
-      console.log(req.user);
       return req;
     } catch (error) {}
   }

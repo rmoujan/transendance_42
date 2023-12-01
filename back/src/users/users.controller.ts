@@ -15,29 +15,20 @@ export class UsersController {
     }
     @Get(':id')
     async findById(id:number) {
-
-        const user = await this.usersService.findById(id);
-        return (user);
+        if (id)
+        {
+          const user = await this.usersService.findById(id);
+          return (user);
+        }
     }
     @Get(':name')
     async findByName(name:string) {
-        
-        const user = await this.usersService.findByName(name);
-        return (user.id_user);
+        if (name)
+        {
+          const user = await this.usersService.findByName(name);
+          return (user.id_user);
+        }
     }
-    // // hadhsi bash ytesta khaso front !!!
-    // @Get('myFriend')
-    // async getFreinds(@Req() req, @Body() data:any)
-    // {
-    //     const decode = this.jwt.verify(req.cookies[this.config.get('cookie')]);
-    //     const user = await this.findById(decode.id);
-    //      const id = data;
-    //       console.log(`Freinds  ${data}`);
-    //     const Freinds = await this.usersService.getFreinds(
-    //         id
-    //       );
-    // }
-
 
   @Patch('upload/avatar')
   @UseInterceptors(FileInterceptor('file'))
@@ -47,10 +38,8 @@ export class UsersController {
       try {
           const rest = await this.cloudinaryService.uploadImage(file);
             const avatarUrl = rest.secure_url;
-            console.log("avatarUrl: ", avatarUrl)
-          return avatarUrl;
+          return (avatarUrl);
         } catch (error) {
-            console.log("error in uploading: ", error)
                 return error;
         }
   }

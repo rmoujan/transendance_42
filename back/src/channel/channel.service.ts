@@ -167,11 +167,8 @@ export class ChannelsService {
       }
       if (ch)
       {
-        console.log(ch);
-        console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤ 1");
         if (ch.visibility === "protected")
         {
-          console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤ 2");
           let test = await this.verifyPassword(data.sendData.password, ch.password);
           if (test)
           {
@@ -180,7 +177,6 @@ export class ChannelsService {
         }
           if (join == 1 || ch.visibility === "public")
           {
-            console.log("¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤¤ 3");
               const memberchannel = await this.prisma.memberChannel.create({
                 data: {
                     userId:usid,
@@ -189,15 +185,12 @@ export class ChannelsService {
                     muted:false,
                     },
                 });
-                console.log("############### AFTER JOINGING ");
                 return true;
           }
       }
     }  catch(error)
     {
-      console.log("ERRRRRRRRRRRRROR JOIN CHANNEL");
       throw new NotFoundException(`Error occured when joining this channel`);
-      //  console.error('Error occured when joining this channel', error);
     } 
   }
 
@@ -252,13 +245,11 @@ export class ChannelsService {
     }
   } catch(error)
   {
-    // console.error('Error occured when updating password of this channel', error);
     throw new NotFoundException('Error occured when updating password of this channel');
   } 
 }
 
 
-  // End !!
   async removePass(data : any, usid : number)
   {
     try{
@@ -309,7 +300,6 @@ export class ChannelsService {
   }
 } catch(error)
   {
-    // console.error('Error occured when Removing password of this channel', error);
     throw new NotFoundException('Error occured when Removing password of this channel');
   } 
 }
@@ -365,15 +355,10 @@ export class ChannelsService {
   }
 } catch(error)
   {
-    // console.error('Error occured when setting password of this channel', error);
     throw new NotFoundException('Error occured when setting password of this channel');
   } 
 }
 
-
-
-
-  // END. belaan d muted kifesh andir lih hnea !!
   async setAdmin(data : any)
   {
     try {
@@ -426,7 +411,6 @@ export class ChannelsService {
     }
     else
     {
-      // hena diri name instead of id !!!
       throw new NotFoundException(`the user with ${data.from} or ${data.to} is not belong to this channel ${ch.name}`);
     }
   }
@@ -437,11 +421,8 @@ export class ChannelsService {
   } catch(error)
   {
     throw new NotFoundException('Error occured when setting admin in this channel');
-    // console.error('Error occured when setting admin in this channel', error);
   } 
 }
-
-  // weslt hena f trycatch
 
   async kickUser(data:any, idus:number, kickcus:number)
   {
@@ -476,14 +457,12 @@ export class ChannelsService {
       {
         if (record2.status_UserInChannel !== "owner" && record2.status_UserInChannel !== "admin")
         {
-          // delete all messages of this user from channel first :
           const deleteMsg = await this.prisma.discussion.deleteMany({
             where: {
               userId: record2.userId,
               channelId: ch.id_channel,
             },
           });
-          // then delete this user from channel.
           const updateChannel = await this.prisma.memberChannel.delete({
             where: {
               userId_channelId: {
@@ -493,7 +472,6 @@ export class ChannelsService {
             },
           })
 
-          // save this banned user in saveBanned :
           const memberchannel = await this.prisma.saveBanned.create({
             data: {
               bannedUserId:record2.userId,
@@ -501,7 +479,6 @@ export class ChannelsService {
               status_User:'kicked',
             },
           });
-          console.log(`AFTER KICKING THIS USER ${updateChannel}`);
           return updateChannel;
         }
         else
@@ -528,9 +505,6 @@ export class ChannelsService {
     throw new NotFoundException(`Error occured when kickUser in this channel`);
   } 
 }
-
-
-// END
 
   async getChannelById(nameVar:number)
   {
@@ -578,14 +552,12 @@ export class ChannelsService {
       {
         if (record2.status_UserInChannel !== "owner" && record2.status_UserInChannel !== "admin")
         {
-          // delete all messages of this user from channel first :
           const deleteMsg = await this.prisma.discussion.deleteMany({
             where: {
               userId: record2.userId,
               channelId: ch.id_channel,
             },
           });
-          // then delete this user from channel.
           const updateChannel = await this.prisma.memberChannel.delete({
             where: {
               userId_channelId: {
@@ -594,7 +566,6 @@ export class ChannelsService {
               },
             },
           })
-          // save this banned user in saveBanned :
           const memberchannel = await this.prisma.saveBanned.create({
             data: {
               bannedUserId:record2.userId,
@@ -629,7 +600,6 @@ export class ChannelsService {
   } 
   }
 
-// END
   async muteUser(data:any, idus:number, user_muted:number)
   {
     try {
@@ -699,8 +669,6 @@ export class ChannelsService {
   }
 }
 
-
-    // get all Channels of current user that has joined them:
     async getAllChannels(idUser : number )
     {
       try{
@@ -717,8 +685,6 @@ export class ChannelsService {
       }
       catch(error)
       {
-        
-        // console.error('Error occured when getting all channels', error);
         throw new NotFoundException(`Error occured when getting all channels`);
       }
     }
@@ -748,11 +714,9 @@ export class ChannelsService {
            catch(error)
           {
             throw new NotFoundException(`Error occured  when getting all admins in this channel`);
-            // console.error('Error occured when getting all admins in this channel', error);
           }
         }
 
-        // get all Channels of current user that has joined them:
         async getAllMembers(idch : number )
         {
           try {
@@ -777,7 +741,6 @@ export class ChannelsService {
         } catch(error)
         {
           throw new NotFoundException(`Error occured when getting all members in this channel`);
-          // console.error('Error occured when getting all members in this channel', error);
         }
         }
 
@@ -806,7 +769,6 @@ export class ChannelsService {
          } catch(error)
           {
             throw new NotFoundException(`Error occured when getting all owners in this channel`);
-            // console.error('Error occured when getting all owners in this channel', error);
           }
         }
 
@@ -821,18 +783,16 @@ export class ChannelsService {
                 channelId: idch
               },
               orderBy: {
-                dateSent: 'desc' // or 'desc' for descending order
+                dateSent: 'desc' 
               }
             });
             return lastMessage;
             }
             catch (error) {
-                  // console.error('we have no messages on this channel', error);
               throw new NotFoundException(`we have no messages on this channel`);
             }
         }
 
-        // END
   async unmuteUser(data:any, idus:number, user_muted:number)
   {
     try{
@@ -923,18 +883,18 @@ export class ChannelsService {
           {
               if (record.status_UserInChannel === "owner")
               {
-                // delete all messages of channel 
                 const deleteMsg = await this.prisma.discussion.deleteMany({
                   where: {
                     channelId: ch.id_channel,
                   },
                 });
-                // // delete all members of channel 
+
                 const users = await this.prisma.memberChannel.deleteMany({
                   where: {
                     channelId: ch.id_channel,
                   },
                 });
+
                 const chan = await this.prisma.channel.delete({
                   where: {
                     id_channel: ch.id_channel,
@@ -959,11 +919,8 @@ export class ChannelsService {
     }
    catch(error)
   {
-    // console.error('Error occured when remove this channel', error);
     throw new NotFoundException(`Error occured when remove this channel`);
   }
-  }
-  
-  
-  // end 
+}
+
 }

@@ -85,7 +85,6 @@ export class AuthService {
         where: { id_user: decoded.id },
         data: { secretKey: sKey },
       });
-      // console.log(user);
       const otpAuthURL = authenticator.keyuri(decoded.email, this.config.get('QrCodeAppName'), sKey);
   
       const qrCodeOptions = {
