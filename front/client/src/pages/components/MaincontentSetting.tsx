@@ -58,7 +58,7 @@ function MaincontentSetting() {
 
     formData.append("name", name);
     if (photo) {
-      formData.append("photo", photo);
+      formData.append("file", photo);
     }
     if (name) {
       try {
@@ -85,11 +85,15 @@ function MaincontentSetting() {
     }
     if (photo) {
       try {
-        await axios.post(backendURLPhoto, formData, {
+        const dataAvatar: any = await axios.patch(
+          "http://localhost:3000/users/upload/avatar",
+          formData,
+          {
+            withCredentials: true,
+          }
+        );
+        await axios.post(backendURLPhoto, {photo:dataAvatar.data}, {
           withCredentials: true,
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
         });
         dispatch(
           showSnackbar({
@@ -106,6 +110,7 @@ function MaincontentSetting() {
         );
         console.error("Error:", error);
       }
+      
     }
     fetchData();
   };

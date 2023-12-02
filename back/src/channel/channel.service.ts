@@ -455,7 +455,7 @@ export class ChannelsService {
     {
       if (record.status_UserInChannel === "owner" || record.status_UserInChannel === "admin")
       {
-        if (record2.status_UserInChannel !== "owner" && record2.status_UserInChannel !== "admin")
+        if (record2.status_UserInChannel !== "owner")
         {
           const deleteMsg = await this.prisma.discussion.deleteMany({
             where: {
@@ -550,7 +550,7 @@ export class ChannelsService {
     {
       if (record.status_UserInChannel === "owner" || record.status_UserInChannel === "admin")
       {
-        if (record2.status_UserInChannel !== "owner" && record2.status_UserInChannel !== "admin")
+        if (record2.status_UserInChannel !== "owner" )
         {
           const deleteMsg = await this.prisma.discussion.deleteMany({
             where: {

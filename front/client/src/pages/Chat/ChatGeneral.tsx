@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/store/store";
 import Converstation from "../../sections/Converstation";
 import NoChat from "../../sections/NoChat";
 import ChatTabs from "./ChatTabs";
+import { resetContact } from "../../redux/slices/contact";
 
 const ChatGeneral: React.FC = () => {
   const { contact, profile } = useAppSelector((state) => state);

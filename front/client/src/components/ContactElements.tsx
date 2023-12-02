@@ -69,18 +69,7 @@ const ContactElements = (cont: any) => {
         sx={{ padding: "0 8px 14px" }}
       >
         <Stack direction={"row"} alignItems={"center"} spacing={2}>
-          {cont.status_user === "online" ? (
-            <StyledBadge
-              overlap="circular"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              variant="dot"
-              sx={{ width: 52, height: 52 }}
-            >
-              <Avatar src={cont.avatar} sx={{ width: 52, height: 52 }} />
-            </StyledBadge>
-          ) : (
-            <Avatar src={cont.avatar} sx={{ width: 52, height: 52 }} />
-          )}
+           <Avatar src={cont.avatar} sx={{ width: 52, height: 52 }} />
           <Typography variant="subtitle2" color={"white"}>
             {cont.name}
           </Typography>

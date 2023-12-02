@@ -6,3 +6,13 @@ node_modules
 README.md
 */README.md
 */*/README.md
+
+# env
+.env 
+*/.env
+*/*/.env
+
+#ds
+.DS_Store
+*/.DS_Store
+*/*/.DS_Store

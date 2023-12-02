@@ -277,7 +277,7 @@ const MembersSettings = (el: any) => {
               </Box>
             )}
 
-            {(el.isAdmin || el.isOwner) &&
+            {(el.isOwner|| el.isAdmin) &&
               el.el.status_UserInChannel !== "owner" && (
                 <Box
                   sx={{
@@ -302,8 +302,8 @@ const MembersSettings = (el: any) => {
                 </Box>
               )}
 
-            {(el.isAdmin || el.isOwner) &&
-              el.el.status_UserInChannel === "member" && (
+            {(el.isOwner || el.isAdmin) &&
+              (el.el.status_UserInChannel !== "owner") && (
                 <Box
                   sx={{
                     width: "50px",
@@ -320,8 +320,8 @@ const MembersSettings = (el: any) => {
                 </Box>
               )}
 
-            {(el.isAdmin || el.isOwner) &&
-              el.el.status_UserInChannel === "member" && (
+            {(el.isOwner|| el.isAdmin) &&
+              el.el.status_UserInChannel !== "owner" && (
                 <Box
                   sx={{
                     width: "50px",

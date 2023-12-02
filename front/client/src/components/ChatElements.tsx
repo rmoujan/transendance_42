@@ -89,17 +89,7 @@ const ChatElements = (id: any) => {
         sx={{ padding: "0 8px 0 4px" }}
       >
         <Stack direction={"row"} alignItems={"center"} spacing={2}>
-          {id.online ? (
-            <StyledBadge
-              overlap="circular"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              variant="dot"
-            >
-              <Avatar src={id.img} sx={{ width: 52, height: 52 }} />
-            </StyledBadge>
-          ) : (
             <Avatar src={id.img} sx={{ width: 52, height: 52 }} />
-          )}
           <Stack spacing={1.3}>
             <Typography variant="subtitle2" color={"white"}>
               {id.name}

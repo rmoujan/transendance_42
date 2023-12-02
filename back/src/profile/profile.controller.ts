@@ -46,9 +46,16 @@ export class ProfileController {
   }
 
   @Post("modify-photo")
-  @UseInterceptors(FileInterceptor("photo"))
-  Photo__Modification(@UploadedFile() photo, @Req() req, @Res() res) {
-    this.Profile.ModifyPhoto(photo, req, res);
+  async Photo__Modification(@Body() photo:any, @Req() req) {
+    try{
+      const decoded = this.jwt.verify(req.cookies[this.config.get('cookie')]);
+      await this.prisma.user.update({
+        where:{id_user: decoded.id},
+        data:{
+          avatar: photo.photo,
+        },
+      });
+    }catch(error){}
   }
 
   @Post("About")

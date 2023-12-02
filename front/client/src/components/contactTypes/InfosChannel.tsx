@@ -183,7 +183,7 @@ const InfosChannel = () => {
           <Stack>
             <Avatar
               alt={contact.name}
-              src={currentInfos.current.img}
+              src={currentInfos.current?.img}
               sx={{ width: 200, height: 200 }}
             />
           </Stack>
