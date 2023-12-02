@@ -15,7 +15,7 @@ import { JwtService } from "../auth/jwt/jwtservice.service";
 import { JwtAuthGuard } from "../auth/jwt/JwtGuard";
 import { PrismaService } from "src/prisma.service";
 import { NumberDto } from "./utils/numberDto";
-import { NumberDtoO } from "./utils/NumberDtoO";
+import { NumberDtoO , deblockDTO} from "./utils/NumberDtoO";
 import { ConfigService } from "@nestjs/config";
 import { TFDTO } from "./utils/TFDTO";
 import { sign } from "jsonwebtoken"; // Update with the correct import
@@ -138,6 +138,8 @@ export class AuthController {
           },
         },
       });
+      this.DeBlock_friends({blocked: body.id_user, id_user: decoded.id});
+      this.DeBlock_friends({blocked: decoded.id, id_user: body.id_user});
       await this.prisma.notification.deleteMany({
         where: {
           AND: [{ userId: decoded.id }, { id_user: body.id_user }],
@@ -201,12 +203,11 @@ export class AuthController {
   }
 
   @Post("DeBlock-friends")
-  async DeBlock_friends(@Body() Body: NumberDtoO, @Req() req) {
+  async DeBlock_friends(@Body() Body: deblockDTO) {
     try {
-      const decoded = this.jwt.verify(req.cookies[this.config.get("cookie")]);
       await this.prisma.blockedUser.deleteMany({
         where: {
-          AND: [{ id_blocked_user: Body.id_user }, { userId: decoded.id }],
+          AND: [{ id_blocked_user: Body.blocked }, { userId: Body.id_user }],
         },
       });
     } catch (error) {}

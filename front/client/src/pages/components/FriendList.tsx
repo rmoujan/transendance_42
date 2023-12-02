@@ -107,20 +107,12 @@ function FriendList() {
       { id_user },
       { withCredentials: true }
     );
-    Modal.confirm({
-      title: "Are you sure, you want to block this friend?",
-      okText: "Yes",
-      okType: "danger",
-      className: " flex justify-center items-center h-100vh",
-      onOk: () => {
-        if (socket_user) {
-          socket_user.emit("friends-list", id_user);
-          socket_user.emit("newfriend", id_user);
-        }
-        const updatedUsers = friend.filter((user) => user.id_user !== id_user);
-        setFriend(updatedUsers);
-      },
-    });
+    if (socket_user) {
+      socket_user.emit("friends-list", id_user);
+      socket_user.emit("newfriend", id_user);
+    }
+    const updatedUsers = friend.filter((user) => user.id_user !== id_user);
+    setFriend(updatedUsers);
   };
 
   const [NotFriends, setNotFriends] = useState<User[]>([]);
