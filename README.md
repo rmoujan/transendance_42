@@ -1,32 +1,32 @@
-# React + TypeScript + Vite
+# Project Name
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ft_transcendence is the last project in the 42 common core, is about creating a website for the mighty Pong contest!
+The project is consisting of three main parts (user interface, chat, and real-time multiplayer online games)
 
-Currently, two official plugins are available:
+1- The user interface is where a user can log in to their profile and perform actions such as navigation, adding/removing friends, and posting content
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+2- Chat is where you can start a direct message with your friends, create channels—public, private, or protected with a password—and engage in conversations with your friends.
 
-## Expanding the ESLint configuration
+3- Game: This section represents the core goal of the project, providing you with the opportunity to play ping pong with your friends.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+## Technologies Used
 
-- Configure the top-level `parserOptions` property like this:
+- [NestJS](https://nestjs.com/) - A progressive Node.js framework for building efficient and scalable server-side applications. Leveraging TypeScript, NestJS follows the modular development pattern and supports various libraries for seamless integration.
+- [TypeScript](https://www.typescriptlang.org/) - A superset of JavaScript that adds static typing and other features, enhancing code maintainability and scalability.
+- [ReactJS](https://reactjs.org/) - A JavaScript library for building user interfaces, maintained by Facebook. ReactJS allows for the creation of interactive and reusable UI components in a declarative style.
+- [Prisma](https://www.prisma.io/) - A modern database toolkit that simplifies database access and management, providing a type-safe and auto-generated query builder.
+- [PostgreSQL](https://www.postgresql.org/) - A powerful, open-source relational database system used for data storage.
+- [Docker](https://www.docker.com/) - A platform for automating the deployment and scaling of applications in lightweight, portable containers.
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+## Installation
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+Clone the project, then run the command: make build. After building, the server will run, and you can access it via the browser using the address: 'http://localhost:5173'.
 
-# TODO LIST
-### fake data => ./data/index.js
+Enjoy 🤗 😊
+## Usage
 
-### remove online from contact/all/private elements ==> DONE
+<!-- I ll do it later  -->
+
+## Contact
+
+If you have questions or feedback, you can reach us at my linkdin profile .
