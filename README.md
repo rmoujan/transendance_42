@@ -1,6 +1,6 @@
 # Project Name
 
-ft_transcendence is the last project in the 42 common core, is about creating a website for the mighty Pong contest!
+ft_transcendence is the last project in the 42 Common Core, which is about creating a website for the mighty Pong contest!
 The project is consisting of three main parts (user interface, chat, and real-time multiplayer online games)
 
 1- The user interface is where a user can log in to their profile and perform actions such as navigation, adding/removing friends, and posting content
@@ -23,10 +23,19 @@ The project is consisting of three main parts (user interface, chat, and real-ti
 Clone the project, then run the command: make build. After building, the server will run, and you can access it via the browser using the address: 'http://localhost:5173'.
 
 Enjoy 🤗 😊
-## Usage
+## My tasks : 
+1- First :
 
-<!-- I ll do it later  -->
+I took charge of the project from the start, organizing tasks and making a plan. I not only listed what needed to be done but also worked on a detailed plan using UML class diagrams. These diagrams helped us visualize the project structure and relationships between different parts. It was like drawing a map to guide us through the project. This combination of planning and visualizing set us on the right path to success.
+
+2-Second :
+
+After the first step of the conception of the project, I took an extra step by creating different data models using Prisma to organize and structure our database, specifically with PostgreSQL. This involved setting up a blueprint for how our information gets stored and connected. 
+
+3-Third :
+
+In addition, I added a feature to the project: real-time chat. Basically, I made it so people can talk to each other instantly. I used NestJS and WebSocket to make it work smoothly and quickly. And to keep all those chat messages in order, I saved them neatly in a PostgreSQL database. Think of it like having a secure and organized place to store all the conversations, making sure everything runs smoothly and stays organized in our project.
 
 ## Contact
 
-If you have questions or feedback, you can reach us at my linkdin profile .
+If you have questions or feedback, you can reach us at my LinkedIn profile.
